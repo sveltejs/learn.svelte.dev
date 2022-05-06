@@ -6,8 +6,6 @@
 
 	const dispatch = createEventDispatcher();
 
-	console.log('>>>> INITING VIEWER');
-
 	/** @type {{ fulfil: (value?: any) => void, reject: (error: Error) => void }}*/
 	let deferred;
 	const ready = new Promise((fulfil, reject) => {
@@ -55,7 +53,6 @@
 
 	/** @param {Array<import('$lib/types').File | import('$lib/types').Directory>} data */
 	export async function set(data) {
-		console.log('set', data);
 		files.set(data);
 		dispatch('change', data);
 
@@ -136,12 +133,17 @@
 	.top {
 		display: grid;
 		grid-template-columns: 200px 1fr;
+		border-bottom: 1px solid #ccc;
 	}
 
 	.left,
 	.right {
 		width: 100%;
 		height: 100%;
+	}
+
+	.left {
+		border-right: 1px solid #ccc;
 	}
 
 	.filetree {

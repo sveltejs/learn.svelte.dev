@@ -16,8 +16,6 @@
 	/** @type {Array<import('$lib/types').File | import('$lib/types').Directory>} */
 	export let files;
 
-	$: if (depth === 0) console.log('files', files);
-
 	$: children = files.filter((file) => file.name.startsWith(prefix));
 	$: child_directories = children.filter(
 		(child) => child.depth === depth + 1 && child.type === 'directory'

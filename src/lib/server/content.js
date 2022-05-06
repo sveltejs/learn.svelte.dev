@@ -5,7 +5,7 @@ import { marked } from 'marked';
 export function get_index() {
 	const groups = [];
 
-	let last_section;
+	let last_section = null;
 
 	for (const group of fs.readdirSync('content')) {
 		if (!/^\d{2}-/.test(group)) continue;
@@ -49,7 +49,10 @@ export function get_index() {
 	return groups;
 }
 
-/** @param {string} slug */
+/**
+ * @param {string} slug
+ * @returns {import('$lib/types').Section | undefined}
+ */
 export function get_section(slug) {
 	const common = walk('content/common');
 
