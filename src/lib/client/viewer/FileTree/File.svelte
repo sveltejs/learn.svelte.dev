@@ -17,6 +17,8 @@
 		/* background: 0 0.1em no-repeat; */
 		/* background-size: 1em 1em; */
 		padding: 0 0 0 1.5em;
+		font-size: 1.6rem;
+		font-family: inherit;
 	}
 
 	button.selected {

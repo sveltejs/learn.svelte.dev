@@ -57,9 +57,10 @@
 <style>
 	span {
 		padding: 0 0 0 1.5em;
-		background: url(tutorial/icons/folder.svg) 0 0.1em no-repeat;
-		background-size: 1em 1em;
-		font-weight: bold;
+		background: url(tutorial/icons/folder.svg) 0 0.2rem no-repeat;
+		background-size: 1.4rem 1.4rem;
+		font-size: 1.6rem;
+		/* font-weight: bold; */
 		cursor: pointer;
 	}
 
@@ -68,13 +69,13 @@
 	}
 
 	ul {
-		padding: 0.2em 0 0 0.5em;
-		margin: 0 0 0 0.5em;
+		padding: 0 0 0 0.2em;
+		margin: 0 0 0 0.2em;
 		list-style: none;
 		border-left: 1px solid #eee;
 	}
 
 	li {
-		padding: 0.2em 0;
+		padding: 0;
 	}
 </style>

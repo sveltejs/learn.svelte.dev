@@ -146,5 +146,6 @@
 
 	.filetree {
 		padding: 1rem;
+		line-height: 1.3;
 	}
 </style>
