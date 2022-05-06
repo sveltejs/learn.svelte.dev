@@ -1,8 +1,8 @@
 <script>
 	import File from './File.svelte';
-	import { slide } from 'svelte/transition';
 
-	export let expanded = false;
+	export let expanded = true;
+	export let toggleable = true;
 
 	/** @type {string} */
 	export let name;
@@ -16,6 +16,8 @@
 	/** @type {Array<import('$lib/types').File | import('$lib/types').Directory>} */
 	export let files;
 
+	$: if (depth === 0) console.log('files', files);
+
 	$: children = files.filter((file) => file.name.startsWith(prefix));
 	$: child_directories = children.filter(
 		(child) => child.depth === depth + 1 && child.type === 'directory'
@@ -24,17 +26,15 @@
 		children.filter((child) => child.depth === depth + 1 && child.type === 'file')
 	);
 
-	$: console.log({ children, child_files, child_directories });
-
 	function toggle() {
-		expanded = !expanded;
+		if (toggleable) expanded = !expanded;
 	}
 </script>
 
 <span class:expanded on:click={toggle}>{name}</span>
 
 {#if expanded}
-	<ul transition:slide={{ duration: 300 }}>
+	<ul>
 		{#each child_directories as directory}
 			<li>
 				<svelte:self

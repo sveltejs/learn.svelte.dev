@@ -11,6 +11,7 @@
 		height: 100%;
 		resize: none;
 		border: none;
+		padding: 1rem;
 		box-sizing: border-box;
 		tab-size: 2;
 	}

@@ -15,9 +15,11 @@
 
 	$: b = { ...section.a, ...section.b };
 
-	$: console.log(section.a);
+	console.log('>>>> INITING'); // TODO this fires twice, but should only fire once
 
-	afterNavigate(() => {
+	afterNavigate(({ from, to }) => {
+		console.log({ from: from?.href, to: to?.href });
+
 		viewer.set(Object.values(section.a));
 
 		completed = false;

@@ -1,9 +1,12 @@
 <script>
-	import { onMount, createEventDispatcher } from 'svelte';
+	import { onMount, createEventDispatcher, setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 	import Editor from './Editor.svelte';
-	import FileTree from './FileTree/FileTree.svelte';
+	import Folder from './FileTree/Folder.svelte';
 
 	const dispatch = createEventDispatcher();
+
+	console.log('>>>> INITING VIEWER');
 
 	/** @type {{ fulfil: (value?: any) => void, reject: (error: Error) => void }}*/
 	let deferred;
@@ -11,7 +14,7 @@
 		deferred = { fulfil, reject };
 	});
 
-	/** @type {TODO} */
+	/** @type {import('$lib/types').Adapter} */
 	let adapter;
 
 	onMount(() => {
@@ -30,21 +33,36 @@
 		};
 	});
 
-	/** @type {Array<import('$lib/types').File | import('$lib/types').Directory>}*/
-	let files = [];
+	/** @type {import('svelte/store').Writable<Array<import('$lib/types').File | import('$lib/types').Directory>>} */
+	const files = writable([]);
 
-	/** @type {import('$lib/types').File | null}*/
-	let current = null;
+	/** @type {import('svelte/store').Writable<import('$lib/types').File | null>} */
+	const selected = writable(null);
+
+	setContext('filetree', {
+		/** @param {import('$lib/types').File} file */
+		select: (file) => {
+			selected.set(file);
+			dispatch('select', { file });
+		},
+
+		files,
+
+		selected
+	});
 
 	let started = false;
 
 	/** @param {Array<import('$lib/types').File | import('$lib/types').Directory>} data */
 	export async function set(data) {
-		files = data;
-		dispatch('change', files);
+		console.log('set', data);
+		files.set(data);
+		dispatch('change', data);
 
-		current = /** @type {import('$lib/types').File} */ (
-			files.find((file) => file.name === '/src/routes/index.svelte')
+		selected.set(
+			/** @type {import('$lib/types').File} */ (
+				data.find((file) => file.name === '/src/routes/index.svelte')
+			)
 		);
 
 		await ready;
@@ -74,22 +92,19 @@
 <div class="viewer">
 	<div class="top">
 		<div class="left">
-			<FileTree
-				{files}
-				on:select={(e) => {
-					current = e.detail;
-				}}
-			/>
+			<div class="filetree">
+				<Folder prefix="/" depth={0} name="project" files={$files} expanded toggleable={false} />
+			</div>
 		</div>
 
 		<div class="right">
 			<Editor
-				file={current}
+				file={$selected}
 				on:input={(e) => {
-					if (current) {
+					if ($selected) {
 						// @ts-ignore for now
-						current.contents = e.currentTarget.value;
-						update([current]);
+						$selected.contents = e.currentTarget.value;
+						update([$selected]);
 					}
 				}}
 			/>
@@ -127,5 +142,9 @@
 	.right {
 		width: 100%;
 		height: 100%;
+	}
+
+	.filetree {
+		padding: 1rem;
 	}
 </style>

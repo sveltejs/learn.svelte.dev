@@ -15,6 +15,6 @@ export interface Directory {
 
 export interface Adapter {
 	base: string;
-	update(files: File[]): Promise<void>;
+	update(files: Array<File | Directory>): Promise<void>;
 	destroy(): Promise<void>;
 }

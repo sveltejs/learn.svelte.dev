@@ -102,6 +102,8 @@ export function walk(cwd) {
 		const files = fs.readdirSync(path.join(cwd, dir));
 
 		for (const basename of files) {
+			if (basename === '.gitkeep') continue;
+
 			const name = dir + basename;
 			const resolved = path.join(cwd, name);
 
