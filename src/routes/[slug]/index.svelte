@@ -1,6 +1,6 @@
 <script>
 	import { afterNavigate } from '$app/navigation';
-	import { setContext, getContext, createEventDispatcher, onMount } from 'svelte';
+	import { setContext, getContext, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import Viewer from '$lib/client/viewer/Viewer.svelte';
 	import TableOfContents from './_/TableOfContents.svelte';
@@ -42,6 +42,23 @@
 		async update(data) {
 			await ready;
 			await adapter.update(data);
+
+			completed = false;
+
+			const expected = new Set(Object.keys(b));
+
+			for (const file of $files) {
+				expected.delete(file.name);
+
+				if (file.type === 'file') {
+					if (b[file.name]?.contents !== file.contents) {
+						completed = false;
+						return;
+					}
+				}
+			}
+
+			completed = expected.size === 0;
 		}
 	});
 
@@ -112,7 +129,7 @@
 				<label>
 					<input
 						type="checkbox"
-						checked={false}
+						checked={completed}
 						on:change={(e) => {
 							completed = e.currentTarget.checked;
 							const selected_name = $selected.name;
@@ -134,12 +151,7 @@
 	</div>
 
 	<div class="right">
-		<Viewer
-			on:change={(e) => {
-				// completed = false;
-				// TODO check to see if we're in the completed state or not
-			}}
-		/>
+		<Viewer />
 	</div>
 </div>
 

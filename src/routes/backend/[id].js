@@ -46,11 +46,12 @@ export async function put({ request, params, url }) {
 		}
 	}
 
-	for (const file of old_files) {
-		if (fs.existsSync(`${dir}/${file}`)) {
-			fs.unlinkSync(`${dir}/${file}`);
-		}
-	}
+	// TODO this is buggy
+	// for (const file of old_files) {
+	// 	if (fs.existsSync(`${dir}/${file}`)) {
+	// 		fs.unlinkSync(`${dir}/${file}`);
+	// 	}
+	// }
 
 	if (app) {
 		app.files = new_files;
