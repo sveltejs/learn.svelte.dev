@@ -9,15 +9,15 @@ const sveltekit_pkg = JSON.parse(fs.readFileSync(sveltekit_pkg_file, 'utf-8'));
 const sveltekit = path.resolve(sveltekit_pkg_file, '..', sveltekit_pkg.bin['svelte-kit']);
 
 // poor man's HMR, pending Vite fix
-if (globalThis.__processes) {
-	globalThis.__processes.forEach((process) => {
-		process.kill();
+if (globalThis.__apps) {
+	globalThis.__apps.forEach((app) => {
+		app.process.kill();
 	});
 }
 
-/** @type {Map<string, import('child_process').ChildProcess>} */
-const processes = new Map();
-globalThis.__processes = processes;
+/** @type {Map<string, { process: import('child_process').ChildProcess, files: string[] }>} */
+const apps = new Map();
+globalThis.__apps = apps;
 
 /** @type {import('./[id]').RequestHandler} */
 export async function put({ request, params, url }) {
@@ -29,16 +29,36 @@ export async function put({ request, params, url }) {
 	/** @type {Array<import('$lib/types').File | import('$lib/types').Directory>} */
 	const files = await request.json();
 
+	const app = apps.get(id);
+
+	const old_files = new Set(app ? app.files : []);
+
+	/** @type {string[]} */
+	const new_files = [];
+
 	for (const file of files) {
 		if (file.type === 'file') {
+			new_files.push(file.name);
+			old_files.delete(file.name);
+
 			const dest = `${dir}/${file.name}`;
-			fs.mkdirSync(path.dirname(dest), { recursive: true });
-			fs.writeFileSync(dest, file.contents);
+			write_if_changed(dest, file.contents);
 		}
 	}
 
-	if (!processes.has(id)) {
-		processes.set(id, launch(id, port));
+	for (const file of old_files) {
+		if (fs.existsSync(`${dir}/${file}`)) {
+			fs.unlinkSync(`${dir}/${file}`);
+		}
+	}
+
+	if (app) {
+		app.files = new_files;
+	} else {
+		apps.set(id, {
+			process: launch(id, port),
+			files: new_files
+		});
 	}
 
 	return {
@@ -53,8 +73,8 @@ export async function del({ params }) {
 
 	fs.rmSync(dir, { recursive: true, force: true });
 
-	processes.get(id)?.kill();
-	processes.delete(id);
+	apps.get(id)?.process.kill();
+	apps.delete(id);
 
 	return {
 		status: 201
@@ -74,4 +94,19 @@ function launch(id, port) {
 	});
 
 	return process;
+}
+
+/**
+ *
+ * @param {string} file
+ * @param {string} contents TODO should also accept binary data
+ */
+function write_if_changed(file, contents) {
+	if (fs.existsSync(file)) {
+		const existing = fs.readFileSync(file, 'utf-8');
+		if (contents === existing) return;
+	}
+
+	fs.mkdirSync(path.dirname(file), { recursive: true });
+	fs.writeFileSync(file, contents);
 }

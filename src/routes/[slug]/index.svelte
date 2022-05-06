@@ -1,43 +1,108 @@
 <script>
-	import { afterNavigate, goto } from '$app/navigation';
-	import { getContext } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
+	import { setContext, getContext, createEventDispatcher, onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 	import Viewer from '$lib/client/viewer/Viewer.svelte';
 	import TableOfContents from './_/TableOfContents.svelte';
-
-	const index = getContext('index');
 
 	/** @type {any} */
 	export let section;
 
-	/** @type {import('svelte').SvelteComponentTyped} */
-	let viewer;
+	const index = getContext('index');
 
 	let completed = false;
 
 	$: b = { ...section.a, ...section.b };
 
-	afterNavigate(({ from, to }) => {
-		viewer.set(Object.values(section.a));
+	/** @type {import('svelte/store').Writable<Array<import('$lib/types').File | import('$lib/types').Directory>>} */
+	const files = writable([]);
+
+	/** @type {import('svelte/store').Writable<import('$lib/types').File | null>} */
+	const selected = writable(null);
+
+	const started = writable(false);
+
+	const base = writable('');
+
+	setContext('filetree', {
+		/** @param {import('$lib/types').File} file */
+		select: (file) => {
+			selected.set(file);
+		},
+
+		files,
+
+		selected,
+
+		started,
+
+		base,
+
+		/** @param {Array<import('$lib/types').File | import('$lib/types').Directory>} data */
+		async update(data) {
+			await ready;
+			await adapter.update(data);
+		}
+	});
+
+	/** @type {{ fulfil: (value?: any) => void, reject: (error: Error) => void }}*/
+	let deferred;
+	const ready = new Promise((fulfil, reject) => {
+		deferred = { fulfil, reject };
+	});
+
+	/** @type {import('$lib/types').Adapter} */
+	let adapter;
+
+	onMount(() => {
+		let destroyed = false;
+
+		// TODO vary adapter based on situation, e.g. webcontainers
+		import('$lib/client/adapters/filesystem/index.js').then(async (module) => {
+			if (!destroyed) adapter = await module.create();
+			base.set(adapter.base);
+			deferred.fulfil();
+		});
+
+		return () => {
+			destroyed = true;
+			if (adapter) {
+				adapter.destroy();
+			}
+		};
+	});
+
+	afterNavigate(async () => {
+		const data = Object.values(section.a);
+
+		files.set(data);
+
+		selected.set(
+			/** @type {import('$lib/types').File} */ (
+				data.find((file) => file.name === '/src/routes/index.svelte')
+			)
+		);
+
+		await ready;
+		await adapter.update(data);
+
+		while (!$started) {
+			try {
+				await fetch(adapter.base, {
+					mode: 'no-cors'
+				});
+				$started = true;
+			} catch {
+				await new Promise((f) => setTimeout(f, 250));
+			}
+		}
+
 		completed = false;
 	});
 </script>
 
 <div class="grid">
 	<div class="left">
-		<!-- <select
-			value={section.slug}
-			on:change={(e) => {
-				goto(`/${e.currentTarget.value}`);
-			}}
-		>
-			{#each index as group, i}
-				<optgroup label="{i + 1}. {group.title}">
-					{#each group.sections as section}
-						<option value={section.slug}>{section.title}</option>
-					{/each}
-				</optgroup>
-			{/each}
-		</select> -->
 		<TableOfContents {index} {section} />
 
 		<div class="text">{@html section.html}</div>
@@ -49,10 +114,20 @@
 						type="checkbox"
 						checked={false}
 						on:change={(e) => {
-							// TODO toggle completed state
+							completed = e.currentTarget.checked;
+							const selected_name = $selected.name;
+
+							const data = Object.values(completed ? b : section.a);
+
+							$files = data;
+							$selected =
+								data.find((file) => file.name === selected_name) ||
+								data.find((file) => file.name === '/src/routes/index.svelte');
+
+							adapter.update(data);
 						}}
 					/>
-					show completed
+					{completed ? 'show completed (uncheck to reset)' : 'show completed'}
 				</label>
 			</div>
 		{/if}
@@ -60,10 +135,8 @@
 
 	<div class="right">
 		<Viewer
-			bind:this={viewer}
 			on:change={(e) => {
-				completed = false;
-
+				// completed = false;
 				// TODO check to see if we're in the completed state or not
 			}}
 		/>
