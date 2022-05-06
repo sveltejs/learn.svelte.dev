@@ -22,6 +22,8 @@ globalThis.__processes = processes;
 /** @type {import('./[id]').RequestHandler} */
 export async function put({ request, params, url }) {
 	const { id } = params;
+	const port = /** @type {string} */ (url.searchParams.get('port'));
+
 	const dir = `.apps/${id}`;
 
 	/** @type {Array<import('$lib/types').File | import('$lib/types').Directory>} */
@@ -36,7 +38,7 @@ export async function put({ request, params, url }) {
 	}
 
 	if (!processes.has(id)) {
-		// processes.set(id, launch(id, url.searchParams.get('port')));
+		processes.set(id, launch(id, port));
 	}
 
 	return {
@@ -68,7 +70,7 @@ function launch(id, port) {
 
 	const process = spawn(`${sveltekit}`, ['dev', '--port', port], {
 		cwd,
-		stdio: [null]
+		stdio: 'inherit' // TODO send to the client via a webworker?
 	});
 
 	return process;

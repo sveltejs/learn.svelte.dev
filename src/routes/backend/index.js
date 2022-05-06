@@ -2,7 +2,7 @@ import fs from 'node:fs';
 // import * as ports from 'port-authority';
 
 fs.rmSync('.apps', { recursive: true, force: true });
-fs.mkdirSync('.apps');
+fs.mkdirSync('.apps', { recursive: true });
 
 let port = 3001; // TODO use port-authority
 
@@ -12,8 +12,6 @@ export async function post() {
 	// const port = await ports.find(3000);
 
 	fs.mkdirSync(`.apps/${id}`);
-
-	console.log(`created ${id}`);
 
 	return {
 		status: 201, // should this be a 200?

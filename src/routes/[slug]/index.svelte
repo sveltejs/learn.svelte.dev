@@ -11,14 +11,23 @@
 	/** @type {import('svelte').SvelteComponentTyped} */
 	let viewer;
 
+	let completed = false;
+
+	$: b = { ...section.a, ...section.b };
+
+	$: console.log(section.a);
+
 	afterNavigate(() => {
-		viewer.update(section.a);
+		viewer.set(Object.values(section.a));
+
+		completed = false;
 	});
 </script>
 
 <div class="grid">
 	<div class="left">
 		<select
+			value={section.slug}
 			on:change={(e) => {
 				goto(`/${e.currentTarget.value}`);
 			}}
@@ -32,11 +41,35 @@
 			{/each}
 		</select>
 
-		<div>{@html section.html}</div>
+		<div class="text">{@html section.html}</div>
+
+		<div class="controls">
+			<a href={section.prev}>previous</a>
+			<label>
+				<input
+					type="checkbox"
+					checked={false}
+					on:change={(e) => {
+						// TODO toggle completed state
+					}}
+				/>
+				show completed
+			</label>
+			<a href={section.next}>next</a>
+		</div>
 	</div>
 
 	<div class="right">
-		<Viewer bind:this={viewer} />
+		<Viewer
+			bind:this={viewer}
+			on:change={(e) => {
+				console.log('change', e.detail);
+
+				completed = false;
+
+				// TODO check to see if we're in the completed state or not
+			}}
+		/>
 	</div>
 </div>
 
@@ -44,5 +77,23 @@
 	.grid {
 		display: grid;
 		grid-template-columns: 300px 1fr;
+		height: 100%;
+		max-height: 100%;
+	}
+
+	.left {
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		height: 100%;
+		max-height: 100%;
+	}
+
+	.text {
+		flex: 1 1;
+		overflow-y: auto;
+		padding: 1rem;
+		background: var(--second);
+		color: white;
 	}
 </style>

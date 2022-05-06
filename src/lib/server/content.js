@@ -55,9 +55,10 @@ export function get_section(slug) {
 			return {
 				group: group.title,
 				title: section.title,
+				slug: section.slug,
 				html: marked(section.markdown), // TODO syntax highlighting
-				a: Object.values(a),
-				b: Object.values(b)
+				a,
+				b
 			};
 		}
 	}
@@ -93,12 +94,15 @@ export function walk(cwd) {
 
 	if (!fs.existsSync(cwd)) return result;
 
-	/** @param {string} dir */
-	function walk_dir(dir) {
+	/**
+	 * @param {string} dir
+	 * @param {number} depth
+	 */
+	function walk_dir(dir, depth) {
 		const files = fs.readdirSync(path.join(cwd, dir));
 
-		for (const file of files) {
-			const name = path.join(dir, file);
+		for (const basename of files) {
+			const name = dir + basename;
 			const resolved = path.join(cwd, name);
 
 			const stats = fs.statSync(resolved);
@@ -106,19 +110,23 @@ export function walk(cwd) {
 			if (stats.isDirectory()) {
 				result[name] = {
 					type: 'directory',
-					name
+					name,
+					basename,
+					depth
 				};
 
-				walk_dir(name);
+				walk_dir(name + '/', depth + 1);
 			} else {
 				result[name] = {
 					type: 'file',
 					name,
-					contents: fs.readFileSync(resolved, 'utf-8')
+					basename,
+					contents: fs.readFileSync(resolved, 'utf-8'),
+					depth
 				};
 			}
 		}
 	}
 
-	return walk_dir(''), result;
+	return walk_dir('/', 1), result;
 }

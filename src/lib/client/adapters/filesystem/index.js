@@ -1,3 +1,6 @@
+/**
+ * @returns {Promise<import('$lib/types').Adapter>}
+ */
 export async function create() {
 	const res = await fetch('/backend', {
 		method: 'post'
@@ -6,6 +9,8 @@ export async function create() {
 	const { id, port } = await res.json();
 
 	return {
+		base: `http://localhost:${port}`,
+
 		/** @param {TODO} files */
 		async update(files) {
 			await fetch(`/backend/${id}?port=${port}`, {
