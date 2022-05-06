@@ -5,6 +5,8 @@ import { marked } from 'marked';
 export function get_index() {
 	const groups = [];
 
+	let last_section;
+
 	for (const group of fs.readdirSync('content')) {
 		if (!/^\d{2}-/.test(group)) continue;
 
@@ -20,12 +22,22 @@ export function get_index() {
 			const text = fs.readFileSync(`${dir}/text.md`, 'utf-8');
 			const { frontmatter, markdown } = extract_frontmatter(text);
 
-			sections.push({
-				slug: section.slice(3),
-				title: frontmatter.title,
-				markdown,
-				dir
-			});
+			const slug = section.slice(3);
+
+			if (last_section) last_section.next = slug;
+
+			sections.push(
+				(last_section = {
+					slug: section.slice(3),
+					title: frontmatter.title,
+					markdown,
+					dir,
+					/** @type {string | null} */
+					prev: last_section ? last_section.slug : null,
+					/** @type {string | null} */
+					next: null
+				})
+			);
 		}
 
 		groups.push({
@@ -56,6 +68,8 @@ export function get_section(slug) {
 				group: group.title,
 				title: section.title,
 				slug: section.slug,
+				prev: section.prev,
+				next: section.next,
 				html: marked(section.markdown), // TODO syntax highlighting
 				a,
 				b
