@@ -19,16 +19,16 @@ export function get_index() {
 
 	let last_section = null;
 
-	for (const group of fs.readdirSync('content')) {
+	for (const group of fs.readdirSync('content/tutorial')) {
 		if (!/^\d{2}-/.test(group)) continue;
 
-		const meta_file = `content/${group}/meta.json`;
+		const meta_file = `content/tutorial/${group}/meta.json`;
 		const meta = JSON.parse(fs.readFileSync(meta_file, 'utf-8'));
 
 		const sections = [];
 
-		for (const section of fs.readdirSync(`content/${group}`)) {
-			const dir = `content/${group}/${section}`;
+		for (const section of fs.readdirSync(`content/tutorial/${group}`)) {
+			const dir = `content/tutorial/${group}/${section}`;
 			if (!fs.statSync(dir).isDirectory()) continue;
 
 			const text = fs.readFileSync(`${dir}/text.md`, 'utf-8');
@@ -66,7 +66,7 @@ export function get_index() {
  * @returns {import('$lib/types').Section | undefined}
  */
 export function get_section(slug) {
-	const common = walk('content/common');
+	const common = walk('content/tutorial/common');
 
 	for (const group of get_index()) {
 		for (const section of group.sections) {
