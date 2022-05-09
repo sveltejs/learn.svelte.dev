@@ -176,16 +176,26 @@
 	.text {
 		flex: 1 1;
 		overflow-y: auto;
-		padding: 1rem;
+		padding: 3rem;
+		color: var(--sidebar-text);
+	}
+
+	.text :global(a) {
+		color: inherit;
+		text-decoration: underline;
+	}
+
+	.text :global(h2) {
+		color: white;
+		font-size: 2.8rem;
+		font-weight: normal;
+		margin: 2em 0 0 0;
 	}
 
 	.controls {
-		padding: 1rem;
+		padding: 1rem 3rem;
 		display: flex;
 		justify-content: space-between;
-	}
-
-	.controls a {
-		color: white;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
 	}
 </style>

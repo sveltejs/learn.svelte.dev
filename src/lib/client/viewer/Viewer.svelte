@@ -1,6 +1,6 @@
 <script>
-	import { onMount, createEventDispatcher, getContext } from 'svelte';
-	import { writable } from 'svelte/store';
+	import { getContext } from 'svelte';
+	import SplitPane from '../../components/SplitPane.svelte';
 	import Editor from './Editor.svelte';
 	import Folder from './FileTree/Folder.svelte';
 
@@ -8,38 +8,47 @@
 </script>
 
 <div class="viewer">
-	<div class="top">
-		<div class="left">
-			<div class="filetree">
-				<Folder prefix="/" depth={0} name="project" files={$files} expanded toggleable={false} />
-			</div>
-		</div>
+	<SplitPane type="vertical" min="100px" max="-100px" pos="50%">
+		<section slot="a">
+			<SplitPane type="horizontal" min="20px" max="-20px" pos="200px">
+				<section slot="a">
+					<div class="filetree">
+						<Folder
+							prefix="/"
+							depth={0}
+							name="project"
+							files={$files}
+							expanded
+							toggleable={false}
+						/>
+					</div>
+				</section>
 
-		<div class="right">
-			<Editor
-				file={$selected}
-				on:input={(e) => {
-					if ($selected) {
-						// @ts-ignore for now
-						$selected.contents = e.currentTarget.value;
-						update([$selected]);
-					}
-				}}
-			/>
-		</div>
-	</div>
+				<section slot="b">
+					<Editor
+						file={$selected}
+						on:input={(e) => {
+							if ($selected) {
+								// @ts-ignore for now
+								$selected.contents = e.currentTarget.value;
+								update([$selected]);
+							}
+						}}
+					/>
+				</section>
+			</SplitPane>
+		</section>
 
-	<div>
-		{#if $started}
-			<iframe title="Output" src={$base} />
-		{/if}
-	</div>
+		<section slot="b">
+			{#if $started}
+				<iframe title="Output" src={$base} />
+			{/if}
+		</section>
+	</SplitPane>
 </div>
 
 <style>
 	.viewer {
-		display: grid;
-		grid-template-rows: 1fr 1fr;
 		height: 100%;
 	}
 
@@ -49,22 +58,6 @@
 		resize: none;
 		box-sizing: border-box;
 		border: none;
-	}
-
-	.top {
-		display: grid;
-		grid-template-columns: 200px 1fr;
-		border-bottom: 1px solid #ccc;
-	}
-
-	.left,
-	.right {
-		width: 100%;
-		height: 100%;
-	}
-
-	.left {
-		border-right: 1px solid #ccc;
 	}
 
 	.filetree {
