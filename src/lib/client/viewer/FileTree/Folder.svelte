@@ -55,7 +55,7 @@
 <style>
 	span {
 		padding: 0 0 0 1.2em;
-		background: url(tutorial/icons/folder.svg) 0 0.25rem no-repeat;
+		background: url(/tutorial/icons/folder.svg) 0 0.25rem no-repeat;
 		background-size: 1.4rem 1.4rem;
 		font-size: 1.6rem;
 		user-select: none;
@@ -64,7 +64,7 @@
 	}
 
 	.expanded {
-		background-image: url(tutorial/icons/folder-open.svg);
+		background-image: url(/tutorial/icons/folder-open.svg);
 	}
 
 	ul {

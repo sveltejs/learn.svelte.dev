@@ -4,7 +4,7 @@
 	import Editor from './Editor.svelte';
 	import Folder from './FileTree/Folder.svelte';
 
-	const { files, selected, started, base, update } = getContext('filetree');
+	const { files, current, selected, started, base, update } = getContext('filetree');
 </script>
 
 <div class="viewer">
@@ -13,7 +13,13 @@
 			<SplitPane type="horizontal" min="20px" max="-20px" pos="200px">
 				<section slot="a">
 					<div class="filetree">
-						<Folder prefix="/src/lib/" depth={2} name="src" files={$files} expanded />
+						<Folder
+							prefix={$current.group.scope.prefix}
+							depth={$current.group.scope.depth}
+							name={$current.group.scope.name}
+							files={$files}
+							expanded
+						/>
 					</div>
 				</section>
 

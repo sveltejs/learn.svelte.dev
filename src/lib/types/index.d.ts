@@ -21,7 +21,14 @@ export interface Adapter {
 }
 
 export interface Section {
-	group: string;
+	group: {
+		title: string;
+		scope: {
+			prefix: string;
+			depth: number;
+			name: string;
+		};
+	};
 	title: string;
 	slug: string;
 	prev: string | null;

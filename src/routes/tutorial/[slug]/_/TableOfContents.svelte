@@ -10,7 +10,7 @@
 
 	/** @param {Event & { currentTarget: HTMLSelectElement }} e */
 	function navigate(e) {
-		goto(`/${e.currentTarget.value}`);
+		goto(`/tutorial/${e.currentTarget.value}`);
 	}
 </script>
 
@@ -19,7 +19,7 @@
 		rel="prefetch"
 		aria-label="Previous tutorial step"
 		class="no-underline"
-		href="/{section.prev || section.slug}"
+		href="/tutorial/{section.prev || section.slug}"
 		class:disabled={!section.prev}
 	>
 		<Icon name="arrow-left" />
@@ -31,7 +31,7 @@
 				<span style="position: relative; top: -0.1em; margin: 0 0.5em 0 0">
 					<Icon name="menu" />
 				</span>
-				{section.group} /
+				{section.group.title} /
 			</strong>
 			{section.title}
 		</span>
@@ -51,7 +51,7 @@
 		rel="prefetch"
 		aria-label="Next tutorial step"
 		class="no-underline"
-		href="/{section.next || section.slug}"
+		href="/tutorial/{section.next || section.slug}"
 		class:disabled={!section.next}
 	>
 		<Icon name="arrow-right" />

@@ -2,7 +2,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { marked } from 'marked';
 
-const text_files = new Set(['.svelte', '.txt', 'json', '.js', '.ts', '.css', '.svg']);
+const text_files = new Set([
+	'.svelte',
+	'.txt',
+	'.json',
+	'.js',
+	'.ts',
+	'.css',
+	'.svg',
+	'.html',
+	'.md'
+]);
 
 export function get_index() {
 	const groups = [];
@@ -43,7 +53,7 @@ export function get_index() {
 		}
 
 		groups.push({
-			title: meta.title,
+			meta,
 			sections
 		});
 	}
@@ -70,7 +80,7 @@ export function get_section(slug) {
 			const b = walk(`${section.dir}/app-b`);
 
 			return {
-				group: group.title,
+				group: group.meta,
 				title: section.title,
 				slug: section.slug,
 				prev: section.prev,

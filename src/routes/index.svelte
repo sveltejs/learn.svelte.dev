@@ -2,7 +2,7 @@
 	export function load() {
 		return {
 			status: 307,
-			redirect: '/basics'
+			redirect: '/tutorial/basics'
 		};
 	}
 </script>

@@ -14,6 +14,9 @@
 
 	$: b = { ...section.a, ...section.b };
 
+	/** @type {import('svelte/store').Writable<import('$lib/types').Section>}*/
+	const current = writable(section);
+
 	/** @type {import('svelte/store').Writable<Array<import('$lib/types').File | import('$lib/types').Directory>>} */
 	const files = writable([]);
 
@@ -29,6 +32,8 @@
 		select: (file) => {
 			selected.set(file);
 		},
+
+		current,
 
 		files,
 
@@ -96,9 +101,11 @@
 
 		selected.set(
 			/** @type {import('$lib/types').File} */ (
-				data.find((file) => file.name === '/src/lib/App.svelte')
+				data.find((file) => file.name === section.group.focus)
 			)
 		);
+
+		current.set(section);
 
 		await ready;
 		await adapter.update(data);
@@ -139,7 +146,7 @@
 							$files = data;
 							$selected =
 								data.find((file) => file.name === selected_name) ||
-								data.find((file) => file.name === '/src/lib/App.svelte');
+								data.find((file) => file.name === section.group.focus);
 
 							adapter.update(data);
 						}}
