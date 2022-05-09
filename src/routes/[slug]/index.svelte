@@ -192,6 +192,39 @@
 		margin: 2em 0 0 0;
 	}
 
+	.text :global(code) {
+		background: none;
+		color: white;
+	}
+
+	.text :global(code)::before,
+	.text :global(code)::after {
+		content: '`';
+	}
+
+	.text :global(pre) {
+		background: rgba(255, 255, 255, 0.1);
+		padding: 1rem;
+		margin: 0 0 1em 0;
+		line-height: 1.3;
+		border-radius: 2px;
+	}
+
+	.text :global(pre) :global(code) {
+		color: white;
+	}
+
+	.text :global(pre) :global(code)::before,
+	.text :global(pre) :global(code)::after {
+		content: none;
+	}
+
+	.text :global(blockquote) {
+		background: rgba(255, 255, 255, 0.1);
+		border-left: 2px solid white;
+		color: white;
+	}
+
 	.controls {
 		padding: 1rem 3rem;
 		display: flex;
