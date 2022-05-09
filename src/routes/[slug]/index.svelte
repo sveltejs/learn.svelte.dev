@@ -96,7 +96,7 @@
 
 		selected.set(
 			/** @type {import('$lib/types').File} */ (
-				data.find((file) => file.name === '/src/routes/index.svelte')
+				data.find((file) => file.name === '/src/lib/App.svelte')
 			)
 		);
 
@@ -139,7 +139,7 @@
 							$files = data;
 							$selected =
 								data.find((file) => file.name === selected_name) ||
-								data.find((file) => file.name === '/src/routes/index.svelte');
+								data.find((file) => file.name === '/src/lib/App.svelte');
 
 							adapter.update(data);
 						}}

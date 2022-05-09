@@ -1,5 +1,5 @@
 <script>
-	import Nested from '$lib/Nested.svelte';
+	import Nested from './Nested.svelte';
 </script>
 
 <p>This is a paragraph.</p>

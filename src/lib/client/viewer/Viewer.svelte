@@ -13,14 +13,7 @@
 			<SplitPane type="horizontal" min="20px" max="-20px" pos="200px">
 				<section slot="a">
 					<div class="filetree">
-						<Folder
-							prefix="/"
-							depth={0}
-							name="project"
-							files={$files}
-							expanded
-							toggleable={false}
-						/>
+						<Folder prefix="/src/lib/" depth={2} name="src" files={$files} expanded />
 					</div>
 				</section>
 
