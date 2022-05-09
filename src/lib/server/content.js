@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { marked } from 'marked';
 
+const text_files = new Set(['.svelte', '.txt', 'json', '.js', '.ts', '.css', '.svg']);
+
 export function get_index() {
 	const groups = [];
 
@@ -136,11 +138,15 @@ export function walk(cwd) {
 
 				walk_dir(name + '/', depth + 1);
 			} else {
+				const text = text_files.has(path.extname(name));
+				const contents = fs.readFileSync(resolved, text ? 'utf-8' : 'base64');
+
 				result[name] = {
 					type: 'file',
 					name,
 					basename,
-					contents: fs.readFileSync(resolved, 'utf-8'),
+					text,
+					contents,
 					depth
 				};
 			}

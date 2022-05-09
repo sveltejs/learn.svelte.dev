@@ -3,6 +3,7 @@ export interface File {
 	name: string;
 	basename: string;
 	contents: string;
+	text: boolean;
 	depth: number;
 }
 

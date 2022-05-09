@@ -42,7 +42,7 @@ export async function put({ request, params, url }) {
 			old_files.delete(file.name);
 
 			const dest = `${dir}/${file.name}`;
-			write_if_changed(dest, file.contents);
+			write_if_changed(dest, file.text ? file.contents : Buffer.from(file.contents, 'base64'));
 		}
 	}
 
@@ -100,10 +100,10 @@ function launch(id, port) {
 /**
  *
  * @param {string} file
- * @param {string} contents TODO should also accept binary data
+ * @param {string | Buffer} contents
  */
 function write_if_changed(file, contents) {
-	if (fs.existsSync(file)) {
+	if (typeof contents === 'string' && fs.existsSync(file)) {
 		const existing = fs.readFileSync(file, 'utf-8');
 		if (contents === existing) return;
 	}
