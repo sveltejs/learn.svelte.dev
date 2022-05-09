@@ -1,15 +1,13 @@
 import fs from 'node:fs';
-// import * as ports from 'port-authority';
 
 fs.rmSync('.apps', { recursive: true, force: true });
 fs.mkdirSync('.apps', { recursive: true });
 
-let port = 3001; // TODO use port-authority
+let port = 3001;
 
 /** @type {import('./index').RequestHandler} */
 export async function post() {
 	const id = String(Date.now());
-	// const port = await ports.find(3000);
 
 	fs.mkdirSync(`.apps/${id}`);
 
