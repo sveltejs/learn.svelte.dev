@@ -1,6 +1,6 @@
 # learn.svelte.dev
 
-A soup-to-nuts interactive tutorial for people wanting to learn how to build apps with Svelte.
+A soup-to-nuts interactive tutorial on how to build apps with Svelte.
 
 ## Running the app
 
