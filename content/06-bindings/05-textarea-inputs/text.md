@@ -4,13 +4,13 @@ title: Textarea inputs
 
 The `<textarea>` element behaves similarly to a text input in Svelte — use `bind:value`:
 
-```html
+```svelte
 <textarea bind:value={value}></textarea>
 ```
 
 In cases like these, where the names match, we can also use a shorthand form:
 
-```html
+```svelte
 <textarea bind:value></textarea>
 ```
 

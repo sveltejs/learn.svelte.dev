@@ -6,7 +6,7 @@ It would be impractical to put your entire app in a single component. Instead, w
 
 Add a `<script>` tag that imports `Nested.svelte`...
 
-```html
+```svelte
 <script>
 	import Nested from '$lib/Nested.svelte';
 </script>
@@ -14,7 +14,7 @@ Add a `<script>` tag that imports `Nested.svelte`...
 
 ...then add it to the markup:
 
-```html
+```svelte
 <p>This is a paragraph.</p>
 <Nested />
 ```
