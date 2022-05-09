@@ -61,7 +61,10 @@
 	}
 
 	.filetree {
+		background: #f9f9f9;
 		padding: 1rem;
-		line-height: 1.3;
+		width: 100%;
+		height: 100%;
+		overflow-y: auto;
 	}
 </style>

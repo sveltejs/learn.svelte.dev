@@ -58,6 +58,7 @@
 		background: url(tutorial/icons/folder.svg) 0 0.25rem no-repeat;
 		background-size: 1.4rem 1.4rem;
 		font-size: 1.6rem;
+		user-select: none;
 		/* font-weight: bold; */
 		cursor: pointer;
 	}
@@ -71,6 +72,7 @@
 		margin: 0 0 0 0.2em;
 		list-style: none;
 		border-left: 1px solid #eee;
+		line-height: 1.3;
 	}
 
 	li {

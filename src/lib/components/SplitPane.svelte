@@ -150,7 +150,8 @@
 
 <style>
 	.container {
-		--thickness: 8px;
+		--sp-thickness: var(--thickness, 8px);
+		--sp-color: var(--color, #eee);
 		display: grid;
 		position: relative;
 		width: 100%;
@@ -196,16 +197,16 @@
 	.divider::after {
 		content: '';
 		position: absolute;
-		background-color: var(--second);
+		background-color: var(--sp-color);
 	}
 
 	.horizontal > .divider {
-		padding: 0 calc(0.5 * var(--thickness));
+		padding: 0 calc(0.5 * var(--sp-thickness));
 		width: 0;
 		height: 100%;
 		cursor: ew-resize;
 		left: var(--pos);
-		transform: translate(calc(-0.5 * var(--thickness)), 0);
+		transform: translate(calc(-0.5 * var(--sp-thickness)), 0);
 	}
 
 	.horizontal > .divider.disabled {
@@ -220,12 +221,12 @@
 	}
 
 	.vertical > .divider {
-		padding: calc(0.5 * var(--thickness)) 0;
+		padding: calc(0.5 * var(--sp-thickness)) 0;
 		width: 100%;
 		height: 0;
 		cursor: ns-resize;
 		top: var(--pos);
-		transform: translate(0, calc(-0.5 * var(--thickness)));
+		transform: translate(0, calc(-0.5 * var(--sp-thickness)));
 	}
 
 	.vertical > .divider.disabled {
