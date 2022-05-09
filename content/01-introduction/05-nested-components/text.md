@@ -8,7 +8,7 @@ Add a `<script>` tag that imports `Nested.svelte`...
 
 ```html
 <script>
-	import Nested from './Nested.svelte';
+	import Nested from '$lib/Nested.svelte';
 </script>
 ```
 
@@ -16,7 +16,7 @@ Add a `<script>` tag that imports `Nested.svelte`...
 
 ```html
 <p>This is a paragraph.</p>
-<Nested/>
+<Nested />
 ```
 
 Notice that even though `Nested.svelte` has a `<p>` element, the styles from `App.svelte` don't leak in.
