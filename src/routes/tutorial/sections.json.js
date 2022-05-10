@@ -7,9 +7,9 @@ export function get() {
 		body: {
 			index: get_index().map((part) => ({
 				title: part.meta.title,
-				groups: part.groups.map((group) => ({
-					title: group.meta.title,
-					sections: group.sections.map((section) => ({
+				chapters: part.chapters.map((chapter) => ({
+					title: chapter.meta.title,
+					sections: chapter.sections.map((section) => ({
 						title: section.title,
 						slug: section.slug
 					}))

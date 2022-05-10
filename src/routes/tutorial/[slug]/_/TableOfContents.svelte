@@ -26,7 +26,7 @@
 				<span style="position: relative; top: -0.1em; margin: 0 0.5em 0 0">
 					<Icon name="menu" />
 				</span>
-				{section.group.title} /
+				{section.chapter.title} /
 			</strong>
 			{section.title}
 		</span>
@@ -39,9 +39,9 @@
 		>
 			{#each index as part, i}
 				<optgroup label={part.title} />
-				{#each part.groups as group, i}
-					<optgroup label="{i + 1}. {group.title}">
-						{#each group.sections as section, i}
+				{#each part.chapters as chapter, i}
+					<optgroup label="{i + 1}. {chapter.title}">
+						{#each chapter.sections as section, i}
 							<option value={section.slug}>{String.fromCharCode(i + 97)}. {section.title}</option>
 						{/each}
 					</optgroup>

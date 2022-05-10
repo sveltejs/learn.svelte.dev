@@ -21,7 +21,7 @@ export interface Adapter {
 }
 
 export interface Section {
-	group: {
+	chapter: {
 		title: string;
 		scope: {
 			prefix: string;
@@ -41,7 +41,7 @@ export interface Section {
 export type SectionIndex = Array<{
 	slug: string;
 	title: string;
-	groups: Array<{
+	chapters: Array<{
 		title: string;
 		sections: SectionStub[];
 	}>;

@@ -13,13 +13,7 @@
 			<SplitPane type="horizontal" min="20px" max="-20px" pos="200px">
 				<section slot="a">
 					<div class="filetree">
-						<Folder
-							prefix={$current.group.scope.prefix}
-							depth={$current.group.scope.depth}
-							name={$current.group.scope.name}
-							files={$files}
-							expanded
-						/>
+						<Folder {...$current.chapter.scope} files={$files} expanded />
 					</div>
 				</section>
 

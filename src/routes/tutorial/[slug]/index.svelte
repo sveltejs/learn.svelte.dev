@@ -101,7 +101,7 @@
 
 		selected.set(
 			/** @type {import('$lib/types').File} */ (
-				data.find((file) => file.name === section.group.focus)
+				data.find((file) => file.name === section.chapter.focus)
 			)
 		);
 
@@ -146,7 +146,7 @@
 							$files = data;
 							$selected =
 								data.find((file) => file.name === selected_name) ||
-								data.find((file) => file.name === section.group.focus);
+								data.find((file) => file.name === section.chapter.focus);
 
 							adapter.update(data);
 						}}

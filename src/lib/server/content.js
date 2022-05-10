@@ -29,17 +29,17 @@ export function get_index() {
 
 		const part_meta = json(`content/tutorial/${part}/meta.json`);
 
-		const groups = [];
+		const chapters = [];
 
-		for (const group of fs.readdirSync(`content/tutorial/${part}`)) {
-			if (!/^\d{2}-/.test(group)) continue;
+		for (const chapter of fs.readdirSync(`content/tutorial/${part}`)) {
+			if (!/^\d{2}-/.test(chapter)) continue;
 
-			const group_meta = json(`content/tutorial/${part}/${group}/meta.json`);
+			const group_meta = json(`content/tutorial/${part}/${chapter}/meta.json`);
 
 			const sections = [];
 
-			for (const section of fs.readdirSync(`content/tutorial/${part}/${group}`)) {
-				const dir = `content/tutorial/${part}/${group}/${section}`;
+			for (const section of fs.readdirSync(`content/tutorial/${part}/${chapter}`)) {
+				const dir = `content/tutorial/${part}/${chapter}/${section}`;
 				if (!fs.statSync(dir).isDirectory()) continue;
 
 				const text = fs.readFileSync(`${dir}/text.md`, 'utf-8');
@@ -63,7 +63,7 @@ export function get_index() {
 				);
 			}
 
-			groups.push({
+			chapters.push({
 				meta: group_meta,
 				sections
 			});
@@ -72,7 +72,7 @@ export function get_index() {
 		parts.push({
 			slug: part,
 			meta: part_meta,
-			groups
+			chapters
 		});
 	}
 
@@ -85,8 +85,8 @@ export function get_index() {
  */
 export function get_section(slug) {
 	for (const part of get_index()) {
-		for (const group of part.groups) {
-			for (const section of group.sections) {
+		for (const chapter of part.chapters) {
+			for (const section of chapter.sections) {
 				if (section.slug !== slug) continue;
 
 				const a = {
@@ -98,7 +98,7 @@ export function get_section(slug) {
 				const b = walk(`${section.dir}/app-b`);
 
 				return {
-					group: group.meta,
+					chapter: chapter.meta,
 					title: section.title,
 					slug: section.slug,
 					prev: section.prev,
