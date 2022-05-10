@@ -14,51 +14,69 @@ const text_files = new Set([
 	'.md'
 ]);
 
+/** @param {string} file */
+function json(file) {
+	return JSON.parse(fs.readFileSync(file, 'utf-8'));
+}
+
 export function get_index() {
-	const groups = [];
+	const parts = [];
 
 	let last_section = null;
 
-	for (const group of fs.readdirSync('content/tutorial')) {
-		if (!/^\d{2}-/.test(group)) continue;
+	for (const part of fs.readdirSync('content/tutorial')) {
+		if (!/^\d{2}-/.test(part)) continue;
 
-		const meta_file = `content/tutorial/${group}/meta.json`;
-		const meta = JSON.parse(fs.readFileSync(meta_file, 'utf-8'));
+		const part_meta = json(`content/tutorial/${part}/meta.json`);
 
-		const sections = [];
+		const groups = [];
 
-		for (const section of fs.readdirSync(`content/tutorial/${group}`)) {
-			const dir = `content/tutorial/${group}/${section}`;
-			if (!fs.statSync(dir).isDirectory()) continue;
+		for (const group of fs.readdirSync(`content/tutorial/${part}`)) {
+			if (!/^\d{2}-/.test(group)) continue;
 
-			const text = fs.readFileSync(`${dir}/text.md`, 'utf-8');
-			const { frontmatter, markdown } = extract_frontmatter(text);
+			const group_meta = json(`content/tutorial/${part}/${group}/meta.json`);
 
-			const slug = section.slice(3);
+			const sections = [];
 
-			if (last_section) last_section.next = slug;
+			for (const section of fs.readdirSync(`content/tutorial/${part}/${group}`)) {
+				const dir = `content/tutorial/${part}/${group}/${section}`;
+				if (!fs.statSync(dir).isDirectory()) continue;
 
-			sections.push(
-				(last_section = {
-					slug: section.slice(3),
-					title: frontmatter.title,
-					markdown,
-					dir,
-					/** @type {string | null} */
-					prev: last_section ? last_section.slug : null,
-					/** @type {string | null} */
-					next: null
-				})
-			);
+				const text = fs.readFileSync(`${dir}/text.md`, 'utf-8');
+				const { frontmatter, markdown } = extract_frontmatter(text);
+
+				const slug = section.slice(3);
+
+				if (last_section) last_section.next = slug;
+
+				sections.push(
+					(last_section = {
+						slug: section.slice(3),
+						title: frontmatter.title,
+						markdown,
+						dir,
+						/** @type {string | null} */
+						prev: last_section ? last_section.slug : null,
+						/** @type {string | null} */
+						next: null
+					})
+				);
+			}
+
+			groups.push({
+				meta: group_meta,
+				sections
+			});
 		}
 
-		groups.push({
-			meta,
-			sections
+		parts.push({
+			slug: part,
+			meta: part_meta,
+			groups
 		});
 	}
 
-	return groups;
+	return parts;
 }
 
 /**
@@ -66,29 +84,30 @@ export function get_index() {
  * @returns {import('$lib/types').Section | undefined}
  */
 export function get_section(slug) {
-	const common = walk('content/tutorial/common');
+	for (const part of get_index()) {
+		for (const group of part.groups) {
+			for (const section of group.sections) {
+				if (section.slug !== slug) continue;
 
-	for (const group of get_index()) {
-		for (const section of group.sections) {
-			if (section.slug !== slug) continue;
+				const a = {
+					...walk('content/tutorial/common'),
+					...walk(`content/tutorial/${part.slug}/common`),
+					...walk(`${section.dir}/app-a`)
+				};
 
-			const a = {
-				...common,
-				...walk(`${section.dir}/app-a`)
-			};
+				const b = walk(`${section.dir}/app-b`);
 
-			const b = walk(`${section.dir}/app-b`);
-
-			return {
-				group: group.meta,
-				title: section.title,
-				slug: section.slug,
-				prev: section.prev,
-				next: section.next,
-				html: marked(section.markdown), // TODO syntax highlighting
-				a,
-				b
-			};
+				return {
+					group: group.meta,
+					title: section.title,
+					slug: section.slug,
+					prev: section.prev,
+					next: section.next,
+					html: marked(section.markdown), // TODO syntax highlighting
+					a,
+					b
+				};
+			}
 		}
 	}
 }

@@ -39,8 +39,12 @@ export interface Section {
 }
 
 export type SectionIndex = Array<{
+	slug: string;
 	title: string;
-	sections: SectionStub[];
+	groups: Array<{
+		title: string;
+		sections: SectionStub[];
+	}>;
 }>;
 
 export interface SectionStub {

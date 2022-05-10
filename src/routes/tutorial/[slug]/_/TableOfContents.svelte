@@ -7,11 +7,6 @@
 
 	/** @type {import('$lib/types').Section} */
 	export let section;
-
-	/** @param {Event & { currentTarget: HTMLSelectElement }} e */
-	function navigate(e) {
-		goto(`/tutorial/${e.currentTarget.value}`);
-	}
 </script>
 
 <nav>
@@ -36,13 +31,21 @@
 			{section.title}
 		</span>
 
-		<select value={section.slug} on:change={navigate}>
-			{#each index as group, i}
-				<optgroup label="{i + 1}. {group.title}">
-					{#each group.sections as section, i}
-						<option value={section.slug}>{String.fromCharCode(i + 97)}. {section.title}</option>
-					{/each}
-				</optgroup>
+		<select
+			value={section.slug}
+			on:change={(e) => {
+				goto(`/tutorial/${e.currentTarget.value}`);
+			}}
+		>
+			{#each index as part, i}
+				<optgroup label={part.title} />
+				{#each part.groups as group, i}
+					<optgroup label="{i + 1}. {group.title}">
+						{#each group.sections as section, i}
+							<option value={section.slug}>{String.fromCharCode(i + 97)}. {section.title}</option>
+						{/each}
+					</optgroup>
+				{/each}
 			{/each}
 		</select>
 	</div>

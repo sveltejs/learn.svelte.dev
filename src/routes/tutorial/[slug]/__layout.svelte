@@ -1,7 +1,7 @@
 <script context="module">
 	/** @type {import('./__layout').Load} */
 	export async function load({ fetch }) {
-		const res = await fetch('/sections.json');
+		const res = await fetch('/tutorial/sections.json');
 		const { index } = await res.json();
 
 		return {
