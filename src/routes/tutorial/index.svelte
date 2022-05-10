@@ -62,6 +62,7 @@
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		grid-gap: 1rem;
+		margin: 0 0 8rem 0;
 	}
 
 	section {
