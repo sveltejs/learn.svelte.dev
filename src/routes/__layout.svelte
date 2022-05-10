@@ -1,3 +1,15 @@
+<script context="module">
+	/** @type {import('./__layout').Load} */
+	export async function load({ fetch }) {
+		const res = await fetch('/tutorial.json');
+		const { index } = await res.json();
+
+		return {
+			stuff: { index }
+		};
+	}
+</script>
+
 <script>
 	import '@sveltejs/site-kit/base.css';
 	import { page, navigating } from '$app/stores';
@@ -42,17 +54,9 @@
 
 <style>
 	:global(body) {
-		--header-height: 3rem;
 		margin: 0;
 		width: 100%;
-		height: 100vh;
-		overflow: hidden; /* shouldn't be necessary */
-	}
-
-	header {
-		width: 100%;
-		height: var(--header-height);
-		background-color: #eee;
+		min-height: 100vh;
 	}
 
 	main {

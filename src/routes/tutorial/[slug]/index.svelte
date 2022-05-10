@@ -1,14 +1,27 @@
+<script context="module">
+	/** @type {import('./index').Load} */
+	export function load({ props, stuff }) {
+		return {
+			props: {
+				...props,
+				index: stuff.index
+			}
+		};
+	}
+</script>
+
 <script>
 	import { afterNavigate } from '$app/navigation';
-	import { setContext, getContext, onMount } from 'svelte';
+	import { setContext, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import Viewer from '$lib/client/viewer/Viewer.svelte';
 	import TableOfContents from './_/TableOfContents.svelte';
 
-	/** @type {any} */
-	export let section;
+	/** @type {import('$lib/types').SectionIndex} */
+	export let index;
 
-	const index = getContext('index');
+	/** @type {import('$lib/types').Section} */
+	export let section;
 
 	let completed = false;
 
