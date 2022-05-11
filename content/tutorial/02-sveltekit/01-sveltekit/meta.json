@@ -1,9 +1,0 @@
-{
-	"title": "SvelteKit",
-	"scope": {
-		"prefix": "/",
-		"depth": 0,
-		"name": "project"
-	},
-	"focus": "/src/routes/index.svelte"
-}

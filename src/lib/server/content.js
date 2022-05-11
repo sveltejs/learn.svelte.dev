@@ -43,7 +43,7 @@ export function get_index() {
 				if (!fs.statSync(dir).isDirectory()) continue;
 
 				const text = fs.readFileSync(`${dir}/text.md`, 'utf-8');
-				const { frontmatter, markdown } = extract_frontmatter(text);
+				const { frontmatter, markdown } = extract_frontmatter(text, dir);
 
 				const slug = section.slice(3);
 
@@ -64,7 +64,10 @@ export function get_index() {
 			}
 
 			chapters.push({
-				meta: group_meta,
+				meta: {
+					...part_meta,
+					...group_meta
+				},
 				sections
 			});
 		}
@@ -112,11 +115,14 @@ export function get_section(slug) {
 	}
 }
 
-/** @param {string} markdown */
-function extract_frontmatter(markdown) {
+/**
+ * @param {string} markdown
+ * @param {string} dir
+ */
+function extract_frontmatter(markdown, dir) {
 	const match = /---\n([^]+?)\n---\n([^]+)/.exec(markdown);
 	if (!match) {
-		throw new Error('bad markdown');
+		throw new Error(`bad markdown for ${dir}`);
 	}
 
 	/** @type {Record<string, string>} */

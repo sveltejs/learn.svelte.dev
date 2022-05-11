@@ -245,6 +245,10 @@
 		color: white;
 	}
 
+	.text :global(ul) {
+		list-style-position: inside;
+	}
+
 	.controls {
 		padding: 1rem 3rem;
 		display: flex;

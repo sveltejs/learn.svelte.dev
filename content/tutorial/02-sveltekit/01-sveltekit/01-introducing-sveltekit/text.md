@@ -1,5 +1,0 @@
----
-title: Introducing SvelteKit
----
-
-TODO
