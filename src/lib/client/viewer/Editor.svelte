@@ -20,12 +20,6 @@
 	/** @type {import('monaco-editor').editor.IStandaloneCodeEditor}*/
 	let editor;
 
-	/** @type {import('monaco-editor').editor.ITextModel}*/
-	let model;
-
-	/** @type {import('$lib/types').File | null} */
-	let active;
-
 	onMount(() => {
 		let destroyed = false;
 
@@ -67,29 +61,6 @@
 			destroyed = true;
 		};
 	});
-
-	$: if (editor && file) {
-		if (file === active) {
-			// model.setValue(file.contents);
-		} else {
-			const type = file.basename.split('.').pop();
-
-			model = monaco.editor.createModel(
-				file.contents,
-				type === 'svelte' ? 'html' : type, // TODO figure out how to do Svelte files with monaco.languages.register
-				new monaco.Uri().with({ path: file.name })
-			);
-
-			model.onDidChangeContent(() => {
-				dispatch('change', {
-					value: model.getValue()
-				});
-			});
-
-			editor.setModel(model);
-			active = file;
-		}
-	}
 </script>
 
 <div bind:this={container} />

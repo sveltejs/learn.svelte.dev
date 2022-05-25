@@ -16,6 +16,7 @@
 	import { writable } from 'svelte/store';
 	import Viewer from '$lib/client/viewer/Viewer.svelte';
 	import TableOfContents from './_/TableOfContents.svelte';
+	import { monaco } from '$lib/client/monaco/monaco.js';
 
 	/** @type {import('$lib/types').SectionIndex} */
 	export let index;
@@ -33,6 +34,9 @@
 	/** @type {import('svelte/store').Writable<Array<import('$lib/types').File | import('$lib/types').Directory>>} */
 	const files = writable([]);
 
+	/** @type {import('svelte/store').Writable<import('monaco-editor').editor.ITextModel[]>} */
+	const models = writable([]);
+
 	/** @type {import('svelte/store').Writable<import('$lib/types').File | null>} */
 	const selected = writable(null);
 
@@ -49,6 +53,8 @@
 		current,
 
 		files,
+
+		models,
 
 		selected,
 
@@ -111,6 +117,28 @@
 		const data = Object.values(section.a);
 
 		files.set(data);
+
+		for (const model of $models) model.dispose();
+		$models = [];
+
+		data.forEach((file) => {
+			if (file.type === 'file') {
+				const type = file.basename.split('.').pop();
+				const model = monaco.editor.createModel(
+					file.contents,
+					type,
+					new monaco.Uri().with({ path: file.name })
+				);
+
+				model.onDidChangeContent(() => {
+					const value = model.getValue();
+					file.contents = value;
+					adapter.update([file]);
+				});
+
+				$models.push(model);
+			}
+		});
 
 		selected.set(
 			/** @type {import('$lib/types').File} */ (
