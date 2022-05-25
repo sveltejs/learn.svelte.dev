@@ -20,10 +20,10 @@
 				<section slot="b">
 					<Editor
 						file={$selected}
-						on:input={(e) => {
+						on:change={(e) => {
 							if ($selected) {
 								// @ts-ignore for now
-								$selected.contents = e.currentTarget.value;
+								$selected.contents = e.detail.value;
 								update([$selected]);
 							}
 						}}

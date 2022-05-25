@@ -25,6 +25,7 @@
 	"type": "module",
 	"dependencies": {
 		"marked": "^4.0.15",
+		"monaco-editor": "^0.33.0",
 		"ws": "^8.6.0"
 	}
 }
