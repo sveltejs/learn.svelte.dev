@@ -4,7 +4,7 @@
 	import Editor from './Editor.svelte';
 	import Folder from './FileTree/Folder.svelte';
 
-	const { files, current, selected, started, base, update } = getContext('filetree');
+	const { files, current, active, started, base, update } = getContext('filetree');
 </script>
 
 <div class="viewer">
@@ -18,16 +18,7 @@
 				</section>
 
 				<section slot="b">
-					<Editor
-						file={$selected}
-						on:change={(e) => {
-							if ($selected) {
-								// @ts-ignore for now
-								$selected.contents = e.detail.value;
-								update([$selected]);
-							}
-						}}
-					/>
+					<Editor model={$active} />
 				</section>
 			</SplitPane>
 		</section>

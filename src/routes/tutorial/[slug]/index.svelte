@@ -17,6 +17,7 @@
 	import Viewer from '$lib/client/viewer/Viewer.svelte';
 	import TableOfContents from './_/TableOfContents.svelte';
 	import { monaco } from '$lib/client/monaco/monaco.js';
+	import { browser } from '$app/env';
 
 	/** @type {import('$lib/types').SectionIndex} */
 	export let index;
@@ -34,8 +35,8 @@
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
 	const files = writable([]);
 
-	/** @type {import('svelte/store').Writable<import('monaco-editor').editor.ITextModel[]>} */
-	const models = writable([]);
+	/** @type {import('svelte/store').Writable<import('monaco-editor').editor.ITextModel>} */
+	const active = writable();
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub | null>} */
 	const selected = writable(null);
@@ -44,17 +45,21 @@
 
 	const base = writable('');
 
-	setContext('filetree', {
+	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
+	const models = new Map();
+
+	const { select } = setContext('filetree', {
 		/** @param {import('$lib/types').FileStub} file */
 		select: (file) => {
-			selected.set(file);
+			$selected = file;
+			$active = /** @type {import('monaco-editor').editor.ITextModel} */ (models.get(file));
 		},
 
 		current,
 
 		files,
 
-		models,
+		active,
 
 		selected,
 
@@ -95,6 +100,13 @@
 	/** @type {import('$lib/types').Adapter} */
 	let adapter;
 
+	/** @type {Record<string, string>}*/
+	const types = {
+		js: 'javascript',
+		ts: 'typescript',
+		svelte: 'html' // TODO
+	};
+
 	onMount(() => {
 		let destroyed = false;
 
@@ -110,48 +122,51 @@
 			if (adapter) {
 				adapter.destroy();
 			}
+
+			clearInterval(interval);
 		};
 	});
 
 	afterNavigate(async () => {
-		const data = Object.values(section.a);
+		const stubs = Object.values(section.a);
 
-		console.log(section.a);
+		files.set(stubs);
 
-		files.set(data);
+		models.forEach((model) => {
+			model.dispose();
+		});
+		models.clear();
 
-		for (const model of $models) model.dispose();
-		$models = [];
+		stubs.forEach((stub) => {
+			if (stub.type === 'file') {
+				const type = /** @type {string} */ (stub.basename.split('.').pop());
 
-		data.forEach((file) => {
-			if (file.type === 'file') {
-				const type = file.basename.split('.').pop();
 				const model = monaco.editor.createModel(
-					file.contents,
-					type,
-					new monaco.Uri().with({ path: file.name })
+					stub.contents,
+					types[type] || type,
+					new monaco.Uri().with({ path: stub.name })
 				);
 
 				model.onDidChangeContent(() => {
 					const value = model.getValue();
-					file.contents = value;
-					adapter.update([file]);
+					stub.contents = value;
+					adapter.update([stub]);
 				});
 
-				$models.push(model);
+				models.set(stub, model);
 			}
 		});
 
-		selected.set(
+		select(
 			/** @type {import('$lib/types').FileStub} */ (
-				data.find((file) => file.name === section.chapter.focus)
+				stubs.find((stub) => stub.name === section.chapter.focus)
 			)
 		);
 
 		current.set(section);
 
 		await ready;
-		await adapter.update(data);
+		await adapter.update(stubs);
 
 		while (!$started) {
 			try {

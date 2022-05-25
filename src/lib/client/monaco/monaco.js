@@ -9,10 +9,8 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 let monaco;
 
 if (browser) {
-	monaco = await import('monaco-editor');
-
 	// @ts-expect-error
-	window.monacoEnvironment = {
+	self.MonacoEnvironment = {
 		/**
 		 * @param {string} _moduleId
 		 * @param {string} label
@@ -35,6 +33,8 @@ if (browser) {
 			}
 		}
 	};
+
+	monaco = await import('monaco-editor');
 }
 
 export { monaco };
