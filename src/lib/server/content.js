@@ -143,7 +143,7 @@ function extract_frontmatter(markdown, dir) {
  * @param {string} cwd - the directory to walk
  */
 export function walk(cwd) {
-	/** @type {Record<string, import('$lib/types').File | import('$lib/types').Directory>} */
+	/** @type {Record<string, import('$lib/types').FileStub | import('$lib/types').DirectoryStub>} */
 	const result = {};
 
 	if (!fs.existsSync(cwd)) return result;

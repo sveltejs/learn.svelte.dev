@@ -1,7 +1,7 @@
 <script>
 	import { getContext } from 'svelte';
 
-	/** @type {import('$lib/types').File} */
+	/** @type {import('$lib/types').FileStub} */
 	export let file;
 
 	const { select, selected } = getContext('filetree');

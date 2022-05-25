@@ -33,7 +33,7 @@ export async function put({ request, params, url }) {
 
 	const dir = `.apps/${id}`;
 
-	/** @type {Array<import('$lib/types').File | import('$lib/types').Directory>} */
+	/** @type {Array<import('$lib/types').FileStub | import('$lib/types').DirectoryStub>} */
 	const files = await request.json();
 
 	const app = apps.get(id);

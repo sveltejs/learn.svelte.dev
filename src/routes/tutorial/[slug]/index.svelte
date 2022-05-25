@@ -31,13 +31,13 @@
 	/** @type {import('svelte/store').Writable<import('$lib/types').Section>}*/
 	const current = writable(section);
 
-	/** @type {import('svelte/store').Writable<Array<import('$lib/types').File | import('$lib/types').Directory>>} */
+	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
 	const files = writable([]);
 
 	/** @type {import('svelte/store').Writable<import('monaco-editor').editor.ITextModel[]>} */
 	const models = writable([]);
 
-	/** @type {import('svelte/store').Writable<import('$lib/types').File | null>} */
+	/** @type {import('svelte/store').Writable<import('$lib/types').Stub | null>} */
 	const selected = writable(null);
 
 	const started = writable(false);
@@ -45,7 +45,7 @@
 	const base = writable('');
 
 	setContext('filetree', {
-		/** @param {import('$lib/types').File} file */
+		/** @param {import('$lib/types').FileStub} file */
 		select: (file) => {
 			selected.set(file);
 		},
@@ -62,7 +62,7 @@
 
 		base,
 
-		/** @param {Array<import('$lib/types').File | import('$lib/types').Directory>} data */
+		/** @param {import('$lib/types').Stub[]} data */
 		async update(data) {
 			await ready;
 			await adapter.update(data);
@@ -116,6 +116,8 @@
 	afterNavigate(async () => {
 		const data = Object.values(section.a);
 
+		console.log(section.a);
+
 		files.set(data);
 
 		for (const model of $models) model.dispose();
@@ -141,7 +143,7 @@
 		});
 
 		selected.set(
-			/** @type {import('$lib/types').File} */ (
+			/** @type {import('$lib/types').FileStub} */ (
 				data.find((file) => file.name === section.chapter.focus)
 			)
 		);

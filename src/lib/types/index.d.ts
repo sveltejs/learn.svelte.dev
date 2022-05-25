@@ -1,4 +1,4 @@
-export interface File {
+export interface FileStub {
 	type: 'file';
 	name: string;
 	basename: string;
@@ -7,16 +7,18 @@ export interface File {
 	depth: number;
 }
 
-export interface Directory {
+export interface DirectoryStub {
 	type: 'directory';
 	name: string;
 	basename: string;
 	depth: number;
 }
 
+export type Stub = FileStub | DirectoryStub;
+
 export interface Adapter {
 	base: string;
-	update(files: Array<File | Directory>): Promise<void>;
+	update(files: Array<Stub>): Promise<void>;
 	destroy(): Promise<void>;
 }
 
@@ -34,8 +36,8 @@ export interface Section {
 	prev: string | null;
 	next: string | null;
 	html: string;
-	a: Record<string, File | Directory>;
-	b: Record<string, File | Directory>;
+	a: Record<string, Stub>;
+	b: Record<string, Stub>;
 }
 
 export type SectionIndex = Array<{

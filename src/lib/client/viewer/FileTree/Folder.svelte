@@ -13,14 +13,14 @@
 	/** @type {number} */
 	export let depth;
 
-	/** @type {Array<import('$lib/types').File | import('$lib/types').Directory>} */
+	/** @type {Array<import('$lib/types').Stub>} */
 	export let files;
 
 	$: children = files.filter((file) => file.name.startsWith(prefix));
 	$: child_directories = children.filter(
 		(child) => child.depth === depth + 1 && child.type === 'directory'
 	);
-	$: child_files = /** @type {import('$lib/types').File[]} */ (
+	$: child_files = /** @type {import('$lib/types').FileStub[]} */ (
 		children.filter((child) => child.depth === depth + 1 && child.type === 'file')
 	);
 
