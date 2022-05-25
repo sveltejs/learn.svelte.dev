@@ -2,24 +2,31 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { broadcast } from './_ws';
 
-const require = createRequire(import.meta.url);
-const sveltekit_pkg_file = require.resolve('@sveltejs/kit/package.json');
-const sveltekit_pkg = JSON.parse(fs.readFileSync(sveltekit_pkg_file, 'utf-8'));
-const sveltekit = path.resolve(sveltekit_pkg_file, '..', sveltekit_pkg.bin['svelte-kit']);
+/**
+ * @typedef {{
+ *   process: import('child_process').ChildProcess,
+ *   files: string[]
+ * }} App */
 
-// poor man's HMR, pending Vite fix
+// poor man's HMR, pending https://github.com/vitejs/vite/issues/7887
 if (globalThis.__apps) {
 	globalThis.__apps.forEach((app) => {
 		app.process.kill();
 	});
 }
 
-/** @type {Map<string, { process: import('child_process').ChildProcess, files: string[] }>} */
+const require = createRequire(import.meta.url);
+const sveltekit_pkg_file = require.resolve('@sveltejs/kit/package.json');
+const sveltekit_pkg = JSON.parse(fs.readFileSync(sveltekit_pkg_file, 'utf-8'));
+const sveltekit = path.resolve(sveltekit_pkg_file, '..', sveltekit_pkg.bin['svelte-kit']);
+
+/** @type {Map<string, App>} */
 const apps = new Map();
 globalThis.__apps = apps;
 
-/** @type {import('./[id]').RequestHandler} */
+/** @type {import('./__types/[id]').RequestHandler} */
 export async function put({ request, params, url }) {
 	const { id } = params;
 	const port = /** @type {string} */ (url.searchParams.get('port'));
@@ -67,7 +74,7 @@ export async function put({ request, params, url }) {
 	};
 }
 
-/** @type {import('./[id]').RequestHandler} */
+/** @type {import('./__types/[id]').RequestHandler} */
 export async function del({ params }) {
 	const { id } = params;
 	const dir = `.apps/${id}`;
@@ -90,8 +97,15 @@ function launch(id, port) {
 	const cwd = `.apps/${id}`;
 
 	const process = spawn(`${sveltekit}`, ['dev', '--port', port], {
-		cwd,
-		stdio: 'inherit' // TODO send to the client via a webworker?
+		cwd
+	});
+
+	process.stdout.on('data', (data) => {
+		broadcast({ id, data: data.toString(), type: 'stdout' });
+	});
+
+	process.stderr.on('data', (data) => {
+		broadcast({ id, data: data.toString(), type: 'stderr' });
 	});
 
 	return process;

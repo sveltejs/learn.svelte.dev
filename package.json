@@ -24,6 +24,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"marked": "^4.0.15"
+		"marked": "^4.0.15",
+		"ws": "^8.6.0"
 	}
 }

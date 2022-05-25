@@ -8,6 +8,15 @@ export async function create() {
 
 	const { id, port } = await res.json();
 
+	const ws = new WebSocket('ws://localhost:4567');
+
+	ws.addEventListener('message', (event) => {
+		const payload = JSON.parse(event.data);
+		if (payload.id === id) {
+			console[payload.type === 'stdout' ? 'log' : 'error'](payload.data);
+		}
+	});
+
 	return {
 		base: `http://localhost:${port}`,
 
