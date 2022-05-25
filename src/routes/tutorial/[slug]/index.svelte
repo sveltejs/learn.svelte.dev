@@ -17,7 +17,6 @@
 	import Viewer from '$lib/client/viewer/Viewer.svelte';
 	import TableOfContents from './_/TableOfContents.svelte';
 	import { monaco } from '$lib/client/monaco/monaco.js';
-	import { browser } from '$app/env';
 
 	/** @type {import('$lib/types').SectionIndex} */
 	export let index;

@@ -19,6 +19,12 @@
 		};
 	});
 
+	export function resize() {
+		if (editor) {
+			editor.layout();
+		}
+	}
+
 	$: if (editor) {
 		editor.setModel(model);
 	}
