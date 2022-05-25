@@ -25,7 +25,7 @@
 
 <SkipLink href="#main" />
 
-<Nav {page} logo="/learn-svelte.svg">
+<Nav {page} logo="/svelte-logo.svg">
 	<svelte:fragment slot="nav-center">
 		<!-- <NavItem href="/tutorial">Tutorial</NavItem>
 		<NavItem href="/docs">Docs</NavItem>
