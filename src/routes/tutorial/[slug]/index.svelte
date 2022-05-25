@@ -1,5 +1,5 @@
 <script context="module">
-	/** @type {import('./index').Load} */
+	/** @type {import('./__types/index').Load} */
 	export function load({ props, stuff }) {
 		return {
 			props: {
