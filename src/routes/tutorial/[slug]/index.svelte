@@ -284,6 +284,7 @@
 		color: var(--code-base);
 		padding: 0;
 		top: 0;
+		white-space: pre;
 	}
 
 	.text :global(pre) :global(code)::before,
