@@ -64,7 +64,14 @@ export function update({ id, port, files }) {
 			old_files.delete(file.name);
 
 			const dest = `.apps/${id}/${file.name}`;
-			write_if_changed(dest, file.text ? file.contents : Buffer.from(file.contents, 'base64'));
+			let content = file.text ? file.contents : Buffer.from(file.contents, 'base64');
+
+			if (file.name === '/src/app.html' && typeof content === 'string') {
+				// TODO handle case where config.kit.files.template is different
+				content = content.replace('</head>', '<script src="/__client.js"></script></head>');
+			}
+
+			write_if_changed(dest, content);
 		}
 	}
 

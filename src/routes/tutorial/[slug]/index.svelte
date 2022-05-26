@@ -37,6 +37,7 @@
 
 	let completed = false;
 	let started = false;
+	let path = '/';
 
 	$: b = { ...section.a, ...section.b };
 
@@ -75,10 +76,8 @@
 			deferred.fulfil();
 		});
 
-		document.addEventListener('visibilitychange', () => {
-			if (document.visibilityState === 'hidden') {
-				adapter.destroy();
-			}
+		document.addEventListener('pagehide', () => {
+			adapter.destroy();
 		});
 
 		return () => {
@@ -151,6 +150,18 @@
 	});
 </script>
 
+<svelte:window
+	on:message={(e) => {
+		if (e.origin === adapter.base) {
+			if (e.data.type === 'path') {
+				console.log(e.data);
+				path = e.data.data.path;
+				console.log({ path });
+			}
+		}
+	}}
+/>
+
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="360px">
 		<section class="content" slot="a">
@@ -159,59 +170,58 @@
 			<div class="text">{@html section.html}</div>
 
 			{#if Object.keys(section.b).length > 0}
-				<div class="controls">
-					<label>
-						<input
-							type="checkbox"
-							checked={completed}
-							on:change={(e) => {
-								completed = e.currentTarget.checked;
-
-								const target = completed ? b : section.a;
-
-								const changes = [];
-
-								for (const name in target) {
-									const model = models.get(
-										/** @type {import('$lib/types').FileStub} */ (section.a[name])
-									);
-
-									// if model exists, it's a file
-									if (model) {
-										const value = model.getValue();
-										const stub = /** @type {import('$lib/types').FileStub} */ (target[name]);
-
-										if (stub.contents !== value) {
-											model.pushEditOperations(
-												[],
-												[
-													{
-														range: model.getFullModelRange(),
-														text: stub.contents
-													}
-												],
-												() => null
-											);
-
-											changes.push(stub);
-										}
-									}
-								}
-
-								adapter.update(changes);
-							}}
-						/>
-						{completed ? 'show completed (uncheck to reset)' : 'show completed'}
-					</label>
-				</div>
+				<div class="controls" />
 			{/if}
 		</section>
 
 		<section slot="b">
 			<SplitPane type="vertical" min="100px" max="-100px" pos="50%">
 				<section slot="a">
-					<SplitPane type="horizontal" min="20px" max="-20px" pos="200px">
-						<section slot="a">
+					<SplitPane type="horizontal" min="20px" max="300px" pos="200px">
+						<section class="navigator" slot="a">
+							<button
+								class:completed
+								disabled={Object.keys(section.b).length === 0}
+								on:click={(e) => {
+									completed = !completed;
+
+									const target = completed ? b : section.a;
+
+									const changes = [];
+
+									for (const name in target) {
+										const model = models.get(
+											/** @type {import('$lib/types').FileStub} */ (section.a[name])
+										);
+
+										// if model exists, it's a file
+										if (model) {
+											const value = model.getValue();
+											const stub = /** @type {import('$lib/types').FileStub} */ (target[name]);
+
+											if (stub.contents !== value) {
+												model.pushEditOperations(
+													[],
+													[
+														{
+															range: model.getFullModelRange(),
+															text: stub.contents
+														}
+													],
+													() => null
+												);
+
+												changes.push(stub);
+											}
+										}
+									}
+
+									adapter.update(changes);
+								}}
+							>
+								{completed ? 'reset' : 'solve'}
+							</button>
+
 							<div class="filetree">
 								<Folder {...section.chapter.scope} files={Object.values(section.a)} expanded />
 							</div>
@@ -223,7 +233,19 @@
 					</SplitPane>
 				</section>
 
-				<section slot="b">
+				<section class="preview" slot="b">
+					<div class="chrome">
+						<input
+							value={path}
+							readonly
+							on:change={(e) => {
+								// TODO enable URL bar to control iframe
+								const url = new URL(e.target.value, adapter.base);
+								path = url.pathname + url.search + url.hash;
+							}}
+						/>
+					</div>
+
 					{#if started}
 						<iframe title="Output" src={adapter.base} />
 					{/if}
@@ -282,7 +304,7 @@
 		padding: 1rem;
 		margin: 0 0 1em 0;
 		line-height: 1.3;
-		border-radius: 2px;
+		border-radius: 0.5rem;
 	}
 
 	.text :global(pre) :global(code) {
@@ -315,19 +337,69 @@
 		border-top: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
-	iframe {
+	.navigator {
+		background: #f9f9f9;
+		display: flex;
+		flex-direction: column;
+		padding: 1rem;
+		gap: 1rem;
+	}
+
+	.navigator button {
+		background: #ddd;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
 		width: 100%;
-		height: 100%;
-		resize: none;
-		box-sizing: border-box;
-		border: none;
+	}
+
+	.navigator button:not(:disabled) {
+		background: var(--prime);
+		color: white;
+	}
+
+	.navigator button.completed {
+		background: var(--second);
 	}
 
 	.filetree {
+		flex: 1;
+		overflow-y: auto;
+	}
+
+	.preview {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.chrome {
+		width: 100%;
+		height: 4rem;
+		display: flex;
+		padding: 0.4rem;
 		background: #f9f9f9;
-		padding: 1rem;
+	}
+
+	.chrome input {
+		flex: 1;
+		padding: 0.5rem 1rem 0.4rem 1rem;
+		border-radius: 0.5rem;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
+		font-family: inherit;
+		font-size: 1.6rem;
+	}
+
+	/* TODO change this once the input is interactive */
+	.chrome input:focus {
+		outline: none;
+	}
+
+	iframe {
 		width: 100%;
 		height: 100%;
-		overflow-y: auto;
+		flex: 1;
+		resize: none;
+		box-sizing: border-box;
+		border: none;
 	}
 </style>
