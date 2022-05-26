@@ -218,7 +218,13 @@
 							</button>
 
 							<div class="filetree">
-								<Folder {...section.chapter.scope} files={Object.values(section.a)} expanded />
+								<Folder
+									{...section.chapter.scope}
+									files={Object.values(section.a).filter(
+										(stub) => stub.name !== '/static/__client.js'
+									)}
+									expanded
+								/>
 							</div>
 						</section>
 
