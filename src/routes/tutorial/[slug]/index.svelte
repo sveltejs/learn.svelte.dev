@@ -82,8 +82,6 @@
 			if (adapter) {
 				adapter.destroy();
 			}
-
-			clearInterval(interval);
 		};
 	});
 
