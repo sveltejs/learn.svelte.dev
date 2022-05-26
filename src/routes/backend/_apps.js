@@ -30,30 +30,57 @@ const sveltekit = path.resolve(sveltekit_pkg_file, '..', sveltekit_pkg.bin['svel
 const apps = new Map();
 globalThis.__apps = apps;
 
-export async function create() {
+/**
+ * @param {{
+ *   files: import('$lib/types').FileStub[]
+ * }} options
+ */
+export async function create({ files }) {
 	const id = String(Date.now());
 
-	fs.mkdirSync(`.apps/${id}`);
+	for (const file of files) {
+		if (file.type === 'file') {
+			const dest = `.apps/${id}/${file.name}`;
+			let content = file.text ? file.contents : Buffer.from(file.contents, 'base64');
+
+			if (file.name === '/src/app.html' && typeof content === 'string') {
+				// TODO handle case where config.kit.files.template is different
+				content = content.replace('</head>', '<script src="/__client.js"></script></head>');
+			}
+
+			write_if_changed(dest, content);
+		}
+	}
+
+	const port = String(await ports.find(3001));
+
+	apps.set(id, {
+		process: launch(id, port),
+		files: files.map((file) => file.name)
+	});
 
 	await ready;
 
 	return {
 		id,
-		port: await ports.find(3001)
+		port
 	};
 }
 
 /**
  * @param {{
  *   id: string;
- *   port: string;
  *   files: import('$lib/types').FileStub[]
  * }} options
  */
-export function update({ id, port, files }) {
+export function update({ id, files }) {
 	const app = apps.get(id);
 
-	const old_files = new Set(app ? app.files : []);
+	if (!app) {
+		throw new Error(`app ${id} does not exist`);
+	}
+
+	const old_files = new Set(app.files);
 
 	/** @type {string[]} */
 	const new_files = [];
@@ -82,14 +109,7 @@ export function update({ id, port, files }) {
 	// 	}
 	// }
 
-	if (app) {
-		app.files = new_files;
-	} else {
-		apps.set(id, {
-			process: launch(id, port),
-			files: new_files
-		});
-	}
+	app.files = new_files;
 }
 
 /**

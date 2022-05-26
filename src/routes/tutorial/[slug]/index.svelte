@@ -39,7 +39,6 @@
 	let iframe;
 
 	let completed = false;
-	let started = false;
 	let path = '/';
 	let src = '/loading.html';
 
@@ -76,7 +75,7 @@
 
 		// TODO vary adapter based on situation, e.g. webcontainers
 		import('$lib/client/adapters/filesystem/index.js').then(async (module) => {
-			if (!destroyed) adapter = await module.create();
+			if (!destroyed) adapter = await module.create(Object.values(section.a));
 			deferred.fulfil();
 			src = adapter.base;
 		});
@@ -139,33 +138,33 @@
 			)
 		);
 
-		await ready;
-		await adapter.update(stubs);
-
-		while (!started) {
-			try {
-				await fetch(adapter.base, {
-					mode: 'no-cors'
-				});
-				started = true;
-			} catch {
-				await new Promise((f) => setTimeout(f, 250));
-			}
-		}
-
 		completed = false;
+
+		if (adapter) {
+			await adapter.update(stubs);
+		}
 	});
+
+	/** @type {NodeJS.Timeout} */
+	let timeout;
+
+	/** @param {MessageEvent} e */
+	function handle_message(e) {
+		if (!adapter) return;
+		if (e.origin !== adapter.base) return;
+		if (e.data.type !== 'ping') return;
+
+		path = e.data.data.path;
+
+		clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			// we lost contact, refresh the page
+			iframe.src = iframe.src;
+		}, 500);
+	}
 </script>
 
-<svelte:window
-	on:message={(e) => {
-		if (e.origin === adapter.base) {
-			if (e.data.type === 'path') {
-				path = e.data.data.path;
-			}
-		}
-	}}
-/>
+<svelte:window on:message={handle_message} />
 
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="360px">

@@ -1,9 +1,14 @@
 /**
+ * @param {import('$lib/types').Stub[]} stubs
  * @returns {Promise<import('$lib/types').Adapter>}
  */
-export async function create() {
+export async function create(stubs) {
 	const res = await fetch('/backend', {
-		method: 'post'
+		method: 'post',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify(stubs)
 	});
 
 	const { id, port } = await res.json();
@@ -20,14 +25,14 @@ export async function create() {
 	return {
 		base: `http://localhost:${port}`,
 
-		/** @param {TODO} files */
-		async update(files) {
-			await fetch(`/backend/${id}?port=${port}`, {
+		/** @param {import('$lib/types').Stub[]} stubs */
+		async update(stubs) {
+			await fetch(`/backend/${id}`, {
 				method: 'put',
 				headers: {
 					'content-type': 'application/json'
 				},
-				body: JSON.stringify(files)
+				body: JSON.stringify(stubs)
 			});
 		},
 
