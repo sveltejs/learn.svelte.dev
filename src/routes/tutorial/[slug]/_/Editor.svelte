@@ -62,7 +62,6 @@
 	<div bind:this={container} />
 </div>
 
-<!-- <textarea value={file ? file.contents : 'loading...'} on:input /> -->
 <style>
 	div {
 		width: 100%;
