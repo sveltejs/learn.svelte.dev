@@ -11,6 +11,8 @@ specifiers:
   monaco-editor: ^0.33.0
   prettier: ^2.5.1
   prettier-plugin-svelte: ^2.5.0
+  prism-svelte: ^0.5.0
+  prismjs: ^1.28.0
   svelte: ^3.44.0
   svelte-check: ^2.2.6
   typescript: ~4.6.2
@@ -19,6 +21,8 @@ specifiers:
 dependencies:
   marked: 4.0.15
   monaco-editor: 0.33.0
+  prism-svelte: 0.5.0
+  prismjs: 1.28.0
   ws: 8.6.0
 
 devDependencies:
@@ -1061,6 +1065,15 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
+
+  /prism-svelte/0.5.0:
+    resolution: {integrity: sha512-db91Bf3pRGKDPz1lAqLFSJXeW13mulUJxhycysFpfXV5MIK7RgWWK2E5aPAa71s8TCzQUXxF5JOV42/iOs6QkA==}
+    dev: false
+
+  /prismjs/1.28.0:
+    resolution: {integrity: sha512-8aaXdYvl1F7iC7Xm1spqSaY/OJBpYW3v+KJ+F17iYxvdc8sfjW194COK5wVhMZX45tGteiBQgdvD/nhxcRwylw==}
+    engines: {node: '>=6'}
+    dev: false
 
   /process-nextick-args/2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}

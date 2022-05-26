@@ -14,8 +14,10 @@
 	import { afterNavigate } from '$app/navigation';
 	import { setContext, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
-	import Viewer from '$lib/client/viewer/Viewer.svelte';
 	import TableOfContents from './_/TableOfContents.svelte';
+	import SplitPane from '$lib/components/SplitPane.svelte';
+	import Editor from './_/Editor.svelte';
+	import Folder from './_/Folder.svelte';
 	import { monaco } from '$lib/client/monaco/monaco.js';
 
 	/** @type {import('$lib/types').SectionIndex} */
@@ -182,52 +184,72 @@
 	});
 </script>
 
-<div class="grid">
-	<div class="left">
-		<TableOfContents {index} {section} />
+<div class="container">
+	<SplitPane type="horizontal" min="360px" max="50%" pos="360px">
+		<section slot="a">
+			<TableOfContents {index} {section} />
 
-		<div class="text">{@html section.html}</div>
+			<div class="text">{@html section.html}</div>
 
-		{#if Object.keys(section.b).length > 0}
-			<div class="controls">
-				<label>
-					<input
-						type="checkbox"
-						checked={completed}
-						on:change={(e) => {
-							completed = e.currentTarget.checked;
-							const selected_name = $selected.name;
+			{#if Object.keys(section.b).length > 0}
+				<div class="controls">
+					<label>
+						<input
+							type="checkbox"
+							checked={completed}
+							on:change={(e) => {
+								completed = e.currentTarget.checked;
+								const selected_name = $selected.name;
 
-							const data = Object.values(completed ? b : section.a);
+								const data = Object.values(completed ? b : section.a);
 
-							$files = data;
-							$selected =
-								data.find((file) => file.name === selected_name) ||
-								data.find((file) => file.name === section.chapter.focus);
+								$files = data;
+								$selected =
+									data.find((file) => file.name === selected_name) ||
+									data.find((file) => file.name === section.chapter.focus);
 
-							adapter.update(data);
-						}}
-					/>
-					{completed ? 'show completed (uncheck to reset)' : 'show completed'}
-				</label>
-			</div>
-		{/if}
-	</div>
+								adapter.update(data);
+							}}
+						/>
+						{completed ? 'show completed (uncheck to reset)' : 'show completed'}
+					</label>
+				</div>
+			{/if}
+		</section>
 
-	<div class="right">
-		<Viewer />
-	</div>
+		<section slot="b">
+			<SplitPane type="vertical" min="100px" max="-100px" pos="50%">
+				<section slot="a">
+					<SplitPane type="horizontal" min="20px" max="-20px" pos="200px">
+						<section slot="a">
+							<div class="filetree">
+								<Folder {...$current.chapter.scope} files={$files} expanded />
+							</div>
+						</section>
+
+						<section slot="b">
+							<Editor model={$active} />
+						</section>
+					</SplitPane>
+				</section>
+
+				<section slot="b">
+					{#if $started}
+						<iframe title="Output" src={$base} />
+					{/if}
+				</section>
+			</SplitPane>
+		</section>
+	</SplitPane>
 </div>
 
 <style>
-	.grid {
-		display: grid;
-		grid-template-columns: 400px 1fr;
+	.container {
 		height: 100%;
 		max-height: 100%;
 	}
 
-	.left {
+	[slot='a'] {
 		display: flex;
 		flex-direction: column;
 		min-height: 0;
@@ -267,7 +289,7 @@
 	}
 
 	.text :global(pre) {
-		background: rgba(255, 255, 255, 0.1);
+		background: white;
 		padding: 1rem;
 		margin: 0 0 1em 0;
 		line-height: 1.3;
@@ -275,7 +297,7 @@
 	}
 
 	.text :global(pre) :global(code) {
-		color: white;
+		color: var(--code-base);
 	}
 
 	.text :global(pre) :global(code)::before,
@@ -298,5 +320,21 @@
 		display: flex;
 		justify-content: space-between;
 		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	iframe {
+		width: 100%;
+		height: 100%;
+		resize: none;
+		box-sizing: border-box;
+		border: none;
+	}
+
+	.filetree {
+		background: #f9f9f9;
+		padding: 1rem;
+		width: 100%;
+		height: 100%;
+		overflow-y: auto;
 	}
 </style>

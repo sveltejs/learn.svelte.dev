@@ -15,7 +15,11 @@
 	let h = 0;
 
 	onMount(() => {
-		editor = monaco.editor.create(container);
+		editor = monaco.editor.create(container, {
+			minimap: {
+				enabled: false
+			}
+		});
 
 		return () => {
 			editor.dispose();

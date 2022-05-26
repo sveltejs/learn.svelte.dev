@@ -29,7 +29,7 @@
 	}
 </script>
 
-<span class:expanded on:click={toggle}>{name}</span>
+<button class:expanded on:click={toggle}>{name}</button>
 
 {#if expanded}
 	<ul>
@@ -53,13 +53,14 @@
 {/if}
 
 <style>
-	span {
+	button {
+		font-size: 1.6rem;
+		font-family: inherit;
+		color: var(--text);
 		padding: 0 0 0 1.2em;
 		background: url(/tutorial/icons/folder.svg) 0 0.25rem no-repeat;
 		background-size: 1.4rem 1.4rem;
-		font-size: 1.6rem;
 		user-select: none;
-		/* font-weight: bold; */
 		cursor: pointer;
 	}
 

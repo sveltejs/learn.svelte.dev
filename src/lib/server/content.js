@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { marked } from 'marked';
+import { transform } from './markdown.js';
 
 const text_files = new Set([
 	'.svelte',
@@ -106,7 +106,7 @@ export function get_section(slug) {
 					slug: section.slug,
 					prev: section.prev,
 					next: section.next,
-					html: marked(section.markdown), // TODO syntax highlighting
+					html: transform(section.markdown), // TODO syntax highlighting
 					a,
 					b
 				};
