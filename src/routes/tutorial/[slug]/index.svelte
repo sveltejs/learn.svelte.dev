@@ -246,7 +246,7 @@
 	.text {
 		flex: 1 1;
 		overflow-y: auto;
-		padding: 3rem;
+		padding: 3rem 4rem;
 		color: var(--sidebar-text);
 	}
 
@@ -259,17 +259,16 @@
 		color: white;
 		font-size: 2.8rem;
 		font-weight: normal;
-		margin: 2em 0 0 0;
+		margin: 1.5em 0 0.5em 0;
 	}
 
 	.text :global(code) {
-		background: none;
-		color: white;
-	}
-
-	.text :global(code)::before,
-	.text :global(code)::after {
-		content: '`';
+		color: var(--sidebar-text);
+		background: rgba(0, 0, 0, 0.12);
+		padding: 0.2em 0.4em 0.3em;
+		white-space: nowrap;
+		position: relative;
+		top: -0.1em;
 	}
 
 	.text :global(pre) {
@@ -281,7 +280,10 @@
 	}
 
 	.text :global(pre) :global(code) {
+		background: none;
 		color: var(--code-base);
+		padding: 0;
+		top: 0;
 	}
 
 	.text :global(pre) :global(code)::before,
