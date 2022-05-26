@@ -54,12 +54,6 @@
 		selected
 	});
 
-	/** @type {{ fulfil: (value?: any) => void, reject: (error: Error) => void }}*/
-	let deferred;
-	const ready = new Promise((fulfil, reject) => {
-		deferred = { fulfil, reject };
-	});
-
 	/** @type {import('$lib/types').Adapter} */
 	let adapter;
 
@@ -76,7 +70,6 @@
 		// TODO vary adapter based on situation, e.g. webcontainers
 		import('$lib/client/adapters/filesystem/index.js').then(async (module) => {
 			if (!destroyed) adapter = await module.create(Object.values(section.a));
-			deferred.fulfil();
 			src = adapter.base;
 		});
 
