@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
+import * as ports from 'port-authority';
 import { broadcast, ready } from './_ws';
 
 /**
@@ -29,8 +30,6 @@ const sveltekit = path.resolve(sveltekit_pkg_file, '..', sveltekit_pkg.bin['svel
 const apps = new Map();
 globalThis.__apps = apps;
 
-let port = 3001; // TODO something more robust than just incrementing
-
 export async function create() {
 	const id = String(Date.now());
 
@@ -38,7 +37,10 @@ export async function create() {
 
 	await ready;
 
-	return { id, port: port++ };
+	return {
+		id,
+		port: await ports.find(3001)
+	};
 }
 
 /**

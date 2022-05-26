@@ -9,6 +9,7 @@ specifiers:
   '@sveltejs/site-kit': ^2.1.0
   marked: ^4.0.15
   monaco-editor: ^0.33.0
+  port-authority: ^1.1.2
   prettier: ^2.5.1
   prettier-plugin-svelte: ^2.5.0
   prism-svelte: ^0.5.0
@@ -21,6 +22,7 @@ specifiers:
 dependencies:
   marked: 4.0.15
   monaco-editor: 0.33.0
+  port-authority: 1.1.2
   prism-svelte: 0.5.0
   prismjs: 1.28.0
   ws: 8.6.0
@@ -280,7 +282,7 @@ packages:
     dev: true
 
   /code-point-at/1.1.0:
-    resolution: {integrity: sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=}
+    resolution: {integrity: sha512-RpAVKQA5T63xEj6/giIbUEtZwJ4UFIc3ZtvEkiaUERylqe8xb5IvqcgOurZLahv93CLKfxcw5YI+DZcUBRyLXA==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -1049,6 +1051,10 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
     dev: true
+
+  /port-authority/1.1.2:
+    resolution: {integrity: sha512-me2dL+chJVb88zpE228MvA6wIRy1CuXxGTwI5hYe4DnSnXRbtJT+9ggRj+49kgHgs/AKMTKOt/EkTHSvQJmRXA==}
+    dev: false
 
   /prettier-plugin-svelte/2.7.0_kkjbqzpydplecjtkxrgomroeru:
     resolution: {integrity: sha512-fQhhZICprZot2IqEyoiUYLTRdumULGRvw0o4dzl5jt0jfzVWdGqeYW27QTWAeXhoupEZJULmNoH3ueJwUWFLIA==}
