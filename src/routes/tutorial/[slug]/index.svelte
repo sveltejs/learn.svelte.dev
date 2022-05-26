@@ -35,9 +35,13 @@
 	/** @type {import('monaco-editor').editor.ITextModel} */
 	let current_model;
 
+	/** @type {HTMLIFrameElement} */
+	let iframe;
+
 	let completed = false;
 	let started = false;
 	let path = '/';
+	let src = '/loading.html';
 
 	$: b = { ...section.a, ...section.b };
 
@@ -74,6 +78,7 @@
 		import('$lib/client/adapters/filesystem/index.js').then(async (module) => {
 			if (!destroyed) adapter = await module.create();
 			deferred.fulfil();
+			src = adapter.base;
 		});
 
 		document.addEventListener('pagehide', () => {
@@ -246,9 +251,7 @@
 						/>
 					</div>
 
-					{#if started}
-						<iframe title="Output" src={adapter.base} />
-					{/if}
+					<iframe bind:this={iframe} title="Output" {src} />
 				</section>
 			</SplitPane>
 		</section>
