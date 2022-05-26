@@ -1,0 +1,13 @@
+lockfileVersion: 5.4
+
+specifiers:
+  elizabot: ^0.0.3
+
+dependencies:
+  elizabot: 0.0.3
+
+packages:
+
+  /elizabot/0.0.3:
+    resolution: {integrity: sha512-giwweEawiOHLS8eMPNtpLJaYxWZIHxtJcoq0NyvtEqVx2pxZ8XX1AXHHx84hUK3Scl8vk4U4lEatG54nsMZo+Q==}
+    dev: false

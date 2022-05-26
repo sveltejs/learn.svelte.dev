@@ -1,0 +1,13 @@
+{
+	"name": "elizabot",
+	"description": "Adaptation of http://www.masswerk.at/elizabot/ for node.js.",
+	"author": "Tomas Kafka <tk@tomaskafka.com>",
+	"version": "0.0.3",
+	"repository": "https://github.com/tkafka/node-elizabot.git",
+	"main": "elizabot.js",
+	"dependencies": {},
+	"devDependencies": {
+		"eslint": "^7.0.0"
+	},
+	"engine": "node >= 0.6"
+}
