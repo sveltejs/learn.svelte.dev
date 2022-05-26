@@ -32,9 +32,7 @@ export async function create() {
 		},
 
 		async destroy() {
-			await fetch(`/backend/${id}`, {
-				method: 'delete'
-			});
+			navigator.sendBeacon(`/backend/destroy?id=${id}`);
 		}
 	};
 }

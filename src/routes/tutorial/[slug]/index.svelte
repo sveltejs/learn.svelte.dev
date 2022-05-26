@@ -75,6 +75,12 @@
 			deferred.fulfil();
 		});
 
+		document.addEventListener('visibilitychange', () => {
+			if (document.visibilityState === 'hidden') {
+				adapter.destroy();
+			}
+		});
+
 		return () => {
 			destroyed = true;
 			if (adapter) {
