@@ -235,7 +235,7 @@
 							readonly
 							on:change={(e) => {
 								// TODO enable URL bar to control iframe
-								const url = new URL(e.target.value, adapter.base);
+								const url = new URL(e.currentTarget.value, adapter.base);
 								path = url.pathname + url.search + url.hash;
 							}}
 						/>
