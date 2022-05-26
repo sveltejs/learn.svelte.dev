@@ -96,7 +96,6 @@
 		// TODO vary adapter based on situation, e.g. webcontainers
 		import('$lib/client/adapters/filesystem/index.js').then(async (module) => {
 			if (!destroyed) adapter = await module.create();
-			base.set(adapter.base);
 			deferred.fulfil();
 		});
 
@@ -129,9 +128,8 @@
 				);
 
 				model.onDidChangeContent(() => {
-					const value = model.getValue();
-					stub.contents = value;
-					adapter.update([stub]);
+					const contents = model.getValue();
+					adapter.update([{ ...stub, contents }]);
 				});
 
 				models.set(stub, model);
@@ -177,15 +175,39 @@
 							checked={completed}
 							on:change={(e) => {
 								completed = e.currentTarget.checked;
-								const selected_name = $selected.name;
 
-								const data = Object.values(completed ? b : section.a);
+								const target = completed ? b : section.a;
 
-								$selected =
-									data.find((file) => file.name === selected_name) ||
-									data.find((file) => file.name === section.chapter.focus);
+								const changes = [];
 
-								adapter.update(data);
+								for (const name in target) {
+									const model = models.get(
+										/** @type {import('$lib/types').FileStub} */ (section.a[name])
+									);
+
+									// if model exists, it's a file
+									if (model) {
+										const value = model.getValue();
+										const stub = /** @type {import('$lib/types').FileStub} */ (target[name]);
+
+										if (stub.contents !== value) {
+											model.pushEditOperations(
+												[],
+												[
+													{
+														range: model.getFullModelRange(),
+														text: stub.contents
+													}
+												],
+												() => null
+											);
+
+											changes.push(stub);
+										}
+									}
+								}
+
+								adapter.update(changes);
 							}}
 						/>
 						{completed ? 'show completed (uncheck to reset)' : 'show completed'}
