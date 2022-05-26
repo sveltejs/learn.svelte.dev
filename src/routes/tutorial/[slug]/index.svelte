@@ -114,6 +114,8 @@
 					new monaco.Uri().with({ path: stub.name })
 				);
 
+				model.updateOptions({ tabSize: 2 });
+
 				model.onDidChangeContent(() => {
 					const contents = model.getValue();
 					adapter.update([{ ...stub, contents }]);
