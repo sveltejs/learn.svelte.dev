@@ -47,31 +47,7 @@
 			current_model = /** @type {import('monaco-editor').editor.ITextModel} */ (models.get(file));
 		},
 
-		selected,
-
-		/** @param {import('$lib/types').Stub[]} data */
-		async update(data) {
-			await ready;
-			await adapter.update(data);
-
-			// check if we're in the completed state yet
-			completed = false;
-
-			const expected = new Set(Object.keys(b));
-
-			for (const file of Object.values(section.a)) {
-				expected.delete(file.name);
-
-				if (file.type === 'file') {
-					if (b[file.name]?.contents !== file.contents) {
-						completed = false;
-						return;
-					}
-				}
-			}
-
-			completed = expected.size === 0;
-		}
+		selected
 	});
 
 	/** @type {{ fulfil: (value?: any) => void, reject: (error: Error) => void }}*/
@@ -115,10 +91,16 @@
 		});
 		models.clear();
 
+		/** @type {Record<string, boolean>}*/
+		const complete_states = {};
+
 		const stubs = Object.values(section.a);
 
 		stubs.forEach((stub) => {
 			if (stub.type === 'file') {
+				const target = /** @type {import('$lib/types').FileStub} */ (b[stub.name]);
+				complete_states[stub.name] = target.contents === stub.contents;
+
 				const type = /** @type {string} */ (stub.basename.split('.').pop());
 
 				const model = monaco.editor.createModel(
@@ -130,6 +112,9 @@
 				model.onDidChangeContent(() => {
 					const contents = model.getValue();
 					adapter.update([{ ...stub, contents }]);
+
+					complete_states[stub.name] = contents === target.contents;
+					completed = Object.values(complete_states).every((value) => value);
 				});
 
 				models.set(stub, model);
