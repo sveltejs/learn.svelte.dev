@@ -26,7 +26,7 @@
 	"dependencies": {
 		"marked": "^4.0.15",
 		"monaco-editor": "^0.33.0",
-		"port-authority": "^1.2.0",
+		"port-authority": "^2.0.1",
 		"prism-svelte": "^0.5.0",
 		"prismjs": "^1.28.0",
 		"ws": "^8.6.0"

@@ -6,7 +6,7 @@ specifiers:
   '@sveltejs/site-kit': ^2.1.0
   marked: ^4.0.15
   monaco-editor: ^0.33.0
-  port-authority: ^1.2.0
+  port-authority: ^2.0.1
   prettier: ^2.5.1
   prettier-plugin-svelte: ^2.5.0
   prism-svelte: ^0.5.0
@@ -19,7 +19,7 @@ specifiers:
 dependencies:
   marked: 4.0.15
   monaco-editor: 0.33.0
-  port-authority: 1.2.0
+  port-authority: 2.0.1
   prism-svelte: 0.5.0
   prismjs: 1.28.0
   ws: 8.6.0
@@ -1049,8 +1049,8 @@ packages:
     engines: {node: '>=8.6'}
     dev: true
 
-  /port-authority/1.2.0:
-    resolution: {integrity: sha512-izg9jj10CEbNWBX6B1IJtzs0IcMEIo+2to2IIvq0vvcqLnOi0Fz36LSL4mqp/pJsPDFB5jyrxUEEHRctmPu9Pg==}
+  /port-authority/2.0.1:
+    resolution: {integrity: sha512-Hz/WvSNt5+7x+Rq1Cn6DetJOZxKtLDehJ1mLCYge6ju4QvSF/PHvRgy94e1SKJVI96AJTcqEdNwkkaAFad+TXQ==}
     dev: false
 
   /prettier-plugin-svelte/2.7.0_kkjbqzpydplecjtkxrgomroeru:

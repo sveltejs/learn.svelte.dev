@@ -59,7 +59,7 @@ export async function create({ files }) {
 		files: files.map((file) => file.name)
 	});
 
-	await ports.wait(port);
+	await ports.waitUntilBusy(port);
 
 	await ready;
 
