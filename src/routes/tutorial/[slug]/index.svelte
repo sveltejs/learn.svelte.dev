@@ -154,9 +154,7 @@
 	on:message={(e) => {
 		if (e.origin === adapter.base) {
 			if (e.data.type === 'path') {
-				console.log(e.data);
 				path = e.data.data.path;
-				console.log({ path });
 			}
 		}
 	}}
