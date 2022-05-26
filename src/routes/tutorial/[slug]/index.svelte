@@ -332,7 +332,8 @@
 
 	.text :global(blockquote) {
 		background: rgba(255, 255, 255, 0.1);
-		border-left: 2px solid white;
+		margin: 2rem -4rem;
+		padding: 2rem 4rem;
 		color: white;
 	}
 
