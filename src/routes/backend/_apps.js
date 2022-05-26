@@ -52,12 +52,14 @@ export async function create({ files }) {
 		}
 	}
 
-	const port = String(await ports.find(3001));
+	const port = await ports.find(3001);
 
 	apps.set(id, {
-		process: launch(id, port),
+		process: launch(id, String(port)),
 		files: files.map((file) => file.name)
 	});
+
+	await ports.wait(port);
 
 	await ready;
 

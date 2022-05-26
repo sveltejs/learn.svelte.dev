@@ -1,15 +1,12 @@
 lockfileVersion: 5.4
 
-overrides:
-  '@sveltejs/kit': ../kit/packages/kit
-
 specifiers:
   '@sveltejs/adapter-auto': next
   '@sveltejs/kit': ../kit/packages/kit
   '@sveltejs/site-kit': ^2.1.0
   marked: ^4.0.15
   monaco-editor: ^0.33.0
-  port-authority: ^1.1.2
+  port-authority: ^1.2.0
   prettier: ^2.5.1
   prettier-plugin-svelte: ^2.5.0
   prism-svelte: ^0.5.0
@@ -22,7 +19,7 @@ specifiers:
 dependencies:
   marked: 4.0.15
   monaco-editor: 0.33.0
-  port-authority: 1.1.2
+  port-authority: 1.2.0
   prism-svelte: 0.5.0
   prismjs: 1.28.0
   ws: 8.6.0
@@ -1052,8 +1049,8 @@ packages:
     engines: {node: '>=8.6'}
     dev: true
 
-  /port-authority/1.1.2:
-    resolution: {integrity: sha512-me2dL+chJVb88zpE228MvA6wIRy1CuXxGTwI5hYe4DnSnXRbtJT+9ggRj+49kgHgs/AKMTKOt/EkTHSvQJmRXA==}
+  /port-authority/1.2.0:
+    resolution: {integrity: sha512-izg9jj10CEbNWBX6B1IJtzs0IcMEIo+2to2IIvq0vvcqLnOi0Fz36LSL4mqp/pJsPDFB5jyrxUEEHRctmPu9Pg==}
     dev: false
 
   /prettier-plugin-svelte/2.7.0_kkjbqzpydplecjtkxrgomroeru:
