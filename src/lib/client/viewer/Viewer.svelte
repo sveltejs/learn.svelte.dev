@@ -5,17 +5,12 @@
 	import Folder from './FileTree/Folder.svelte';
 
 	const { files, current, active, started, base, update } = getContext('filetree');
-
-	/** @type {import('svelte').SvelteComponent} */
-	let editor;
-
-	const resize = () => editor.resize();
 </script>
 
 <div class="viewer">
-	<SplitPane type="vertical" min="100px" max="-100px" pos="50%" on:change={resize}>
+	<SplitPane type="vertical" min="100px" max="-100px" pos="50%">
 		<section slot="a">
-			<SplitPane type="horizontal" min="20px" max="-20px" pos="200px" on:change={resize}>
+			<SplitPane type="horizontal" min="20px" max="-20px" pos="200px">
 				<section slot="a">
 					<div class="filetree">
 						<Folder {...$current.chapter.scope} files={$files} expanded />
@@ -23,7 +18,7 @@
 				</section>
 
 				<section slot="b">
-					<Editor bind:this={editor} model={$active} />
+					<Editor model={$active} />
 				</section>
 			</SplitPane>
 		</section>

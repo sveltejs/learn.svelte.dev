@@ -11,6 +11,9 @@
 	/** @type {import('monaco-editor').editor.IStandaloneCodeEditor}*/
 	let editor;
 
+	let w = 0;
+	let h = 0;
+
 	onMount(() => {
 		editor = monaco.editor.create(container);
 
@@ -19,27 +22,24 @@
 		};
 	});
 
-	export function resize() {
-		if (editor) {
-			editor.layout();
-		}
-	}
-
 	$: if (editor) {
 		editor.setModel(model);
 	}
+
+	$: if ((editor && w) || h) {
+		editor.layout();
+	}
 </script>
 
-<div bind:this={container} />
+<div bind:clientWidth={w} bind:clientHeight={h}>
+	<div bind:this={container} />
+</div>
 
 <!-- <textarea value={file ? file.contents : 'loading...'} on:input /> -->
 <style>
 	div {
 		width: 100%;
 		height: 100%;
-		resize: none;
-		border: none;
-		box-sizing: border-box;
 		tab-size: 2;
 	}
 </style>
