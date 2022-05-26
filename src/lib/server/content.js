@@ -106,6 +106,7 @@ export function get_section(slug) {
 					slug: section.slug,
 					prev: section.prev,
 					next: section.next,
+					dir: section.dir,
 					html: transform(section.markdown), // TODO syntax highlighting
 					a,
 					b

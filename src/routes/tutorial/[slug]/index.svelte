@@ -19,6 +19,7 @@
 	import Editor from './_/Editor.svelte';
 	import Folder from './_/Folder.svelte';
 	import { monaco } from '$lib/client/monaco/monaco.js';
+	import { Icon } from '@sveltejs/site-kit';
 
 	/** @type {import('$lib/types').SectionIndex} */
 	export let index;
@@ -169,9 +170,11 @@
 
 			<div class="text">{@html section.html}</div>
 
-			{#if Object.keys(section.b).length > 0}
-				<div class="controls" />
-			{/if}
+			<footer>
+				<a class="edit" href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{section.dir}">
+					<Icon size={16} name="edit" /> Edit this page
+				</a>
+			</footer>
 		</section>
 
 		<section slot="b">
@@ -337,11 +340,18 @@
 		list-style-position: inside;
 	}
 
-	.controls {
-		padding: 1rem 3rem;
+	.content footer {
+		padding: 1rem 4rem;
 		display: flex;
 		justify-content: space-between;
 		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.content footer a {
+		color: var(--sidebar-text);
+		font-size: 1.4rem;
+		display: flex;
+		gap: 0.5rem;
 	}
 
 	.navigator {

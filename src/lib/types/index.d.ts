@@ -37,6 +37,7 @@ export interface Section {
 	prev: string | null;
 	next: string | null;
 	html: string;
+	dir: string;
 	a: Record<string, Stub>;
 	b: Record<string, Stub>;
 }
