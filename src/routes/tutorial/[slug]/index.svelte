@@ -160,6 +160,8 @@
 			iframe.src = iframe.src;
 		}, 500);
 	}
+
+	const hidden = new Set(['__client.js', 'node_modules']);
 </script>
 
 <svelte:window on:message={handle_message} />
@@ -232,9 +234,7 @@
 							<div class="filetree">
 								<Folder
 									{...section.chapter.scope}
-									files={Object.values(section.a).filter(
-										(stub) => stub.name !== '/static/__client.js'
-									)}
+									files={Object.values(section.a).filter((stub) => !hidden.has(stub.basename))}
 									expanded
 								/>
 							</div>
