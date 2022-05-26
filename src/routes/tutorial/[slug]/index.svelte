@@ -34,13 +34,13 @@
 	const current = writable(section);
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
-	const files = writable([]);
+	const files = writable(Object.values(section.a));
 
 	/** @type {import('svelte/store').Writable<import('monaco-editor').editor.ITextModel>} */
 	const active = writable();
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub | null>} */
-	const selected = writable(null);
+	const selected = writable(section.a[section.chapter.focus]);
 
 	const started = writable(false);
 
@@ -186,7 +186,7 @@
 
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="360px">
-		<section slot="a">
+		<section class="content" slot="a">
 			<TableOfContents {index} {section} />
 
 			<div class="text">{@html section.html}</div>
@@ -249,7 +249,7 @@
 		max-height: 100%;
 	}
 
-	[slot='a'] {
+	.content {
 		display: flex;
 		flex-direction: column;
 		min-height: 0;
