@@ -157,7 +157,8 @@
 		clearTimeout(timeout);
 		timeout = setTimeout(() => {
 			// we lost contact, refresh the page
-			iframe.src = iframe.src;
+			iframe.src = '/loading.html';
+			iframe.src = adapter.base + path;
 		}, 500);
 	}
 
