@@ -42,7 +42,7 @@ export function get_index() {
 				const dir = `content/tutorial/${part}/${chapter}/${section}`;
 				if (!fs.statSync(dir).isDirectory()) continue;
 
-				const text = fs.readFileSync(`${dir}/text.md`, 'utf-8');
+				const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
 				const { frontmatter, markdown } = extract_frontmatter(text, dir);
 
 				const slug = section.slice(3);

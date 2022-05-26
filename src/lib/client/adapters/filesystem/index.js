@@ -22,8 +22,6 @@ export async function create(stubs) {
 		}
 	});
 
-	console.log('?????');
-
 	return {
 		base: `http://localhost:${port}`,
 
