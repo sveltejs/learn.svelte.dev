@@ -18,6 +18,7 @@
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './_/Editor.svelte';
 	import Folder from './_/Folder.svelte';
+	import refresh from './_/refresh.svg';
 	import { monaco } from '$lib/client/monaco/monaco.js';
 	import { Icon } from '@sveltejs/site-kit';
 
@@ -247,6 +248,16 @@
 
 				<section class="preview" slot="b">
 					<div class="chrome">
+						<button
+							on:click={() => {
+								iframe.src = '/loading.html';
+								iframe.src = adapter.base + path;
+							}}
+							aria-label="reload"
+						>
+							<img src={refresh} alt="Reload icon" />
+						</button>
+
 						<input
 							value={path}
 							readonly
@@ -395,6 +406,22 @@
 		display: flex;
 		padding: 0.4rem;
 		background: #f9f9f9;
+	}
+
+	.chrome button {
+		padding: 0.5rem 1rem;
+	}
+
+	.chrome button img {
+		height: 100%;
+		width: auto;
+		transition: 0.2s ease-out;
+		transform: none;
+	}
+
+	.chrome button:active img {
+		transform: rotate(-180deg);
+		transition: none;
 	}
 
 	.chrome input {
