@@ -39,6 +39,7 @@
 	let iframe;
 
 	let completed = false;
+	let completing = false;
 	let path = '/';
 	let src = '/loading.html';
 
@@ -113,7 +114,10 @@
 
 				model.onDidChangeContent(() => {
 					const contents = model.getValue();
-					adapter.update([{ ...stub, contents }]);
+
+					if (!completing) {
+						adapter.update([{ ...stub, contents }]);
+					}
 
 					complete_states[stub.name] = contents === target.contents;
 					completed = Object.values(complete_states).every((value) => value);
@@ -132,7 +136,8 @@
 		completed = false;
 
 		if (adapter) {
-			await adapter.update(stubs);
+			await adapter.reset(stubs);
+			if (path !== '/') iframe.src = adapter.base;
 		}
 	});
 
@@ -178,6 +183,8 @@
 								class:completed
 								disabled={Object.keys(section.b).length === 0}
 								on:click={(e) => {
+									completing = true;
+
 									completed = !completed;
 
 									const target = completed ? b : section.a;
@@ -212,6 +219,7 @@
 									}
 
 									adapter.update(changes);
+									completing = false;
 								}}
 							>
 								{completed ? 'reset' : 'solve'}

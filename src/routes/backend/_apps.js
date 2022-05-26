@@ -81,6 +81,41 @@ export async function create({ files }) {
  *   files: import('$lib/types').FileStub[]
  * }} options
  */
+export function clear({ id, files }) {
+	const app = apps.get(id);
+
+	if (!app) {
+		throw new Error(`app ${id} does not exist`);
+	}
+
+	const dir = `.apps/${id}`;
+	const old_filenames = new Set(app.filenames);
+
+	/** @type {string[]} */
+	const filenames = [];
+
+	for (const file of files) {
+		if (file.type === 'file') {
+			filenames.push(file.name);
+			old_filenames.delete(file.name);
+		}
+	}
+
+	for (const file of old_filenames) {
+		if (fs.existsSync(dir + file)) {
+			fs.unlinkSync(dir + file);
+		}
+	}
+
+	app.filenames = filenames;
+}
+
+/**
+ * @param {{
+ *   id: string;
+ *   files: import('$lib/types').FileStub[]
+ * }} options
+ */
 export function update({ id, files }) {
 	const app = apps.get(id);
 
@@ -89,16 +124,9 @@ export function update({ id, files }) {
 	}
 
 	const dir = `.apps/${id}`;
-	const old_files = new Set(app.filenames);
-
-	/** @type {string[]} */
-	const new_files = [];
 
 	for (const file of files) {
 		if (file.type === 'file') {
-			new_files.push(file.name);
-			old_files.delete(file.name);
-
 			const dest = `${dir}/${file.name}`;
 			let content = file.text ? file.contents : Buffer.from(file.contents, 'base64');
 
@@ -110,15 +138,6 @@ export function update({ id, files }) {
 			write_if_changed(dest, content);
 		}
 	}
-
-	// TODO this is buggy
-	for (const file of old_files) {
-		if (fs.existsSync(dir + file)) {
-			fs.unlinkSync(dir + file);
-		}
-	}
-
-	app.filenames = new_files;
 }
 
 /**

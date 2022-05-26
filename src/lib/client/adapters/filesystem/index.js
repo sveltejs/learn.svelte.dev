@@ -22,8 +22,21 @@ export async function create(stubs) {
 		}
 	});
 
+	console.log('?????');
+
 	return {
 		base: `http://localhost:${port}`,
+
+		/** @param {import('$lib/types').Stub[]} stubs */
+		async reset(stubs) {
+			await fetch(`/backend/${id}?reset`, {
+				method: 'put',
+				headers: {
+					'content-type': 'application/json'
+				},
+				body: JSON.stringify(stubs)
+			});
+		},
 
 		/** @param {import('$lib/types').Stub[]} stubs */
 		async update(stubs) {
