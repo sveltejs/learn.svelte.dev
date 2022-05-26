@@ -26,58 +26,40 @@
 	/** @type {import('$lib/types').Section} */
 	export let section;
 
-	let completed = false;
-
-	$: b = { ...section.a, ...section.b };
-
-	/** @type {import('svelte/store').Writable<import('$lib/types').Section>}*/
-	const current = writable(section);
-
-	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
-	const files = writable(Object.values(section.a));
-
-	/** @type {import('svelte/store').Writable<import('monaco-editor').editor.ITextModel>} */
-	const active = writable();
-
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub | null>} */
 	const selected = writable(section.a[section.chapter.focus]);
 
-	const started = writable(false);
-
-	const base = writable('');
-
 	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
 	const models = new Map();
+
+	/** @type {import('monaco-editor').editor.ITextModel} */
+	let current_model;
+
+	let completed = false;
+	let started = false;
+
+	$: b = { ...section.a, ...section.b };
 
 	const { select } = setContext('filetree', {
 		/** @param {import('$lib/types').FileStub} file */
 		select: (file) => {
 			$selected = file;
-			$active = /** @type {import('monaco-editor').editor.ITextModel} */ (models.get(file));
+			current_model = /** @type {import('monaco-editor').editor.ITextModel} */ (models.get(file));
 		},
 
-		current,
-
-		files,
-
-		active,
-
 		selected,
-
-		started,
-
-		base,
 
 		/** @param {import('$lib/types').Stub[]} data */
 		async update(data) {
 			await ready;
 			await adapter.update(data);
 
+			// check if we're in the completed state yet
 			completed = false;
 
 			const expected = new Set(Object.keys(b));
 
-			for (const file of $files) {
+			for (const file of Object.values(section.a)) {
 				expected.delete(file.name);
 
 				if (file.type === 'file') {
@@ -129,14 +111,12 @@
 	});
 
 	afterNavigate(async () => {
-		const stubs = Object.values(section.a);
-
-		files.set(stubs);
-
 		models.forEach((model) => {
 			model.dispose();
 		});
 		models.clear();
+
+		const stubs = Object.values(section.a);
 
 		stubs.forEach((stub) => {
 			if (stub.type === 'file') {
@@ -164,17 +144,15 @@
 			)
 		);
 
-		current.set(section);
-
 		await ready;
 		await adapter.update(stubs);
 
-		while (!$started) {
+		while (!started) {
 			try {
 				await fetch(adapter.base, {
 					mode: 'no-cors'
 				});
-				$started = true;
+				started = true;
 			} catch {
 				await new Promise((f) => setTimeout(f, 250));
 			}
@@ -203,7 +181,6 @@
 
 								const data = Object.values(completed ? b : section.a);
 
-								$files = data;
 								$selected =
 									data.find((file) => file.name === selected_name) ||
 									data.find((file) => file.name === section.chapter.focus);
@@ -223,19 +200,19 @@
 					<SplitPane type="horizontal" min="20px" max="-20px" pos="200px">
 						<section slot="a">
 							<div class="filetree">
-								<Folder {...$current.chapter.scope} files={$files} expanded />
+								<Folder {...section.chapter.scope} files={Object.values(section.a)} expanded />
 							</div>
 						</section>
 
 						<section slot="b">
-							<Editor model={$active} />
+							<Editor model={current_model} />
 						</section>
 					</SplitPane>
 				</section>
 
 				<section slot="b">
-					{#if $started}
-						<iframe title="Output" src={$base} />
+					{#if started}
+						<iframe title="Output" src={adapter.base} />
 					{/if}
 				</section>
 			</SplitPane>
