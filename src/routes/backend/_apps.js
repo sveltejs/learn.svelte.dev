@@ -8,13 +8,14 @@ import { broadcast, ready } from './_ws';
 /**
  * @typedef {{
  *   process: import('child_process').ChildProcess,
- *   files: string[]
+ *   filenames: string[]
  * }} App */
 
 fs.rmSync('.apps', { recursive: true, force: true });
 fs.mkdirSync('.apps', { recursive: true });
 
 // poor man's HMR, pending https://github.com/vitejs/vite/issues/7887
+// @ts-expect-error
 if (globalThis.__apps) {
 	globalThis.__apps.forEach((app) => {
 		app.process.kill();
@@ -38,8 +39,13 @@ globalThis.__apps = apps;
 export async function create({ files }) {
 	const id = String(Date.now());
 
+	/** @type {string[]} */
+	const filenames = [];
+
 	for (const file of files) {
 		if (file.type === 'file') {
+			filenames.push(file.name);
+
 			const dest = `.apps/${id}/${file.name}`;
 			let content = file.text ? file.contents : Buffer.from(file.contents, 'base64');
 
@@ -56,7 +62,7 @@ export async function create({ files }) {
 
 	apps.set(id, {
 		process: launch(id, String(port)),
-		files: files.map((file) => file.name)
+		filenames
 	});
 
 	await ports.waitUntilBusy(port);
@@ -82,7 +88,8 @@ export function update({ id, files }) {
 		throw new Error(`app ${id} does not exist`);
 	}
 
-	const old_files = new Set(app.files);
+	const dir = `.apps/${id}`;
+	const old_files = new Set(app.filenames);
 
 	/** @type {string[]} */
 	const new_files = [];
@@ -92,7 +99,7 @@ export function update({ id, files }) {
 			new_files.push(file.name);
 			old_files.delete(file.name);
 
-			const dest = `.apps/${id}/${file.name}`;
+			const dest = `${dir}/${file.name}`;
 			let content = file.text ? file.contents : Buffer.from(file.contents, 'base64');
 
 			if (file.name === '/src/app.html' && typeof content === 'string') {
@@ -105,13 +112,13 @@ export function update({ id, files }) {
 	}
 
 	// TODO this is buggy
-	// for (const file of old_files) {
-	// 	if (fs.existsSync(`${dir}/${file}`)) {
-	// 		fs.unlinkSync(`${dir}/${file}`);
-	// 	}
-	// }
+	for (const file of old_files) {
+		if (fs.existsSync(dir + file)) {
+			fs.unlinkSync(dir + file);
+		}
+	}
 
-	app.files = new_files;
+	app.filenames = new_files;
 }
 
 /**
