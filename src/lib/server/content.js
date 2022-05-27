@@ -28,14 +28,20 @@ export function get_index() {
 	for (const part of fs.readdirSync('content/tutorial')) {
 		if (!/^\d{2}-/.test(part)) continue;
 
-		const part_meta = json(`content/tutorial/${part}/meta.json`);
+		const part_meta = {
+			...json(`content/tutorial/${part}/meta.json`),
+			slug: part
+		};
 
 		const chapters = [];
 
 		for (const chapter of fs.readdirSync(`content/tutorial/${part}`)) {
 			if (!/^\d{2}-/.test(chapter)) continue;
 
-			const group_meta = json(`content/tutorial/${part}/${chapter}/meta.json`);
+			const chapter_meta = {
+				...json(`content/tutorial/${part}/${chapter}/meta.json`),
+				slug: chapter
+			};
 
 			const sections = [];
 
@@ -66,7 +72,7 @@ export function get_index() {
 			chapters.push({
 				meta: {
 					...part_meta,
-					...group_meta
+					...chapter_meta
 				},
 				sections
 			});
@@ -104,8 +110,16 @@ export function get_section(slug) {
 				const b = walk(`${section.dir}/app-b`);
 
 				return {
-					part: part.meta,
-					chapter: chapter.meta,
+					part: {
+						slug: part.meta.slug,
+						title: part.meta.title
+					},
+					chapter: {
+						slug: chapter.meta.slug,
+						title: chapter.meta.title
+					},
+					scope: chapter.meta.scope ?? part.meta.scope,
+					focus: chapter.meta.focus ?? part.meta.focus,
 					title: section.title,
 					slug: section.slug,
 					prev: section.prev,

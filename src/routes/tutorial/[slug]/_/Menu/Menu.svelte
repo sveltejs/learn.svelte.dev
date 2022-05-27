@@ -1,6 +1,9 @@
 <script>
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { slide } from 'svelte/transition';
+	import arrow from './arrow.svg';
+	import expanded from './expanded.svg';
 
 	import { Icon } from '@sveltejs/site-kit';
 
@@ -11,11 +14,6 @@
 	export let current;
 
 	let open = false;
-
-	let expanded = {
-		part: index[0],
-		chapter: index[0].chapters[0]
-	};
 
 	afterNavigate(() => {
 		// open = false;
@@ -32,24 +30,33 @@
 	<div class="sections">
 		<ul>
 			{#each index as part, i}
-				<li>
-					<a href="/tutorial/{part.chapters[0].sections[0].slug}">{part.title}</a>
+				<li class="part">
+					<a href="/tutorial/{part.chapters[0].sections[0].slug}" data-label={i + 1}>
+						{part.title}
+					</a>
 
 					{#if part.slug === current.part.slug}
-						<ul>
-							{#each part.chapters as chapter}
-								<li>
-									<a href="/tutorial/{chapter.sections[0].slug}">{chapter.title}</a>
+						<ul class="chapter" transition:slide|local={{ duration: 200 }}>
+							{#each part.chapters as chapter, i}
+								<li class="chapter" class:expanded={chapter.slug === current.chapter.slug}>
+									<img src={arrow} alt="Arrow icon" />
+									<a
+										href="/tutorial/{chapter.sections[0].slug}"
+										data-label={String.fromCharCode(i + 97)}>{chapter.title}</a
+									>
 
 									{#if chapter.slug === current.chapter.slug}
-										<ul>
+										<ul transition:slide|local={{ duration: 200 }}>
 											{#each chapter.sections as section}
 												<li
+													class="section"
 													aria-current={$page.url.pathname === `/tutorial/${section.slug}`
 														? 'page'
 														: undefined}
 												>
-													<a href="/tutorial/{section.slug}">{section.title}</a>
+													<a href="/tutorial/{section.slug}" on:click={() => (open = false)}>
+														{section.title}
+													</a>
 												</li>
 											{/each}
 										</ul>
@@ -139,18 +146,88 @@
 	}
 
 	.sections {
-		padding: 1rem;
+		padding: 2rem 0;
 		flex: 1;
 		overflow: auto;
 	}
 
 	ul {
+		position: relative;
 		list-style: none;
-		padding: 0 0 0 1rem;
+		padding: 0 0 0 2rem;
 		margin: 0;
+	}
+
+	ul.chapter {
+		padding: 0 0 0 3rem;
+	}
+
+	li {
+		position: relative;
 	}
 
 	li[aria-current='page'] {
 		font-weight: bold;
+	}
+
+	li img {
+		position: absolute;
+		left: -2.5rem;
+		top: 0.3rem;
+		width: 2rem;
+		height: 2rem;
+		transition: transform 0.2s;
+	}
+
+	li.expanded img {
+		transform: rotate(90deg);
+	}
+
+	li a::before,
+	li a::after {
+		position: absolute;
+	}
+
+	.section {
+		--dot-size: 1.2rem;
+		--color: hsl(240, 8%, 95%);
+	}
+
+	.section > a::before,
+	.section > a::after {
+		content: '';
+		top: calc(1.3rem - 0.5 * var(--dot-size));
+		right: calc(0.5 * (var(--menu-width) - var(--dot-size)));
+		width: var(--dot-size);
+		height: var(--dot-size);
+		border-radius: 50%;
+		border: 1px solid var(--color);
+		box-sizing: border-box;
+	}
+
+	.section a::after {
+		transform: scale(0);
+		transition: transform 0.2s;
+		background: var(--color);
+	}
+
+	.part > a::after,
+	.chapter > a::after {
+		content: attr(data-label);
+		width: var(--menu-width);
+		text-align: center;
+		top: 0.2rem;
+		right: 0;
+		color: hsl(240, 8%, 64%);
+	}
+
+	.section[aria-current='page'] > a::after {
+		transform: none;
+	}
+
+	a {
+		color: white;
+		padding: 0.2rem 0;
+		display: block;
 	}
 </style>

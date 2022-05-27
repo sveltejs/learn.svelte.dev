@@ -131,7 +131,7 @@
 
 		select(
 			/** @type {import('$lib/types').FileStub} */ (
-				stubs.find((stub) => stub.name === section.chapter.focus)
+				stubs.find((stub) => stub.name === section.focus)
 			)
 		);
 
@@ -247,7 +247,7 @@
 
 							<div class="filetree">
 								<Folder
-									{...section.chapter.scope}
+									{...section.scope}
 									files={Object.values(section.a).filter((stub) => !hidden.has(stub.basename))}
 									expanded
 								/>
