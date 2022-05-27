@@ -24,14 +24,20 @@ export interface Adapter {
 }
 
 export interface Section {
-	chapter: {
+	part: {
+		slug: string;
 		title: string;
-		scope: {
-			prefix: string;
-			depth: number;
-			name: string;
-		};
 	};
+	chapter: {
+		slug: string;
+		title: string;
+	};
+	scope: {
+		prefix: string;
+		depth: number;
+		name: string;
+	};
+	focus: string;
 	title: string;
 	slug: string;
 	prev: { slug: string; title: string } | null;
@@ -58,11 +64,13 @@ export interface SectionStub {
 	next: { slug: string; title: string } | null;
 }
 
-export type SectionIndex = Array<{
+export interface ChapterStub {
+	title: string;
+	sections: SectionStub[];
+}
+
+export interface PartStub {
 	slug: string;
 	title: string;
-	chapters: Array<{
-		title: string;
-		sections: SectionStub[];
-	}>;
-}>;
+	chapters: ChapterStub[];
+}

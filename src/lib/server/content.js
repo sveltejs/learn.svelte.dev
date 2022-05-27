@@ -87,7 +87,10 @@ export function get_index() {
  * @returns {import('$lib/types').Section | undefined}
  */
 export function get_section(slug) {
-	for (const part of get_index()) {
+	const index = get_index();
+	for (let i = 0; i < index.length; i += 1) {
+		const part = index[i];
+
 		for (const chapter of part.chapters) {
 			for (const section of chapter.sections) {
 				if (section.slug !== slug) continue;
@@ -101,6 +104,7 @@ export function get_section(slug) {
 				const b = walk(`${section.dir}/app-b`);
 
 				return {
+					part: part.meta,
 					chapter: chapter.meta,
 					title: section.title,
 					slug: section.slug,

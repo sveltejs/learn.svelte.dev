@@ -1,5 +1,5 @@
 <script context="module">
-	/** @type {import('./index').Load} */
+	/** @type {import('./__types/index').Load} */
 	export async function load({ stuff }) {
 		return {
 			props: {
@@ -10,7 +10,7 @@
 </script>
 
 <script>
-	/** @type {import('$lib/types').SectionIndex} */
+	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
 </script>
 

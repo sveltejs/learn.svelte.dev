@@ -7,6 +7,6 @@ declare namespace App {
 	// interface Platform {}
 	// interface Session {}
 	interface Stuff {
-		index: import('$lib/types').SectionIndex;
+		index: import('$lib/types').PartStub[];
 	}
 }

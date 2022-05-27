@@ -14,15 +14,15 @@
 	import { afterNavigate } from '$app/navigation';
 	import { setContext, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
-	import TableOfContents from './_/TableOfContents.svelte';
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './_/Editor.svelte';
 	import Folder from './_/Folder.svelte';
 	import refresh from './_/refresh.svg';
 	import { monaco } from '$lib/client/monaco/monaco.js';
 	import { Icon } from '@sveltejs/site-kit';
+	import Menu from './_/Menu/Menu.svelte';
 
-	/** @type {import('$lib/types').SectionIndex} */
+	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
 
 	/** @type {import('$lib/types').Section} */
@@ -170,7 +170,14 @@
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="480px">
 		<section class="content" slot="a">
-			<TableOfContents {index} {section} />
+			<Menu {index} current={section} />
+
+			<header>
+				<span>
+					Part {section.part.index + 1} > {section.chapter.title} >
+					<strong>{section.title}</strong>
+				</span>
+			</header>
 
 			<div class="text">
 				{@html section.html}
@@ -296,12 +303,27 @@
 		max-height: 100%;
 		background: var(--second);
 		color: white;
+		--menu-width: 5.4rem;
+	}
+
+	header {
+		display: flex;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		padding: 0 0 0 calc(var(--menu-width) + 4rem);
+		height: var(--menu-width);
+		align-items: center;
+	}
+
+	header strong,
+	header span {
+		opacity: 0.7;
+		font-size: 1.4rem;
 	}
 
 	.text {
 		flex: 1 1;
 		overflow-y: auto;
-		padding: 3rem 4rem;
+		padding: 3rem 4rem 3rem calc(var(--menu-width) + 4rem);
 		color: var(--sidebar-text);
 	}
 
@@ -359,7 +381,7 @@
 	}
 
 	.content footer {
-		padding: 1rem 4rem;
+		padding: 1rem 4rem 1rem calc(var(--menu-width) + 4rem);
 		display: flex;
 		justify-content: space-between;
 		border-top: 1px solid rgba(255, 255, 255, 0.1);
