@@ -17,6 +17,18 @@ const languages = {
 	'': ''
 };
 
+/** @type {Record<string, string>} */
+const chars = {
+	'&': '&amp;',
+	'<': '&lt;',
+	'>': '&gt;'
+};
+
+/** @param {string} html */
+function escape(html) {
+	return html.replace(/[&<>]/g, (c) => chars[c]);
+}
+
 marked.use({
 	renderer: {
 		code: (source, language, current) => {
@@ -52,7 +64,7 @@ marked.use({
 
 					return {
 						type,
-						content
+						content: escape(content)
 					};
 				});
 
@@ -66,7 +78,7 @@ marked.use({
 				const plang = languages[language];
 				const highlighted = plang
 					? PrismJS.highlight(source, PrismJS.languages[plang], language)
-					: source.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+					: escape(source);
 
 				html = `<div class="code-block">${
 					options.file ? `<h5>${options.file}</h5>` : ''

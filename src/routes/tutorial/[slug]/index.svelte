@@ -328,7 +328,7 @@
 
 	.text :global(pre) {
 		background: white;
-		padding: 1rem;
+		padding: 1rem 1.5rem;
 		margin: 0 0 1em 0;
 		line-height: 1.3;
 		border-radius: 0.5rem;

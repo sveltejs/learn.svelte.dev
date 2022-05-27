@@ -13,6 +13,7 @@
 <script>
 	import '@sveltejs/site-kit/base.css';
 	import '@sveltejs/site-kit/code.css';
+	import '../app.css';
 	import { page, navigating } from '$app/stores';
 	import { Icon, Icons, Nav, NavItem, SkipLink } from '@sveltejs/site-kit';
 	import PreloadingIndicator from '$lib/components/PreloadingIndicator.svelte';

@@ -6,8 +6,9 @@ Just like you can use curly braces to control text, you can use them to control 
 
 Our image is missing a `src` — let's add one:
 
-```svelte
-<img src={src}>
+```diff
+-<img />
++<img src={src} />
 ```
 
 That's better. But Svelte is giving us a warning:
@@ -18,8 +19,9 @@ When building web apps, it's important to make sure that they're _accessible_ to
 
 In this case, we're missing the `alt` attribute that describes the image for people using screenreaders, or people with slow or flaky internet connections that can't download the image. Let's add one:
 
-```svelte
-<img src={src} alt="A man dances.">
+```diff
+-<img src={src} />
++<img src={src} alt="A man dances.">
 ```
 
 We can use curly braces _inside_ attributes. Try changing it to `"{name} dances."` — remember to declare a `name` variable in the `<script>` block.
@@ -28,6 +30,7 @@ We can use curly braces _inside_ attributes. Try changing it to `"{name} dances.
 
 It's not uncommon to have an attribute where the name and value are the same, like `src={src}`. Svelte gives us a convenient shorthand for these cases:
 
-```svelte
-<img {src} alt="A man dances.">
+```diff
+-<img src={src} alt="A man dances.">
++<img {src} alt="A man dances.">
 ```
