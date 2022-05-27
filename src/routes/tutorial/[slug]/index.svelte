@@ -309,21 +309,28 @@
 	header {
 		display: flex;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		padding: 0 0 0 calc(var(--menu-width) + 4rem);
+		padding: 0 0 0 calc(var(--menu-width) + 2.2rem);
 		height: var(--menu-width);
 		align-items: center;
 	}
 
 	header strong,
 	header span {
-		opacity: 0.7;
 		font-size: 1.4rem;
+	}
+
+	header strong {
+		color: hsl(240, 8%, 94%);
+	}
+
+	header span {
+		color: hsl(240, 8%, 84%);
 	}
 
 	.text {
 		flex: 1 1;
 		overflow-y: auto;
-		padding: 3rem 4rem 3rem calc(var(--menu-width) + 4rem);
+		padding: 2.2rem 2.2rem 2.2rem calc(var(--menu-width) + 2.2rem);
 		color: var(--sidebar-text);
 	}
 
@@ -381,7 +388,7 @@
 	}
 
 	.content footer {
-		padding: 1rem 4rem 1rem calc(var(--menu-width) + 4rem);
+		padding: 1rem 2.2rem 1rem calc(var(--menu-width) + 2.2rem);
 		display: flex;
 		justify-content: space-between;
 		border-top: 1px solid rgba(255, 255, 255, 0.1);

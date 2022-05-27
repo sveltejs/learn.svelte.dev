@@ -1,11 +1,11 @@
 <script>
-	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { slide } from 'svelte/transition';
 	import arrow from './arrow.svg';
-	import expanded from './expanded.svg';
 
 	import { Icon } from '@sveltejs/site-kit';
+	import { browser } from '$app/env';
+	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('$lib/types').PartStub[]}*/
 	export let index;
@@ -14,41 +14,62 @@
 	export let current;
 
 	let open = false;
+	let search = '';
+
+	const duration = browser && matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
+
+	$: regex = new RegExp(`\\b${search.length >= 2 ? search : ''}`, 'i');
+
+	$: filtered = index
+		.map((part, i) => {
+			const chapters = part.chapters
+				.map((chapter, i) => ({
+					...chapter,
+					label: String.fromCharCode(97 + i),
+					first: chapter.sections[0].slug,
+					sections: chapter.sections.filter((section) => regex.test(section.title))
+				}))
+				.filter((chapter) => chapter.sections.length > 0 || regex.test(chapter.title));
+
+			return {
+				...part,
+				label: i + 1,
+				first: part.chapters[0].sections[0].slug,
+				chapters
+			};
+		})
+		.filter((part) => part.chapters.length > 0 || regex.test(part.title));
 
 	afterNavigate(() => {
-		// open = false;
+		search = '';
 	});
-
-	$: console.log({ index, current });
 </script>
 
 <nav class:open>
 	<div class="controls">
-		<input type="search" placeholder="Search" />
+		<input type="search" placeholder="Search" bind:value={search} />
 	</div>
 
 	<div class="sections">
 		<ul>
-			{#each index as part, i}
-				<li class="part">
-					<a href="/tutorial/{part.chapters[0].sections[0].slug}" data-label={i + 1}>
+			{#each filtered as part (part.slug)}
+				<li class="part" transition:slide|local={{ duration }}>
+					<a href="/tutorial/{part.first}" data-label={part.label}>
 						{part.title}
 					</a>
 
-					{#if part.slug === current.part.slug}
-						<ul class="chapter" transition:slide|local={{ duration: 200 }}>
-							{#each part.chapters as chapter, i}
+					{#if search.length >= 2 || part.slug === current.part.slug}
+						<ul class="chapter" transition:slide|local={{ duration }}>
+							{#each part.chapters as chapter (chapter.slug)}
 								<li class="chapter" class:expanded={chapter.slug === current.chapter.slug}>
 									<img src={arrow} alt="Arrow icon" />
-									<a
-										href="/tutorial/{chapter.sections[0].slug}"
-										data-label={String.fromCharCode(i + 97)}>{chapter.title}</a
-									>
+									<a href="/tutorial/{chapter.first}" data-label={chapter.label}>{chapter.title}</a>
 
-									{#if chapter.slug === current.chapter.slug}
-										<ul transition:slide|local={{ duration: 200 }}>
-											{#each chapter.sections as section}
+									{#if search.length >= 2 || chapter.slug === current.chapter.slug}
+										<ul transition:slide|local={{ duration }}>
+											{#each chapter.sections as section (section.slug)}
 												<li
+													transition:slide|local={{ duration }}
 													class="section"
 													aria-current={$page.url.pathname === `/tutorial/${section.slug}`
 														? 'page'

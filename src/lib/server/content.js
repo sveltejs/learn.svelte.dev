@@ -112,7 +112,8 @@ export function get_section(slug) {
 				return {
 					part: {
 						slug: part.meta.slug,
-						title: part.meta.title
+						title: part.meta.title,
+						index: i
 					},
 					chapter: {
 						slug: chapter.meta.slug,

@@ -27,6 +27,7 @@ export interface Section {
 	part: {
 		slug: string;
 		title: string;
+		index: number;
 	};
 	chapter: {
 		slug: string;
@@ -65,6 +66,7 @@ export interface SectionStub {
 }
 
 export interface ChapterStub {
+	slug: string;
 	title: string;
 	sections: SectionStub[];
 }
