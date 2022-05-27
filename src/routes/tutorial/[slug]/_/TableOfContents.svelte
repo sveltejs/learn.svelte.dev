@@ -14,7 +14,7 @@
 		rel="prefetch"
 		aria-label="Previous tutorial step"
 		class="no-underline"
-		href="/tutorial/{section.prev || section.slug}"
+		href="/tutorial/{section.prev?.slug ?? section.slug}"
 		class:disabled={!section.prev}
 	>
 		<Icon name="arrow-left" />
@@ -54,7 +54,7 @@
 		rel="prefetch"
 		aria-label="Next tutorial step"
 		class="no-underline"
-		href="/tutorial/{section.next || section.slug}"
+		href="/tutorial/{section.next?.slug ?? section.slug}"
 		class:disabled={!section.next}
 	>
 		<Icon name="arrow-right" />

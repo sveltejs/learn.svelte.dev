@@ -22,6 +22,7 @@ function json(file) {
 export function get_index() {
 	const parts = [];
 
+	/** @type {import('$lib/types').SectionRaw | null} */
 	let last_section = null;
 
 	for (const part of fs.readdirSync('content/tutorial')) {
@@ -44,10 +45,11 @@ export function get_index() {
 
 				const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
 				const { frontmatter, markdown } = extract_frontmatter(text, dir);
+				const { title } = frontmatter;
 
 				const slug = section.slice(3);
 
-				if (last_section) last_section.next = slug;
+				if (last_section) last_section.next = { slug, title };
 
 				sections.push(
 					(last_section = {
@@ -55,9 +57,7 @@ export function get_index() {
 						title: frontmatter.title,
 						markdown,
 						dir,
-						/** @type {string | null} */
-						prev: last_section ? last_section.slug : null,
-						/** @type {string | null} */
+						prev: last_section ? { slug: last_section.slug, title: last_section.title } : null,
 						next: null
 					})
 				);

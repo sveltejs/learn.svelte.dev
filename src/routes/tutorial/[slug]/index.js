@@ -1,6 +1,6 @@
 import { get_section } from '$lib/server/content';
 
-/** @type {import('./index').RequestHandler} */
+/** @type {import('./__types/index').RequestHandler} */
 export function get({ params }) {
 	const section = get_section(params.slug);
 

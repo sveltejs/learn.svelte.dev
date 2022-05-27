@@ -168,11 +168,17 @@
 <svelte:window on:message={handle_message} />
 
 <div class="container">
-	<SplitPane type="horizontal" min="360px" max="50%" pos="360px">
+	<SplitPane type="horizontal" min="360px" max="50%" pos="480px">
 		<section class="content" slot="a">
 			<TableOfContents {index} {section} />
 
-			<div class="text">{@html section.html}</div>
+			<div class="text">
+				{@html section.html}
+
+				{#if section.next}
+					<p><a href="/tutorial/{section.next.slug}">Next: {section.next.title}</a></p>
+				{/if}
+			</div>
 
 			<footer>
 				<a class="edit" href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{section.dir}">

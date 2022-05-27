@@ -34,12 +34,28 @@ export interface Section {
 	};
 	title: string;
 	slug: string;
-	prev: string | null;
-	next: string | null;
+	prev: { slug: string; title: string } | null;
+	next: { slug: string; title: string } | null;
 	html: string;
 	dir: string;
 	a: Record<string, Stub>;
 	b: Record<string, Stub>;
+}
+
+export interface SectionRaw {
+	title: string;
+	slug: string;
+	prev: { slug: string; title: string } | null;
+	next: { slug: string; title: string } | null;
+	markdown: string;
+	dir: string;
+}
+
+export interface SectionStub {
+	title: string;
+	slug: string;
+	prev: { slug: string; title: string } | null;
+	next: { slug: string; title: string } | null;
 }
 
 export type SectionIndex = Array<{
@@ -50,10 +66,3 @@ export type SectionIndex = Array<{
 		sections: SectionStub[];
 	}>;
 }>;
-
-export interface SectionStub {
-	title: string;
-	slug: string;
-	prev: string | null;
-	next: string | null;
-}
