@@ -325,6 +325,9 @@
 
 	header span {
 		color: hsl(240, 8%, 84%);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 
 	.text {
