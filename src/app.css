@@ -1,5 +1,9 @@
 /* TODO move all this to site-kit */
 
+body {
+	--font-mono: Menlo, Monaco, 'Courier New', monospace;
+}
+
 /* this is duplicated with kit.svelte.dev */
 pre.language-diff code {
 	color: rgba(0, 0, 0, 0.4);
