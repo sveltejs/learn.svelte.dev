@@ -1,5 +1,3 @@
-let path = '';
-
 function ping() {
 	top.postMessage(
 		{
