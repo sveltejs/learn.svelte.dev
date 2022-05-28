@@ -260,5 +260,6 @@
 		color: white;
 		padding: 0.2rem 0;
 		display: block;
+		font-variant-numeric: tabular-nums;
 	}
 </style>

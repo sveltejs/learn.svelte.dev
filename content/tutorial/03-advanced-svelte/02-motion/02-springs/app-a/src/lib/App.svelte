@@ -1,15 +1,8 @@
 <script>
-	import { spring } from 'svelte/motion';
+	import { writable } from 'svelte/store';
 
-	let coords = spring(
-		{ x: 50, y: 50 },
-		{
-			stiffness: 0.1,
-			damping: 0.25
-		}
-	);
-
-	let size = spring(10);
+	let coords = writable({ x: 50, y: 50 });
+	let size = writable(10);
 </script>
 
 <div style="position: absolute; right: 1em;">
@@ -37,8 +30,9 @@
 </div>
 
 <svg
-	on:mousemove={(e) =>
-		coords.set({ x: e.clientX, y: e.clientY })}
+	on:mousemove={(e) => {
+		coords.set({ x: e.clientX, y: e.clientY });
+	}}
 	on:mousedown={() => size.set(30)}
 	on:mouseup={() => size.set(10)}
 >
@@ -51,9 +45,13 @@
 
 <style>
 	svg {
+		position: absolute;
 		width: 100%;
 		height: 100%;
+		left: 0;
+		top: 0;
 	}
+
 	circle {
 		fill: #ff3e00;
 	}

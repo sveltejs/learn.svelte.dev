@@ -352,6 +352,10 @@
 		margin: 1.5em 0 0.5em 0;
 	}
 
+	.text :global(ul) {
+		padding: 0 0 0 2rem;
+	}
+
 	.text :global(code) {
 		color: var(--sidebar-text);
 		background: rgba(0, 0, 0, 0.12);
@@ -415,10 +419,6 @@
 		line-height: 1.9;
 		margin: 0 0 1rem 1rem;
 		opacity: 0.8;
-	}
-
-	.text :global(ul) {
-		list-style-position: inside;
 	}
 
 	.content footer {

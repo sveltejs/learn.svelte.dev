@@ -1,5 +1,5 @@
 ---
-title: Spring
+title: Springs
 ---
 
 The `spring` function is an alternative to `tweened` that often works better for values that are frequently changing.

@@ -1,8 +1,10 @@
 ---
-title: Tweened
+title: Tweens
 ---
 
-Setting values and watching the DOM update automatically is cool. Know what's even cooler? _Tweening_ those values. Svelte includes tools to help you build slick user interfaces that use animation to communicate changes.
+Now that we've covered the basics of SvelteKit, it's time to learn some advanced Svelte techniques, starting with _motion_.
+
+Setting values and watching the DOM update automatically is cool. Know what's even cooler? Tweening those values. Svelte includes tools to help you build slick user interfaces that use animation to communicate changes.
 
 Let's start by changing the `progress` store to a `tweened` value:
 
