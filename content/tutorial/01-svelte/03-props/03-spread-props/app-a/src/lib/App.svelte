@@ -1,5 +1,5 @@
 <script>
-	import Info from './Info.svelte';
+	import PackageInfo from './PackageInfo.svelte';
 
 	const pkg = {
 		name: 'svelte',
@@ -9,4 +9,9 @@
 	};
 </script>
 
-<Info name={pkg.name} version={pkg.version} speed={pkg.speed} website={pkg.website}/>
+<PackageInfo
+	name={pkg.name}
+	version={pkg.version}
+	speed={pkg.speed}
+	website={pkg.website}
+/>
