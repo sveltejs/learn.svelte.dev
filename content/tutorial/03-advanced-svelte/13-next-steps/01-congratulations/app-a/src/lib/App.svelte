@@ -3,10 +3,12 @@
 
 	let characters = ['🥳', '🎉', '✨'];
 
-	let confetti = new Array(100).fill()
+	let confetti = new Array(100)
+		.fill()
 		.map((_, i) => {
 			return {
-				character: characters[i % characters.length],
+				character:
+					characters[i % characters.length],
 				x: Math.random() * 100,
 				y: -20 - Math.random() * 100,
 				r: 0.1 + Math.random() * 1
@@ -20,7 +22,7 @@
 		function loop() {
 			frame = requestAnimationFrame(loop);
 
-			confetti = confetti.map(emoji => {
+			confetti = confetti.map((emoji) => {
 				emoji.y += 0.7 * emoji.r;
 				if (emoji.y > 120) emoji.y = -20;
 				return emoji;
@@ -34,7 +36,10 @@
 </script>
 
 {#each confetti as c}
-	<span style="left: {c.x}%; top: {c.y}%; transform: scale({c.r})">{c.character}</span>
+	<span
+		style="left: {c.x}%; top: {c.y}%; transform: scale({c.r})"
+		>{c.character}</span
+	>
 {/each}
 
 <style>

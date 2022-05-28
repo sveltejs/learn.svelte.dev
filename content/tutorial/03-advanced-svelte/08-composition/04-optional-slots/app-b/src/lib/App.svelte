@@ -1,11 +1,9 @@
 <script>
-	import Project from './Project.svelte'
-	import Comment from './Comment.svelte'
+	import Project from './Project.svelte';
+	import Comment from './Comment.svelte';
 </script>
 
-<h1>
-	Projects
-</h1>
+<h1>Projects</h1>
 
 <ul>
 	<li>
@@ -15,8 +13,15 @@
 			totalTasks={57}
 		>
 			<div slot="comments">
-				<Comment name="Ecma Script" postedAt={new Date('2020-08-17T14:12:23')}>
-					<p>Those interface tests are now passing.</p>
+				<Comment
+					name="Ecma Script"
+					postedAt={new Date(
+						'2020-08-17T14:12:23'
+					)}
+				>
+					<p>
+						Those interface tests are now passing.
+					</p>
 				</Comment>
 			</div>
 		</Project>

@@ -9,8 +9,9 @@
 	export let lon;
 	export let label;
 
-	const popup = new mapbox.Popup({ offset: 25 })
-		.setText(label);
+	const popup = new mapbox.Popup({
+		offset: 25
+	}).setText(label);
 
 	const marker = new mapbox.Marker()
 		.setLngLat([lon, lat])

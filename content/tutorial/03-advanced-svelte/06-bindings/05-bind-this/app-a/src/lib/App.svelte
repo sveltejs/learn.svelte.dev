@@ -10,15 +10,30 @@
 		function loop(t) {
 			frame = requestAnimationFrame(loop);
 
-			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			const imageData = ctx.getImageData(
+				0,
+				0,
+				canvas.width,
+				canvas.height
+			);
 
-			for (let p = 0; p < imageData.data.length; p += 4) {
+			for (
+				let p = 0;
+				p < imageData.data.length;
+				p += 4
+			) {
 				const i = p / 4;
 				const x = i % canvas.width;
-				const y = i / canvas.width >>> 0;
+				const y = (i / canvas.width) >>> 0;
 
-				const r = 64 + (128 * x / canvas.width) + (64 * Math.sin(t / 1000));
-				const g = 64 + (128 * y / canvas.height) + (64 * Math.cos(t / 1000));
+				const r =
+					64 +
+					(128 * x) / canvas.width +
+					64 * Math.sin(t / 1000);
+				const g =
+					64 +
+					(128 * y) / canvas.height +
+					64 * Math.cos(t / 1000);
 				const b = 128;
 
 				imageData.data[p + 0] = r;
@@ -36,17 +51,16 @@
 	});
 </script>
 
-<canvas
-	width={32}
-	height={32}
-></canvas>
+<canvas width={32} height={32} />
 
 <style>
 	canvas {
 		width: 100%;
 		height: 100%;
 		background-color: #666;
-		-webkit-mask: url(svelte-logo-mask.svg) 50% 50% no-repeat;
-		mask: url(svelte-logo-mask.svg) 50% 50% no-repeat;
+		-webkit-mask: url(svelte-logo-mask.svg) 50%
+			50% no-repeat;
+		mask: url(svelte-logo-mask.svg) 50% 50%
+			no-repeat;
 	}
 </style>

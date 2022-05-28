@@ -3,7 +3,7 @@
 	import { mapbox, key } from './mapbox.js';
 
 	setContext(key, {
-		getMap: () => map,
+		getMap: () => map
 	});
 
 	export let lat;
@@ -18,7 +18,7 @@
 			container,
 			style: 'mapbox://styles/mapbox/streets-v9',
 			center: [lon, lat],
-			zoom,
+			zoom
 		});
 	}
 

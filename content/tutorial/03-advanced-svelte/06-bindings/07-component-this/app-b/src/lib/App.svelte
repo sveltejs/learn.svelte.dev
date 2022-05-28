@@ -4,6 +4,8 @@
 	let field;
 </script>
 
-<InputField bind:this={field}/>
+<InputField bind:this={field} />
 
-<button on:click={() => field.focus()}>Focus field</button>
+<button on:click={() => field.focus()}
+	>Focus field</button
+>

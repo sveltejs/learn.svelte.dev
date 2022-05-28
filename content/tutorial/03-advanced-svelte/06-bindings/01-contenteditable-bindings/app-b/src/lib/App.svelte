@@ -5,7 +5,7 @@
 <div
 	contenteditable="true"
 	bind:innerHTML={html}
-></div>
+/>
 
 <pre>{html}</pre>
 

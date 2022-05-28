@@ -10,16 +10,18 @@
 	}
 </script>
 
-<span class:expanded on:click={toggle}>{name}</span>
+<span class:expanded on:click={toggle}
+	>{name}</span
+>
 
 {#if expanded}
 	<ul>
 		{#each files as file}
 			<li>
 				{#if file.files}
-					<svelte:self {...file}/>
+					<svelte:self {...file} />
 				{:else}
-					<File {...file}/>
+					<File {...file} />
 				{/if}
 			</li>
 		{/each}
@@ -29,7 +31,8 @@
 <style>
 	span {
 		padding: 0 0 0 1.5em;
-		background: url(tutorial/icons/folder.svg) 0 0.1em no-repeat;
+		background: url(tutorial/icons/folder.svg) 0
+			0.1em no-repeat;
 		background-size: 1em 1em;
 		font-weight: bold;
 		cursor: pointer;

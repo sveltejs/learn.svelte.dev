@@ -4,9 +4,7 @@
 	let root = [
 		{
 			name: 'Important work stuff',
-			files: [
-				{ name: 'quarterly-results.xlsx' }
-			]
+			files: [{ name: 'quarterly-results.xlsx' }]
 		},
 		{
 			name: 'Animal GIFs',
@@ -34,4 +32,4 @@
 	];
 </script>
 
-<Folder name="Home" files={root} expanded/>
+<Folder name="Home" files={root} expanded />

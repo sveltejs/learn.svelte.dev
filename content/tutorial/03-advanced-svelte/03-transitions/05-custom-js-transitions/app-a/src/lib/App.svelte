@@ -4,14 +4,12 @@
 	function typewriter(node, { speed = 50 }) {
 		// implementation goes here
 
-		return {
-
-		};
+		return {};
 	}
 </script>
 
 <label>
-	<input type="checkbox" bind:checked={visible}>
+	<input type="checkbox" bind:checked={visible} />
 	visible
 </label>
 

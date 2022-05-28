@@ -6,18 +6,22 @@
 	function spin(node, { duration }) {
 		return {
 			duration,
-			css: t => ``
+			css: (t) => ``
 		};
 	}
 </script>
 
 <label>
-	<input type="checkbox" bind:checked={visible}>
+	<input type="checkbox" bind:checked={visible} />
 	visible
 </label>
 
 {#if visible}
-	<div class="centered" in:spin="{{duration: 8000}}" out:fade>
+	<div
+		class="centered"
+		in:spin={{ duration: 8000 }}
+		out:fade
+	>
 		<span>transitions!</span>
 	</div>
 {/if}
@@ -27,12 +31,12 @@
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		transform: translate(-50%,-50%);
+		transform: translate(-50%, -50%);
 	}
 
 	span {
 		position: absolute;
-		transform: translate(-50%,-50%);
+		transform: translate(-50%, -50%);
 		font-size: 4em;
 	}
 </style>

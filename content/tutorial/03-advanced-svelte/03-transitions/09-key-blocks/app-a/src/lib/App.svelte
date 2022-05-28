@@ -6,7 +6,10 @@
 
 <div>
 	The number is:
-	<span style="display: inline-block" in:fly={{ y: -20 }}>
+	<span
+		style="display: inline-block"
+		in:fly={{ y: -20 }}
+	>
 		{number}
 	</span>
 </div>
@@ -14,6 +17,7 @@
 <button
 	on:click={() => {
 		number += 1;
-	}}>
+	}}
+>
 	Increment
 </button>
