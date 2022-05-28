@@ -4,16 +4,16 @@ title: Assignments
 
 At the heart of Svelte is a powerful system of _reactivity_ for keeping the DOM in sync with your application state — for example, in response to an event.
 
-To demonstrate it, we first need to wire up an event handler. Replace line 9 with this:
+To demonstrate it, we first need to wire up an event handler (we'll learn more about these [later](/tutorial/dom-events)). Replace line 9 with this:
 
 ```svelte
-<button on:click={incrementCount}>
+<button on:click={increment}>
 ```
 
-Inside the `incrementCount` function, all we need to do is change the value of `count`:
+Inside the `increment` function, all we need to do is change the value of `count`:
 
 ```js
-function incrementCount() {
+function increment() {
 	count += 1;
 }
 ```

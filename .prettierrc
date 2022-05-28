@@ -2,5 +2,13 @@
 	"useTabs": true,
 	"singleQuote": true,
 	"trailingComma": "none",
-	"printWidth": 100
+	"printWidth": 100,
+	"overrides": [
+		{
+			"files": ["content/**/*.svelte"],
+			"options": {
+				"printWidth": 50
+			}
+		}
+	]
 }
