@@ -1,9 +1,7 @@
 <script>
 	// setup code goes here
 
-	function sayHello() {
-
-	}
+	function sayHello() {}
 </script>
 
 <button on:click={sayHello}>

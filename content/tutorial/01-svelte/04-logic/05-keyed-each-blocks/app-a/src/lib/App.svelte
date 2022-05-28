@@ -6,7 +6,7 @@
 		{ id: 2, name: 'banana' },
 		{ id: 3, name: 'carrot' },
 		{ id: 4, name: 'doughnut' },
-		{ id: 5, name: 'egg' },
+		{ id: 5, name: 'egg' }
 	];
 
 	function handleClick() {
@@ -19,5 +19,5 @@
 </button>
 
 {#each things as thing}
-	<Thing name={thing.name}/>
+	<Thing name={thing.name} />
 {/each}

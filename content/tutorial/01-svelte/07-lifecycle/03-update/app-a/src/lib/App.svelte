@@ -1,6 +1,9 @@
 <script>
 	import Eliza from 'elizabot';
-	import { beforeUpdate, afterUpdate } from 'svelte';
+	import {
+		beforeUpdate,
+		afterUpdate
+	} from 'svelte';
 
 	let div;
 
@@ -15,7 +18,9 @@
 
 	const eliza = new Eliza();
 
-	let comments = [{ author: 'eliza', text: eliza.getInitial() }];
+	let comments = [
+		{ author: 'eliza', text: eliza.getInitial() }
+	];
 
 	function handleKeydown(event) {
 		if (event.key === 'Enter') {
@@ -40,7 +45,9 @@
 
 				setTimeout(() => {
 					comments = comments
-						.filter((comment) => !comment.placeholder)
+						.filter(
+							(comment) => !comment.placeholder
+						)
 						.concat({
 							author: 'eliza',
 							text: reply

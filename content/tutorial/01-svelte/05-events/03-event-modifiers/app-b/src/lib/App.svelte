@@ -1,6 +1,6 @@
 <script>
 	function handleClick() {
-		alert('no more alerts')
+		alert('no more alerts');
 	}
 </script>
 
