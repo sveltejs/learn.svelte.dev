@@ -13,7 +13,7 @@
 	/** @type {import('$lib/types').Section} */
 	export let current;
 
-	let open = false;
+	let is_open = false;
 	let search = '';
 
 	const duration = browser && matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
@@ -43,9 +43,13 @@
 	afterNavigate(() => {
 		search = '';
 	});
+
+	export function open() {
+		is_open = true;
+	}
 </script>
 
-<nav class:open>
+<nav class:open={is_open}>
 	<div class="controls">
 		<input type="search" placeholder="Search" bind:value={search} />
 	</div>
@@ -54,8 +58,8 @@
 		<ul>
 			{#each filtered as part (part.slug)}
 				<li class="part" transition:slide|local={{ duration }}>
-					<a href="/tutorial/{part.first}" data-label={part.label}>
-						{part.title}
+					<a sveltekit:prefetch href="/tutorial/{part.first}" data-label={part.label}>
+						Part {part.label}: {part.title}
 					</a>
 
 					{#if search.length >= 2 || part.slug === current.part.slug}
@@ -63,7 +67,9 @@
 							{#each part.chapters as chapter (chapter.slug)}
 								<li class="chapter" class:expanded={chapter.slug === current.chapter.slug}>
 									<img src={arrow} alt="Arrow icon" />
-									<a href="/tutorial/{chapter.first}" data-label={chapter.label}>{chapter.title}</a>
+									<a sveltekit:prefetch href="/tutorial/{chapter.first}" data-label={chapter.label}
+										>{chapter.title}</a
+									>
 
 									{#if search.length >= 2 || chapter.slug === current.chapter.slug}
 										<ul transition:slide|local={{ duration }}>
@@ -75,7 +81,11 @@
 														? 'page'
 														: undefined}
 												>
-													<a href="/tutorial/{section.slug}" on:click={() => (open = false)}>
+													<a
+														sveltekit:prefetch
+														href="/tutorial/{section.slug}"
+														on:click={() => (is_open = false)}
+													>
 														{section.title}
 													</a>
 												</li>
@@ -92,8 +102,8 @@
 	</div>
 </nav>
 
-<button class="menu-toggle" on:click={() => (open = !open)} aria-label="Toggle menu">
-	<Icon name={open ? 'close' : 'menu'} />
+<button class="menu-toggle" on:click={() => (is_open = !is_open)} aria-label="Toggle menu">
+	<Icon name={is_open ? 'close' : 'menu'} />
 </button>
 
 <style>

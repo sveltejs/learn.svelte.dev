@@ -25,6 +25,6 @@ This tutorial is split into four main parts:
 - [Advanced Svelte](/tutorial/advanced-svelte)
 - [Advanced SvelteKit](/tutorial/advanced-sveltekit)
 
-Each section will present a mini exercise designed to illustrate a feature of Svelte. Later sections build on the knowledge gained in earlier ones, so it's recommended that you go from start to finish. If necessary, you can navigate via the dropdown above (click 'Introduction / Welcome to Svelte').
+Each section will present an exercise designed to illustrate a feature. Later sections build on the knowledge gained in earlier ones, so it's recommended that you go from start to finish. If necessary, you can navigate via the menu above.
 
 If you get stuck, you can click the `Solve` button to the left of the editor. Try not to rely on it too much; you will learn faster by figuring out where to put each suggested code block and manually typing it in to the editor.

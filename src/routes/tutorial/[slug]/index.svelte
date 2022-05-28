@@ -34,6 +34,9 @@
 	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
 	const models = new Map();
 
+	/** @type {import('svelte').SvelteComponent} */
+	let menu;
+
 	/** @type {import('monaco-editor').editor.ITextModel} */
 	let current_model;
 
@@ -170,9 +173,9 @@
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="480px">
 		<section class="content" slot="a">
-			<Menu {index} current={section} />
+			<Menu bind:this={menu} {index} current={section} />
 
-			<header>
+			<header on:click={() => menu.open()}>
 				<span>
 					Part {section.part.index + 1} > {section.chapter.title} >
 					<strong>{section.title}</strong>
@@ -361,7 +364,7 @@
 	.text :global(pre) {
 		background: white;
 		padding: 1rem 1.5rem;
-		margin: 0 0 1em 0;
+		margin: 0 0 1.6rem 0;
 		line-height: 1.3;
 		border-radius: 0.5rem;
 		filter: drop-shadow(2px 4px 12px hsl(240, 8%, 40%));
