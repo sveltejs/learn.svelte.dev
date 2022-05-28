@@ -364,6 +364,7 @@
 		margin: 0 0 1em 0;
 		line-height: 1.3;
 		border-radius: 0.5rem;
+		filter: drop-shadow(2px 4px 12px hsl(240, 8%, 40%));
 	}
 
 	.text :global(pre) :global(code) {
@@ -380,10 +381,37 @@
 	}
 
 	.text :global(blockquote) {
-		background: rgba(255, 255, 255, 0.1);
-		margin: 2rem -4rem;
-		padding: 2rem 4rem;
+		background: var(--second);
+		margin: 2rem 0;
+		padding: 2rem;
 		color: white;
+		border-radius: 0.5rem;
+		border: 1.5px solid var(--flash);
+		filter: drop-shadow(2px 4px 12px hsl(240, 8%, 36%));
+	}
+
+	.text :global(blockquote)::before {
+		content: '!';
+		position: relative;
+		top: -0.1rem;
+		right: -0.1rem;
+		float: right;
+		color: var(--flash);
+		width: 2rem;
+		height: 2rem;
+		display: block;
+		align-items: center;
+		justify-content: center;
+		border: 1.5px solid var(--flash);
+		background: var(--flash);
+		color: var(--second);
+		border-radius: 50%;
+		text-align: center;
+		font-size: 1.2rem;
+		font-weight: bold;
+		line-height: 1.9;
+		margin: 0 0 1rem 1rem;
+		opacity: 0.8;
 	}
 
 	.text :global(ul) {
