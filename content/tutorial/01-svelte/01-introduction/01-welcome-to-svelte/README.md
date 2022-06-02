@@ -22,7 +22,7 @@ This tutorial is split into four main parts:
 
 - [Welcome to Svelte](/tutorial/welcome-to-svelte) (you are here)
 - [Introduction to SvelteKit](/tutorial/introducing-sveltekit)
-- [Advanced Svelte](/tutorial/advanced-svelte)
+- [Advanced Svelte](/tutorial/tweens)
 - [Advanced SvelteKit](/tutorial/advanced-sveltekit)
 
 Each section will present an exercise designed to illustrate a feature. Later sections build on the knowledge gained in earlier ones, so it's recommended that you go from start to finish. If necessary, you can navigate via the menu above.
