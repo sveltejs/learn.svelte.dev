@@ -172,16 +172,20 @@
 
 <svelte:window on:message={handle_message} />
 
+<svelte:head>
+	<title>{section.chapter.title} / {section.title} • Svelte Tutorial</title>
+</svelte:head>
+
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="480px">
 		<section class="content" slot="a">
 			<Menu bind:this={menu} {index} current={section} />
 
 			<header on:click={() => menu.open()}>
-				<span>
+				<h1>
 					Part {section.part.index + 1} > {section.chapter.title} >
 					<strong>{section.title}</strong>
-				</span>
+				</h1>
 			</header>
 
 			<div class="text">
@@ -278,6 +282,7 @@
 						</button>
 
 						<input
+							aria-label="URL"
 							value={path}
 							on:change={(e) => {
 								const url = new URL(e.currentTarget.value, adapter.base);
@@ -320,7 +325,7 @@
 	}
 
 	header strong,
-	header span {
+	header h1 {
 		font-size: 1.4rem;
 	}
 
@@ -328,11 +333,12 @@
 		color: hsl(240, 8%, 94%);
 	}
 
-	header span {
+	header h1 {
 		color: hsl(240, 8%, 84%);
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		font-weight: 400;
 	}
 
 	.text {

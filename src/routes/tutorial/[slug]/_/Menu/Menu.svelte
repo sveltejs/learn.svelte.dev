@@ -49,9 +49,13 @@
 	}
 </script>
 
-<nav class:open={is_open}>
+<button class="menu-toggle" on:click={() => (is_open = !is_open)} aria-label="Toggle menu" aria-expanded={is_open}>
+	<Icon name={is_open ? 'close' : 'menu'} />
+</button>
+
+<nav class:open={is_open} aria-label="tutorial sections">
 	<div class="controls">
-		<input type="search" placeholder="Search" bind:value={search} />
+		<input type="search" placeholder="Search" bind:value={search} aria-hidden={!is_open ? "true" : null} tabindex={!is_open ? -1 : null} />
 	</div>
 
 	<div class="sections">
@@ -101,10 +105,6 @@
 		</ul>
 	</div>
 </nav>
-
-<button class="menu-toggle" on:click={() => (is_open = !is_open)} aria-label="Toggle menu">
-	<Icon name={is_open ? 'close' : 'menu'} />
-</button>
 
 <style>
 	nav {
@@ -164,7 +164,7 @@
 		top: 0;
 		width: var(--menu-width);
 		height: var(--menu-width);
-		z-index: 2;
+		z-index: 3;
 		/* background: linear-gradient(
 			to right,
 			var(--second),
