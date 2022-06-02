@@ -124,8 +124,10 @@
 						adapter.update([{ ...stub, contents }]);
 					}
 
-					complete_states[stub.name] = contents === target.contents;
-					completed = Object.values(complete_states).every((value) => value);
+					if (Object.keys(section.b).length > 0) {
+						complete_states[stub.name] = contents === target.contents;
+						completed = Object.values(complete_states).every((value) => value);
+					}
 				});
 
 				models.set(stub, model);
@@ -245,7 +247,7 @@
 									completing = false;
 								}}
 							>
-								{completed ? 'reset' : 'solve'}
+								{completed && Object.keys(section.b).length > 0 ? 'reset' : 'solve'}
 							</button>
 
 							<div class="filetree">
