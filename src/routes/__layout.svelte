@@ -52,7 +52,7 @@
 	</svelte:fragment>
 </Nav>
 
-<main><slot /></main>
+<main id="main"><slot /></main>
 
 <style>
 	:global(body) {
