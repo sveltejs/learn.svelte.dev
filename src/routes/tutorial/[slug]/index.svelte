@@ -177,7 +177,7 @@
 </svelte:head>
 
 <div class="container">
-	<SplitPane type="horizontal" min="360px" max="50%" pos="480px">
+	<SplitPane type="horizontal" min="360px" max="50%" pos="33%">
 		<section class="content" slot="a">
 			<Menu bind:this={menu} {index} current={section} />
 
