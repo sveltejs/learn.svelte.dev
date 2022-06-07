@@ -1,11 +1,21 @@
 <script context="module">
+	import { browser, dev } from '$app/env';
+
 	/** @type {import('./__types/__layout').Load} */
 	export async function load({ fetch }) {
 		const res = await fetch('/tutorial.json');
 		const { index } = await res.json();
 
+		const is_chrome = browser && dev && /chrome/gi.test(navigator.userAgent);
+
+		if (browser)
+		console.log(/chrome/gi.test(navigator.userAgent))
+
 		return {
-			stuff: { index }
+			stuff: { index },
+			props: {
+				is_chrome
+			}
 		};
 	}
 </script>
@@ -17,6 +27,9 @@
 	import { page, navigating } from '$app/stores';
 	import { Icon, Icons, Nav, NavItem, SkipLink } from '@sveltejs/site-kit';
 	import PreloadingIndicator from '$lib/components/PreloadingIndicator.svelte';
+
+	/** @type {boolean} */
+	export let is_chrome;
 </script>
 
 <Icons />
@@ -52,6 +65,12 @@
 	</svelte:fragment>
 </Nav>
 
+{#if !is_chrome}
+	<div class="non-chrome-warning">
+		<p>learn.svelte.dev will only work in chrome when in development</p>
+	</div>
+{/if}
+
 <main id="main"><slot /></main>
 
 <style>
@@ -66,5 +85,16 @@
 		height: calc(100vh - var(--nav-h));
 		position: relative;
 		top: var(--nav-h);
+	}
+
+	.non-chrome-warning {
+		position: absolute;
+		z-index: 1000;
+		inset: 0;
+
+		background-color: #fff;
+
+		display: grid;
+		place-items: center;
 	}
 </style>
