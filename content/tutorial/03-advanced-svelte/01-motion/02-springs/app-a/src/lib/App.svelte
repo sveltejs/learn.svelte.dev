@@ -5,7 +5,21 @@
 	let size = writable(10);
 </script>
 
-<div style="position: absolute; right: 1em;">
+<svg
+	on:mousemove={(e) => {
+		coords.set({ x: e.clientX, y: e.clientY });
+	}}
+	on:mousedown={() => size.set(30)}
+	on:mouseup={() => size.set(10)}
+>
+	<circle
+		cx={$coords.x}
+		cy={$coords.y}
+		r={$size}
+	/>
+</svg>
+
+<div class="controls">
 	<label>
 		<h3>stiffness ({coords.stiffness})</h3>
 		<input
@@ -29,20 +43,6 @@
 	</label>
 </div>
 
-<svg
-	on:mousemove={(e) => {
-		coords.set({ x: e.clientX, y: e.clientY });
-	}}
-	on:mousedown={() => size.set(30)}
-	on:mouseup={() => size.set(10)}
->
-	<circle
-		cx={$coords.x}
-		cy={$coords.y}
-		r={$size}
-	/>
-</svg>
-
 <style>
 	svg {
 		position: absolute;
@@ -54,5 +54,17 @@
 
 	circle {
 		fill: #ff3e00;
+	}
+
+	.controls {
+		position: absolute;
+		top: 1em;
+		right: 1em;
+		width: 200px;
+		user-select: none;
+	}
+
+	.controls input {
+		width: 100%;
 	}
 </style>
