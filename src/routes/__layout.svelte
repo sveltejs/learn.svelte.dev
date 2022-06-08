@@ -67,15 +67,4 @@
 		position: relative;
 		top: var(--nav-h);
 	}
-
-	.non-chrome-warning {
-		position: absolute;
-		z-index: 1000;
-		inset: 0;
-
-		background-color: #fff;
-
-		display: grid;
-		place-items: center;
-	}
 </style>
