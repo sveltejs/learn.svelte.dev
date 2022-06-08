@@ -9,7 +9,7 @@ Since the two conditions — `if user.loggedIn` and `if !user.loggedIn` — are 
 	<button on:click={toggle}>
 		Log out
 	</button>
-{:else}
++++{:else}+++
 	<button on:click={toggle}>
 		Log in
 	</button>
