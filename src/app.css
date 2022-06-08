@@ -1,7 +1,11 @@
+@import '@fontsource/roboto-mono';
+
 /* TODO move all this to site-kit */
 
 body {
-	--font-mono: Menlo, Monaco, 'Courier New', monospace;
+	/* --font-mono: Menlo, Monaco, 'Courier New', monospace; */
+	--font-mono: 'Roboto Mono', monospace;
+	--h4: 1.6rem;
 }
 
 /* this is duplicated with kit.svelte.dev */

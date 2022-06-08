@@ -50,6 +50,7 @@
 			monaco.editor.setTheme('svelte');
 
 			editor = monaco.editor.create(container, {
+				fontFamily: 'Roboto Mono',
 				minimap: {
 					enabled: false
 				}

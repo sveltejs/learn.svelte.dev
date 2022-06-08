@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@fontsource/roboto-mono': ^4.5.7
   '@sveltejs/adapter-auto': next
   '@sveltejs/kit': next
   '@sveltejs/site-kit': ^2.1.0
@@ -18,6 +19,7 @@ specifiers:
   ws: ^8.6.0
 
 dependencies:
+  '@fontsource/roboto-mono': 4.5.7
   marked: 4.0.16
   monaco-editor: 0.33.0
   port-authority: 2.0.1
@@ -37,6 +39,10 @@ devDependencies:
   typescript: 4.6.4
 
 packages:
+
+  /@fontsource/roboto-mono/4.5.7:
+    resolution: {integrity: sha512-1uBjM95BEz7zJlmmnpNAM5afMvIxx0wqr86eA76vRqZw8OF5wmsRqYfF3caHuVarBH9/AGN7t9h+3UXK8fjq/Q==}
+    dev: false
 
   /@iarna/toml/2.2.5:
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
