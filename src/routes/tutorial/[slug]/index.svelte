@@ -39,9 +39,6 @@
 	/** @type {Map<string, string>} */
 	const expected = new Map();
 
-	/** @type {Map<string, string>} */
-	const actual = new Map();
-
 	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
 	const models = new Map();
 
@@ -142,7 +139,6 @@
 
 		if (adapter) {
 			expected.clear();
-			actual.clear();
 
 			await adapter.reset(Object.values(b));
 			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
@@ -153,11 +149,13 @@
 			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
 		}
 
+		const actual = new Map();
+
 		await adapter.update(stubs);
 		await get_transformed_modules(adapter.base, section.scope.prefix, stubs, actual);
 
-		for (const [name, contents] of expected.entries()) {
-			complete_states[name] = contents === actual.get(name);
+		for (const [name, transformed] of expected.entries()) {
+			complete_states[name] = transformed === actual.get(name);
 		}
 
 		iframe.src = adapter.base;
@@ -183,20 +181,26 @@
 				iframe.src = adapter.base + path;
 			}, 500);
 		} else if (e.data.type === 'hmr') {
-			e.data.data.forEach(handle_hmr_update);
+			e.data.data.forEach((update) => handle_hmr_update(update.path));
 		}
 	}
 
-	/** @param {any} update */
-	async function handle_hmr_update(update) {
+	/** @param {string} name */
+	async function handle_hmr_update(name) {
 		if (Object.keys(section.b).length === 0) return;
 
-		const res = await fetch(adapter.base + update.path);
+		const res = await fetch(adapter.base + name);
 		const transformed = normalise(await res.text());
+		complete_states[name] = transformed === expected.get(name);
 
-		actual.set(update.path, transformed);
+		if (name.endsWith('.svelte')) {
+			name += '?svelte&type=style&lang.css';
 
-		complete_states[update.path] = transformed === expected.get(update.path);
+			const res = await fetch(adapter.base + name);
+			const transformed = normalise(await res.text());
+			complete_states[name] = transformed === expected.get(name);
+		}
+
 		completed = Object.values(complete_states).every((value) => value);
 	}
 
@@ -215,6 +219,12 @@
 			if (stub.name.startsWith(prefix)) {
 				const res = await fetch(base + stub.name);
 				map.set(stub.name, normalise(await res.text()));
+
+				if (stub.name.endsWith('.svelte')) {
+					const name = stub.name + '?svelte&type=style&lang.css';
+					const res = await fetch(base + name);
+					map.set(name, normalise(await res.text()));
+				}
 			}
 		}
 	}
@@ -223,6 +233,8 @@
 	function normalise(code) {
 		return code
 			.replace(/add_location\([^)]+\)/g, 'add_location(...)')
+			.replace(/\?t=\d+/g, '')
+			.replace(/[&?]svelte&type=style&lang\.css/, '')
 			.replace(/\/\/# sourceMappingURL=.+/, '');
 	}
 
