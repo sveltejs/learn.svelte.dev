@@ -33,9 +33,6 @@
 	const copy_enabled = `${namespace}:copy_enabled`;
 	let show_modal = false;
 
-	/** @type {HTMLElement | null}*/
-	let sfnsp = null;
-
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub | null>} */
 	const selected = writable(section.a[section.chapter.focus]);
 
@@ -206,7 +203,6 @@
 
 					while (node && node !== e.currentTarget) {
 						if (node.nodeName === 'PRE') {
-							sfnsp = node;
 							show_modal = true;
 
 							e.preventDefault();
@@ -328,28 +324,7 @@
 </div>
 
 {#if show_modal}
-	<Modal
-		on:close={() => {
-			show_modal = false;
-
-			// reset sequential focus navigation starting point (ideally this would be
-			// automatic with <dialog> or at least part of the <Modal> component
-			// but I don't think that's currently possible)
-			if (sfnsp) {
-				const tabindex = sfnsp.getAttribute('tabindex');
-
-				sfnsp.setAttribute('tabindex', '-1');
-				sfnsp.focus();
-				sfnsp.blur();
-
-				if (tabindex) {
-					sfnsp.setAttribute('tabindex', tabindex);
-				} else {
-					sfnsp.removeAttribute('tabindex');
-				}
-			}
-		}}
-	>
+	<Modal on:close={() => (show_modal = false)}>
 		<div class="modal-contents">
 			<h2>Copy and paste is currently disabled!</h2>
 

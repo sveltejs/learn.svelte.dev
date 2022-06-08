@@ -5,7 +5,37 @@
 	let modal;
 
 	onMount(() => {
+		const selection = window.getSelection();
+
+		const active = document.activeElement;
+		const sfnsp = selection.focusNode.parentElement;
+
 		if (modal.showModal) modal.showModal();
+
+		return () => {
+			setTimeout(() => {
+				if (active && active !== document.body) {
+					active.focus();
+					return;
+				}
+
+				// reset sequential focus navigation starting point (ideally this
+				// would be automatic with <dialog>, i think)
+				if (sfnsp) {
+					const tabindex = sfnsp.getAttribute('tabindex');
+
+					sfnsp.setAttribute('tabindex', '-1');
+					sfnsp.focus();
+					sfnsp.blur();
+
+					if (tabindex) {
+						sfnsp.setAttribute('tabindex', tabindex);
+					} else {
+						sfnsp.removeAttribute('tabindex');
+					}
+				}
+			}, 0);
+		};
 	});
 </script>
 
