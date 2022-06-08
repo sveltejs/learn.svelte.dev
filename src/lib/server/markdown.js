@@ -40,7 +40,6 @@ const delimiter_substitutes = {
  * @param {string} classname
  */
 function highlight_spans(content, classname) {
-	console.log(content);
 	return `<span class="${classname}">${content}</span>`;
 	// return content.replace(/<span class="([^"]+)"/g, (_, classnames) => {
 	// 	return `<span class="${classname} ${classnames}"`;

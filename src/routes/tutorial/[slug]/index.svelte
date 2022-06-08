@@ -193,15 +193,35 @@
 		const transformed = normalise(await res.text());
 		complete_states[name] = transformed === expected.get(name);
 
-		if (name.endsWith('.svelte')) {
+		if (dev) compare(name, transformed, expected.get(name));
+
+		if (name.endsWith('.svelte') && transformed.includes('svelte&type=style&lang.css')) {
 			name += '?svelte&type=style&lang.css';
 
 			const res = await fetch(adapter.base + name);
 			const transformed = normalise(await res.text());
 			complete_states[name] = transformed === expected.get(name);
+
+			if (dev) compare(name, transformed, expected.get(name));
 		}
 
 		completed = Object.values(complete_states).every((value) => value);
+	}
+
+	/**
+	 * @param {string} name
+	 * @param {string} actual
+	 * @param {string} expected
+	 */
+	async function compare(name, actual, expected) {
+		if (actual === expected) return;
+
+		console.log(actual);
+
+		const Diff = await import('diff');
+		console.group(name);
+		console.log(Diff.diffLines(actual, expected));
+		console.groupEnd();
 	}
 
 	/**
@@ -218,9 +238,10 @@
 
 			if (stub.name.startsWith(prefix)) {
 				const res = await fetch(base + stub.name);
-				map.set(stub.name, normalise(await res.text()));
+				const transformed = normalise(await res.text());
+				map.set(stub.name, transformed);
 
-				if (stub.name.endsWith('.svelte')) {
+				if (stub.name.endsWith('.svelte') && transformed.includes('svelte&type=style&lang.css')) {
 					const name = stub.name + '?svelte&type=style&lang.css';
 					const res = await fetch(base + name);
 					map.set(name, normalise(await res.text()));
