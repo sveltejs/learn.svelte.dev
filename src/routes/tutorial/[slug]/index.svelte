@@ -143,7 +143,7 @@
 		completed = false;
 
 		clearTimeout(timeout);
-		iframe.src = '/loading.html';
+		set_iframe_src('/loading.html');
 
 		if (adapter) {
 			expected.clear();
@@ -166,7 +166,7 @@
 			complete_states[name] = transformed === actual.get(name);
 		}
 
-		iframe.src = adapter.base;
+		set_iframe_src(adapter.base);
 	});
 
 	/** @type {NodeJS.Timeout} */
@@ -185,8 +185,8 @@
 				if (dev && !iframe) return;
 
 				// we lost contact, refresh the page
-				iframe.src = '/loading.html';
-				iframe.src = adapter.base + path;
+				set_iframe_src('/loading.html');
+				set_iframe_src(adapter.base + path);
 			}, 500);
 		} else if (e.data.type === 'hmr') {
 			e.data.data.forEach((update) => handle_hmr_update(update.path));
@@ -265,6 +265,17 @@
 			.replace(/\?t=\d+/g, '')
 			.replace(/[&?]svelte&type=style&lang\.css/, '')
 			.replace(/\/\/# sourceMappingURL=.+/, '');
+	}
+
+	/** @param {string} src */
+	function set_iframe_src(src) {
+		// removing the iframe from the document allows us to
+		// change the src without adding a history entry, which
+		// would make back/forward traversal very annoying
+		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
+		parentNode?.removeChild(iframe);
+		iframe.src = src;
+		parentNode?.appendChild(iframe);
 	}
 
 	const hidden = new Set(['__client.js', 'node_modules']);
@@ -393,8 +404,8 @@
 					<div class="chrome">
 						<button
 							on:click={() => {
-								iframe.src = '/loading.html';
-								iframe.src = adapter.base + path;
+								set_iframe_src('/loading.html');
+								set_iframe_src(adapter.base + path);
 							}}
 							aria-label="reload"
 						>
@@ -407,7 +418,7 @@
 							on:change={(e) => {
 								const url = new URL(e.currentTarget.value, adapter.base);
 								path = url.pathname + url.search + url.hash;
-								iframe.src = adapter.base + path;
+								set_iframe_src(adapter.base + path);
 							}}
 						/>
 					</div>
