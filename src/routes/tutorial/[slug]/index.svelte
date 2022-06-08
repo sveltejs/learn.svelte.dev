@@ -33,7 +33,13 @@
 	let show_modal = false;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub | null>} */
-	const selected = writable(section.a[section.chapter.focus]);
+	const selected = writable(section.a[section.focus]);
+
+	/** @type {Map<string, string>} */
+	const expected = new Map();
+
+	/** @type {Map<string, string>} */
+	const actual = new Map();
 
 	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
 	const models = new Map();
@@ -50,7 +56,6 @@
 	let completed = false;
 	let completing = false;
 	let path = '/';
-	let src = '/loading.html';
 
 	$: b = { ...section.a, ...section.b };
 
@@ -75,24 +80,14 @@
 	};
 
 	onMount(() => {
-		let destroyed = false;
-
-		// TODO vary adapter based on situation, e.g. webcontainers
-		import('$lib/client/adapters/filesystem/index.js').then(async (module) => {
-			if (!destroyed) adapter = await module.create(Object.values(section.a));
-			src = adapter.base;
-		});
-
-		document.addEventListener('pagehide', () => {
-			adapter.destroy();
-		});
-
-		return () => {
-			destroyed = true;
+		function destroy() {
 			if (adapter) {
 				adapter.destroy();
 			}
-		};
+		}
+
+		document.addEventListener('pagehide', destroy);
+		return destroy;
 	});
 
 	afterNavigate(async () => {
@@ -148,9 +143,33 @@
 
 		completed = false;
 
+		iframe.src = '/loading.html';
+
 		if (adapter) {
-			await adapter.reset(stubs);
+			expected.clear();
+			actual.clear();
+
+			await adapter.reset(Object.values(b));
+			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
+
+			await adapter.update(stubs);
+			await get_transformed_modules(adapter.base, section.scope.prefix, stubs, actual);
+
 			if (path !== '/') iframe.src = adapter.base;
+		} else {
+			const module = await import('$lib/client/adapters/filesystem/index.js');
+
+			const { scope, a } = section;
+
+			adapter = await module.create(Object.values(b));
+			await get_transformed_modules(adapter.base, scope.prefix, Object.values(b), expected);
+
+			await adapter.update(stubs);
+			await get_transformed_modules(adapter.base, scope.prefix, stubs, actual);
+
+			console.log({ expected, actual });
+
+			iframe.src = adapter.base;
 		}
 	});
 
@@ -161,16 +180,44 @@
 	function handle_message(e) {
 		if (!adapter) return;
 		if (e.origin !== adapter.base) return;
-		if (e.data.type !== 'ping') return;
 
-		path = e.data.data.path;
+		if (e.data.type === 'ping') {
+			path = e.data.data.path;
 
-		clearTimeout(timeout);
-		timeout = setTimeout(() => {
-			// we lost contact, refresh the page
-			iframe.src = '/loading.html';
-			iframe.src = adapter.base + path;
-		}, 500);
+			clearTimeout(timeout);
+			timeout = setTimeout(() => {
+				// we lost contact, refresh the page
+				iframe.src = '/loading.html';
+				iframe.src = adapter.base + path;
+			}, 500);
+		} else if (e.data.type === 'hmr') {
+			e.data.data.forEach(handle_hmr_update);
+		}
+	}
+
+	/** @param {any} update */
+	async function handle_hmr_update(update) {
+		const res = await fetch(adapter.base + update.path);
+		console.log('>>> HMR', update.path);
+	}
+
+	/**
+	 * @param {string} base
+	 * @param {string} prefix
+	 * @param {import('$lib/types').Stub[]} stubs
+	 * @param {Map<string, string>} map
+	 */
+	async function get_transformed_modules(base, prefix, stubs, map) {
+		for (const stub of stubs) {
+			if (stub.name === '/src/__client.js') continue;
+			if (stub.type !== 'file') continue;
+			if (!/\.(js|ts|svelte)$/.test(stub.name)) continue;
+
+			if (stub.name.startsWith(prefix)) {
+				const res = await fetch(base + stub.name);
+				map.set(stub.name, await res.text());
+			}
+		}
 	}
 
 	const hidden = new Set(['__client.js', 'node_modules']);
@@ -317,7 +364,7 @@
 						/>
 					</div>
 
-					<iframe bind:this={iframe} title="Output" {src} />
+					<iframe bind:this={iframe} title="Output" src="/loading.html" />
 				</section>
 			</SplitPane>
 		</section>

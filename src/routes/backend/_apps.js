@@ -38,25 +38,7 @@ globalThis.__apps = apps;
  */
 export async function create({ files }) {
 	const id = String(Date.now());
-
-	/** @type {string[]} */
-	const filenames = [];
-
-	for (const file of files) {
-		if (file.type === 'file') {
-			filenames.push(file.name);
-
-			const dest = `.apps/${id}/${file.name}`;
-			let content = file.text ? file.contents : Buffer.from(file.contents, 'base64');
-
-			if (file.name === '/src/app.html' && typeof content === 'string') {
-				// TODO handle case where config.kit.files.template is different
-				content = content.replace('</head>', '<script src="/__client.js"></script></head>');
-			}
-
-			write_if_changed(dest, content);
-		}
-	}
+	const filenames = write_files(id, files);
 
 	const port = await ports.find(3001);
 
@@ -117,27 +99,11 @@ export function clear({ id, files }) {
  * }} options
  */
 export function update({ id, files }) {
-	const app = apps.get(id);
-
-	if (!app) {
+	if (!apps.has(id)) {
 		throw new Error(`app ${id} does not exist`);
 	}
 
-	const dir = `.apps/${id}`;
-
-	for (const file of files) {
-		if (file.type === 'file') {
-			const dest = `${dir}/${file.name}`;
-			let content = file.text ? file.contents : Buffer.from(file.contents, 'base64');
-
-			if (file.name === '/src/app.html' && typeof content === 'string') {
-				// TODO handle case where config.kit.files.template is different
-				content = content.replace('</head>', '<script src="/__client.js"></script></head>');
-			}
-
-			write_if_changed(dest, content);
-		}
-	}
+	write_files(id, files);
 }
 
 /**
@@ -187,4 +153,37 @@ function write_if_changed(file, contents) {
 
 	fs.mkdirSync(path.dirname(file), { recursive: true });
 	fs.writeFileSync(file, contents);
+}
+
+/**
+ *
+ * @param {string} id
+ * @param {import('$lib/types').FileStub[]} files
+ */
+function write_files(id, files) {
+	const dir = `.apps/${id}`;
+
+	/** @type {string[]} */
+	const filenames = [];
+
+	for (const file of files) {
+		if (file.type === 'file') {
+			filenames.push(file.name);
+
+			const dest = `${dir}/${file.name}`;
+			let content = file.text ? file.contents : Buffer.from(file.contents, 'base64');
+
+			if (file.name === '/src/app.html' && typeof content === 'string') {
+				// TODO handle case where config.kit.files.template is different
+				content = content.replace(
+					'</head>',
+					'<script type="module" src="/src/__client.js"></script></head>'
+				);
+			}
+
+			write_if_changed(dest, content);
+		}
+	}
+
+	return filenames;
 }
