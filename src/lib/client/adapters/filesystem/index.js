@@ -34,6 +34,8 @@ export async function create(stubs) {
 				},
 				body: JSON.stringify(stubs)
 			});
+
+			await new Promise((f) => setTimeout(f, 100)); // wait for chokidar
 		},
 
 		/** @param {import('$lib/types').Stub[]} stubs */
@@ -45,6 +47,8 @@ export async function create(stubs) {
 				},
 				body: JSON.stringify(stubs)
 			});
+
+			await new Promise((f) => setTimeout(f, 100)); // wait for chokidar
 		},
 
 		async destroy() {

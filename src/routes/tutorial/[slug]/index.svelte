@@ -143,6 +143,7 @@
 
 		completed = false;
 
+		clearTimeout(timeout);
 		iframe.src = '/loading.html';
 
 		if (adapter) {
@@ -151,26 +152,17 @@
 
 			await adapter.reset(Object.values(b));
 			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
-
-			await adapter.update(stubs);
-			await get_transformed_modules(adapter.base, section.scope.prefix, stubs, actual);
-
-			if (path !== '/') iframe.src = adapter.base;
 		} else {
 			const module = await import('$lib/client/adapters/filesystem/index.js');
 
-			const { scope, a } = section;
-
 			adapter = await module.create(Object.values(b));
-			await get_transformed_modules(adapter.base, scope.prefix, Object.values(b), expected);
-
-			await adapter.update(stubs);
-			await get_transformed_modules(adapter.base, scope.prefix, stubs, actual);
-
-			console.log({ expected, actual });
-
-			iframe.src = adapter.base;
+			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
 		}
+
+		await adapter.update(stubs);
+		await get_transformed_modules(adapter.base, section.scope.prefix, stubs, actual);
+
+		iframe.src = adapter.base;
 	});
 
 	/** @type {NodeJS.Timeout} */
