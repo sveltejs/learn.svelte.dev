@@ -25,3 +25,7 @@ Then, we can refer to `name` in the markup:
 ```
 
 Inside the curly braces, we can put any JavaScript we want. Try changing `name` to `name.toUpperCase()` for a shoutier greeting.
+
+```svelte
+<h1>Hello {name+++.toUpperCase()+++}!</h1>
+```

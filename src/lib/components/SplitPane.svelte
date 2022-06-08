@@ -10,6 +10,9 @@
 	export let min = '0%';
 	export let max = '100%';
 
+	/** @type {'min' | 'max'}*/
+	export let priority = 'min';
+
 	/** @type {HTMLElement} */
 	let container;
 
@@ -32,7 +35,9 @@
 		if (min_px < 0) min_px += size;
 		if (max_px < 0) max_px += size;
 
-		pos_px = Math.min(max_px, Math.max(min_px, pos_px));
+		pos_px = priority === 'min'
+			? Math.max(min_px, Math.min(max_px, pos_px))
+			: Math.min(max_px, Math.max(min_px, pos_px));
 
 		pos = pos.endsWith('%') ? `${(100 * pos_px) / size}%` : `${pos_px}px`;
 	}
