@@ -21,6 +21,7 @@
 	import { Icon } from '@sveltejs/site-kit';
 	import Menu from './_/Menu/Menu.svelte';
 	import Modal from '$lib/components/Modal.svelte';
+	import { dev } from '$app/env';
 
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
@@ -33,7 +34,10 @@
 	let show_modal = false;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub | null>} */
-	const selected = writable(section.a[section.chapter.focus]);
+	const selected = writable(section.a[section.focus]);
+
+	/** @type {Map<string, string>} */
+	const expected = new Map();
 
 	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
 	const models = new Map();
@@ -47,10 +51,11 @@
 	/** @type {HTMLIFrameElement} */
 	let iframe;
 
+	/** @type {Record<string, boolean>}*/
+	let complete_states = {};
 	let completed = false;
 	let completing = false;
 	let path = '/';
-	let src = '/loading.html';
 
 	$: b = { ...section.a, ...section.b };
 
@@ -75,24 +80,14 @@
 	};
 
 	onMount(() => {
-		let destroyed = false;
-
-		// TODO vary adapter based on situation, e.g. webcontainers
-		import('$lib/client/adapters/filesystem/index.js').then(async (module) => {
-			if (!destroyed) adapter = await module.create(Object.values(section.a));
-			src = adapter.base;
-		});
-
-		document.addEventListener('pagehide', () => {
-			adapter.destroy();
-		});
-
-		return () => {
-			destroyed = true;
+		function destroy() {
 			if (adapter) {
 				adapter.destroy();
 			}
-		};
+		}
+
+		document.addEventListener('pagehide', destroy);
+		return destroy;
 	});
 
 	afterNavigate(async () => {
@@ -101,8 +96,7 @@
 		});
 		models.clear();
 
-		/** @type {Record<string, boolean>}*/
-		const complete_states = {};
+		complete_states = {};
 
 		const stubs = Object.values(section.a);
 
@@ -110,9 +104,6 @@
 
 		stubs.forEach((stub) => {
 			if (stub.type === 'file') {
-				const target = /** @type {import('$lib/types').FileStub} */ (b[stub.name]);
-				complete_states[stub.name] = target.contents === stub.contents;
-
 				const type = /** @type {string} */ (stub.basename.split('.').pop());
 
 				const model = monaco.editor.createModel(
@@ -129,11 +120,6 @@
 					if (!completing) {
 						adapter.update([{ ...stub, contents }]);
 					}
-
-					if (Object.keys(section.b).length > 0) {
-						complete_states[stub.name] = contents === target.contents;
-						completed = Object.values(complete_states).every((value) => value);
-					}
 				});
 
 				models.set(stub, model);
@@ -148,10 +134,31 @@
 
 		completed = false;
 
+		clearTimeout(timeout);
+		iframe.src = '/loading.html';
+
 		if (adapter) {
-			await adapter.reset(stubs);
-			if (path !== '/') iframe.src = adapter.base;
+			expected.clear();
+
+			await adapter.reset(Object.values(b));
+			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
+		} else {
+			const module = await import('$lib/client/adapters/filesystem/index.js');
+
+			adapter = await module.create(Object.values(b));
+			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
 		}
+
+		const actual = new Map();
+
+		await adapter.update(stubs);
+		await get_transformed_modules(adapter.base, section.scope.prefix, stubs, actual);
+
+		for (const [name, transformed] of expected.entries()) {
+			complete_states[name] = transformed === actual.get(name);
+		}
+
+		iframe.src = adapter.base;
 	});
 
 	/** @type {NodeJS.Timeout} */
@@ -161,16 +168,74 @@
 	function handle_message(e) {
 		if (!adapter) return;
 		if (e.origin !== adapter.base) return;
-		if (e.data.type !== 'ping') return;
 
-		path = e.data.data.path;
+		if (e.data.type === 'ping') {
+			path = e.data.data.path;
 
-		clearTimeout(timeout);
-		timeout = setTimeout(() => {
-			// we lost contact, refresh the page
-			iframe.src = '/loading.html';
-			iframe.src = adapter.base + path;
-		}, 500);
+			clearTimeout(timeout);
+			timeout = setTimeout(() => {
+				if (dev && !iframe) return;
+
+				// we lost contact, refresh the page
+				iframe.src = '/loading.html';
+				iframe.src = adapter.base + path;
+			}, 500);
+		} else if (e.data.type === 'hmr') {
+			e.data.data.forEach((update) => handle_hmr_update(update.path));
+		}
+	}
+
+	/** @param {string} name */
+	async function handle_hmr_update(name) {
+		if (Object.keys(section.b).length === 0) return;
+
+		const res = await fetch(adapter.base + name);
+		const transformed = normalise(await res.text());
+		complete_states[name] = transformed === expected.get(name);
+
+		if (name.endsWith('.svelte')) {
+			name += '?svelte&type=style&lang.css';
+
+			const res = await fetch(adapter.base + name);
+			const transformed = normalise(await res.text());
+			complete_states[name] = transformed === expected.get(name);
+		}
+
+		completed = Object.values(complete_states).every((value) => value);
+	}
+
+	/**
+	 * @param {string} base
+	 * @param {string} prefix
+	 * @param {import('$lib/types').Stub[]} stubs
+	 * @param {Map<string, string>} map
+	 */
+	async function get_transformed_modules(base, prefix, stubs, map) {
+		for (const stub of stubs) {
+			if (stub.name === '/src/__client.js') continue;
+			if (stub.type !== 'file') continue;
+			if (!/\.(js|ts|svelte)$/.test(stub.name)) continue;
+
+			if (stub.name.startsWith(prefix)) {
+				const res = await fetch(base + stub.name);
+				map.set(stub.name, normalise(await res.text()));
+
+				if (stub.name.endsWith('.svelte')) {
+					const name = stub.name + '?svelte&type=style&lang.css';
+					const res = await fetch(base + name);
+					map.set(name, normalise(await res.text()));
+				}
+			}
+		}
+	}
+
+	/** @param {string} code */
+	function normalise(code) {
+		return code
+			.replace(/add_location\([^)]+\)/g, 'add_location(...)')
+			.replace(/\?t=\d+/g, '')
+			.replace(/[&?]svelte&type=style&lang\.css/, '')
+			.replace(/\/\/# sourceMappingURL=.+/, '');
 	}
 
 	const hidden = new Set(['__client.js', 'node_modules']);
@@ -317,7 +382,7 @@
 						/>
 					</div>
 
-					<iframe bind:this={iframe} title="Output" {src} />
+					<iframe bind:this={iframe} title="Output" src="/loading.html" />
 				</section>
 			</SplitPane>
 		</section>
