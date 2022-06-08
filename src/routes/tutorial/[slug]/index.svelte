@@ -18,7 +18,6 @@
 	import Editor from './_/Editor.svelte';
 	import Folder from './_/Folder.svelte';
 	import refresh from './_/refresh.svg';
-	import { monaco } from '$lib/client/monaco/monaco.js';
 	import { Icon } from '@sveltejs/site-kit';
 	import Menu from './_/Menu/Menu.svelte';
 
@@ -101,6 +100,8 @@
 		const complete_states = {};
 
 		const stubs = Object.values(section.a);
+
+		const { monaco } = await import('$lib/client/monaco/monaco.js');
 
 		stubs.forEach((stub) => {
 			if (stub.type === 'file') {
