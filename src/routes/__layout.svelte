@@ -8,9 +8,6 @@
 
 		const is_chrome = browser && dev && /chrome/gi.test(navigator.userAgent);
 
-		if (browser)
-		console.log(/chrome/gi.test(navigator.userAgent))
-
 		return {
 			stuff: { index },
 			props: {
