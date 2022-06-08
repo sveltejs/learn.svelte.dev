@@ -21,6 +21,7 @@
 	import { Icon } from '@sveltejs/site-kit';
 	import Menu from './_/Menu/Menu.svelte';
 	import Modal from '$lib/components/Modal.svelte';
+	import { dev } from '$app/env';
 
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
@@ -53,6 +54,8 @@
 	/** @type {HTMLIFrameElement} */
 	let iframe;
 
+	/** @type {Record<string, boolean>}*/
+	let complete_states = {};
 	let completed = false;
 	let completing = false;
 	let path = '/';
@@ -96,8 +99,7 @@
 		});
 		models.clear();
 
-		/** @type {Record<string, boolean>}*/
-		const complete_states = {};
+		complete_states = {};
 
 		const stubs = Object.values(section.a);
 
@@ -105,9 +107,6 @@
 
 		stubs.forEach((stub) => {
 			if (stub.type === 'file') {
-				const target = /** @type {import('$lib/types').FileStub} */ (b[stub.name]);
-				complete_states[stub.name] = target.contents === stub.contents;
-
 				const type = /** @type {string} */ (stub.basename.split('.').pop());
 
 				const model = monaco.editor.createModel(
@@ -123,11 +122,6 @@
 
 					if (!completing) {
 						adapter.update([{ ...stub, contents }]);
-					}
-
-					if (Object.keys(section.b).length > 0) {
-						complete_states[stub.name] = contents === target.contents;
-						completed = Object.values(complete_states).every((value) => value);
 					}
 				});
 
@@ -162,6 +156,10 @@
 		await adapter.update(stubs);
 		await get_transformed_modules(adapter.base, section.scope.prefix, stubs, actual);
 
+		for (const [name, contents] of expected.entries()) {
+			complete_states[name] = contents === actual.get(name);
+		}
+
 		iframe.src = adapter.base;
 	});
 
@@ -178,6 +176,8 @@
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
+				if (dev && !iframe) return;
+
 				// we lost contact, refresh the page
 				iframe.src = '/loading.html';
 				iframe.src = adapter.base + path;
@@ -189,8 +189,15 @@
 
 	/** @param {any} update */
 	async function handle_hmr_update(update) {
+		if (Object.keys(section.b).length === 0) return;
+
 		const res = await fetch(adapter.base + update.path);
-		console.log('>>> HMR', update.path);
+		const transformed = normalise(await res.text());
+
+		actual.set(update.path, transformed);
+
+		complete_states[update.path] = transformed === expected.get(update.path);
+		completed = Object.values(complete_states).every((value) => value);
 	}
 
 	/**
@@ -207,9 +214,16 @@
 
 			if (stub.name.startsWith(prefix)) {
 				const res = await fetch(base + stub.name);
-				map.set(stub.name, await res.text());
+				map.set(stub.name, normalise(await res.text()));
 			}
 		}
+	}
+
+	/** @param {string} code */
+	function normalise(code) {
+		return code
+			.replace(/add_location\([^)]+\)/g, 'add_location(...)')
+			.replace(/\/\/# sourceMappingURL=.+/, '');
 	}
 
 	const hidden = new Set(['__client.js', 'node_modules']);
