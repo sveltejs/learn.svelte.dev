@@ -7,14 +7,14 @@ At the heart of Svelte is a powerful system of _reactivity_ for keeping the DOM 
 To demonstrate it, we first need to wire up an event handler (we'll learn more about these [later](/tutorial/dom-events)). Replace line 9 with this:
 
 ```svelte
-<button on:click={increment}>
+<button +++on:click={increment}+++>
 ```
 
 Inside the `increment` function, all we need to do is change the value of `count`:
 
 ```js
 function increment() {
-	count += 1;
+	+++count += 1;+++
 }
 ```
 

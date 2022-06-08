@@ -10,19 +10,18 @@ A component that just renders some static markup isn't very interesting. Let's a
 
 First, add a script tag to your component and declare a `name` variable:
 
-```diff
-+<script>
-+	let name = 'Svelte';
-+</script>
-+
+```svelte
++++<script>
+	let name = 'Svelte';
+</script>+++
+
 <h1>Hello world!</h1>
 ```
 
 Then, we can refer to `name` in the markup:
 
-```diff
--<h1>Hello world!</h1>
-+<h1>Hello {name}!</h1>
+```svelte
+<h1>Hello +++{name}+++!</h1>
 ```
 
 Inside the curly braces, we can put any JavaScript we want. Try changing `name` to `name.toUpperCase()` for a shoutier greeting.

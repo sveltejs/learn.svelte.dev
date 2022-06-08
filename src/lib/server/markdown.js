@@ -29,6 +29,24 @@ function escape(html) {
 	return html.replace(/[&<>]/g, (c) => chars[c]);
 }
 
+const delimiter_substitutes = {
+	'+++': '             ',
+	'---': '           ',
+	'===': '         '
+};
+
+/**
+ * @param {string} content
+ * @param {string} classname
+ */
+function highlight_spans(content, classname) {
+	console.log(content);
+	return `<span class="${classname}">${content}</span>`;
+	// return content.replace(/<span class="([^"]+)"/g, (_, classnames) => {
+	// 	return `<span class="${classname} ${classnames}"`;
+	// });
+}
+
 marked.use({
 	renderer: {
 		code: (source, language, current) => {
@@ -51,6 +69,9 @@ marked.use({
 						tabs += '  ';
 					}
 					return prefix + tabs;
+				})
+				.replace(/([+=-]{3})/g, (_, delimiter) => {
+					return delimiter_substitutes[delimiter];
 				})
 				.replace(/\*\\\//g, '*/');
 
@@ -85,23 +106,16 @@ marked.use({
 				}<pre class='language-${plang}'><code>${highlighted}</code></pre></div>`;
 			}
 
-			return html.replace(
-				/^(\s+)<span class="token comment">([\s\S]+?)<\/span>\n/gm,
-				(match, intro_whitespace, content) => {
-					// we use some CSS trickery to make comments break onto multiple lines while preserving indentation
-					const lines = (intro_whitespace + content).split('\n');
-					return lines
-						.map((line) => {
-							const match = /^(\s*)(.*)/.exec(line);
-							const indent = (match[1] ?? '').replace(/\t/g, '  ').length;
-
-							return `<span class="token comment wrapped" style="--indent: ${indent}ch">${
-								line ?? ''
-							}</span>`;
-						})
-						.join('');
-				}
-			);
+			return html
+				.replace(/ {13}([^ ][^]+?) {13}/g, (_, content) => {
+					return highlight_spans(content, 'highlight add');
+				})
+				.replace(/ {11}([^ ][^]+?) {11}/g, (_, content) => {
+					return highlight_spans(content, 'highlight remove');
+				})
+				.replace(/ {9}([^ ][^]+?) {9}/g, (_, content) => {
+					return highlight_spans(content, 'highlight');
+				});
 		}
 	}
 });

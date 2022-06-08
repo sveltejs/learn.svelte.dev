@@ -8,7 +8,7 @@ In any real application, you'll need to pass data from one component down to its
 
 ```svelte
 <script>
-	export let answer;
+	+++export+++ let answer;
 </script>
 ```
 

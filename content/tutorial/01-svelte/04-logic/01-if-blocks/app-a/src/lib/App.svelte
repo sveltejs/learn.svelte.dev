@@ -6,5 +6,10 @@
 	}
 </script>
 
-<button on:click={toggle}>Log out</button>
-<button on:click={toggle}>Log in</button>
+<button on:click={toggle}>
+	Log out
+</button>
+
+<button on:click={toggle}>
+	Log in
+</button>
