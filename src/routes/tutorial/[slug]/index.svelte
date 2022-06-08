@@ -21,12 +21,20 @@
 	import { monaco } from '$lib/client/monaco/monaco.js';
 	import { Icon } from '@sveltejs/site-kit';
 	import Menu from './_/Menu/Menu.svelte';
+	import Modal from '$lib/components/Modal.svelte';
 
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
 
 	/** @type {import('$lib/types').Section} */
 	export let section;
+
+	const namespace = 'learn.svelte.dev';
+	const copy_enabled = `${namespace}:copy_enabled`;
+	let show_modal = false;
+
+	/** @type {HTMLElement | null}*/
+	let sfnsp = null;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub | null>} */
 	const selected = writable(section.a[section.chapter.focus]);
@@ -188,7 +196,27 @@
 				</h1>
 			</header>
 
-			<div class="text">
+			<div
+				class="text"
+				on:copy={(e) => {
+					if (sessionStorage[copy_enabled]) return;
+
+					/** @type {HTMLElement | null} */
+					let node = /** @type {HTMLElement} */ (e.target);
+
+					while (node && node !== e.currentTarget) {
+						if (node.nodeName === 'PRE') {
+							sfnsp = node;
+							show_modal = true;
+
+							e.preventDefault();
+							return;
+						}
+
+						node = /** @type {HTMLElement | null} */ (node.parentNode);
+					}
+				}}
+			>
 				{@html section.html}
 
 				{#if section.next}
@@ -298,6 +326,51 @@
 		</section>
 	</SplitPane>
 </div>
+
+{#if show_modal}
+	<Modal
+		on:close={() => {
+			show_modal = false;
+
+			// reset sequential focus navigation starting point (ideally this would be
+			// automatic with <dialog> or at least part of the <Modal> component
+			// but I don't think that's currently possible)
+			if (sfnsp) {
+				const tabindex = sfnsp.getAttribute('tabindex');
+
+				sfnsp.setAttribute('tabindex', '-1');
+				sfnsp.focus();
+				sfnsp.blur();
+
+				if (tabindex) {
+					sfnsp.setAttribute('tabindex', tabindex);
+				} else {
+					sfnsp.removeAttribute('tabindex');
+				}
+			}
+		}}
+	>
+		<div class="modal-contents">
+			<h2>Copy and paste is currently disabled!</h2>
+
+			<p>
+				We recommend typing the code into the editor to complete the exercise, as this results in
+				better retention and understanding.
+			</p>
+			<label>
+				<input
+					type="checkbox"
+					on:change={(e) => {
+						sessionStorage[copy_enabled] = e.currentTarget.checked ? 'true' : '';
+					}}
+				/>
+				enable copy-and-paste for the duration of this session
+			</label>
+
+			<button on:click={() => (show_modal = false)}>OK</button>
+		</div>
+	</Modal>
+{/if}
 
 <style>
 	.container {
@@ -519,5 +592,25 @@
 		resize: none;
 		box-sizing: border-box;
 		border: none;
+	}
+
+	.modal-contents h2 {
+		font-size: 2.4rem;
+		margin: 0 0 0.5em 0;
+	}
+
+	.modal-contents label {
+		user-select: none;
+	}
+
+	.modal-contents button {
+		display: block;
+		background: var(--prime);
+		color: white;
+		padding: 1rem;
+		width: 10em;
+		margin: 1em 0 0 0;
+		border-radius: var(--border-r);
+		line-height: 1;
 	}
 </style>
