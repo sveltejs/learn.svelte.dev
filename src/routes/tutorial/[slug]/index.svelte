@@ -509,6 +509,21 @@
 		content: none;
 	}
 
+	.text :global(pre) :global(.highlight) {
+		--color: rgba(220, 220, 0, 0.2);
+		background: var(--color);
+		outline: 2px solid var(--color);
+		border-radius: 2px;
+	}
+
+	.text :global(pre) :global(.highlight.add) {
+		--color: rgba(0, 255, 0, 0.2);
+	}
+
+	.text :global(pre) :global(.highlight.remove) {
+		--color: rgba(255, 0, 0, 0.2);
+	}
+
 	.text :global(blockquote) {
 		background: var(--second);
 		margin: 2rem 0;
