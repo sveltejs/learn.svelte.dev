@@ -42,6 +42,9 @@
 	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
 	const models = new Map();
 
+	/** @type {HTMLElement} */
+	let sidebar;
+
 	/** @type {import('svelte').SvelteComponent} */
 	let menu;
 
@@ -91,6 +94,11 @@
 	});
 
 	afterNavigate(async () => {
+		// TODO ideally we would associate scroll state with
+		// history. That's a little tricky to do right now,
+		// so for now just always reset sidebar scroll
+		sidebar.scrollTop = 0;
+
 		models.forEach((model) => {
 			model.dispose();
 		});
@@ -281,6 +289,7 @@
 			</header>
 
 			<div
+				bind:this={sidebar}
 				class="text"
 				on:copy={(e) => {
 					if (sessionStorage[copy_enabled]) return;
