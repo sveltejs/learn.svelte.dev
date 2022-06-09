@@ -394,7 +394,7 @@
 							</div>
 						</section>
 
-						<section slot="b">
+						<section class="editor-container" slot="b">
 							<Editor model={current_model} />
 						</section>
 					</SplitPane>
@@ -709,5 +709,9 @@
 		margin: 1em 0 0 0;
 		border-radius: var(--border-r);
 		line-height: 1;
+	}
+
+	.editor-container {
+		padding: 0.5rem;
 	}
 </style>

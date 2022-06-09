@@ -51,6 +51,7 @@
 
 			editor = monaco.editor.create(container, {
 				fontFamily: 'Roboto Mono',
+				fontSize: 13,
 				minimap: {
 					enabled: false
 				}
@@ -84,5 +85,22 @@
 		width: 100%;
 		height: 100%;
 		tab-size: 2;
+	}
+
+	/* TODO figure out how to make the indent guides
+	   play nicely with fonts other than Menlo */
+	div :global(.core-guide-indent.vertical),
+	div :global(.core-guide-indent-active.vertical) {
+		display: none;
+	}
+
+	/* TODO figure out how to remove the weird 1px line
+	   in the scroll gutter */
+	div :global(.decorationsOverviewRuler) {
+		display: none !important;
+	}
+
+	div :global(.monaco-editor .view-overlays .current-line) {
+		border: none;
 	}
 </style>

@@ -1,3 +1,4 @@
+import path from 'path';
 import adapter from '@sveltejs/adapter-auto';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -7,6 +8,11 @@ const config = {
 
 		vite: {
 			server: {
+				fs: {
+					allow: [
+						path.resolve('.apps')
+					]
+				},
 				watch: {
 					ignored: ['**/.apps/**']
 				}
