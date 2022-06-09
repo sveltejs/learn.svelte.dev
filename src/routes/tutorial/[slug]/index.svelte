@@ -22,6 +22,7 @@
 	import Menu from './_/Menu/Menu.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import { dev } from '$app/env';
+	import ImageViewer from './_/ImageViewer.svelte';
 
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
@@ -33,8 +34,10 @@
 	const copy_enabled = `${namespace}:copy_enabled`;
 	let show_modal = false;
 
-	/** @type {import('svelte/store').Writable<import('$lib/types').Stub | null>} */
-	const selected = writable(section.a[section.focus]);
+	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
+	const selected = writable(
+		/** @type {import('$lib/types').FileStub} */ (section.a[section.focus])
+	);
 
 	/** @type {Map<string, string>} */
 	const expected = new Map();
@@ -396,6 +399,7 @@
 
 						<section class="editor-container" slot="b">
 							<Editor model={current_model} />
+							<ImageViewer selected={$selected} />
 						</section>
 					</SplitPane>
 				</section>
