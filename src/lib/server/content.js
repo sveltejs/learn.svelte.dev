@@ -14,6 +14,8 @@ const text_files = new Set([
 	'.md'
 ]);
 
+const excluded = new Set(['.DS_Store', '.gitkeep']);
+
 /** @param {string} file */
 function json(file) {
 	return JSON.parse(fs.readFileSync(file, 'utf-8'));
@@ -176,7 +178,7 @@ export function walk(cwd) {
 		const files = fs.readdirSync(path.join(cwd, dir));
 
 		for (const basename of files) {
-			if (basename === '.gitkeep') continue;
+			if (excluded.has(basename)) continue;
 
 			const name = dir + basename;
 			const resolved = path.join(cwd, name);
