@@ -10,15 +10,14 @@
 		['.gif', 'image/gif']
 	]);
 
-	$: console.log(selected);
-
 	$: ext = selected?.basename.slice(selected.basename.lastIndexOf('.'));
-	$: image_type = image_types.get(ext);
+	$: image_type = ext && image_types.get(ext);
+	$: image = image_type && selected;
 </script>
 
-{#if image_type}
+{#if image}
 	<div class="image-viewer">
-		<img alt="{selected.name} preview" src="data:{image_type};base64,{selected.contents}" />
+		<img alt="{image.name} preview" src="data:{image_type};base64,{image.contents}" />
 	</div>
 {/if}
 
