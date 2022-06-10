@@ -49,19 +49,34 @@
 	}
 </script>
 
-<button class="menu-toggle" on:click={() => (is_open = !is_open)} aria-label="Toggle menu" aria-expanded={is_open}>
+<button
+	class="menu-toggle"
+	on:click={() => (is_open = !is_open)}
+	aria-label="Toggle menu"
+	aria-expanded={is_open}
+>
 	<Icon name={is_open ? 'close' : 'menu'} />
 </button>
 
 <nav class:open={is_open} aria-label="tutorial sections">
 	<div class="controls">
-		<input type="search" placeholder="Search" bind:value={search} aria-hidden={!is_open ? "true" : null} tabindex={!is_open ? -1 : null} />
+		<input
+			type="search"
+			placeholder="Search"
+			bind:value={search}
+			aria-hidden={!is_open ? 'true' : null}
+			tabindex={!is_open ? -1 : null}
+		/>
 	</div>
 
 	<div class="sections">
 		<ul>
 			{#each filtered as part (part.slug)}
-				<li class="part" transition:slide|local={{ duration }}>
+				<li
+					class="part"
+					transition:slide|local={{ duration }}
+					class:expanded={part.slug === current.part.slug}
+				>
 					<a sveltekit:prefetch href="/tutorial/{part.first}" data-label={part.label}>
 						Part {part.label}: {part.title}
 					</a>
@@ -114,7 +129,7 @@
 		height: 100%;
 		transition: transform 0.2s;
 		transform: translate(calc(var(--menu-width) - 100%), 0);
-		background: var(--second);
+		background: var(--back-api);
 		z-index: 2;
 		/* filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.1)); */
 		border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -171,7 +186,7 @@
 			var(--second) calc(100% - 1rem),
 			transparent
 		); */
-		background: var(--second);
+		background: var(--back-api);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 		border-right: 1px solid rgba(255, 255, 255, 0.1);
 	}
@@ -197,8 +212,8 @@
 		position: relative;
 	}
 
-	li[aria-current='page'] {
-		font-weight: bold;
+	li[aria-current='page'] a {
+		color: var(--prime);
 	}
 
 	li img {
@@ -208,6 +223,10 @@
 		width: 2rem;
 		height: 2rem;
 		transition: transform 0.2s;
+	}
+
+	li.expanded > a {
+		font-weight: bold;
 	}
 
 	li.expanded img {
@@ -221,7 +240,7 @@
 
 	.section {
 		--dot-size: 1.2rem;
-		--color: hsl(240, 8%, 95%);
+		--color: var(--second);
 	}
 
 	.section > a::before,
@@ -257,7 +276,7 @@
 	}
 
 	a {
-		color: white;
+		color: var(--second);
 		padding: 0.2rem 0;
 		display: block;
 		font-variant-numeric: tabular-nums;

@@ -470,8 +470,7 @@
 		min-height: 0;
 		height: 100%;
 		max-height: 100%;
-		background: var(--second);
-		color: white;
+		background: var(--back-api);
 		--menu-width: 5.4rem;
 	}
 
@@ -504,7 +503,7 @@
 		flex: 1 1;
 		overflow-y: auto;
 		padding: 2.2rem 2.2rem 2.2rem calc(var(--menu-width) + 2.2rem);
-		color: var(--sidebar-text);
+		color: var(--second);
 	}
 
 	.text :global(a) {
@@ -513,7 +512,6 @@
 	}
 
 	.text :global(h2) {
-		color: white;
 		font-size: 2.8rem;
 		font-weight: normal;
 		margin: 1.5em 0 0.5em 0;
@@ -524,8 +522,7 @@
 	}
 
 	.text :global(code) {
-		color: var(--sidebar-text);
-		background: rgba(0, 0, 0, 0.12);
+		background: hsl(206, 44%, 87%);
 		padding: 0.2em 0.4em 0.3em;
 		white-space: nowrap;
 		position: relative;
@@ -570,13 +567,11 @@
 	}
 
 	.text :global(blockquote) {
-		background: var(--second);
 		margin: 2rem 0;
 		padding: 2rem;
-		color: white;
 		border-radius: 0.5rem;
 		border: 1.5px solid var(--flash);
-		filter: drop-shadow(2px 4px 12px hsl(240, 8%, 36%));
+		color: hsl(204, 100%, 40%);
 	}
 
 	.text :global(blockquote)::before {
@@ -593,7 +588,7 @@
 		justify-content: center;
 		border: 1.5px solid var(--flash);
 		background: var(--flash);
-		color: var(--second);
+		color: var(--back-api);
 		border-radius: 50%;
 		text-align: center;
 		font-size: 1.2rem;
