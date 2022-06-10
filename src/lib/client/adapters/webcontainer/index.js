@@ -55,7 +55,17 @@ export async function create(stubs) {
 				// at Object.rm (webcontainer.e2e246a845f9e80283581d6b944116e399af6950.js:6:121171)
 				// at MessagePort._0x4ec3f4 (webcontainer.e2e246a845f9e80283581d6b944116e399af6950.js:6:110957)
 				// at MessagePort.nrWrapper (headless:5:29785)
-				await vm.fs.rm(file);
+				// await vm.fs.rm(file);
+
+				// temporary workaround
+				try {
+					await vm.run({
+						command: 'node',
+						args: ['-e', `fs.rmSync('${file.slice(1)}')`]
+					});
+				} catch (e) {
+					console.error(e);
+				}
 			}
 
 			await vm.loadFiles(convert_stubs_to_tree(stubs));
