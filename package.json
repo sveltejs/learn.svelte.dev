@@ -17,20 +17,20 @@
 		"@sveltejs/kit": "next",
 		"@sveltejs/site-kit": "^2.1.0",
 		"diff": "^5.1.0",
-		"prettier": "^2.5.1",
-		"prettier-plugin-svelte": "^2.5.0",
-		"svelte": "^3.44.0",
-		"svelte-check": "^2.2.6",
-		"typescript": "~4.6.2"
+		"prettier": "^2.6.2",
+		"prettier-plugin-svelte": "^2.7.0",
+		"svelte": "^3.48.0",
+		"svelte-check": "^2.7.2",
+		"typescript": "~4.6.4"
 	},
 	"type": "module",
 	"dependencies": {
 		"@fontsource/roboto-mono": "^4.5.7",
-		"marked": "^4.0.15",
+		"marked": "^4.0.16",
 		"monaco-editor": "^0.33.0",
 		"port-authority": "^2.0.1",
 		"prism-svelte": "^0.5.0",
 		"prismjs": "^1.28.0",
-		"ws": "^8.6.0"
+		"ws": "^8.8.0"
 	}
 }
