@@ -5,6 +5,7 @@ specifiers:
   '@sveltejs/adapter-auto': next
   '@sveltejs/kit': next
   '@sveltejs/site-kit': ^2.1.0
+  '@webcontainer/api': ^0.0.1
   diff: ^5.1.0
   marked: ^4.0.16
   monaco-editor: ^0.33.0
@@ -20,6 +21,7 @@ specifiers:
 
 dependencies:
   '@fontsource/roboto-mono': 4.5.7
+  '@webcontainer/api': 0.0.1
   marked: 4.0.16
   monaco-editor: 0.33.0
   port-authority: 2.0.1
@@ -230,6 +232,10 @@ packages:
       - encoding
       - supports-color
     dev: true
+
+  /@webcontainer/api/0.0.1:
+    resolution: {integrity: sha512-+XLRvdpYA1j3CH/jYFCCras4+fsMaPTxCyMH0rbheWn67sWhReOJQuOdbNaIkGYhvx+2+fYj7vUu2TSr5h5ZWw==}
+    dev: false
 
   /abbrev/1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}

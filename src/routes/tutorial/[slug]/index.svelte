@@ -137,7 +137,7 @@
 			await adapter.reset(Object.values(b));
 			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
 		} else {
-			const module = await import('$lib/client/adapters/filesystem/index.js');
+			const module = await import('$lib/client/adapters/webcontainer/index.js');
 
 			adapter = await module.create(Object.values(b));
 			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
