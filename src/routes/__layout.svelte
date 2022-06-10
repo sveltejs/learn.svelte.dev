@@ -67,4 +67,18 @@
 		position: relative;
 		top: var(--nav-h);
 	}
+
+	.large {
+		display: none;
+	}
+
+	@media (min-width: 800px) {
+		.small {
+			display: none;
+		}
+
+		.large {
+			display: inline;
+		}
+	}
 </style>
