@@ -22,6 +22,7 @@
 	import Sidebar from './_/Sidebar.svelte';
 	import Chrome from './_/Chrome.svelte';
 	import { Icon } from '@sveltejs/site-kit';
+	import Loading from './_/Loading.svelte';
 
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
@@ -45,6 +46,7 @@
 
 	/** @type {HTMLIFrameElement} */
 	let iframe;
+	let loading = true;
 
 	/** @type {Record<string, boolean>}*/
 	let complete_states = {};
@@ -130,7 +132,7 @@
 		completed = false;
 
 		clearTimeout(timeout);
-		set_iframe_src('/loading');
+		loading = true;
 
 		if (adapter) {
 			expected.clear();
@@ -172,7 +174,7 @@
 				if (dev && !iframe) return;
 
 				// we lost contact, refresh the page
-				set_iframe_src('/loading');
+				loading = true;
 				set_iframe_src(adapter.base + path);
 			}, 500);
 		} else if (e.data.type === 'hmr') {
@@ -262,6 +264,8 @@
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
+
+		loading = false;
 	}
 
 	const hidden = new Set(['__client.js', 'node_modules']);
@@ -354,7 +358,7 @@
 					<Chrome
 						{path}
 						on:refresh={() => {
-							set_iframe_src('/loading');
+							loading = true;
 							set_iframe_src(adapter.base + path);
 						}}
 						on:change={(e) => {
@@ -364,7 +368,13 @@
 						}}
 					/>
 
-					<iframe bind:this={iframe} title="Output" src="/loading" />
+					<div class="content">
+						<iframe bind:this={iframe} title="Output" />
+
+						{#if loading}
+							<Loading />
+						{/if}
+					</div>
 				</section>
 			</SplitPane>
 		</section>
@@ -398,9 +408,15 @@
 		position: relative;
 		background: #ddd;
 		padding: 0.5rem;
-		width: calc(100% + 1px);
+		width: 100%;
 		height: 4rem;
+		border-right: 1px solid var(--border-color);
 		opacity: 1;
+	}
+
+	.navigator button:disabled {
+		background: #f9f9f9; /* TODO consistent grays */
+		color: #ddd;
 	}
 
 	.navigator button:not(:disabled) {
@@ -434,6 +450,10 @@
 		flex-direction: column;
 	}
 
+	.content {
+		position: relative;
+	}
+
 	iframe {
 		width: 100%;
 		height: 100%;
@@ -441,6 +461,7 @@
 		resize: none;
 		box-sizing: border-box;
 		border: none;
+		background: white;
 	}
 
 	.editor-container {
