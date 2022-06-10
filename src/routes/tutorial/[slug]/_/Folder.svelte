@@ -60,21 +60,29 @@
 		font-family: inherit;
 		color: var(--text);
 		padding: 0 0 0 1.2em;
-		background: url(/tutorial/icons/folder.svg) 0 0.25rem no-repeat;
+		width: 100%;
+		text-align: left;
+		background: url(./folder.svg) 0 45% no-repeat;
 		background-size: 1.4rem 1.4rem;
 		user-select: none;
 		cursor: pointer;
+		border: 2px solid transparent;
+	}
+
+	button:focus-visible {
+		outline: none;
+		border: 2px solid var(--flash);
 	}
 
 	.expanded {
-		background-image: url(/tutorial/icons/folder-open.svg);
+		background-image: url(./folder-open.svg);
 	}
 
 	ul {
-		padding: 0 0 0 0.2em;
-		margin: 0 0 0 0.2em;
+		padding: 0 0 0 0.3em;
+		margin: 0 0 0 0.5em;
 		list-style: none;
-		border-left: 1px solid #eee;
+		/* border-left: 1px solid #eee; */
 		line-height: 1.3;
 	}
 

@@ -43,6 +43,7 @@
 					{ token: 'keyword', foreground: '0b69a8' }
 				],
 				colors: {
+					'editor.background': '#f4f8fb',
 					'token.keyword': '#ff0000'
 				}
 			});

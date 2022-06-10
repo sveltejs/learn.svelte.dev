@@ -215,7 +215,7 @@
 		justify-content: center;
 		border: 1.5px solid var(--flash);
 		background: var(--flash);
-		color: var(--back-api);
+		color: var(--light-blue);
 		border-radius: 50%;
 		text-align: center;
 		font-size: 1.2rem;

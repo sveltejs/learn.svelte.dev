@@ -131,7 +131,7 @@
 		height: 100%;
 		transition: transform 0.2s;
 		transform: translate(calc(var(--menu-width) - 100%), 0);
-		background: var(--back-api);
+		background: var(--light-blue);
 		z-index: 2;
 		/* filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.1)); */
 		border-right: 1px solid var(--border-color);
@@ -180,7 +180,7 @@
 	.menu-toggle {
 		width: 100%;
 		height: 100%;
-		background: var(--back-api);
+		background: var(--light-blue);
 		border: 2px solid transparent;
 		box-sizing: border-box;
 	}

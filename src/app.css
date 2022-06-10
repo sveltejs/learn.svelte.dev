@@ -6,6 +6,19 @@ body {
 	/* --font-mono: Menlo, Monaco, 'Courier New', monospace; */
 	--font-mono: 'Roboto Mono', monospace;
 	--h4: 1.6rem;
+
+	--light-blue: #f4f8fb;
+}
+
+input,
+button {
+	border: 2px solid transparent;
+}
+
+input:focus-visible,
+button:focus-visible {
+	outline: none;
+	border: 2px solid var(--flash);
 }
 
 /* this is duplicated with kit.svelte.dev */
