@@ -415,7 +415,18 @@
 	.filetree {
 		flex: 1;
 		overflow-y: auto;
+		overflow-x: hidden;
 		padding: 2rem;
+	}
+
+	.filetree::before {
+		content: '';
+		position: absolute;
+		width: 0;
+		height: 100%;
+		top: 0;
+		right: 0;
+		border-right: 1px solid var(--border-color);
 	}
 
 	.preview {
