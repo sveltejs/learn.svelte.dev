@@ -185,16 +185,6 @@
 		box-sizing: border-box;
 	}
 
-	/* .menu-toggle::after {
-		content: '';
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		left: 0;
-		top: 0;
-		border-bottom: 1px solid var(--border-color);
-	} */
-
 	.menu-toggle:focus-visible {
 		outline: none;
 		border: 2px solid var(--flash);
@@ -209,7 +199,7 @@
 	ul {
 		position: relative;
 		list-style: none;
-		padding: 0 0 0 2rem;
+		padding: 0 0 0 1.5rem;
 		margin: 0;
 	}
 
@@ -227,7 +217,7 @@
 
 	li img {
 		position: absolute;
-		left: -2.5rem;
+		left: -2rem;
 		top: 0.3rem;
 		width: 2rem;
 		height: 2rem;
@@ -256,7 +246,7 @@
 	.section > a::after {
 		content: '';
 		top: calc(1.3rem - 0.5 * var(--dot-size));
-		right: calc(0.5 * (var(--menu-width) - var(--dot-size)));
+		right: calc(0.5 * (var(--menu-width) - var(--dot-size)) - 0.7rem);
 		width: var(--dot-size);
 		height: var(--dot-size);
 		border-radius: 50%;
@@ -276,7 +266,7 @@
 		width: var(--menu-width);
 		text-align: center;
 		top: 0.2rem;
-		right: 0;
+		right: -0.7rem;
 		color: hsl(240, 8%, 64%);
 	}
 
@@ -286,8 +276,17 @@
 
 	a {
 		color: var(--second);
-		padding: 0.2rem 0;
+		padding: 0 0 0 0.5rem;
+		margin: 0 0.5rem 0 0;
 		display: block;
 		font-variant-numeric: tabular-nums;
+		border: 2px solid transparent;
+		box-sizing: border-box;
+	}
+
+	a:focus-visible {
+		/* outline-color: var(--flash); */
+		outline: none;
+		border: 2px solid var(--flash);
 	}
 </style>
