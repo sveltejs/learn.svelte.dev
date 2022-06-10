@@ -4,7 +4,7 @@
 </script>
 
 <span
-	style="background-image: url(tutorial/icons/{type}.svg)"
+	style="background-image: url(/tutorial/icons/{type}.svg)"
 	>{name}</span
 >
 
