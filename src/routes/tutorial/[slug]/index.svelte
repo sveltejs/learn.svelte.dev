@@ -225,23 +225,22 @@
 	 * @param {Map<string, string>} map
 	 */
 	async function get_transformed_modules(base, prefix, stubs, map) {
-		for (const stub of stubs) {
-			if (stub.name === '/src/__client.js') continue;
-			if (stub.type !== 'file') continue;
-			if (!/\.(js|ts|svelte)$/.test(stub.name)) continue;
-
-			if (stub.name.startsWith(prefix)) {
-				const res = await fetch(base + stub.name);
-				const transformed = normalise(await res.text());
-				map.set(stub.name, transformed);
-
-				if (stub.name.endsWith('.svelte') && transformed.includes('svelte&type=style&lang.css')) {
-					const name = stub.name + '?svelte&type=style&lang.css';
-					const res = await fetch(base + name);
-					map.set(name, normalise(await res.text()));
-				}
-			}
-		}
+		// TODO commented out because we run into CORS issues
+		// for (const stub of stubs) {
+		// 	if (stub.name === '/src/__client.js') continue;
+		// 	if (stub.type !== 'file') continue;
+		// 	if (!/\.(js|ts|svelte)$/.test(stub.name)) continue;
+		// 	if (stub.name.startsWith(prefix)) {
+		// 		const res = await fetch(base + stub.name);
+		// 		const transformed = normalise(await res.text());
+		// 		map.set(stub.name, transformed);
+		// 		if (stub.name.endsWith('.svelte') && transformed.includes('svelte&type=style&lang.css')) {
+		// 			const name = stub.name + '?svelte&type=style&lang.css';
+		// 			const res = await fetch(base + name);
+		// 			map.set(name, normalise(await res.text()));
+		// 		}
+		// 	}
+		// }
 	}
 
 	/** @param {string} code */

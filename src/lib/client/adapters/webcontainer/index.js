@@ -12,9 +12,9 @@ export async function create(stubs) {
 	const tree = convert_stubs_to_tree(stubs);
 	await vm.loadFiles(tree);
 
-	const port = await new Promise(async (fulfil, reject) => {
-		vm.on('server-ready', (port) => {
-			fulfil(port);
+	const base = await new Promise(async (fulfil, reject) => {
+		vm.on('server-ready', (port, base) => {
+			fulfil(base);
 		});
 
 		const install = await vm.run(
@@ -46,10 +46,8 @@ export async function create(stubs) {
 		);
 	});
 
-	console.log({ port });
-
 	return {
-		base: `http://localhost:${port}`,
+		base,
 
 		/** @param {import('$lib/types').Stub[]} stubs */
 		async reset(stubs) {
