@@ -490,11 +490,11 @@
 	}
 
 	header strong {
-		color: hsl(240, 8%, 94%);
+		color: var(--prime);
 	}
 
 	header h1 {
-		color: hsl(240, 8%, 84%);
+		color: var(--second);
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
