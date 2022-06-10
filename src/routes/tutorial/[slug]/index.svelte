@@ -138,7 +138,7 @@
 			await adapter.reset(Object.values(b));
 			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
 		} else {
-			const module = await import('$lib/client/adapters/filesystem/index.js');
+			const module = await import('$lib/client/adapters/webcontainer/index.js');
 
 			adapter = await module.create(Object.values(b));
 			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
@@ -146,7 +146,7 @@
 
 		const actual = new Map();
 
-		await adapter.update(stubs);
+		await adapter.reset(stubs);
 		await get_transformed_modules(adapter.base, section.scope.prefix, stubs, actual);
 
 		for (const [name, transformed] of expected.entries()) {
@@ -226,23 +226,22 @@
 	 * @param {Map<string, string>} map
 	 */
 	async function get_transformed_modules(base, prefix, stubs, map) {
-		for (const stub of stubs) {
-			if (stub.name === '/src/__client.js') continue;
-			if (stub.type !== 'file') continue;
-			if (!/\.(js|ts|svelte)$/.test(stub.name)) continue;
-
-			if (stub.name.startsWith(prefix)) {
-				const res = await fetch(base + stub.name);
-				const transformed = normalise(await res.text());
-				map.set(stub.name, transformed);
-
-				if (stub.name.endsWith('.svelte') && transformed.includes('svelte&type=style&lang.css')) {
-					const name = stub.name + '?svelte&type=style&lang.css';
-					const res = await fetch(base + name);
-					map.set(name, normalise(await res.text()));
-				}
-			}
-		}
+		// TODO commented out because we run into CORS issues
+		// for (const stub of stubs) {
+		// 	if (stub.name === '/src/__client.js') continue;
+		// 	if (stub.type !== 'file') continue;
+		// 	if (!/\.(js|ts|svelte)$/.test(stub.name)) continue;
+		// 	if (stub.name.startsWith(prefix)) {
+		// 		const res = await fetch(base + stub.name);
+		// 		const transformed = normalise(await res.text());
+		// 		map.set(stub.name, transformed);
+		// 		if (stub.name.endsWith('.svelte') && transformed.includes('svelte&type=style&lang.css')) {
+		// 			const name = stub.name + '?svelte&type=style&lang.css';
+		// 			const res = await fetch(base + name);
+		// 			map.set(name, normalise(await res.text()));
+		// 		}
+		// 	}
+		// }
 	}
 
 	/** @param {string} code */

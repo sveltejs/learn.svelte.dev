@@ -5,6 +5,8 @@ specifiers:
   '@sveltejs/adapter-auto': next
   '@sveltejs/kit': next
   '@sveltejs/site-kit': ^2.1.0
+  '@webcontainer/api': ^0.0.1
+  base64-js: ^1.5.1
   diff: ^5.1.0
   marked: ^4.0.16
   monaco-editor: ^0.33.0
@@ -20,6 +22,8 @@ specifiers:
 
 dependencies:
   '@fontsource/roboto-mono': 4.5.7
+  '@webcontainer/api': 0.0.1
+  base64-js: 1.5.1
   marked: 4.0.16
   monaco-editor: 0.33.0
   port-authority: 2.0.1
@@ -231,6 +235,10 @@ packages:
       - supports-color
     dev: true
 
+  /@webcontainer/api/0.0.1:
+    resolution: {integrity: sha512-+XLRvdpYA1j3CH/jYFCCras4+fsMaPTxCyMH0rbheWn67sWhReOJQuOdbNaIkGYhvx+2+fYj7vUu2TSr5h5ZWw==}
+    dev: false
+
   /abbrev/1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
     dev: true
@@ -294,6 +302,10 @@ packages:
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
     dev: true
+
+  /base64-js/1.5.1:
+    resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
+    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
