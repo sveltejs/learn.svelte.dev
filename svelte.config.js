@@ -6,12 +6,18 @@ const config = {
 	kit: {
 		adapter: adapter(),
 
+		prerender: {
+			default: true
+		},
+
 		vite: {
+			build: {
+				target: 'esnext'
+			},
+
 			server: {
 				fs: {
-					allow: [
-						path.resolve('.apps')
-					]
+					allow: [path.resolve('.apps')]
 				},
 				watch: {
 					ignored: ['**/.apps/**']

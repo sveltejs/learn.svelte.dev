@@ -9,8 +9,8 @@
 		"prepare": "svelte-kit sync"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "workspace:*",
-		"@sveltejs/kit": "workspace:*",
+		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/kit": "next",
 		"svelte": "^3.44.0"
 	},
 	"type": "module"
