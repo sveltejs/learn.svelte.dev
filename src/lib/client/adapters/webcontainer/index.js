@@ -1,4 +1,5 @@
 import { load } from '@webcontainer/api';
+import base64 from 'base64-js';
 
 const WebContainer = await load();
 
@@ -86,7 +87,7 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 			} else {
 				tree[stub.basename] = {
 					file: {
-						contents: stub.text ? stub.contents : atob(stub.contents) // errr... how do we turn a base64 string back into a Uint8Array?
+						contents: stub.text ? stub.contents : base64.toByteArray(stub.contents)
 					}
 				};
 			}

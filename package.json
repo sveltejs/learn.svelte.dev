@@ -27,6 +27,7 @@
 	"dependencies": {
 		"@fontsource/roboto-mono": "^4.5.7",
 		"@webcontainer/api": "^0.0.1",
+		"base64-js": "^1.5.1",
 		"marked": "^4.0.16",
 		"monaco-editor": "^0.33.0",
 		"port-authority": "^2.0.1",
