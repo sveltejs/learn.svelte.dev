@@ -460,6 +460,7 @@
 
 <style>
 	.container {
+		--border-color: hsl(206, 44%, 85%);
 		height: 100%;
 		max-height: 100%;
 	}
@@ -476,7 +477,8 @@
 
 	header {
 		display: flex;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		border-bottom: 1px solid var(--border-color);
+		border-right: 1px solid var(--border-color);
 		padding: 0 0 0 calc(var(--menu-width) + 2.2rem);
 		height: var(--menu-width);
 		align-items: center;
@@ -504,6 +506,7 @@
 		overflow-y: auto;
 		padding: 2.2rem 2.2rem 2.2rem calc(var(--menu-width) + 2.2rem);
 		color: var(--second);
+		border-right: 1px solid var(--border-color);
 	}
 
 	.text :global(a) {
@@ -602,11 +605,12 @@
 		padding: 1rem 2.2rem 1rem calc(var(--menu-width) + 2.2rem);
 		display: flex;
 		justify-content: space-between;
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		border-top: 1px solid var(--border-color);
+		border-right: 1px solid var(--border-color);
 	}
 
 	.content footer a {
-		color: var(--sidebar-text);
+		color: var(--second);
 		font-size: 1.4rem;
 		display: flex;
 		gap: 0.5rem;

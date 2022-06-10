@@ -49,14 +49,16 @@
 	}
 </script>
 
-<button
-	class="menu-toggle"
-	on:click={() => (is_open = !is_open)}
-	aria-label="Toggle menu"
-	aria-expanded={is_open}
->
-	<Icon name={is_open ? 'close' : 'menu'} />
-</button>
+<div class="menu-toggle-container">
+	<button
+		class="menu-toggle"
+		on:click={() => (is_open = !is_open)}
+		aria-label="Toggle menu"
+		aria-expanded={is_open}
+	>
+		<Icon name={is_open ? 'close' : 'menu'} />
+	</button>
+</div>
 
 <nav class:open={is_open} aria-label="tutorial sections">
 	<div class="controls">
@@ -132,7 +134,7 @@
 		background: var(--back-api);
 		z-index: 2;
 		/* filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.1)); */
-		border-right: 1px solid rgba(255, 255, 255, 0.1);
+		border-right: 1px solid var(--border-color);
 		display: flex;
 		flex-direction: column;
 	}
@@ -144,51 +146,58 @@
 	.controls {
 		height: var(--menu-width);
 		display: flex;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		padding: 1rem 1rem 1rem calc(var(--menu-width) + 1rem);
+		border-bottom: 1px solid var(--border-color);
+		padding: 0 0 0 var(--menu-width);
 	}
 
 	.controls input {
 		flex: 1;
-		border-radius: 0.5rem;
 		border: none;
 		padding: 0.6rem 1rem 0.5rem 1rem;
 		font-family: inherit;
 		font-size: inherit;
-		background: hsl(240, 8%, 54%);
-		color: white;
-	}
-
-	.controls input::placeholder {
-		color: rgba(255, 255, 255, 0.5);
+		background: rgba(255, 255, 255, 0.5);
+		border: 2px solid transparent;
+		color: var(--text);
 	}
 
 	.controls input:focus {
-		background: white;
-		color: var(--text);
 		outline: none;
+		border: 2px solid var(--flash);
 	}
 
-	.controls input:focus::placeholder {
-		color: #333;
-	}
-
-	.menu-toggle {
+	.menu-toggle-container {
 		position: absolute;
 		left: 0;
 		top: 0;
 		width: var(--menu-width);
 		height: var(--menu-width);
 		z-index: 3;
-		/* background: linear-gradient(
-			to right,
-			var(--second),
-			var(--second) calc(100% - 1rem),
-			transparent
-		); */
+		border-right: 1px solid var(--border-color);
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.menu-toggle {
+		width: 100%;
+		height: 100%;
 		background: var(--back-api);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		border-right: 1px solid rgba(255, 255, 255, 0.1);
+		border: 2px solid transparent;
+		box-sizing: border-box;
+	}
+
+	/* .menu-toggle::after {
+		content: '';
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		border-bottom: 1px solid var(--border-color);
+	} */
+
+	.menu-toggle:focus-visible {
+		outline: none;
+		border: 2px solid var(--flash);
 	}
 
 	.sections {
