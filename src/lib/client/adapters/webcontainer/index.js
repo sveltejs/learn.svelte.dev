@@ -39,7 +39,7 @@ export async function create(stubs) {
 		console.log('installation succeeded');
 
 		await vm.run(
-			{ command: 'turbo', args: ['run', 'dev', '--port', '3005', '--host'] },
+			{ command: 'turbo', args: ['run', 'dev'] },
 			{
 				stdout: (data) => console.log(data),
 				stderr: (data) => console.error(data)
