@@ -21,6 +21,7 @@
 	import ImageViewer from './_/ImageViewer.svelte';
 	import Sidebar from './_/Sidebar.svelte';
 	import Chrome from './_/Chrome.svelte';
+	import { Icon } from '@sveltejs/site-kit';
 
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
@@ -283,6 +284,14 @@
 				<section slot="a">
 					<SplitPane type="horizontal" min="80px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
+							<div class="filetree">
+								<Folder
+									{...section.scope}
+									files={Object.values(section.a).filter((stub) => !hidden.has(stub.basename))}
+									expanded
+								/>
+							</div>
+
 							<button
 								class:completed
 								disabled={Object.keys(section.b).length === 0}
@@ -326,16 +335,12 @@
 									completing = false;
 								}}
 							>
-								{completed && Object.keys(section.b).length > 0 ? 'reset' : 'solve'}
+								{#if completed && Object.keys(section.b).length > 0}
+									reset
+								{:else}
+									solve <Icon name="arrow-right" />
+								{/if}
 							</button>
-
-							<div class="filetree">
-								<Folder
-									{...section.scope}
-									files={Object.values(section.a).filter((stub) => !hidden.has(stub.basename))}
-									expanded
-								/>
-							</div>
 						</section>
 
 						<section class="editor-container" slot="b">
@@ -358,27 +363,6 @@
 							set_iframe_src(adapter.base + path);
 						}}
 					/>
-					<!-- <div class="chrome">
-						<button
-							on:click={() => {
-								set_iframe_src('/loading.html');
-								set_iframe_src(adapter.base + path);
-							}}
-							aria-label="reload"
-						>
-							<img src={refresh} alt="Reload icon" />
-						</button>
-
-						<input
-							aria-label="URL"
-							value={path}
-							on:change={(e) => {
-								const url = new URL(e.currentTarget.value, adapter.base);
-								path = url.pathname + url.search + url.hash;
-								set_iframe_src(adapter.base + path);
-							}}
-						/>
-					</div> -->
 
 					<iframe bind:this={iframe} title="Output" src="/loading.html" />
 				</section>
@@ -389,7 +373,7 @@
 
 <style>
 	.container {
-		--border-color: hsl(206, 44%, 85%);
+		--border-color: hsl(206, 44%, 90%);
 		height: 100%;
 		max-height: 100%;
 	}
@@ -400,7 +384,7 @@
 		min-height: 0;
 		height: 100%;
 		max-height: 100%;
-		background: var(--back-api);
+		background: var(--light-blue);
 		--menu-width: 5.4rem;
 	}
 
@@ -408,15 +392,15 @@
 		background: white;
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
-		gap: 1rem;
 	}
 
 	.navigator button {
+		position: relative;
 		background: #ddd;
 		padding: 0.5rem;
-		border-radius: 0.5rem;
-		width: 100%;
+		width: calc(100% + 1px);
+		height: 4rem;
+		opacity: 1;
 	}
 
 	.navigator button:not(:disabled) {
@@ -431,6 +415,18 @@
 	.filetree {
 		flex: 1;
 		overflow-y: auto;
+		overflow-x: hidden;
+		padding: 2rem;
+	}
+
+	.filetree::before {
+		content: '';
+		position: absolute;
+		width: 0;
+		height: 100%;
+		top: 0;
+		right: 0;
+		border-right: 1px solid var(--border-color);
 	}
 
 	.preview {
@@ -449,5 +445,6 @@
 
 	.editor-container {
 		padding: 0.5rem;
+		background-color: var(--light-blue);
 	}
 </style>

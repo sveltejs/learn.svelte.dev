@@ -35,9 +35,10 @@
 		if (min_px < 0) min_px += size;
 		if (max_px < 0) max_px += size;
 
-		pos_px = priority === 'min'
-			? Math.max(min_px, Math.min(max_px, pos_px))
-			: Math.min(max_px, Math.max(min_px, pos_px));
+		pos_px =
+			priority === 'min'
+				? Math.max(min_px, Math.min(max_px, pos_px))
+				: Math.min(max_px, Math.max(min_px, pos_px));
 
 		pos = pos.endsWith('%') ? `${(100 * pos_px) / size}%` : `${pos_px}px`;
 	}
@@ -156,7 +157,8 @@
 <style>
 	.container {
 		--sp-thickness: var(--thickness, 8px);
-		--sp-color: var(--color, #eee);
+		/* --sp-color: var(--color, #eee); */
+		--sp-color: transparent;
 		display: grid;
 		position: relative;
 		width: 100%;

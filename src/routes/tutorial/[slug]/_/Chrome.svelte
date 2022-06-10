@@ -27,13 +27,14 @@
 		width: 100%;
 		height: 4rem;
 		display: flex;
-		gap: 0.5rem;
-		padding: 0.4rem;
 		background: #f9f9f9;
+		border-top: 1px solid var(--border-color);
 	}
 
 	.chrome button {
-		padding: 0.5rem;
+		padding: 0.8rem;
+		box-sizing: border-box;
+		background: #f3f3f3;
 	}
 
 	.chrome button img {
@@ -51,10 +52,19 @@
 	.chrome input {
 		flex: 1;
 		padding: 0.5rem 1rem 0.4rem 1rem;
-		border-radius: 0.5rem;
-		border: 1px solid rgba(0, 0, 0, 0.1);
-		box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
+		background-color: #fbfbfb;
 		font-family: inherit;
 		font-size: 1.6rem;
+	}
+
+	.chrome button,
+	.chrome input {
+		border: 2px solid transparent;
+	}
+
+	.chrome button:focus-visible,
+	.chrome input:focus-visible {
+		outline: none;
+		border: 2px solid var(--flash);
 	}
 </style>
