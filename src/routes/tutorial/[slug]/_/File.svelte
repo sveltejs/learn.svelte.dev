@@ -27,12 +27,23 @@
 		color: var(--prime);
 	}
 
+	button.selected::before {
+		content: '';
+		position: absolute;
+		width: 1px;
+		height: 9999px;
+		top: -5000px;
+		background: var(--border-color);
+		right: calc(-2rem - 2px);
+	}
+
 	button.selected::after {
 		content: '';
 		position: absolute;
 		width: 1rem;
 		height: 1rem;
-		right: -0.5rem;
+		/* right: -0.5rem; */
+		right: calc(-2.6rem - 2px);
 		/* top: 50%; */
 		background-color: var(--light-blue);
 		border: 1px solid var(--border-color);

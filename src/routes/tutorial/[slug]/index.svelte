@@ -401,7 +401,6 @@
 		width: calc(100% + 1px);
 		height: 4rem;
 		opacity: 1;
-		border-right: 1px solid var(--border-color);
 	}
 
 	.navigator button:not(:disabled) {
@@ -417,7 +416,6 @@
 		flex: 1;
 		overflow-y: auto;
 		padding: 2rem;
-		border-right: 1px solid var(--border-color);
 	}
 
 	.preview {
