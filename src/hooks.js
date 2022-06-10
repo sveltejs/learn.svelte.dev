@@ -33,7 +33,7 @@ svg {
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-	if (event.url.pathname === '/loading.html') {
+	if (event.url.pathname === '/loading') {
 		return new Response(loading, {
 			headers: {
 				'Content-Type': 'text/html',

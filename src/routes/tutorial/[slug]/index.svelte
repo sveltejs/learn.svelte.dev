@@ -130,7 +130,7 @@
 		completed = false;
 
 		clearTimeout(timeout);
-		set_iframe_src('/loading.html');
+		set_iframe_src('/loading');
 
 		if (adapter) {
 			expected.clear();
@@ -172,7 +172,7 @@
 				if (dev && !iframe) return;
 
 				// we lost contact, refresh the page
-				set_iframe_src('/loading.html');
+				set_iframe_src('/loading');
 				set_iframe_src(adapter.base + path);
 			}, 500);
 		} else if (e.data.type === 'hmr') {
@@ -354,7 +354,7 @@
 					<Chrome
 						{path}
 						on:refresh={() => {
-							set_iframe_src('/loading.html');
+							set_iframe_src('/loading');
 							set_iframe_src(adapter.base + path);
 						}}
 						on:change={(e) => {
@@ -364,7 +364,7 @@
 						}}
 					/>
 
-					<iframe bind:this={iframe} title="Output" src="/loading.html" />
+					<iframe bind:this={iframe} title="Output" src="/loading" />
 				</section>
 			</SplitPane>
 		</section>
