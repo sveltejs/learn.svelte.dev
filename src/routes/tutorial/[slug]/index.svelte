@@ -602,7 +602,7 @@
 	}
 
 	.content footer {
-		padding: 1rem 2.2rem 1rem calc(var(--menu-width) + 2.2rem);
+		padding: 1.5rem 2.2rem 1.5rem calc(var(--menu-width) + 2.2rem);
 		display: flex;
 		justify-content: space-between;
 		border-top: 1px solid var(--border-color);
