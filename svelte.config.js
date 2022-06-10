@@ -7,8 +7,7 @@ const config = {
 		adapter: adapter(),
 
 		prerender: {
-			default: true,
-			entries: ['*', '/loading']
+			default: true
 		},
 
 		vite: {
