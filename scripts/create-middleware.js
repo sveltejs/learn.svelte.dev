@@ -26,6 +26,7 @@ config.routes.unshift({
 	middlewarePath: '_middleware',
 	continue: true
 });
+fs.writeFileSync('.vercel/output/config.json', JSON.stringify(config));
 
 fs.mkdirSync('.vercel/output/functions/_middleware.func');
 
