@@ -18,16 +18,10 @@ export async function create(stubs) {
 			fulfil(base);
 		});
 
-		const install = await vm.run(
-			{
-				command: 'turbo',
-				args: ['install']
-			},
-			{
-				stdout: (data) => console.log(data),
-				stderr: (data) => console.error(data)
-			}
-		);
+		const install = await vm.run({
+			command: 'turbo',
+			args: ['install']
+		});
 
 		const code = await install.onExit;
 
@@ -36,34 +30,79 @@ export async function create(stubs) {
 			return;
 		}
 
-		console.log('installation succeeded');
-
-		await vm.run(
-			{ command: 'turbo', args: ['run', 'dev'] },
-			{
-				stdout: (data) => console.log(data),
-				stderr: (data) => console.error(data)
-			}
-		);
+		await vm.run({ command: 'turbo', args: ['run', 'dev'] });
 	});
+
+	let current = stubs;
 
 	return {
 		base,
 
 		/** @param {import('$lib/types').Stub[]} stubs */
 		async reset(stubs) {
+			const old = new Set(current.filter((stub) => stub.type === 'file').map((stub) => stub.name));
+			current = stubs;
+
+			for (const stub of stubs) {
+				if (stub.type === 'file') {
+					old.delete(stub.name);
+				}
+			}
+
+			for (const file of old) {
+				// TODO this fails with a cryptic error
+				// index.svelte:155 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'rmSync')
+				// at Object.rm (webcontainer.e2e246a845f9e80283581d6b944116e399af6950.js:6:121171)
+				// at MessagePort._0x4ec3f4 (webcontainer.e2e246a845f9e80283581d6b944116e399af6950.js:6:110957)
+				// at MessagePort.nrWrapper (headless:5:29785)
+				await vm.fs.rm(file);
+			}
+
+			await vm.loadFiles(convert_stubs_to_tree(stubs));
+
 			// TODO
-			await new Promise((f) => setTimeout(f, 100)); // wait for chokidar
+			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 		},
 
-		/** @param {import('$lib/types').Stub[]} stubs */
+		/** @param {import('$lib/types').FileStub[]} stubs */
 		async update(stubs) {
+			/** @type {import('@webcontainer/api').FileSystemTree} */
+			const root = {};
+
+			for (const stub of stubs) {
+				let tree = root;
+
+				const path = stub.name.split('/').slice(1);
+				const basename = /** @type {string} */ (path.pop());
+
+				for (const part of path) {
+					if (!tree[part]) {
+						/** @type {import('@webcontainer/api').FileSystemTree} */
+						const directory = {};
+
+						tree[part] = {
+							directory
+						};
+					}
+
+					tree = /** @type {import('@webcontainer/api').DirectoryEntry} */ (tree[part]).directory;
+				}
+
+				tree[basename] = {
+					file: {
+						contents: stub.text ? stub.contents : base64.toByteArray(stub.contents)
+					}
+				};
+			}
+
+			await vm.loadFiles(root);
+
 			// TODO
-			await new Promise((f) => setTimeout(f, 100)); // wait for chokidar
+			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 		},
 
 		async destroy() {
-			// TODO
+			vm.teardown();
 		}
 	};
 }

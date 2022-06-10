@@ -38,7 +38,7 @@ export async function create(stubs) {
 			await new Promise((f) => setTimeout(f, 100)); // wait for chokidar
 		},
 
-		/** @param {import('$lib/types').Stub[]} stubs */
+		/** @param {import('$lib/types').FileStub[]} stubs */
 		async update(stubs) {
 			await fetch(`/backend/${id}`, {
 				method: 'put',

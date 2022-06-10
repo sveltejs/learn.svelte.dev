@@ -19,7 +19,7 @@ export type Stub = FileStub | DirectoryStub;
 export interface Adapter {
 	base: string;
 	reset(files: Array<Stub>): Promise<void>;
-	update(files: Array<Stub>): Promise<void>;
+	update(file: Array<FileStub>): Promise<void>;
 	destroy(): Promise<void>;
 }
 

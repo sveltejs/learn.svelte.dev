@@ -145,7 +145,7 @@
 
 		const actual = new Map();
 
-		await adapter.update(stubs);
+		await adapter.reset(stubs);
 		await get_transformed_modules(adapter.base, section.scope.prefix, stubs, actual);
 
 		for (const [name, transformed] of expected.entries()) {
