@@ -60,7 +60,6 @@ export async function create(stubs) {
 
 			await vm.loadFiles(convert_stubs_to_tree(stubs));
 
-			// TODO
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 		},
 
@@ -97,7 +96,6 @@ export async function create(stubs) {
 
 			await vm.loadFiles(root);
 
-			// TODO
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 		},
 
