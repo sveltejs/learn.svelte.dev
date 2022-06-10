@@ -32,6 +32,7 @@
 		position: absolute;
 		width: 1rem;
 		height: 1rem;
+		top: 0.1rem;
 		right: calc(-2.6rem - 2px);
 		background-color: var(--light-blue);
 		border: 1px solid var(--border-color);
