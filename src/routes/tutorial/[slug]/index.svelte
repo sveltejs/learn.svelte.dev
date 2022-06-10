@@ -17,22 +17,16 @@
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './_/Editor.svelte';
 	import Folder from './_/Folder.svelte';
-	import refresh from './_/refresh.svg';
-	import { Icon } from '@sveltejs/site-kit';
-	import Menu from './_/Menu/Menu.svelte';
-	import Modal from '$lib/components/Modal.svelte';
 	import { dev } from '$app/env';
 	import ImageViewer from './_/ImageViewer.svelte';
+	import Sidebar from './_/Sidebar.svelte';
+	import Chrome from './_/Chrome.svelte';
 
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
 
 	/** @type {import('$lib/types').Section} */
 	export let section;
-
-	const namespace = 'learn.svelte.dev';
-	const copy_enabled = `${namespace}:copy_enabled`;
-	let show_modal = false;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
 	const selected = writable(
@@ -44,12 +38,6 @@
 
 	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
 	const models = new Map();
-
-	/** @type {HTMLElement} */
-	let sidebar;
-
-	/** @type {import('svelte').SvelteComponent} */
-	let menu;
 
 	/** @type {import('monaco-editor').editor.ITextModel} */
 	let current_model;
@@ -97,11 +85,6 @@
 	});
 
 	afterNavigate(async () => {
-		// TODO ideally we would associate scroll state with
-		// history. That's a little tricky to do right now,
-		// so for now just always reset sidebar scroll
-		sidebar.scrollTop = 0;
-
 		models.forEach((model) => {
 			model.dispose();
 		});
@@ -293,48 +276,7 @@
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="33%">
 		<section class="content" slot="a">
-			<Menu bind:this={menu} {index} current={section} />
-
-			<header on:click={() => menu.open()}>
-				<h1>
-					Part {section.part.index + 1} > {section.chapter.title} >
-					<strong>{section.title}</strong>
-				</h1>
-			</header>
-
-			<div
-				bind:this={sidebar}
-				class="text"
-				on:copy={(e) => {
-					if (sessionStorage[copy_enabled]) return;
-
-					/** @type {HTMLElement | null} */
-					let node = /** @type {HTMLElement} */ (e.target);
-
-					while (node && node !== e.currentTarget) {
-						if (node.nodeName === 'PRE') {
-							show_modal = true;
-
-							e.preventDefault();
-							return;
-						}
-
-						node = /** @type {HTMLElement | null} */ (node.parentNode);
-					}
-				}}
-			>
-				{@html section.html}
-
-				{#if section.next}
-					<p><a href="/tutorial/{section.next.slug}">Next: {section.next.title}</a></p>
-				{/if}
-			</div>
-
-			<footer>
-				<a class="edit" href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{section.dir}">
-					<Icon size={16} name="edit" /> Edit this page
-				</a>
-			</footer>
+			<Sidebar {index} {section} />
 		</section>
 
 		<section slot="b">
@@ -405,7 +347,19 @@
 				</section>
 
 				<section class="preview" slot="b">
-					<div class="chrome">
+					<Chrome
+						{path}
+						on:refresh={() => {
+							set_iframe_src('/loading.html');
+							set_iframe_src(adapter.base + path);
+						}}
+						on:change={(e) => {
+							const url = new URL(e.detail.value, adapter.base);
+							path = url.pathname + url.search + url.hash;
+							set_iframe_src(adapter.base + path);
+						}}
+					/>
+					<!-- <div class="chrome">
 						<button
 							on:click={() => {
 								set_iframe_src('/loading.html');
@@ -425,7 +379,7 @@
 								set_iframe_src(adapter.base + path);
 							}}
 						/>
-					</div>
+					</div> -->
 
 					<iframe bind:this={iframe} title="Output" src="/loading.html" />
 				</section>
@@ -434,32 +388,9 @@
 	</SplitPane>
 </div>
 
-{#if show_modal}
-	<Modal on:close={() => (show_modal = false)}>
-		<div class="modal-contents">
-			<h2>Copy and paste is currently disabled!</h2>
-
-			<p>
-				We recommend typing the code into the editor to complete the exercise, as this results in
-				better retention and understanding.
-			</p>
-			<label>
-				<input
-					type="checkbox"
-					on:change={(e) => {
-						sessionStorage[copy_enabled] = e.currentTarget.checked ? 'true' : '';
-					}}
-				/>
-				enable copy-and-paste for the duration of this session
-			</label>
-
-			<button on:click={() => (show_modal = false)}>OK</button>
-		</div>
-	</Modal>
-{/if}
-
 <style>
 	.container {
+		--border-color: hsl(206, 44%, 85%);
 		height: 100%;
 		max-height: 100%;
 	}
@@ -470,155 +401,12 @@
 		min-height: 0;
 		height: 100%;
 		max-height: 100%;
-		background: var(--second);
-		color: white;
+		background: var(--back-api);
 		--menu-width: 5.4rem;
 	}
 
-	header {
-		display: flex;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		padding: 0 0 0 calc(var(--menu-width) + 2.2rem);
-		height: var(--menu-width);
-		align-items: center;
-	}
-
-	header strong,
-	header h1 {
-		font-size: 1.4rem;
-	}
-
-	header strong {
-		color: hsl(240, 8%, 94%);
-	}
-
-	header h1 {
-		color: hsl(240, 8%, 84%);
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		font-weight: 400;
-	}
-
-	.text {
-		flex: 1 1;
-		overflow-y: auto;
-		padding: 2.2rem 2.2rem 2.2rem calc(var(--menu-width) + 2.2rem);
-		color: var(--sidebar-text);
-	}
-
-	.text :global(a) {
-		color: inherit;
-		text-decoration: underline;
-	}
-
-	.text :global(h2) {
-		color: white;
-		font-size: 2.8rem;
-		font-weight: normal;
-		margin: 1.5em 0 0.5em 0;
-	}
-
-	.text :global(ul) {
-		padding: 0 0 0 2rem;
-	}
-
-	.text :global(code) {
-		color: var(--sidebar-text);
-		background: rgba(0, 0, 0, 0.12);
-		padding: 0.2em 0.4em 0.3em;
-		white-space: nowrap;
-		position: relative;
-		top: -0.1em;
-	}
-
-	.text :global(pre) {
-		background: white;
-		padding: 1rem 1.5rem;
-		margin: 0 0 1.6rem 0;
-		line-height: 1.3;
-		border-radius: 0.5rem;
-		filter: drop-shadow(2px 4px 12px hsl(240, 8%, 40%));
-	}
-
-	.text :global(pre) :global(code) {
-		background: none;
-		color: var(--code-base);
-		padding: 0;
-		top: 0;
-		white-space: pre;
-	}
-
-	.text :global(pre) :global(code)::before,
-	.text :global(pre) :global(code)::after {
-		content: none;
-	}
-
-	.text :global(pre) :global(.highlight) {
-		--color: rgba(220, 220, 0, 0.2);
-		background: var(--color);
-		outline: 2px solid var(--color);
-		border-radius: 2px;
-	}
-
-	.text :global(pre) :global(.highlight.add) {
-		--color: rgba(0, 255, 0, 0.2);
-	}
-
-	.text :global(pre) :global(.highlight.remove) {
-		--color: rgba(255, 0, 0, 0.2);
-	}
-
-	.text :global(blockquote) {
-		background: var(--second);
-		margin: 2rem 0;
-		padding: 2rem;
-		color: white;
-		border-radius: 0.5rem;
-		border: 1.5px solid var(--flash);
-		filter: drop-shadow(2px 4px 12px hsl(240, 8%, 36%));
-	}
-
-	.text :global(blockquote)::before {
-		content: '!';
-		position: relative;
-		top: -0.1rem;
-		right: -0.1rem;
-		float: right;
-		color: var(--flash);
-		width: 2rem;
-		height: 2rem;
-		display: block;
-		align-items: center;
-		justify-content: center;
-		border: 1.5px solid var(--flash);
-		background: var(--flash);
-		color: var(--second);
-		border-radius: 50%;
-		text-align: center;
-		font-size: 1.2rem;
-		font-weight: bold;
-		line-height: 1.9;
-		margin: 0 0 1rem 1rem;
-		opacity: 0.8;
-	}
-
-	.content footer {
-		padding: 1rem 2.2rem 1rem calc(var(--menu-width) + 2.2rem);
-		display: flex;
-		justify-content: space-between;
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
-	}
-
-	.content footer a {
-		color: var(--sidebar-text);
-		font-size: 1.4rem;
-		display: flex;
-		gap: 0.5rem;
-	}
-
 	.navigator {
-		background: #f9f9f9;
+		background: white;
 		display: flex;
 		flex-direction: column;
 		padding: 1rem;
@@ -651,41 +439,6 @@
 		flex-direction: column;
 	}
 
-	.chrome {
-		width: 100%;
-		height: 4rem;
-		display: flex;
-		gap: 0.5rem;
-		padding: 0.4rem;
-		background: #f9f9f9;
-	}
-
-	.chrome button {
-		padding: 0.5rem;
-	}
-
-	.chrome button img {
-		height: 100%;
-		width: auto;
-		transition: 0.2s ease-out;
-		transform: none;
-	}
-
-	.chrome button:active img {
-		transform: rotate(-180deg);
-		transition: none;
-	}
-
-	.chrome input {
-		flex: 1;
-		padding: 0.5rem 1rem 0.4rem 1rem;
-		border-radius: 0.5rem;
-		border: 1px solid rgba(0, 0, 0, 0.1);
-		box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
-		font-family: inherit;
-		font-size: 1.6rem;
-	}
-
 	iframe {
 		width: 100%;
 		height: 100%;
@@ -693,26 +446,6 @@
 		resize: none;
 		box-sizing: border-box;
 		border: none;
-	}
-
-	.modal-contents h2 {
-		font-size: 2.4rem;
-		margin: 0 0 0.5em 0;
-	}
-
-	.modal-contents label {
-		user-select: none;
-	}
-
-	.modal-contents button {
-		display: block;
-		background: var(--prime);
-		color: white;
-		padding: 1rem;
-		width: 10em;
-		margin: 1em 0 0 0;
-		border-radius: var(--border-r);
-		line-height: 1;
 	}
 
 	.editor-container {
