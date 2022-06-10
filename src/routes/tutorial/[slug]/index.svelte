@@ -17,10 +17,10 @@
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './_/Editor.svelte';
 	import Folder from './_/Folder.svelte';
-	import refresh from './_/refresh.svg';
 	import { dev } from '$app/env';
 	import ImageViewer from './_/ImageViewer.svelte';
 	import Sidebar from './_/Sidebar.svelte';
+	import Chrome from './_/Chrome.svelte';
 
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
@@ -347,7 +347,19 @@
 				</section>
 
 				<section class="preview" slot="b">
-					<div class="chrome">
+					<Chrome
+						{path}
+						on:refresh={() => {
+							set_iframe_src('/loading.html');
+							set_iframe_src(adapter.base + path);
+						}}
+						on:change={(e) => {
+							const url = new URL(e.detail.value, adapter.base);
+							path = url.pathname + url.search + url.hash;
+							set_iframe_src(adapter.base + path);
+						}}
+					/>
+					<!-- <div class="chrome">
 						<button
 							on:click={() => {
 								set_iframe_src('/loading.html');
@@ -367,7 +379,7 @@
 								set_iframe_src(adapter.base + path);
 							}}
 						/>
-					</div>
+					</div> -->
 
 					<iframe bind:this={iframe} title="Output" src="/loading.html" />
 				</section>
@@ -394,7 +406,7 @@
 	}
 
 	.navigator {
-		background: #f9f9f9;
+		background: white;
 		display: flex;
 		flex-direction: column;
 		padding: 1rem;
@@ -425,41 +437,6 @@
 	.preview {
 		display: flex;
 		flex-direction: column;
-	}
-
-	.chrome {
-		width: 100%;
-		height: 4rem;
-		display: flex;
-		gap: 0.5rem;
-		padding: 0.4rem;
-		background: #f9f9f9;
-	}
-
-	.chrome button {
-		padding: 0.5rem;
-	}
-
-	.chrome button img {
-		height: 100%;
-		width: auto;
-		transition: 0.2s ease-out;
-		transform: none;
-	}
-
-	.chrome button:active img {
-		transform: rotate(-180deg);
-		transition: none;
-	}
-
-	.chrome input {
-		flex: 1;
-		padding: 0.5rem 1rem 0.4rem 1rem;
-		border-radius: 0.5rem;
-		border: 1px solid rgba(0, 0, 0, 0.1);
-		box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
-		font-family: inherit;
-		font-size: 1.6rem;
 	}
 
 	iframe {
