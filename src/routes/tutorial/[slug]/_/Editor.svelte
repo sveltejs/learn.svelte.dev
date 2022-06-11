@@ -53,6 +53,10 @@
 			editor = monaco.editor.create(container, {
 				fontFamily: 'Roboto Mono',
 				fontSize: 13,
+				padding: {
+					top: 16,
+					bottom: 16
+				},
 				minimap: {
 					enabled: false
 				}
