@@ -47,6 +47,7 @@
 	/** @type {HTMLIFrameElement} */
 	let iframe;
 	let loading = true;
+	let initial = true;
 
 	/** @type {Record<string, boolean>}*/
 	let complete_states = {};
@@ -156,6 +157,7 @@
 		}
 
 		set_iframe_src(adapter.base);
+		initial = false;
 	});
 
 	/** @type {NodeJS.Timeout} */
@@ -372,7 +374,7 @@
 						<iframe bind:this={iframe} title="Output" />
 
 						{#if loading}
-							<Loading />
+							<Loading {initial} />
 						{/if}
 					</div>
 				</section>
