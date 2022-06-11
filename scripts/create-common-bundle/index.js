@@ -13,27 +13,45 @@ if (!fs.existsSync(`${cwd}/node_modules`)) {
 
 const zip = new AdmZip();
 
-for (const file of glob('**', { cwd, filesOnly: true, dot: true })) {
-	if (file.endsWith('/.DS_Store')) continue;
-	if (file.startsWith('.svelte-kit/')) continue;
-	if (file.endsWith('.d.ts')) continue;
-	if (file.endsWith('.map')) continue;
-	if (file.endsWith('.md')) continue;
-	if (file.endsWith('/LICENSE')) continue;
+// we selectively exclude certain files to minimise the bundle size.
+// this is a bit ropey, but it works
+const ignored_basenames = ['.DS_Store', 'LICENSE'];
+const ignored_extensions = ['.d.ts', '.map', '.md'];
+const ignored_directories = ['.svelte-kit', 'node_modules/.bin', 'node_modules/rollup/dist/shared'];
 
-	// special case
+const ignored_files = new Set([
+	'node_modules/vite/dist/node/terser.js',
+	'node_modules/rollup/dist/es/rollup.browser.js',
+	'node_modules/rollup/dist/rollup.browser.js',
+	'node_modules/svelte/compiler.js'
+]);
+
+for (const file of glob('**', { cwd, filesOnly: true, dot: true })) {
+	if (ignored_extensions.find((ext) => file.endsWith(ext))) continue;
+	if (ignored_basenames.find((basename) => file.endsWith('/' + basename))) continue;
+	if (ignored_directories.find((dir) => file.startsWith(dir + '/'))) continue;
+
+	if (ignored_files.has(file)) {
+		ignored_files.delete(file);
+		continue;
+	}
+
+	// esbuild is a special case
 	if (file.startsWith('node_modules/esbuild-wasm/')) {
 		zip.addFile(
 			file.replace('node_modules/esbuild-wasm', 'node_modules/esbuild'),
 			fs.readFileSync(`${cwd}/${file}`)
 		);
 		continue;
+	} else if (file.startsWith('node_modules/esbuild')) {
+		continue;
 	}
 
-	if (file.startsWith('node_modules/.bin')) continue;
-	if (file.startsWith('node_modules/esbuild')) continue;
-
 	zip.addFile(file, fs.readFileSync(`${cwd}/${file}`));
+}
+
+if (ignored_files.size > 0) {
+	throw new Error(`expected to find ${Array.from(ignored_files).join(', ')}`);
 }
 
 const out = zip.toBuffer();
