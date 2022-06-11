@@ -6,19 +6,25 @@ In the [previous chapter](/tutorial/deferred-transitions), we used deferred tran
 
 To complete the illusion, we also need to apply motion to the elements that _aren't_ transitioning. For this, we use the `animate` directive.
 
-First, import the `flip` function — flip stands for ['First, Last, Invert, Play'](https://aerotwist.com/blog/flip-your-animations/) — from `svelte/animate`:
+First, import the `flip` function — flip stands for ['First, Last, Invert, Play'](https://aerotwist.com/blog/flip-your-animations/) — from `svelte/animate` into `TodoList.svelte`:
 
-```js
-import { flip } from 'svelte/animate';
+```svelte
+<script>
+	+++import { flip } from 'svelte/animate';+++
+	import { send, receive } from './transition.js';
+
+	export let store;
+	export let filter;
+</script>
 ```
 
 Then add it to the `<label>` elements:
 
 ```svelte
 <label
-	in:receive="{{key: todo.id}}"
-	out:send="{{key: todo.id}}"
-	animate:flip
+	in:receive={{ key: todo.id }}
+	out:send={{ key: todo.id }}
+	+++animate:flip+++
 >
 ```
 
@@ -26,9 +32,9 @@ The movement is a little slow in this case, so we can add a `duration` parameter
 
 ```svelte
 <label
-	in:receive="{{key: todo.id}}"
-	out:send="{{key: todo.id}}"
-	animate:flip="{{duration: 200}}"
+	in:receive={{ key: todo.id }}
+	out:send={{ key: todo.id }}
+	animate:flip+++={{ duration: 200 }}+++
 >
 ```
 

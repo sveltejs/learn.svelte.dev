@@ -23,8 +23,8 @@ Then, add them to the `<label>` element, using the `todo.id` property as a key t
 
 ```svelte
 <label
-	+++in:receive={{key: todo.id}}+++
-	+++out:send={{key: todo.id}}+++
+	+++in:receive={{ key: todo.id }}+++
+	+++out:send={{ key: todo.id }}+++
 >
 ```
 
