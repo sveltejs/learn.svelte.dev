@@ -38,8 +38,8 @@
 	}
 
 	.chrome button img {
-		height: 100%;
-		width: auto;
+		width: 2rem;
+		height: 2rem;
 		transition: 0.2s ease-out;
 		transform: none;
 	}
