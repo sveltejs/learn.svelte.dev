@@ -3,11 +3,12 @@ import esbuild from 'esbuild';
 import AdmZip from 'adm-zip';
 import glob from 'tiny-glob/sync.js';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const cwd = 'content/tutorial/common';
 
 if (!fs.existsSync(`${cwd}/node_modules`)) {
-	throw new Error(`${cwd}/node_modules does not exist`);
+	execSync('npm install', { cwd });
 }
 
 const zip = new AdmZip();
