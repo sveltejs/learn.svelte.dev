@@ -12,7 +12,7 @@ function typewriter(node, { speed = 1 }) {
 		throw new Error(`This transition only works on elements with a single text node child`);
 	}
 
-	const text = node.textContent;
+	+++const text = node.textContent;
 	const duration = text.length / (speed * 0.01);
 
 	return {
@@ -21,6 +21,6 @@ function typewriter(node, { speed = 1 }) {
 			const i = Math.trunc(text.length * t);
 			node.textContent = text.slice(0, i);
 		}
-	};
+	};+++
 }
 ```

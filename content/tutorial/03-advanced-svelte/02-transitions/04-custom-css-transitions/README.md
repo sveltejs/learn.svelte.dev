@@ -51,14 +51,14 @@ We can get a lot more creative though. Let's make something truly gratuitous:
 ```svelte
 <script>
 	import { fade } from 'svelte/transition';
-	import { elasticOut } from 'svelte/easing';
+	+++import { elasticOut } from 'svelte/easing';+++
 
 	let visible = true;
 
 	function spin(node, { duration }) {
 		return {
 			duration,
-			css: t => {
+			css: t => +++{
 				const eased = elasticOut(t);
 
 				return `
@@ -68,7 +68,7 @@ We can get a lot more creative though. Let's make something truly gratuitous:
 						${Math.min(100, 1000 - 1000 * t)}%,
 						${Math.min(50, 500 - 500 * t)}%
 					);`
-			}
+			}+++
 		};
 	}
 </script>

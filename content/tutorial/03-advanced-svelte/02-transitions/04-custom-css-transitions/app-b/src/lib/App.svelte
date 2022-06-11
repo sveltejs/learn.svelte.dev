@@ -11,9 +11,7 @@
 				const eased = elasticOut(t);
 
 				return `
-					transform: scale(${eased}) rotate(${
-					eased * 1080
-				}deg);
+					transform: scale(${eased}) rotate(${eased * 1080}deg);
 					color: hsl(
 						${Math.trunc(t * 360)},
 						${Math.min(100, 1000 - 1000 * t)}%,
