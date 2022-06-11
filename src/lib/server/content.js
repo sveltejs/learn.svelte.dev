@@ -14,7 +14,7 @@ const text_files = new Set([
 	'.md'
 ]);
 
-const excluded = new Set(['.DS_Store', '.gitkeep']);
+const excluded = new Set(['.DS_Store', '.gitkeep', '.svelte-kit']);
 
 /** @param {string} file */
 function json(file) {
@@ -104,7 +104,7 @@ export function get_section(slug) {
 				if (section.slug !== slug) continue;
 
 				const a = {
-					...walk('content/tutorial/common'),
+					...walk('content/tutorial/common', { exclude: ['node_modules'] }),
 					...walk(`content/tutorial/${part.slug}/common`),
 					...walk(`${section.dir}/app-a`)
 				};
@@ -163,8 +163,11 @@ function extract_frontmatter(markdown, dir) {
 /**
  * Get a list of all files in a directory
  * @param {string} cwd - the directory to walk
+ * @param {{
+ *   exclude?: string[]
+ * }} options
  */
-export function walk(cwd) {
+export function walk(cwd, options = {}) {
 	/** @type {Record<string, import('$lib/types').FileStub | import('$lib/types').DirectoryStub>} */
 	const result = {};
 
@@ -179,6 +182,7 @@ export function walk(cwd) {
 
 		for (const basename of files) {
 			if (excluded.has(basename)) continue;
+			if (options.exclude?.includes(basename)) continue;
 
 			const name = dir + basename;
 			const resolved = path.join(cwd, name);

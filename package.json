@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"build": "svelte-kit build && node scripts/create-middleware.js",
+		"build": "node scripts/create-common-bundle && svelte-kit build && node scripts/create-middleware",
 		"package": "svelte-kit package",
 		"preview": "svelte-kit preview",
 		"prepare": "svelte-kit sync",
@@ -17,16 +17,19 @@
 		"@sveltejs/kit": "next",
 		"@sveltejs/site-kit": "^2.1.0",
 		"diff": "^5.1.0",
+		"esbuild": "^0.14.43",
 		"prettier": "^2.6.2",
 		"prettier-plugin-svelte": "^2.7.0",
 		"svelte": "^3.48.0",
 		"svelte-check": "^2.7.2",
+		"tiny-glob": "^0.2.9",
 		"typescript": "~4.6.4"
 	},
 	"type": "module",
 	"dependencies": {
 		"@fontsource/roboto-mono": "^4.5.7",
 		"@webcontainer/api": "^0.0.1",
+		"adm-zip": "^0.5.9",
 		"base64-js": "^1.5.1",
 		"marked": "^4.0.16",
 		"monaco-editor": "^0.33.0",

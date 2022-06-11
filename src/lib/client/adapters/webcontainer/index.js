@@ -1,5 +1,7 @@
 import { load } from '@webcontainer/api';
+
 import base64 from 'base64-js';
+import { ready } from '../common/index.js';
 
 const WebContainer = await load();
 
@@ -8,29 +10,42 @@ const WebContainer = await load();
  * @returns {Promise<import('$lib/types').Adapter>}
  */
 export async function create(stubs) {
-	const vm = await WebContainer.boot();
-
 	const tree = convert_stubs_to_tree(stubs);
+
+	const common = await ready;
+	tree['common.zip'] = file(new Uint8Array(common.zipped));
+	tree['boot.cjs'] = file(common.boot);
+
+	const vm = await WebContainer.boot();
 	await vm.loadFiles(tree);
+
+	const boot = await vm.run(
+		{
+			command: 'node',
+			args: ['boot.cjs']
+		},
+		{
+			stderr: (data) => console.error(`[boot] ${data}`)
+		}
+	);
+
+	const code = await boot.onExit;
+
+	if (code !== 0) {
+		throw new Error('Failed to initialize WebContainer');
+	}
 
 	const base = await new Promise(async (fulfil, reject) => {
 		vm.on('server-ready', (port, base) => {
 			fulfil(base);
 		});
 
-		const install = await vm.run({
-			command: 'turbo',
-			args: ['install']
-		});
-
-		const code = await install.onExit;
-
-		if (code !== 0) {
-			reject(new Error('Installation failed'));
-			return;
-		}
-
-		await vm.run({ command: 'turbo', args: ['run', 'dev'] });
+		await vm.run(
+			{ command: 'turbo', args: ['run', 'dev'] },
+			{
+				stderr: (data) => console.error(`[dev] ${data}`)
+			}
+		);
 	});
 
 	let current = stubs;
@@ -97,11 +112,7 @@ export async function create(stubs) {
 					tree = /** @type {import('@webcontainer/api').DirectoryEntry} */ (tree[part]).directory;
 				}
 
-				tree[basename] = {
-					file: {
-						contents: stub.text ? stub.contents : base64.toByteArray(stub.contents)
-					}
-				};
+				tree[basename] = file(stub.text ? stub.contents : base64.toByteArray(stub.contents));
 			}
 
 			await vm.loadFiles(root);
@@ -132,14 +143,17 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 					directory: convert_stubs_to_tree(children, depth + 1)
 				};
 			} else {
-				tree[stub.basename] = {
-					file: {
-						contents: stub.text ? stub.contents : base64.toByteArray(stub.contents)
-					}
-				};
+				tree[stub.basename] = file(stub.text ? stub.contents : base64.toByteArray(stub.contents));
 			}
 		}
 	}
 
 	return tree;
+}
+
+/** @param {string | Uint8Array} contents */
+function file(contents) {
+	return {
+		file: { contents }
+	};
 }
