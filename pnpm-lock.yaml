@@ -6,8 +6,11 @@ specifiers:
   '@sveltejs/kit': next
   '@sveltejs/site-kit': ^2.1.0
   '@webcontainer/api': ^0.0.1
+  adm-zip: ^0.5.9
   base64-js: ^1.5.1
   diff: ^5.1.0
+  esbuild: ^0.14.43
+  jszip: ^3.10.0
   marked: ^4.0.16
   monaco-editor: ^0.33.0
   port-authority: ^2.0.1
@@ -17,12 +20,14 @@ specifiers:
   prismjs: ^1.28.0
   svelte: ^3.48.0
   svelte-check: ^2.7.2
+  tiny-glob: ^0.2.9
   typescript: ~4.6.4
   ws: ^8.8.0
 
 dependencies:
   '@fontsource/roboto-mono': 4.5.7
   '@webcontainer/api': 0.0.1
+  adm-zip: 0.5.9
   base64-js: 1.5.1
   marked: 4.0.16
   monaco-editor: 0.33.0
@@ -36,10 +41,13 @@ devDependencies:
   '@sveltejs/kit': 1.0.0-next.350_svelte@3.48.0
   '@sveltejs/site-kit': 2.1.0
   diff: 5.1.0
+  esbuild: 0.14.43
+  jszip: 3.10.0
   prettier: 2.6.2
   prettier-plugin-svelte: 2.7.0_kkjbqzpydplecjtkxrgomroeru
   svelte: 3.48.0
   svelte-check: 2.7.2_svelte@3.48.0
+  tiny-glob: 0.2.9
   typescript: 4.6.4
 
 packages:
@@ -248,6 +256,11 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
+
+  /adm-zip/0.5.9:
+    resolution: {integrity: sha512-s+3fXLkeeLjZ2kLjCBwQufpI5fuN+kIGBxu6530nVQZGVol0d7Y/M88/xw9HGGUcJjKf8LutN3VPRUBq6N7Ajg==}
+    engines: {node: '>=6.0'}
+    dev: false
 
   /agent-base/6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -822,6 +835,10 @@ packages:
       minimatch: 3.1.2
     dev: true
 
+  /immediate/3.0.6:
+    resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
+    dev: true
+
   /import-fresh/3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -891,9 +908,24 @@ packages:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
     dev: true
 
+  /jszip/3.10.0:
+    resolution: {integrity: sha512-LDfVtOLtOxb9RXkYOwPyNBTQDL4eUbqahtoY6x07GiDJHwSYvn8sHHIw8wINImV3MqbMNve2gSuM1DDqEKk09Q==}
+    dependencies:
+      lie: 3.3.0
+      pako: 1.0.11
+      readable-stream: 2.3.7
+      setimmediate: 1.0.5
+    dev: true
+
   /kleur/4.1.4:
     resolution: {integrity: sha512-8QADVssbrFjivHWQU7KkMgptGTl6WAcSdlbBPY4uNF+mWr6DGcKrvY2w4FQJoXch7+fKMjj0dRrL75vk3k23OA==}
     engines: {node: '>=6'}
+    dev: true
+
+  /lie/3.3.0:
+    resolution: {integrity: sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ==}
+    dependencies:
+      immediate: 3.0.6
     dev: true
 
   /lru-cache/6.0.0:
@@ -1164,6 +1196,10 @@ packages:
       os-tmpdir: 1.0.2
     dev: true
 
+  /pako/1.0.11:
+    resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
+    dev: true
+
   /parent-module/1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
@@ -1392,6 +1428,10 @@ packages:
 
   /set-cookie-parser/2.5.0:
     resolution: {integrity: sha512-cHMAtSXilfyBePduZEBVPTCftTQWz6ehWJD5YNUg4mqvRosrrjKbo4WS8JkB0/RxonMoohHm7cOGH60mDkRQ9w==}
+    dev: true
+
+  /setimmediate/1.0.5:
+    resolution: {integrity: sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==}
     dev: true
 
   /signal-exit/3.0.7:

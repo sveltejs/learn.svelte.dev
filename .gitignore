@@ -8,3 +8,6 @@
 !.env.example
 .apps
 .vercel
+/content/tutorial/common/.svelte-kit
+/content/tutorial/common/node_modules
+/content/tutorial/common/package-lock.json

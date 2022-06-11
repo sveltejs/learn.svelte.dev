@@ -9,8 +9,8 @@
 		"prepare": "svelte-kit sync"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
+		"esbuild-wasm": "^0.14.43",
 		"svelte": "^3.44.0"
 	},
 	"type": "module"
