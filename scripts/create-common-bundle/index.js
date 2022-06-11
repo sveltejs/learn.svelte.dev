@@ -17,6 +17,7 @@ for (const file of glob('**', { cwd, filesOnly: true, dot: true })) {
 	if (file.endsWith('/.DS_Store')) continue;
 	if (file.startsWith('.svelte-kit/')) continue;
 	if (file.endsWith('.d.ts')) continue;
+	if (file.endsWith('.map')) continue;
 	if (file.endsWith('.md')) continue;
 	if (file.endsWith('/LICENSE')) continue;
 
