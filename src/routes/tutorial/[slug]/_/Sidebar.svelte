@@ -256,7 +256,7 @@
 	}
 
 	footer {
-		padding: 1.5rem 2.2rem;
+		padding: 1rem 3rem;
 		display: flex;
 		justify-content: space-between;
 		border-top: 1px solid var(--border-color);
