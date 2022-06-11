@@ -1,16 +1,14 @@
 <script>
 	import { quintOut } from 'svelte/easing';
 	import { crossfade } from 'svelte/transition';
+	import { createTodoStore } from './todos.js';
 
 	const [send, receive] = crossfade({
 		duration: (d) => Math.sqrt(d * 200),
 
 		fallback(node, params) {
 			const style = getComputedStyle(node);
-			const transform =
-				style.transform === 'none'
-					? ''
-					: style.transform;
+			const transform = style.transform === 'none' ? '' : style.transform;
 
 			return {
 				duration: 600,
@@ -23,92 +21,53 @@
 		}
 	});
 
-	let uid = 1;
-
-	let todos = [
-		{
-			id: uid++,
-			done: false,
-			description: 'write some docs'
-		},
-		{
-			id: uid++,
-			done: false,
-			description: 'start writing blog post'
-		},
-		{
-			id: uid++,
-			done: true,
-			description: 'buy some milk'
-		},
-		{
-			id: uid++,
-			done: false,
-			description: 'mow the lawn'
-		},
-		{
-			id: uid++,
-			done: false,
-			description: 'feed the turtle'
-		},
-		{
-			id: uid++,
-			done: false,
-			description: 'fix some bugs'
-		}
-	];
-
-	function add(input) {
-		const todo = {
-			id: uid++,
-			done: false,
-			description: input.value
-		};
-
-		todos = [todo, ...todos];
-		input.value = '';
-	}
-
-	function remove(todo) {
-		todos = todos.filter((t) => t !== todo);
-	}
-
-	function mark(todo, done) {
-		todo.done = done;
-		remove(todo);
-		todos = todos.concat(todo);
-	}
+	const todos = createTodoStore([
+		{ done: false, description: 'write some docs' },
+		{ done: false, description: 'start writing blog post' },
+		{ done: true, description: 'buy some milk' },
+		{ done: false, description: 'mow the lawn' },
+		{ done: false, description: 'feed the turtle' },
+		{ done: false, description: 'fix some bugs' }
+	]);
 </script>
 
 <div class="board">
 	<input
 		placeholder="what needs to be done?"
-		on:keydown={(e) =>
-			e.key === 'Enter' && add(e.target)}
+		on:keydown={(e) => {
+			if (e.key === 'Enter') {
+				todos.add(e.currentTarget.value);
+				e.currentTarget.value = '';
+			}
+		}}
 	/>
 
 	<div class="left">
 		<h2>todo</h2>
-		{#each todos.filter((t) => !t.done) as todo (todo.id)}
+
+		{#each $todos.filter((t) => !t.done) as todo (todo.id)}
 			<label
 				in:receive={{ key: todo.id }}
 				out:send={{ key: todo.id }}
 			>
 				<input
 					type="checkbox"
-					on:change={() => mark(todo, true)}
+					on:change={() => todos.mark(todo, true)}
 				/>
+
 				{todo.description}
-				<button on:click={() => remove(todo)}
-					>remove</button
-				>
+
+				<button on:click={() => todos.remove(todo)}>
+					remove
+				</button>
 			</label>
 		{/each}
 	</div>
 
 	<div class="right">
 		<h2>done</h2>
-		{#each todos.filter((t) => t.done) as todo (todo.id)}
+
+		{#each $todos.filter((t) => t.done) as todo (todo.id)}
 			<label
 				class="done"
 				in:receive={{ key: todo.id }}
@@ -117,12 +76,14 @@
 				<input
 					type="checkbox"
 					checked
-					on:change={() => mark(todo, false)}
+					on:change={() => todos.mark(todo, false)}
 				/>
+
 				{todo.description}
-				<button on:click={() => remove(todo)}
-					>remove</button
-				>
+
+				<button on:click={() => todos.remove(todo)}>
+					remove
+				</button>
 			</label>
 		{/each}
 	</div>
@@ -151,6 +112,7 @@
 
 	label {
 		position: relative;
+		display: block;
 		line-height: 1.2;
 		padding: 0.5em 2.5em 0.5em 2em;
 		margin: 0 0 0.5em 0;
