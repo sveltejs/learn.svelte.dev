@@ -21,6 +21,7 @@
 		width: 100%;
 		text-align: left;
 		border: 2px solid transparent;
+		white-space: nowrap;
 	}
 
 	button.selected {
@@ -37,6 +38,7 @@
 		background-color: var(--light-blue);
 		border: 1px solid var(--border-color);
 		transform: translate(0, 0.2rem) rotate(45deg);
+		z-index: 2;
 	}
 
 	button:focus-visible {
