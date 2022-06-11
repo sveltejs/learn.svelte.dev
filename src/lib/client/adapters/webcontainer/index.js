@@ -1,5 +1,4 @@
 import { load } from '@webcontainer/api';
-
 import base64 from 'base64-js';
 import { ready } from '../common/index.js';
 
@@ -13,8 +12,12 @@ export async function create(stubs) {
 	const tree = convert_stubs_to_tree(stubs);
 
 	const common = await ready;
-	tree['common.zip'] = file(new Uint8Array(common.zipped));
-	tree['unzip.cjs'] = file(common.unzip);
+	tree['common.zip'] = {
+		file: { contents: new Uint8Array(common.zipped) }
+	};
+	tree['unzip.cjs'] = {
+		file: { contents: common.unzip }
+	};
 
 	const vm = await WebContainer.boot();
 	await vm.loadFiles(tree);
@@ -113,7 +116,7 @@ export async function create(stubs) {
 					tree = /** @type {import('@webcontainer/api').DirectoryEntry} */ (tree[part]).directory;
 				}
 
-				tree[basename] = file(stub.text ? stub.contents : base64.toByteArray(stub.contents));
+				tree[basename] = to_file(stub);
 			}
 
 			await vm.loadFiles(root);
@@ -144,7 +147,7 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 					directory: convert_stubs_to_tree(children, depth + 1)
 				};
 			} else {
-				tree[stub.basename] = file(stub.text ? stub.contents : base64.toByteArray(stub.contents));
+				tree[stub.basename] = to_file(stub);
 			}
 		}
 	}
@@ -152,8 +155,22 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 	return tree;
 }
 
-/** @param {string | Uint8Array} contents */
-function file(contents) {
+/** @param {import('$lib/types').FileStub} stub */
+function to_file(stub) {
+	// special case
+	if (stub.name === '/src/app.html') {
+		const contents = stub.contents.replace(
+			'</head>',
+			'<script type="module" src="/src/__client.js"></script></head>'
+		);
+
+		return {
+			file: { contents }
+		};
+	}
+
+	const contents = stub.text ? stub.contents : base64.toByteArray(stub.contents);
+
 	return {
 		file: { contents }
 	};
