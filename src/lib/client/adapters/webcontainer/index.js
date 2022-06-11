@@ -40,19 +40,6 @@ export async function create(stubs) {
 			fulfil(base);
 		});
 
-		// const install = await vm.run({
-		// 	command: 'turbo',
-		// 	args: ['install']
-		// });
-
-		// const code = await install.onExit;
-
-		// if (code !== 0) {
-		// 	reject(new Error('Installation failed'));
-		// 	return;
-		// }
-
-		console.log('running dev');
 		await vm.run(
 			{ command: 'turbo', args: ['run', 'dev'] },
 			{
