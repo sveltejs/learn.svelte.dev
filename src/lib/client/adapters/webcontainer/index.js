@@ -19,8 +19,6 @@ export async function create(stubs) {
 	const vm = await WebContainer.boot();
 	await vm.loadFiles(tree);
 
-	console.group('unzipping');
-
 	const boot = await vm.run(
 		{
 			command: 'node',
@@ -36,9 +34,6 @@ export async function create(stubs) {
 	if (code !== 0) {
 		throw new Error('Failed to initialize WebContainer');
 	}
-	console.log({ code });
-
-	console.groupEnd();
 
 	const base = await new Promise(async (fulfil, reject) => {
 		vm.on('server-ready', (port, base) => {
