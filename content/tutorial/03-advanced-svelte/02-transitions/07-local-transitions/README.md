@@ -9,7 +9,7 @@ Instead, we'd like transitions to play only when individual items are added and 
 We can achieve this with a _local_ transition, which only plays when the block with the transition itself is added or removed:
 
 ```svelte
-<div transition:slide|local>
+<div transition:slide+++|local+++>
 	{item}
 </div>
 ```

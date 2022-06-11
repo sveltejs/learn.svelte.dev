@@ -67,6 +67,7 @@
 		user-select: none;
 		cursor: pointer;
 		border: 2px solid transparent;
+		white-space: nowrap;
 	}
 
 	button:focus-visible {
@@ -88,5 +89,15 @@
 
 	li {
 		padding: 0;
+	}
+
+	li::after {
+		content: '';
+		position: absolute;
+		width: 2rem;
+		height: 100%;
+		background: linear-gradient(to right, transparent 30%, white 80%);
+		border-right: 1px solid var(--border-color);
+		right: 0
 	}
 </style>

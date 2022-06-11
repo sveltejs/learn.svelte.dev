@@ -8,7 +8,7 @@ First, import the `fade` function from `svelte/transition`...
 
 ```svelte
 <script>
-	import { fade } from 'svelte/transition';
+	+++import { fade } from 'svelte/transition';+++
 	let visible = true;
 </script>
 ```
@@ -16,5 +16,5 @@ First, import the `fade` function from `svelte/transition`...
 ...then add it to the `<p>` element:
 
 ```svelte
-<p transition:fade>Fades in and out</p>
+<p +++transition:fade+++>Fades in and out</p>
 ```

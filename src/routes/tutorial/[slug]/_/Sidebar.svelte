@@ -1,8 +1,7 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
-
 	import Modal from '$lib/components/Modal.svelte';
-
 	import { Icon } from '@sveltejs/site-kit';
 	import Menu from './Menu/Menu.svelte';
 
@@ -11,6 +10,8 @@
 
 	/** @type {import('$lib/types').Section} */
 	export let section;
+
+	const dispatch = createEventDispatcher();
 
 	const namespace = 'learn.svelte.dev';
 	const copy_enabled = `${namespace}:copy_enabled`;
@@ -61,7 +62,20 @@
 		}
 	}}
 >
-	{@html section.html}
+	<div
+		on:click={(e) => {
+			const node = /** @type {HTMLElement} */ (e.target);
+
+			if (node.nodeName === 'CODE') {
+				const { file } = node.dataset;
+				if (file) {
+					dispatch('select', { file });
+				}
+			}
+		}}
+	>
+		{@html section.html}
+	</div>
 
 	{#if section.next}
 		<p><a href="/tutorial/{section.next.slug}">Next: {section.next.title}</a></p>
@@ -70,7 +84,7 @@
 
 <footer>
 	<a class="edit" href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{section.dir}">
-		<Icon size={16} name="edit" /> Edit this page
+		Edit this page
 	</a>
 </footer>
 
@@ -149,11 +163,27 @@
 	}
 
 	.text :global(code) {
-		background: hsl(206, 44%, 87%);
+		background: hsl(206, 44%, 92%);
 		padding: 0.2em 0.4em 0.3em;
 		white-space: nowrap;
 		position: relative;
 		top: -0.1em;
+	}
+
+	.text :global(code[data-file]) {
+		padding-right: 1.8em;
+		cursor: pointer;
+	}
+
+	.text :global(code[data-file])::after {
+		content: '';
+		position: absolute;
+		width: 1em;
+		height: 1em;
+		top: calc(50% - 0.55em);
+		right: 0.5em;
+		background: url(./file-edit.svg);
+		background-size: 100% 100%;
 	}
 
 	.text :global(pre) {
@@ -233,11 +263,12 @@
 		border-right: 1px solid var(--border-color);
 	}
 
-	footer a {
+	footer .edit {
 		color: var(--second);
 		font-size: 1.4rem;
-		display: flex;
-		gap: 0.5rem;
+		padding: 0 0 0 1.4em;
+		background: url(./file-edit.svg) no-repeat 0 calc(50% - 0.1em);
+		background-size: 1em 1em;
 	}
 
 	.modal-contents h2 {

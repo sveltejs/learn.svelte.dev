@@ -6,7 +6,7 @@ Transition functions can accept parameters. Replace the `fade` transition with `
 
 ```svelte
 <script>
-	import { fly } from 'svelte/transition';
+	import { +++fly+++ } from 'svelte/transition';
 	let visible = true;
 </script>
 ```
@@ -14,8 +14,8 @@ Transition functions can accept parameters. Replace the `fade` transition with `
 ...and apply it to the `<p>` along with some options:
 
 ```svelte
-<p transition:fly="{{ y: 200, duration: 2000 }}">
-	Flies in and out
+<p transition:+++fly={{ y: 200, duration: 2000 }}+++>
+	+++Flies+++ in and out
 </p>
 ```
 

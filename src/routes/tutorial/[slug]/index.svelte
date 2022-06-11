@@ -282,7 +282,9 @@
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="33%">
 		<section class="content" slot="a">
-			<Sidebar {index} {section} />
+			<Sidebar {index} {section} on:select={e => {
+				select(/** @type {import('$lib/types').FileStub} */ (section.a[e.detail.file]));
+			}} />
 		</section>
 
 		<section slot="b">

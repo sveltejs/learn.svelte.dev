@@ -1,13 +1,10 @@
 <script>
 	import { spring } from 'svelte/motion';
 
-	let coords = spring(
-		{ x: 50, y: 50 },
-		{
-			stiffness: 0.1,
-			damping: 0.25
-		}
-	);
+	let coords = spring({ x: 50, y: 50 }, {
+		stiffness: 0.1,
+		damping: 0.25
+	});
 
 	let size = spring(10);
 </script>
