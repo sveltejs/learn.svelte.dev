@@ -27,6 +27,7 @@
 		height: 100%;
 		top: 0;
 		left: 0;
+		padding: 2rem;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
