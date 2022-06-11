@@ -43,10 +43,6 @@
 	afterNavigate(() => {
 		search = '';
 	});
-
-	export function open() {
-		is_open = true;
-	}
 </script>
 
 <div class="menu-toggle-container">
@@ -59,6 +55,22 @@
 		<Icon name={is_open ? 'close' : 'menu'} />
 	</button>
 </div>
+
+<header>
+	<a href={current.prev ? `/tutorial/${current.prev.slug}` : undefined} aria-label="Previous">
+		<Icon name="arrow-left" size={16} />
+	</a>
+
+	<h1 on:click={() => (is_open = true)}>
+		Part {current.part.index + 1} <span class="separator">/</span>
+		{current.chapter.title} <span class="separator">/</span>
+		<strong>{current.title}</strong>
+	</h1>
+
+	<a href={current.next ? `/tutorial/${current.next.slug}` : undefined} aria-label="Previous">
+		<Icon name="arrow-right" size={16} />
+	</a>
+</header>
 
 <nav class:open={is_open} aria-label="tutorial sections">
 	<div class="controls">
@@ -124,13 +136,56 @@
 </nav>
 
 <style>
+	header {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		border-bottom: 1px solid var(--border-color);
+		border-right: 1px solid var(--border-color);
+		padding: 0 0 0 var(--menu-width);
+		height: var(--menu-width);
+		align-items: center;
+	}
+
+	header strong,
+	header h1 {
+		font-size: 1.4rem;
+	}
+
+	header strong {
+		color: var(--prime);
+	}
+
+	header h1 {
+		color: var(--second);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		font-weight: 400;
+		flex: 1;
+		top: 0.15rem;
+	}
+
+	.separator {
+		position: relative;
+		font-size: 0.8em;
+		opacity: 0.3;
+		top: -0.1rem;
+		display: inline-block;
+	}
+
+	header a:not([href]) {
+		opacity: 0.1;
+		cursor: default;
+	}
+
 	nav {
 		--menu-width: 5.4rem;
 		position: absolute;
 		width: 100%;
 		height: 100%;
 		transition: transform 0.2s;
-		transform: translate(calc(var(--menu-width) - 100%), 0);
+		transform: translate(-100%, 0);
 		background: var(--light-blue);
 		z-index: 2;
 		/* filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.1)); */
@@ -183,6 +238,7 @@
 		background: var(--light-blue);
 		border: 2px solid transparent;
 		box-sizing: border-box;
+		padding: 0.2rem 0 0 0;
 	}
 
 	.menu-toggle:focus-visible {
@@ -228,7 +284,7 @@
 		font-weight: bold;
 	}
 
-	li.expanded img {
+	li.expanded > img {
 		transform: rotate(90deg);
 	}
 
@@ -240,38 +296,6 @@
 	.section {
 		--dot-size: 1.2rem;
 		--color: var(--second);
-	}
-
-	.section > a::before,
-	.section > a::after {
-		content: '';
-		top: calc(1.3rem - 0.5 * var(--dot-size));
-		right: calc(0.5 * (var(--menu-width) - var(--dot-size)) - 0.7rem);
-		width: var(--dot-size);
-		height: var(--dot-size);
-		border-radius: 50%;
-		border: 1px solid var(--color);
-		box-sizing: border-box;
-	}
-
-	.section a::after {
-		transform: scale(0);
-		transition: transform 0.2s;
-		background: var(--color);
-	}
-
-	.part > a::after,
-	.chapter > a::after {
-		content: attr(data-label);
-		width: var(--menu-width);
-		text-align: center;
-		top: 0.2rem;
-		right: -0.7rem;
-		color: hsl(240, 8%, 64%);
-	}
-
-	.section[aria-current='page'] > a::after {
-		transform: none;
 	}
 
 	a {
