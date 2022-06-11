@@ -155,7 +155,7 @@
 		margin: 0 0 1.6rem 0;
 		line-height: 1.3;
 		border-radius: 0.5rem;
-		box-shadow: inset 1px 1px 4px hsl(206, 20%, 85%);
+		box-shadow: inset 1px 1px 3px hsl(206deg 20% 93%);
 	}
 
 	.text :global(pre) :global(code) {
