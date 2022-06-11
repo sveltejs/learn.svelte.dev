@@ -62,7 +62,8 @@
 	</a>
 
 	<h1 on:click={() => (is_open = true)}>
-		Part {current.part.index + 1} > {current.chapter.title} >
+		Part {current.part.index + 1} <span class="separator">/</span>
+		{current.chapter.title} <span class="separator">/</span>
 		<strong>{current.title}</strong>
 	</h1>
 
@@ -163,6 +164,14 @@
 		font-weight: 400;
 		flex: 1;
 		top: 0.15rem;
+	}
+
+	.separator {
+		position: relative;
+		font-size: 0.8em;
+		opacity: 0.3;
+		top: -0.1rem;
+		display: inline-block;
 	}
 
 	header a:not([href]) {
