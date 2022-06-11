@@ -19,8 +19,17 @@ for (const file of glob('**', { cwd, filesOnly: true, dot: true })) {
 	if (file.endsWith('.md')) continue;
 	if (file.endsWith('/LICENSE')) continue;
 
+	// special case
+	if (file.startsWith('node_modules/esbuild-wasm/')) {
+		zip.addFile(
+			file.replace('node_modules/esbuild-wasm', 'node_modules/esbuild'),
+			fs.readFileSync(`${cwd}/${file}`)
+		);
+		continue;
+	}
+
 	if (file.startsWith('node_modules/.bin')) continue;
-	if (file.startsWith('node_modules/esbuild')) continue; // TODO can we bundle the WASM version?
+	if (file.startsWith('node_modules/esbuild')) continue;
 
 	zip.addFile(file, fs.readFileSync(`${cwd}/${file}`));
 }
