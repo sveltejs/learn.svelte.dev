@@ -29,6 +29,7 @@
 
 <Nav {page} logo="/svelte-logo.svg">
 	<svelte:fragment slot="nav-center">
+		<strong class="large">Work in progress. Here be dragons!</strong>
 		<!-- <NavItem href="/tutorial">Tutorial</NavItem>
 		<NavItem href="/docs">Docs</NavItem>
 		<NavItem href="/examples">Examples</NavItem>
@@ -79,6 +80,17 @@
 
 		.large {
 			display: inline;
+		}
+
+		strong.large {
+			height: 100%;
+			display: flex;
+			align-items: center;
+			color: var(--second);
+			text-transform: uppercase;
+			font-size: 1.2rem;
+			opacity: 1;
+			white-space: nowrap;
 		}
 	}
 </style>
