@@ -32,7 +32,7 @@ function escape(html) {
 const delimiter_substitutes = {
 	'+++': '             ',
 	'---': '           ',
-	'===': '         '
+	':::': '         '
 };
 
 /**
@@ -69,7 +69,7 @@ marked.use({
 					}
 					return prefix + tabs;
 				})
-				.replace(/([+=-]{3})/g, (_, delimiter) => {
+				.replace(/([+:-]{3})/g, (_, delimiter) => {
 					return delimiter_substitutes[delimiter];
 				})
 				.replace(/\*\\\//g, '*/');
