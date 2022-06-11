@@ -111,6 +111,13 @@ export function get_section(slug) {
 
 				const b = walk(`${section.dir}/app-b`);
 
+				const scope = chapter.meta.scope ?? part.meta.scope;
+				const filenames = new Set(
+					Object.keys(a)
+						.filter((filename) => filename.startsWith(scope.prefix))
+						.map((filename) => filename.slice(scope.prefix.length))
+				);
+
 				return {
 					part: {
 						slug: part.meta.slug,
@@ -121,14 +128,19 @@ export function get_section(slug) {
 						slug: chapter.meta.slug,
 						title: chapter.meta.title
 					},
-					scope: chapter.meta.scope ?? part.meta.scope,
+					scope,
 					focus: chapter.meta.focus ?? part.meta.focus,
 					title: section.title,
 					slug: section.slug,
 					prev: section.prev,
 					next: section.next,
 					dir: section.dir,
-					html: transform(section.markdown), // TODO syntax highlighting
+					html: transform(section.markdown, {
+						codespan: (text) =>
+							filenames.size > 1 && filenames.has(text)
+								? `<code data-file="${scope.prefix + text}">${text}</code>`
+								: `<code>${text}</code>`
+					}),
 					a,
 					b
 				};
