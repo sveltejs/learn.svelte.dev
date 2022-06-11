@@ -56,11 +56,19 @@
 	</button>
 </div>
 
-<header on:click={() => (is_open = true)}>
-	<h1>
+<header>
+	<a href={current.prev ? `/tutorial/${current.prev.slug}` : undefined} aria-label="Previous">
+		<Icon name="arrow-left" size={16} />
+	</a>
+
+	<h1 on:click={() => (is_open = true)}>
 		Part {current.part.index + 1} > {current.chapter.title} >
 		<strong>{current.title}</strong>
 	</h1>
+
+	<a href={current.next ? `/tutorial/${current.next.slug}` : undefined} aria-label="Previous">
+		<Icon name="arrow-right" size={16} />
+	</a>
 </header>
 
 <nav class:open={is_open} aria-label="tutorial sections">
@@ -129,9 +137,11 @@
 <style>
 	header {
 		display: flex;
+		gap: 0.5rem;
+		align-items: center;
 		border-bottom: 1px solid var(--border-color);
 		border-right: 1px solid var(--border-color);
-		padding: 0 0 0 calc(var(--menu-width) + 2.2rem);
+		padding: 0 0 0 var(--menu-width);
 		height: var(--menu-width);
 		align-items: center;
 	}
@@ -151,6 +161,13 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 		font-weight: 400;
+		flex: 1;
+		top: 0.15rem;
+	}
+
+	header a:not([href]) {
+		opacity: 0.1;
+		cursor: default;
 	}
 
 	nav {
@@ -257,7 +274,7 @@
 		font-weight: bold;
 	}
 
-	li.expanded img {
+	li.expanded > img {
 		transform: rotate(90deg);
 	}
 
