@@ -142,7 +142,7 @@
 	.text {
 		flex: 1 1;
 		overflow-y: auto;
-		padding: 2.2rem;
+		padding: 2.2rem 3rem;
 		color: var(--second);
 		border-right: 1px solid var(--border-color);
 	}
