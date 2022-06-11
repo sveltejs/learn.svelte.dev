@@ -5,15 +5,19 @@
 	/** @type {string} */
 	export let path;
 
+	/** @type {boolean} */
+	export let loading;
+
 	const dispatch = createEventDispatcher();
 </script>
 
 <div class="chrome">
-	<button on:click={() => dispatch('refresh')} aria-label="reload">
+	<button disabled={loading} on:click={() => dispatch('refresh')} aria-label="reload">
 		<img src={refresh} alt="Reload icon" />
 	</button>
 
 	<input
+		disabled={loading}
 		aria-label="URL"
 		value={path}
 		on:change={(e) => {

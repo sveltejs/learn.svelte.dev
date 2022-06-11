@@ -359,6 +359,7 @@
 				<section class="preview" slot="b">
 					<Chrome
 						{path}
+						{loading}
 						on:refresh={() => {
 							loading = true;
 							set_iframe_src(adapter.base + path);
