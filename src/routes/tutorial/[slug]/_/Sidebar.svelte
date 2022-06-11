@@ -2,7 +2,6 @@
 	import { createEventDispatcher } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import Modal from '$lib/components/Modal.svelte';
-	import { Icon } from '@sveltejs/site-kit';
 	import Menu from './Menu/Menu.svelte';
 
 	/** @type {import('$lib/types').PartStub[]} */
@@ -15,9 +14,6 @@
 
 	const namespace = 'learn.svelte.dev';
 	const copy_enabled = `${namespace}:copy_enabled`;
-
-	/** @type {import('svelte').SvelteComponent} */
-	let menu;
 
 	/** @type {HTMLElement} */
 	let sidebar;
@@ -32,14 +28,7 @@
 	});
 </script>
 
-<Menu bind:this={menu} {index} current={section} />
-
-<header on:click={() => menu.open()}>
-	<h1>
-		Part {section.part.index + 1} > {section.chapter.title} >
-		<strong>{section.title}</strong>
-	</h1>
-</header>
+<Menu {index} current={section} />
 
 <div
 	bind:this={sidebar}
@@ -113,32 +102,6 @@
 {/if}
 
 <style>
-	header {
-		display: flex;
-		border-bottom: 1px solid var(--border-color);
-		border-right: 1px solid var(--border-color);
-		padding: 0 0 0 calc(var(--menu-width) + 2.2rem);
-		height: var(--menu-width);
-		align-items: center;
-	}
-
-	header strong,
-	header h1 {
-		font-size: 1.4rem;
-	}
-
-	header strong {
-		color: var(--prime);
-	}
-
-	header h1 {
-		color: var(--second);
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		font-weight: 400;
-	}
-
 	.text {
 		flex: 1 1;
 		overflow-y: auto;

@@ -43,10 +43,6 @@
 	afterNavigate(() => {
 		search = '';
 	});
-
-	export function open() {
-		is_open = true;
-	}
 </script>
 
 <div class="menu-toggle-container">
@@ -59,6 +55,13 @@
 		<Icon name={is_open ? 'close' : 'menu'} />
 	</button>
 </div>
+
+<header on:click={() => (is_open = true)}>
+	<h1>
+		Part {current.part.index + 1} > {current.chapter.title} >
+		<strong>{current.title}</strong>
+	</h1>
+</header>
 
 <nav class:open={is_open} aria-label="tutorial sections">
 	<div class="controls">
@@ -124,6 +127,32 @@
 </nav>
 
 <style>
+	header {
+		display: flex;
+		border-bottom: 1px solid var(--border-color);
+		border-right: 1px solid var(--border-color);
+		padding: 0 0 0 calc(var(--menu-width) + 2.2rem);
+		height: var(--menu-width);
+		align-items: center;
+	}
+
+	header strong,
+	header h1 {
+		font-size: 1.4rem;
+	}
+
+	header strong {
+		color: var(--prime);
+	}
+
+	header h1 {
+		color: var(--second);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		font-weight: 400;
+	}
+
 	nav {
 		--menu-width: 5.4rem;
 		position: absolute;
