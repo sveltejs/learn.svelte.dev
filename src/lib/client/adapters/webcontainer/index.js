@@ -14,22 +14,22 @@ export async function create(stubs) {
 
 	const common = await ready;
 	tree['common.zip'] = file(new Uint8Array(common.zipped));
-	tree['boot.cjs'] = file(common.boot);
+	tree['unzip.cjs'] = file(common.unzip);
 
 	const vm = await WebContainer.boot();
 	await vm.loadFiles(tree);
 
-	const boot = await vm.run(
+	const unzip = await vm.run(
 		{
 			command: 'node',
-			args: ['boot.cjs']
+			args: ['unzip.cjs']
 		},
 		{
-			stderr: (data) => console.error(`[boot] ${data}`)
+			stderr: (data) => console.error(`[unzip] ${data}`)
 		}
 	);
 
-	const code = await boot.onExit;
+	const code = await unzip.onExit;
 
 	if (code !== 0) {
 		throw new Error('Failed to initialize WebContainer');

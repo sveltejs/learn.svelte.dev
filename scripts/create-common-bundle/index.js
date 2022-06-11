@@ -60,10 +60,10 @@ fs.writeFileSync(`src/lib/client/adapters/common/common.zip`, out);
 
 // bundle adm-zip so we can use it in the webcontainer
 esbuild.buildSync({
-	entryPoints: [fileURLToPath(new URL('./boot.js', import.meta.url))],
+	entryPoints: [fileURLToPath(new URL('./unzip.js', import.meta.url))],
 	bundle: true,
 	platform: 'node',
 	minify: true,
-	outfile: 'src/lib/client/adapters/common/boot.cjs',
+	outfile: 'src/lib/client/adapters/common/unzip.cjs',
 	format: 'cjs'
 });
