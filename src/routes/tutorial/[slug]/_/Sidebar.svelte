@@ -142,7 +142,7 @@
 	.text {
 		flex: 1 1;
 		overflow-y: auto;
-		padding: 2.2rem 2.2rem 2.2rem calc(var(--menu-width) + 2.2rem);
+		padding: 2.2rem;
 		color: var(--second);
 		border-right: 1px solid var(--border-color);
 	}
@@ -256,7 +256,7 @@
 	}
 
 	footer {
-		padding: 1.5rem 2.2rem 1.5rem calc(var(--menu-width) + 2.2rem);
+		padding: 1.5rem 2.2rem;
 		display: flex;
 		justify-content: space-between;
 		border-top: 1px solid var(--border-color);

@@ -130,7 +130,7 @@
 		width: 100%;
 		height: 100%;
 		transition: transform 0.2s;
-		transform: translate(calc(var(--menu-width) - 100%), 0);
+		transform: translate(-100%, 0);
 		background: var(--light-blue);
 		z-index: 2;
 		/* filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.1)); */
@@ -240,38 +240,6 @@
 	.section {
 		--dot-size: 1.2rem;
 		--color: var(--second);
-	}
-
-	.section > a::before,
-	.section > a::after {
-		content: '';
-		top: calc(1.3rem - 0.5 * var(--dot-size));
-		right: calc(0.5 * (var(--menu-width) - var(--dot-size)) - 0.7rem);
-		width: var(--dot-size);
-		height: var(--dot-size);
-		border-radius: 50%;
-		border: 1px solid var(--color);
-		box-sizing: border-box;
-	}
-
-	.section a::after {
-		transform: scale(0);
-		transition: transform 0.2s;
-		background: var(--color);
-	}
-
-	.part > a::after,
-	.chapter > a::after {
-		content: attr(data-label);
-		width: var(--menu-width);
-		text-align: center;
-		top: 0.2rem;
-		right: -0.7rem;
-		color: hsl(240, 8%, 64%);
-	}
-
-	.section[aria-current='page'] > a::after {
-		transform: none;
 	}
 
 	a {
