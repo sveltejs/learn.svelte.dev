@@ -229,6 +229,7 @@
 		background: var(--light-blue);
 		border: 2px solid transparent;
 		box-sizing: border-box;
+		padding: 0.2rem 0 0 0;
 	}
 
 	.menu-toggle:focus-visible {
