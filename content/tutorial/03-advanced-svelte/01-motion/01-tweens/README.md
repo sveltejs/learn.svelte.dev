@@ -10,9 +10,9 @@ Let's start by changing the `progress` store to a `tweened` value:
 
 ```svelte
 <script>
-	import { tweened } from 'svelte/motion';
+	import { +++tweened+++ } from 'svelte/+++motion+++';
 
-	const progress = tweened(0);
+	const progress = +++tweened+++(0);
 </script>
 ```
 
@@ -21,12 +21,12 @@ Clicking the buttons causes the progress bar to animate to its new value. It's a
 ```svelte
 <script>
 	import { tweened } from 'svelte/motion';
-	import { cubicOut } from 'svelte/easing';
+	+++import { cubicOut } from 'svelte/easing';+++
 
-	const progress = tweened(0, {
+	const progress = tweened(0, +++{
 		duration: 400,
 		easing: cubicOut
-	});
+	}+++);
 </script>
 ```
 

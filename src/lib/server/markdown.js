@@ -65,11 +65,11 @@ marked.use({
 					// for no good reason at all, marked replaces tabs with spaces
 					let tabs = '';
 					for (let i = 0; i < spaces.length; i += 4) {
-						tabs += '  ';
+						tabs += '\t';
 					}
 					return prefix + tabs;
 				})
-				.replace(/([+:-]{3})/g, (_, delimiter) => {
+				.replace(/(\+\+\+|---|:::)/g, (_, delimiter) => {
 					return delimiter_substitutes[delimiter];
 				})
 				.replace(/\*\\\//g, '*/');
