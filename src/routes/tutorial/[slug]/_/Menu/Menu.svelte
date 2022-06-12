@@ -16,6 +16,9 @@
 	let is_open = false;
 	let search = '';
 
+	let expanded_part = current.part.slug;
+	let expanded_chapter = current.chapter.slug;
+
 	const duration = browser && matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
 
 	$: regex = new RegExp(`\\b${search.length >= 2 ? search : ''}`, 'i');
@@ -88,23 +91,35 @@
 			{#each filtered as part (part.slug)}
 				<li
 					class="part"
+					class:expanded={part.slug === expanded_part}
+					aria-current={part.slug === current.part.slug ? 'step' : undefined}
 					transition:slide|local={{ duration }}
-					class:expanded={part.slug === current.part.slug}
 				>
-					<a sveltekit:prefetch href="/tutorial/{part.first}" data-label={part.label}>
+					<button
+						on:click={() => {
+							if (expanded_part !== part.slug) {
+								expanded_part = part.slug;
+								expanded_chapter = part.chapters[0].slug;
+							}
+						}}
+					>
 						Part {part.label}: {part.title}
-					</a>
+					</button>
 
-					{#if search.length >= 2 || part.slug === current.part.slug}
+					{#if search.length >= 2 || part.slug === expanded_part}
 						<ul class="chapter" transition:slide|local={{ duration }}>
 							{#each part.chapters as chapter (chapter.slug)}
-								<li class="chapter" class:expanded={chapter.slug === current.chapter.slug}>
+								<li
+									class="chapter"
+									class:expanded={chapter.slug === expanded_chapter}
+									aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
+								>
 									<img src={arrow} alt="Arrow icon" />
-									<a sveltekit:prefetch href="/tutorial/{chapter.first}" data-label={chapter.label}
-										>{chapter.title}</a
-									>
+									<button on:click={() => (expanded_chapter = chapter.slug)}>
+										{chapter.title}
+									</button>
 
-									{#if search.length >= 2 || chapter.slug === current.chapter.slug}
+									{#if search.length >= 2 || chapter.slug === expanded_chapter}
 										<ul transition:slide|local={{ duration }}>
 											{#each chapter.sections as section (section.slug)}
 												<li
@@ -267,20 +282,21 @@
 		position: relative;
 	}
 
-	li[aria-current='page'] a {
+	li[aria-current='page'] a,
+	li[aria-current='step']:not(.expanded) > button {
 		color: var(--prime);
 	}
 
 	li img {
 		position: absolute;
 		left: -2rem;
-		top: 0.3rem;
+		top: 0.1rem;
 		width: 2rem;
 		height: 2rem;
 		transition: transform 0.2s;
 	}
 
-	li.expanded > a {
+	li.expanded > button {
 		font-weight: bold;
 	}
 
@@ -298,7 +314,8 @@
 		--color: var(--second);
 	}
 
-	a {
+	a,
+	button {
 		color: var(--second);
 		padding: 0 0 0 0.5rem;
 		margin: 0 0.5rem 0 0;
