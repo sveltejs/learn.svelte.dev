@@ -475,6 +475,7 @@
 	}
 
 	.editor-container {
+		position: relative;
 		background-color: var(--light-blue);
 	}
 </style>
