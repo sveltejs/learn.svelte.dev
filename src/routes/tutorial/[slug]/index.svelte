@@ -408,6 +408,7 @@
 	}
 
 	.navigator {
+		position: relative;
 		background: white;
 		display: flex;
 		flex-direction: column;
