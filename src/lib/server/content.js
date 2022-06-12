@@ -14,7 +14,7 @@ const text_files = new Set([
 	'.md'
 ]);
 
-const excluded = new Set(['.DS_Store', '.gitkeep', '.svelte-kit']);
+const excluded = new Set(['.DS_Store', '.gitkeep', '.svelte-kit', 'package-lock.json']);
 
 /** @param {string} file */
 function json(file) {
