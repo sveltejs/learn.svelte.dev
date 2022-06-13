@@ -49,7 +49,7 @@
 	}
 
 	.chrome button:active img {
-		transform: rotate(-180deg);
+		transform: rotate(-360deg);
 		transition: none;
 	}
 
