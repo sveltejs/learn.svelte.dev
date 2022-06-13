@@ -36,7 +36,7 @@
 	);
 
 	/** @type {Map<string, string>} */
-	const expected = new Map();
+	let expected;
 
 	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
 	const models = new Map();
@@ -136,35 +136,52 @@
 		loading = true;
 
 		if (adapter) {
-			expected.clear();
-
 			await adapter.reset(Object.values(b));
-			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
 		} else {
 			const module = await import('$lib/client/adapters/webcontainer/index.js');
-
 			adapter = await module.create(Object.values(b));
-			await get_transformed_modules(adapter.base, section.scope.prefix, Object.values(b), expected);
-		}
-
-		const actual = new Map();
-
-		await adapter.reset(stubs);
-		await get_transformed_modules(adapter.base, section.scope.prefix, stubs, actual);
-
-		for (const [name, transformed] of expected.entries()) {
-			complete_states[name] = transformed === actual.get(name);
 		}
 
 		set_iframe_src(adapter.base);
-		initial = false;
+
+		try {
+			await new Promise((fulfil, reject) => {
+				window.addEventListener('message', function handler(e) {
+					if (e.origin !== adapter.base) return;
+					if (e.data.type === 'ping') {
+						window.removeEventListener('message', handler);
+						fulfil(undefined);
+					}
+
+					setTimeout(() => {
+						reject(new Error('Timed out'));
+					}, 5000);
+				});
+			});
+
+			expected = await get_transformed_modules(section.scope.prefix, Object.values(b));
+
+			await adapter.reset(stubs);
+			const actual = await get_transformed_modules(section.scope.prefix, stubs);
+
+			for (const [name, transformed] of expected.entries()) {
+				complete_states[name] = transformed === actual.get(name);
+			}
+
+			set_iframe_src(adapter.base);
+
+			loading = false;
+			initial = false;
+		} catch (e) {
+			console.error(e);
+		}
 	});
 
 	/** @type {NodeJS.Timeout} */
 	let timeout;
 
 	/** @param {MessageEvent} e */
-	function handle_message(e) {
+	async function handle_message(e) {
 		if (!adapter) return;
 		if (e.origin !== adapter.base) return;
 
@@ -178,33 +195,40 @@
 				// we lost contact, refresh the page
 				loading = true;
 				set_iframe_src(adapter.base + path);
+				loading = false;
 			}, 500);
 		} else if (e.data.type === 'hmr') {
-			e.data.data.forEach((update) => handle_hmr_update(update.path));
+			const transformed = await fetch_from_vite(e.data.data.map(({ path }) => path));
+
+			for (const { name, code } of transformed) {
+				const normalised = normalise(code);
+				complete_states[name] = normalised === expected.get(name);
+				if (dev) compare(name, normalised, expected.get(name));
+			}
+
+			completed = Object.values(complete_states).every((value) => value);
 		}
 	}
 
-	/** @param {string} name */
-	async function handle_hmr_update(name) {
-		if (Object.keys(section.b).length === 0) return;
+	/**
+	 * @param {string[]} names
+	 * @return {Promise<Array<{ name: string, code: string }>>}
+	 */
+	async function fetch_from_vite(names) {
+		/** @type {Window} */ (iframe.contentWindow).postMessage({ type: 'fetch', names }, '*');
 
-		const res = await fetch(adapter.base + name);
-		const transformed = normalise(await res.text());
-		complete_states[name] = transformed === expected.get(name);
+		return new Promise((fulfil, reject) => {
+			window.addEventListener('message', function handler(e) {
+				if (e.data.type === 'fetch-result') {
+					fulfil(e.data.data);
+					window.removeEventListener('message', handler);
+				}
+			});
 
-		if (dev) compare(name, transformed, expected.get(name));
-
-		if (name.endsWith('.svelte') && transformed.includes('svelte&type=style&lang.css')) {
-			name += '?svelte&type=style&lang.css';
-
-			const res = await fetch(adapter.base + name);
-			const transformed = normalise(await res.text());
-			complete_states[name] = transformed === expected.get(name);
-
-			if (dev) compare(name, transformed, expected.get(name));
-		}
-
-		completed = Object.values(complete_states).every((value) => value);
+			setTimeout(() => {
+				reject(new Error('Timed out'));
+			}, 5000);
+		});
 	}
 
 	/**
@@ -215,44 +239,44 @@
 	async function compare(name, actual, expected) {
 		if (actual === expected) return;
 
-		console.log(actual);
-
 		const Diff = await import('diff');
-		console.group(name);
+		console.groupCollapsed(`diff: ${name}`);
+		console.log(actual);
 		console.log(Diff.diffLines(actual, expected));
 		console.groupEnd();
 	}
 
 	/**
-	 * @param {string} base
 	 * @param {string} prefix
 	 * @param {import('$lib/types').Stub[]} stubs
-	 * @param {Map<string, string>} map
+	 * @returns {Promise<Map<string, string>>}
 	 */
-	async function get_transformed_modules(base, prefix, stubs, map) {
-		// TODO commented out because we run into CORS issues
-		// for (const stub of stubs) {
-		// 	if (stub.name === '/src/__client.js') continue;
-		// 	if (stub.type !== 'file') continue;
-		// 	if (!/\.(js|ts|svelte)$/.test(stub.name)) continue;
-		// 	if (stub.name.startsWith(prefix)) {
-		// 		const res = await fetch(base + stub.name);
-		// 		const transformed = normalise(await res.text());
-		// 		map.set(stub.name, transformed);
-		// 		if (stub.name.endsWith('.svelte') && transformed.includes('svelte&type=style&lang.css')) {
-		// 			const name = stub.name + '?svelte&type=style&lang.css';
-		// 			const res = await fetch(base + name);
-		// 			map.set(name, normalise(await res.text()));
-		// 		}
-		// 	}
-		// }
+	async function get_transformed_modules(prefix, stubs) {
+		const names = stubs
+			.filter((stub) => {
+				if (stub.name === '/src/__client.js') return;
+				if (stub.type !== 'file') return;
+				if (!/\.(js|ts|svelte)$/.test(stub.name)) return;
+
+				return stub.name.startsWith(prefix);
+			})
+			.map((stub) => stub.name);
+
+		const transformed = await fetch_from_vite(names);
+
+		const map = new Map();
+		transformed.forEach(({ name, code }) => {
+			map.set(name, normalise(code));
+		});
+
+		return map;
 	}
 
 	/** @param {string} code */
 	function normalise(code) {
 		return code
 			.replace(/add_location\([^)]+\)/g, 'add_location(...)')
-			.replace(/\?t=\d+/g, '')
+			.replace(/\?[tv]=[a-zA-Z0-9]+/g, '')
 			.replace(/[&?]svelte&type=style&lang\.css/, '')
 			.replace(/\/\/# sourceMappingURL=.+/, '');
 	}
@@ -266,8 +290,6 @@
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
-
-		loading = false;
 	}
 
 	const hidden = new Set(['__client.js', 'node_modules']);
@@ -367,7 +389,6 @@
 						{path}
 						{loading}
 						on:refresh={() => {
-							loading = true;
 							set_iframe_src(adapter.base + path);
 						}}
 						on:change={(e) => {
