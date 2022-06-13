@@ -40,7 +40,7 @@ export async function create(stubs) {
 
 	const base = await new Promise(async (fulfil, reject) => {
 		vm.on('server-ready', (port, base) => {
-			console.log(`server ready at ${performance.now()}`);
+			console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
 			fulfil(base);
 		});
 
