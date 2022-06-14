@@ -5,7 +5,7 @@
 
 <div class="loading">
 	{#if initial}
-		<p>Initializing WebContainer. This may take a few seconds</p>
+		<p>initializing... this may take a few seconds</p>
 	{/if}
 
 	<svg width="107" height="128" viewBox="0 0 107 128">
