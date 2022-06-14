@@ -51,16 +51,16 @@
 	 * @param {HTMLElement} node
 	 */
 	function close_when_focus_leaves(node) {
-		function handleFocusIn() {
+		function handle_focus_in() {
 			if (!node.contains(document.activeElement)) {
 				is_open = false;
 			}
 		}
-		document.addEventListener('focusin', handleFocusIn)
+		document.addEventListener('focusin', handle_focus_in)
 
 		return {
 			destroy: () => {
-				document.removeEventListener('focusin', handleFocusIn);
+				document.removeEventListener('focusin', handle_focus_in);
 			}
 		}
 	}
