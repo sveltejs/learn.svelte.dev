@@ -138,7 +138,10 @@
 		if (adapter) {
 			await adapter.reset(Object.values(b));
 		} else {
-			const module = await import('$lib/client/adapters/webcontainer/index.js');
+			const module = import.meta.env.VITE_USE_FILESYSTEM
+				? await import('$lib/client/adapters/filesystem/index.js')
+				: await import('$lib/client/adapters/webcontainer/index.js');
+
 			adapter = await module.create(Object.values(b));
 		}
 

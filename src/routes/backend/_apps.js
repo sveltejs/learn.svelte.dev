@@ -31,6 +31,17 @@ const sveltekit = path.resolve(sveltekit_pkg_file, '..', sveltekit_pkg.bin['svel
 const apps = new Map();
 globalThis.__apps = apps;
 
+const hooks_src = `/** @type {import('@sveltejs/kit').Handle} */
+export async function handle({ event, resolve }) {
+	const response = await resolve(event);
+
+	response.headers.set('cross-origin-opener-policy', 'same-origin');
+	response.headers.set('cross-origin-embedder-policy', 'require-corp');
+	response.headers.set('cross-origin-resource-policy', 'cross-origin');
+
+	return response;
+}`;
+
 /**
  * @param {{
  *   files: import('$lib/types').FileStub[]
@@ -39,6 +50,14 @@ globalThis.__apps = apps;
 export async function create({ files }) {
 	const id = String(Date.now());
 	const filenames = write_files(id, files);
+
+	// TODO this enables embedding on cross-origin sites, which is
+	// necessary for the JSNation talk, but will currently break if an app
+	// already has a src/hooks.js file (though it could be worked
+	// around easily enough if necessary)
+	if (!files.find((stub) => stub.name === '/src/hooks.js')) {
+		fs.writeFileSync(`.apps/${id}/src/hooks.js`, hooks_src);
+	}
 
 	const port = await ports.find(3001);
 
