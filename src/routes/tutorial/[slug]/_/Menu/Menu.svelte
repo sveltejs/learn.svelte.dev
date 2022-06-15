@@ -46,17 +46,112 @@
 	afterNavigate(() => {
 		search = '';
 	});
+
+	/**
+	 * @param {HTMLElement} node
+	 */
+	function close_when_focus_leaves(node) {
+		function handle_focus_in() {
+			if (!node.contains(document.activeElement)) {
+				is_open = false;
+			}
+		}
+		document.addEventListener('focusin', handle_focus_in)
+
+		return {
+			destroy: () => {
+				document.removeEventListener('focusin', handle_focus_in);
+			}
+		}
+	}
 </script>
 
-<div class="menu-toggle-container">
-	<button
-		class="menu-toggle"
-		on:click={() => (is_open = !is_open)}
-		aria-label="Toggle menu"
-		aria-expanded={is_open}
-	>
-		<Icon name={is_open ? 'close' : 'menu'} />
-	</button>
+<div use:close_when_focus_leaves>
+	<div class="menu-toggle-container">
+		<button
+			class="menu-toggle"
+			on:click={() => (is_open = !is_open)}
+			aria-label="Toggle menu"
+			aria-expanded={is_open}
+		>
+			<Icon name={is_open ? 'close' : 'menu'} />
+		</button>
+	</div>
+
+	<nav class:open={is_open} aria-label="tutorial sections" >
+		<div class="controls">
+			<input
+				type="search"
+				placeholder="Search"
+				bind:value={search}
+				aria-hidden={!is_open ? 'true' : null}
+				tabindex={!is_open ? -1 : null}
+			/>
+		</div>
+
+		<div class="sections">
+			<ul>
+				{#each filtered as part (part.slug)}
+					<li
+						class="part"
+						class:expanded={part.slug === expanded_part}
+						aria-current={part.slug === current.part.slug ? 'step' : undefined}
+						transition:slide|local={{ duration }}
+					>
+						<button
+							on:click={() => {
+								if (expanded_part !== part.slug) {
+									expanded_part = part.slug;
+									expanded_chapter = part.chapters[0].slug;
+								}
+							}}
+						>
+							Part {part.label}: {part.title}
+						</button>
+
+						{#if search.length >= 2 || part.slug === expanded_part}
+							<ul class="chapter" transition:slide|local={{ duration }}>
+								{#each part.chapters as chapter (chapter.slug)}
+									<li
+										class="chapter"
+										class:expanded={chapter.slug === expanded_chapter}
+										aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
+									>
+										<img src={arrow} alt="Arrow icon" />
+										<button on:click={() => (expanded_chapter = chapter.slug)}>
+											{chapter.title}
+										</button>
+
+										{#if search.length >= 2 || chapter.slug === expanded_chapter}
+											<ul transition:slide|local={{ duration }}>
+												{#each chapter.sections as section (section.slug)}
+													<li
+														transition:slide|local={{ duration }}
+														class="section"
+														aria-current={$page.url.pathname === `/tutorial/${section.slug}`
+															? 'page'
+															: undefined}
+													>
+														<a
+															sveltekit:prefetch
+															href="/tutorial/{section.slug}"
+															on:click={() => (is_open = false)}
+														>
+															{section.title}
+														</a>
+													</li>
+												{/each}
+											</ul>
+										{/if}
+									</li>
+								{/each}
+							</ul>
+						{/if}
+					</li>
+				{/each}
+			</ul>
+		</div>
+	</nav>
 </div>
 
 <header>
@@ -74,81 +169,6 @@
 		<Icon name="arrow-right" size={16} />
 	</a>
 </header>
-
-<nav class:open={is_open} aria-label="tutorial sections">
-	<div class="controls">
-		<input
-			type="search"
-			placeholder="Search"
-			bind:value={search}
-			aria-hidden={!is_open ? 'true' : null}
-			tabindex={!is_open ? -1 : null}
-		/>
-	</div>
-
-	<div class="sections">
-		<ul>
-			{#each filtered as part (part.slug)}
-				<li
-					class="part"
-					class:expanded={part.slug === expanded_part}
-					aria-current={part.slug === current.part.slug ? 'step' : undefined}
-					transition:slide|local={{ duration }}
-				>
-					<button
-						on:click={() => {
-							if (expanded_part !== part.slug) {
-								expanded_part = part.slug;
-								expanded_chapter = part.chapters[0].slug;
-							}
-						}}
-					>
-						Part {part.label}: {part.title}
-					</button>
-
-					{#if search.length >= 2 || part.slug === expanded_part}
-						<ul class="chapter" transition:slide|local={{ duration }}>
-							{#each part.chapters as chapter (chapter.slug)}
-								<li
-									class="chapter"
-									class:expanded={chapter.slug === expanded_chapter}
-									aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
-								>
-									<img src={arrow} alt="Arrow icon" />
-									<button on:click={() => (expanded_chapter = chapter.slug)}>
-										{chapter.title}
-									</button>
-
-									{#if search.length >= 2 || chapter.slug === expanded_chapter}
-										<ul transition:slide|local={{ duration }}>
-											{#each chapter.sections as section (section.slug)}
-												<li
-													transition:slide|local={{ duration }}
-													class="section"
-													aria-current={$page.url.pathname === `/tutorial/${section.slug}`
-														? 'page'
-														: undefined}
-												>
-													<a
-														sveltekit:prefetch
-														href="/tutorial/{section.slug}"
-														on:click={() => (is_open = false)}
-													>
-														{section.title}
-													</a>
-												</li>
-											{/each}
-										</ul>
-									{/if}
-								</li>
-							{/each}
-						</ul>
-					{/if}
-				</li>
-			{/each}
-		</ul>
-	</div>
-</nav>
 
 <style>
 	header {
@@ -196,10 +216,12 @@
 
 	nav {
 		--menu-width: 5.4rem;
+		--transform-transition: transform 0.2s;
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		transition: transform 0.2s;
+		/* when the nav is closing, wait to change visibility until the slide out completes */
+		transition: var(--transform-transition), visibility 0s 0.2s;
 		transform: translate(-100%, 0);
 		background: var(--light-blue);
 		z-index: 2;
@@ -207,10 +229,14 @@
 		border-right: 1px solid var(--border-color);
 		display: flex;
 		flex-direction: column;
+		visibility: hidden;
 	}
 
 	nav.open {
 		transform: none;
+		visibility: visible;
+		/* when the nav starts opening, don't transition visibility - set it right away */
+		transition: var(--transform-transition);
 	}
 
 	.controls {
@@ -325,7 +351,8 @@
 		box-sizing: border-box;
 	}
 
-	a:focus-visible {
+	a:focus-visible,
+	.sections button:focus-visible {
 		/* outline-color: var(--flash); */
 		outline: none;
 		border: 2px solid var(--flash);
