@@ -118,11 +118,13 @@ const default_renderer = {
 	link: (href, title, text) => {
 		if (href?.includes('$docs')) {
 			const url = href.replace('$', 'https://svelte.dev/');
-			return `<a target="_blank" href="${url}">${text}` + '</a>';
+			return `<a target="_blank" href="${url}">${text}</a>`;
 		} else if (href?.includes('$kitdocs')) {
 			const url = href.replace('$kit', 'https://kit.svelte.dev/');
-			return `<a target="_blank" href="${url}">${text}` + '</a>';
-		} else return false;
+			return `<a target="_blank" href="${url}">${text}</a>`;
+		}
+
+		return false;
 	}
 };
 
