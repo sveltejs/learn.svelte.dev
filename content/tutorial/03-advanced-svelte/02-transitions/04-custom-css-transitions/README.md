@@ -2,7 +2,7 @@
 title: Custom CSS transitions
 ---
 
-The `svelte/transition` module has a handful of built-in transitions, but it's very easy to create your own. By way of example, this is the source of the `fade` transition:
+The `svelte/transition` module has a handful of built-in transitions, but it's very easy to [create your own]($docs#template-syntax-element-directives-transition-fn-custom-transition-functions). By way of example, this is the source of the `fade` transition:
 
 ```js
 function fade(node, { delay = 0, duration = 400 }) {
@@ -20,13 +20,13 @@ The function takes two arguments — the node to which the transition is applied
 
 - `delay` — milliseconds before the transition begins
 - `duration` — length of the transition in milliseconds
-- `easing` — a `p => t` easing function (see the chapter on [tweening](/tutorial/tweens))
+- `easing` — a `p => t` [easing function]($docs#run-time-svelte-easing) (see the chapter on [tweening](/tutorial/tweens))
 - `css` — a `(t, u) => css` function, where `u === 1 - t`
 - `tick` — a `(t, u) => {...}` function that has some effect on the node
 
 The `t` value is `0` at the beginning of an intro or the end of an outro, and `1` at the end of an intro or beginning of an outro.
 
-Most of the time you should return the `css` property and _not_ the `tick` property, as CSS animations run off the main thread to prevent jank where possible. Svelte 'simulates' the transition and constructs a CSS animation, then lets it run.
+Most of the time you should return the `css` property and _not_ the [`tick`]($docs#run-time-svelte-tick) property, as CSS animations run off the main thread to prevent jank where possible. Svelte 'simulates' the transition and constructs a CSS animation, then lets it run.
 
 For example, the `fade` transition generates a CSS animation somewhat like this:
 

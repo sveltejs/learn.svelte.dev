@@ -2,7 +2,7 @@
 title: Springs
 ---
 
-The `spring` function is an alternative to `tweened` that often works better for values that are frequently changing.
+The [`spring`]($docs#run-time-svelte-motion-spring) function is an alternative to [`tweened`]($docs#run-time-svelte-motion-tweened) that often works better for values that are frequently changing.
 
 In this example we have two stores — one representing the circle's coordinates, and one representing its size. Let's convert them to springs:
 

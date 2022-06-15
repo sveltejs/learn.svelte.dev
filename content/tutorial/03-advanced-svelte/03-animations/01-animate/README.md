@@ -4,9 +4,9 @@ title: The animate directive
 
 In the [previous chapter](/tutorial/deferred-transitions), we used deferred transitions to create the illusion of motion as elements move from one todo list to the other.
 
-To complete the illusion, we also need to apply motion to the elements that _aren't_ transitioning. For this, we use the `animate` directive.
+To complete the illusion, we also need to apply motion to the elements that _aren't_ transitioning. For this, we use the [`animate`]($docs#run-time-svelte-animate) directive.
 
-First, import the `flip` function — flip stands for ['First, Last, Invert, Play'](https://aerotwist.com/blog/flip-your-animations/) — from `svelte/animate` into `TodoList.svelte`:
+First, import the [`flip`]($docs#run-time-svelte-animate-flip) function — flip stands for ['First, Last, Invert, Play'](https://aerotwist.com/blog/flip-your-animations/) — from [`svelte/animate`]($docs#run-time-svelte-animate) into `TodoList.svelte`:
 
 ```svelte
 <script>

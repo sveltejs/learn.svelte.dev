@@ -2,7 +2,7 @@
 title: Each blocks
 ---
 
-If you need to loop over lists of data, use an `each` block:
+If you need to loop over lists of data, use an [`each` block]($docs#template-syntax-each):
 
 ```svelte
 <ul>

@@ -2,7 +2,7 @@
 title: Media elements
 ---
 
-The `<audio>` and `<video>` elements have several properties that you can bind to. This example demonstrates a few of them.
+The `<audio>` and `<video>` elements have [several properties]($docs#template-syntax-element-directives-bind-property-media-element-bindings) that you can bind to. This example demonstrates a few of them.
 
 On line 62, add `currentTime={time}`, `duration` and `paused` bindings:
 

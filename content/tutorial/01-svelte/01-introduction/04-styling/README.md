@@ -2,7 +2,7 @@
 title: Styling
 ---
 
-Just like in HTML, you can add a `<style>` tag to your component. Let's add some styles to the `<p>` element:
+Just like in HTML, you can add a [`<style>`]($docs#component-format-style) tag to your component. Let's add some styles to the `<p>` element:
 
 ```svelte
 <p>This is a paragraph.</p>

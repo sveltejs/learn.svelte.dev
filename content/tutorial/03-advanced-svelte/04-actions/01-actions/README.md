@@ -2,7 +2,7 @@
 title: The use directive
 ---
 
-Actions are essentially element-level lifecycle functions. They're useful for things like:
+[Actions]($docs#template-syntax-element-directives-use-action) are essentially element-level lifecycle functions. They're useful for things like:
 
 - interfacing with third-party libraries
 - lazy-loaded images

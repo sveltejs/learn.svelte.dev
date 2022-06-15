@@ -2,7 +2,7 @@
 title: Component bindings
 ---
 
-Just as you can bind to properties of DOM elements, you can bind to component props. For example, we can bind to the `value` prop of this `<Keypad>` component as though it were a form element:
+Just as you can [bind to properties]($docs#template-syntax-element-directives-bind-property) of DOM elements, you can [bind to component props]($docs#template-syntax-component-directives-bind-property). For example, we can bind to the `value` prop of this `<Keypad>` component as though it were a form element:
 
 ```svelte
 <Keypad

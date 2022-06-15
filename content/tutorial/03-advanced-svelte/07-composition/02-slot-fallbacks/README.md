@@ -2,7 +2,7 @@
 title: Slot fallbacks
 ---
 
-A component can specify _fallbacks_ for any slots that are left empty, by putting content inside the `<slot>` element:
+A component can specify _fallbacks_ for any slots that are left empty, by putting content inside the [`<slot>`]($docs#template-syntax-slot) element:
 
 ```svelte
 <div class="box">

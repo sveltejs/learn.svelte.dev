@@ -6,7 +6,7 @@ A particularly powerful feature of Svelte's transition engine is the ability to 
 
 Take this pair of todo lists, in which toggling a todo sends it to the opposite list. In the real world, objects don't behave like that — instead of disappearing and reappearing in another place, they move through a series of intermediate positions. Using motion can go a long way towards helping users understand what's happening in your app.
 
-We can achieve this effect using the `crossfade` function, as seen in transition.js, which creates a pair of transitions called `send` and `receive`. When an element is 'sent', it looks for a corresponding element being 'received', and generates a transition that transforms the element to its counterpart's position and fades it out. When an element is 'received', the reverse happens. If there is no counterpart, the `fallback` transition is used.
+We can achieve this effect using the [`crossfade`]($docs#run-time-svelte-transition-crossfade) function, as seen in transition.js, which creates a pair of transitions called `send` and `receive`. When an element is 'sent', it looks for a corresponding element being 'received', and generates a transition that transforms the element to its counterpart's position and fades it out. When an element is 'received', the reverse happens. If there is no counterpart, the `fallback` transition is used.
 
 Open TodoList.svelte. First, import the `send` and `receive` transitions from transition.js:
 

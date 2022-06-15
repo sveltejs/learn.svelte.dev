@@ -114,13 +114,20 @@ const default_renderer = {
 			.replace(/ {9}([^ ][^]+?) {9}/g, (_, content) => {
 				return highlight_spans(content, 'highlight');
 			});
+	},
+	link: (href, title, text) => {
+		if (href?.includes('$docs')) {
+			const url = href.replace('$', 'https://svelte.dev/');
+			return `<a target="_blank" href="${url}">${text}` + '</a>';
+		} else if (href?.includes('$kitdocs')) {
+			const url = href.replace('$kit', 'https://kit.svelte.dev/');
+			return `<a target="_blank" href="${url}">${text}` + '</a>';
+		} else return false;
 	}
-}
+};
 
 marked.use({
-	renderer: {
-
-	}
+	renderer: {}
 });
 
 /**

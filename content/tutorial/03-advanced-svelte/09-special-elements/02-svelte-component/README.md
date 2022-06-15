@@ -2,7 +2,7 @@
 title: <svelte:component>
 ---
 
-A component can change its category altogether with `<svelte:component>`. Instead of a sequence of `if` blocks...
+A component can change its category altogether with [`<svelte:component>`]($docs#template-syntax-svelte-component). Instead of a sequence of [`if`]($docs#template-syntax-if) blocks...
 
 ```svelte
 {#if selected.color === 'red'}

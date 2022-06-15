@@ -4,7 +4,7 @@ title: If blocks
 
 HTML doesn't have a way of expressing _logic_, like conditionals and loops. Svelte does.
 
-To conditionally render some markup, we wrap it in an `if` block:
+To conditionally render some markup, we wrap it in an [`if` block]($docs#template-syntax-if):
 
 ```svelte
 +++{#if user.loggedIn}+++

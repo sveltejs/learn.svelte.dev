@@ -2,9 +2,9 @@
 title: The transition directive
 ---
 
-We can make more appealing user interfaces by gracefully transitioning elements into and out of the DOM. Svelte makes this very easy with the `transition` directive.
+We can make more appealing user interfaces by gracefully transitioning elements into and out of the DOM. Svelte makes this very easy with the [`transition`]($docs#template-syntax-element-directives-transition-fn) directive.
 
-First, import the `fade` function from `svelte/transition`...
+First, import the [`fade`]($docs#run-time-svelte-transition-fade) function from [`svelte/transition`]($docs#run-time-svelte-transition)...
 
 ```svelte
 <script>

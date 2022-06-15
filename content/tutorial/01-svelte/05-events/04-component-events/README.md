@@ -2,7 +2,7 @@
 title: Component events
 ---
 
-Components can also dispatch events. To do so, they must create an event dispatcher. Update `Inner.svelte`:
+Components can also dispatch events. To do so, they must create an [event dispatcher]($docs#run-time-svelte-createeventdispatcher). Update `Inner.svelte`:
 
 ```svelte
 <script>

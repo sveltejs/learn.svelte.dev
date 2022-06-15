@@ -2,7 +2,7 @@
 title: <svelte:self>
 ---
 
-Svelte provides a variety of built-in elements. The first, `<svelte:self>`, allows a component to contain itself recursively.
+Svelte provides a variety of built-in elements. The first, [`<svelte:self>`]($docs#template-syntax-svelte-self), allows a component to contain itself recursively.
 
 It's useful for things like this folder tree view, where folders can contain _other_ folders. In `Folder.svelte` we want to be able to do this...
 
@@ -14,7 +14,7 @@ It's useful for things like this folder tree view, where folders can contain _ot
 {/if}
 ```
 
-...but that's impossible, because a module can't import itself. Instead, we use `<svelte:self>`:
+...but that's impossible, because a module can't import itself. Instead, we use [`<svelte:self>`]($docs#template-syntax-svelte-self):
 
 ```svelte
 {#if file.files}

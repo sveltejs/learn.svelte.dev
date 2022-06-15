@@ -6,7 +6,7 @@ Ordinarily, strings are inserted as plain text, meaning that characters like `<`
 
 But sometimes you need to render HTML directly into a component. For example, the words you're reading right now exist in a markdown file that gets included on this page as a blob of HTML.
 
-In Svelte, you do this with the special `{@html ...}` tag:
+In Svelte, you do this with the special [`{@html ...}`]($docs#template-syntax-html) tag:
 
 ```svelte
 <p>{+++@html+++ string}</p>

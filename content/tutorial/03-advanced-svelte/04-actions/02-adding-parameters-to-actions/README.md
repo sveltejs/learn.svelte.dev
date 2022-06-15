@@ -2,7 +2,7 @@
 title: Adding parameters
 ---
 
-Like transitions and animations, an action can take an argument, which the action function will be called with alongside the element it belongs to.
+Like transitions and animations, an [action]($docs#template-syntax-element-directives-use-action) can take an argument, which the action function will be called with alongside the element it belongs to.
 
 Here, we're using a `longpress` action that fires an event with the same name whenever the user presses and holds the button for a given duration. Right now, if you switch over to the `longpress.js` file, you'll see it's hardcoded to 500ms.
 

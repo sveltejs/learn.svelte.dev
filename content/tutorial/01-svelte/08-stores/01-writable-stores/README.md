@@ -4,9 +4,9 @@ title: Writable stores
 
 Not all application state belongs inside your application's component hierarchy. Sometimes, you'll have values that need to be accessed by multiple unrelated components, or by a regular JavaScript module.
 
-In Svelte, we do this with _stores_. A store is simply an object with a `subscribe` method that allows interested parties to be notified whenever the store value changes. In `App.svelte`, `count` is a store, and we're setting `count_value` in the `count.subscribe` callback.
+In Svelte, we do this with [_stores_]($docs#run-time-svelte-store). A store is simply an object with a `subscribe` method that allows interested parties to be notified whenever the store value changes. In `App.svelte`, `count` is a store, and we're setting `count_value` in the `count.subscribe` callback.
 
-Click the `stores.js` tab to see the definition of `count`. It's a _writable_ store, which means it has `set` and `update` methods in addition to `subscribe`.
+Click the `stores.js` tab to see the definition of `count`. It's a [_writable_]($docs#run-time-svelte-store-writable) store, which means it has `set` and `update` methods in addition to `subscribe`.
 
 Now go to the `Incrementer.svelte` tab so that we can wire up the `+` button:
 

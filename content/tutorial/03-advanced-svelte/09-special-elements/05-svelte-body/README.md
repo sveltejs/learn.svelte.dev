@@ -2,9 +2,9 @@
 title: <svelte:body>
 ---
 
-Similar to `<svelte:window>`, the `<svelte:body>` element allows you to listen for events that fire on `document.body`. This is useful with the `mouseenter` and `mouseleave` events, which don't fire on `window`.
+Similar to [`<svelte:window>`]($docs#template-syntax-svelte-window), the [`<svelte:body>`]($docs#template-syntax-svelte-body) element allows you to listen for events that fire on `document.body`. This is useful with the `mouseenter` and `mouseleave` events, which don't fire on `window`.
 
-Add the `mouseenter` and `mouseleave` handlers to the `<svelte:body>` tag:
+Add the `mouseenter` and `mouseleave` handlers to the [`<svelte:body>`]($docs#template-syntax-svelte-body) tag:
 
 ```svelte
 <svelte:body

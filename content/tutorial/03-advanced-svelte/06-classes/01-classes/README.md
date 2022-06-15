@@ -11,7 +11,7 @@ Like any other attribute, you can specify classes with a JavaScript attribute, s
 >foo</button>
 ```
 
-This is such a common pattern in UI development that Svelte includes a special directive to simplify it:
+This is such a common pattern in UI development that Svelte includes a [special directive]($docs#template-syntax-element-directives-class-name) to simplify it:
 
 ```svelte
 <button

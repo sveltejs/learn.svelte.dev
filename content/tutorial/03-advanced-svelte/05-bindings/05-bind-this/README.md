@@ -2,7 +2,7 @@
 title: This
 ---
 
-The readonly `this` binding applies to every element (and component) and allows you to obtain a reference to rendered elements. For example, we can get a reference to a `<canvas>` element:
+The readonly [`this`]($docs#template-syntax-element-directives-bind-this) binding applies to every element ([and component]($docs#template-syntax-component-directives-bind-this)) and allows you to obtain a reference to rendered elements. For example, we can get a reference to a `<canvas>` element:
 
 ```svelte
 <canvas

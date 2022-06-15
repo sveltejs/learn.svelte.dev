@@ -2,7 +2,7 @@
 title: Statements
 ---
 
-We're not limited to declaring reactive _values_ — we can also run arbitrary _statements_ reactively. For example, we can log the value of `count` whenever it changes:
+We're not limited to declaring reactive _values_ — we can also run arbitrary [_statements_ reactively]($docs#component-format-script-3-$-marks-a-statement-as-reactive). For example, we can log the value of `count` whenever it changes:
 
 ```js
 let count = 0;
