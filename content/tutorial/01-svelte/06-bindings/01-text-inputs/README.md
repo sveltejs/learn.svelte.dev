@@ -6,7 +6,7 @@ As a general rule, data flow in Svelte is _top down_ — a parent component can 
 
 Sometimes it's useful to break that rule. Take the case of the `<input>` element in this component — we _could_ add an `on:input` event handler that sets the value of `name` to `event.target.value`, but it's a bit... boilerplatey. It gets even worse with other form elements, as we'll see.
 
-Instead, we can use the [`bind:value` directive](docs#template-syntax-element-directives-bind-property):
+Instead, we can use the [`bind:value` directive]($docs#template-syntax-element-directives-bind-property):
 
 ```svelte
 <input bind:value={name}>
