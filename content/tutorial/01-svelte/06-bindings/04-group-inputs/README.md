@@ -4,7 +4,7 @@ title: Group inputs
 
 If you have multiple inputs relating to the same value, you can use [`bind:group`](docs#template-syntax-element-directives-bind-group) along with the `value` attribute. Radio inputs in the same group are mutually exclusive; checkbox inputs in the same group form an array of selected values.
 
-Add [`bind:group`](docs#template-syntax-element-directives-bind-group) to each input:
+Add `bind:group` to each input:
 
 ```svelte
 <input type=radio bind:group={scoops} name="scoops" value={1}>
