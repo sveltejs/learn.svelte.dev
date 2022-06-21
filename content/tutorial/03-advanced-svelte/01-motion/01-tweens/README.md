@@ -32,7 +32,7 @@ Clicking the buttons causes the progress bar to animate to its new value. It's a
 
 > The [`svelte/easing`]($docs#run-time-svelte-easing) module contains the [Penner easing equations](https://web.archive.org/web/20190805215728/http://robertpenner.com/easing/), or you can supply your own `p => t` function where `p` and `t` are both values between 0 and 1.
 
-The full set of options available to [`tweened`]($docs#run-time-svelte-motion-tweened):
+The full set of options available to `tweened`:
 
 - `delay` — milliseconds before the tween starts
 - `duration` — either the duration of the tween in milliseconds, or a `(from, to) => milliseconds` function allowing you to (e.g.) specify longer tweens for larger changes in value
