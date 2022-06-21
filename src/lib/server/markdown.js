@@ -116,7 +116,7 @@ const default_renderer = {
 			});
 	},
 	link: (href, title, text) => {
-		if (href?.includes('$docs')) {
+		if (href?.startsWith('$docs')) {
 			const url = href.replace('$', 'https://svelte.dev/');
 			return `<a target="_blank" href="${url}">${text}</a>`;
 		} else if (href?.includes('$kitdocs')) {
