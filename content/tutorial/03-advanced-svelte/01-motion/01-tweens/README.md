@@ -16,7 +16,7 @@ Let's start by changing the `progress` store to a [`tweened`]($docs#run-time-sve
 </script>
 ```
 
-Clicking the buttons causes the progress bar to animate to its new value. It's a bit robotic and unsatisfying though. We need to add an [easing]($docs#run-time-svelte-easing) function:
+Clicking the buttons causes the progress bar to animate to its new value. It's a bit robotic and unsatisfying though. We need to add an easing function:
 
 ```svelte
 <script>
