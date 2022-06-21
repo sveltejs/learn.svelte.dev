@@ -14,7 +14,7 @@ It's useful for things like this folder tree view, where folders can contain _ot
 {/if}
 ```
 
-...but that's impossible, because a module can't import itself. Instead, we use [`<svelte:self>`]($docs#template-syntax-svelte-self):
+...but that's impossible, because a module can't import itself. Instead, we use `<svelte:self>`:
 
 ```svelte
 {#if file.files}
