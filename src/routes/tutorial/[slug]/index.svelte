@@ -149,6 +149,7 @@
 				adapter = await module.create(Object.values(b));
 			} catch (e) {
 				error = /** @type {Error} */ (e);
+				return;
 			}
 		}
 

@@ -4,11 +4,24 @@
 
 	/** @type {Error | null} */
 	export let error;
+
+	/** @param {Error} error */
+	function get_error_message(error) {
+		if (/safari/i.test(navigator.userAgent)) {
+			return '<p>This app requires modern web platform features. Please use a browser other than Safari.</p>';
+		}
+
+		if (/firefox/i.test(navigator.userAgent)) {
+			return `<p>Failed to start WebContainer. Please enable third party cookies and disable Enhanced Tracking Protection.</p><small>${error.message}</small>`;
+		}
+
+		return '<p>Failed to start WebContainer. Please enable third party cookies.<p><small>${error.message}</small>';
+	}
 </script>
 
-<div class="loading">
+<div class="loading" class:error>
 	{#if error}
-		<p class="error">{error.message}</p>
+		{@html get_error_message(error)}
 	{:else}
 		{#if initial}
 			<p>initializing... this may take a few seconds</p>
@@ -48,6 +61,11 @@
 	}
 
 	.error {
+		align-items: start;
+		justify-content: start;
+	}
+
+	.error :global(p) {
 		color: #f00;
 	}
 
