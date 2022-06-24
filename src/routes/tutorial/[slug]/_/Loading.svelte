@@ -15,7 +15,7 @@
 			return `<p>Failed to start WebContainer. Please enable third party cookies and disable Enhanced Tracking Protection.</p><small>${error.message}</small>`;
 		}
 
-		return '<p>Failed to start WebContainer. Please enable third party cookies.<p><small>${error.message}</small>';
+		return `<p>Failed to start WebContainer. Please enable third party cookies.<p><small>${error.message}</small>`;
 	}
 </script>
 
