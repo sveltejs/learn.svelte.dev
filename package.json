@@ -28,7 +28,7 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/roboto-mono": "^4.5.7",
-		"@webcontainer/api": "^0.0.1",
+		"@webcontainer/api": "^0.0.4",
 		"adm-zip": "^0.5.9",
 		"base64-js": "^1.5.1",
 		"marked": "^4.0.16",
