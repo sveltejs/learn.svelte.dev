@@ -7,7 +7,7 @@
 
 	/** @param {Error} error */
 	function get_error_message(error) {
-		if (/safari/i.test(navigator.userAgent)) {
+		if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
 			return '<p>This app requires modern web platform features. Please use a browser other than Safari.</p>';
 		}
 
