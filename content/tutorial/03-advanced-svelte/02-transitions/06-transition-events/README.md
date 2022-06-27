@@ -2,7 +2,7 @@
 title: Transition events
 ---
 
-It can be useful to know when transitions are beginning and ending. Svelte dispatches events that you can listen to like any other DOM event:
+It can be useful to know when transitions are beginning and ending. Svelte dispatches [transition events]($docs#template-syntax-element-directives-transition-fn-transition-events) that you can listen to like any other DOM event:
 
 ```svelte
 <p

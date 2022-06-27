@@ -4,7 +4,7 @@ title: Declarations
 
 Svelte automatically updates the DOM when your component's state changes. Often, some parts of a component's state need to be computed from _other_ parts (such as a `fullname` derived from a `firstname` and a `lastname`), and recomputed whenever they change.
 
-For these, we have _reactive declarations_. They look like this:
+For these, we have [_reactive declarations_]($docs#component-format-script-3-$-marks-a-statement-as-reactive). They look like this:
 
 ```js
 let count = 0;

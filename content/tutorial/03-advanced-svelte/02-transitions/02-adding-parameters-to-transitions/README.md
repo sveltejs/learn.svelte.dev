@@ -2,7 +2,7 @@
 title: Adding parameters
 ---
 
-Transition functions can accept parameters. Replace the `fade` transition with `fly`...
+Transition functions can accept [parameters]($docs#template-syntax-element-directives-transition-fn-transition-parameters). Replace the [`fade`]($docs#run-time-svelte-transition-fade) transition with [`fly`]($docs#run-time-svelte-transition-fly)...
 
 ```svelte
 <script>

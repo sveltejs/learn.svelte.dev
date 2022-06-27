@@ -2,7 +2,7 @@
 title: Dimensions
 ---
 
-Every block-level element has `clientWidth`, `clientHeight`, `offsetWidth` and `offsetHeight` bindings:
+Every block-level element has `clientWidth`, `clientHeight`, `offsetWidth` and `offsetHeight` [bindings]($docs#template-syntax-element-directives-bind-property-block-level-element-bindings):
 
 ```svelte
 <div bind:clientWidth={w} bind:clientHeight={h}>

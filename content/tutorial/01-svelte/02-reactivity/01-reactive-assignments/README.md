@@ -2,7 +2,7 @@
 title: Assignments
 ---
 
-At the heart of Svelte is a powerful system of _reactivity_ for keeping the DOM in sync with your application state — for example, in response to an event.
+At the heart of Svelte is a powerful system of [_reactivity_]($docs#component-format-script-2-assignments-are-reactive) for keeping the DOM in sync with your application state — for example, in response to an event.
 
 To demonstrate it, we first need to wire up an event handler (we'll learn more about these [later](/tutorial/dom-events)):
 

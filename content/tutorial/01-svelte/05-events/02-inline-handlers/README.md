@@ -2,7 +2,7 @@
 title: Inline handlers
 ---
 
-You can also declare event handlers inline:
+You can also declare [event handlers]($docs#template-syntax-element-directives) inline:
 
 ```svelte
 <div on:mousemove="{e => m = { x: e.clientX, y: e.clientY }}">

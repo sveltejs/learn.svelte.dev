@@ -2,7 +2,7 @@
 title: <svelte:head>
 ---
 
-The `<svelte:head>` element allows you to insert elements inside the `<head>` of your document:
+The [`<svelte:head>`]($docs#template-syntax-svelte-head) element allows you to insert elements inside the `<head>` of your document:
 
 ```svelte
 <svelte:head>

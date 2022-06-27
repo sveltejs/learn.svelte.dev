@@ -14,7 +14,7 @@ const unsubscribe = count.subscribe((value) => {
 
 > Calling a `subscribe` method returns an `unsubscribe` function.
 
-You now declared `unsubscribe`, but it still needs to be called, for example through the `onDestroy` [lifecycle hook](/tutorial/ondestroy):
+You now declared `unsubscribe`, but it still needs to be called, for example through the [`onDestroy`]($docs#run-time-svelte-ondestroy) [lifecycle hook](/tutorial/ondestroy):
 
 ```svelte
 <script>
@@ -36,7 +36,7 @@ You now declared `unsubscribe`, but it still needs to be called, for example thr
 <h1>The count is {count_value}</h1>
 ```
 
-It starts to get a bit boilerplatey though, especially if your component subscribes to multiple stores. Instead, Svelte has a trick up its sleeve — you can reference a store value by prefixing the store name with `$`:
+It starts to get a bit boilerplatey though, especially if your component subscribes to multiple stores. Instead, Svelte has a trick up its sleeve — you can reference a store value by [prefixing the store name with `$`]($docs#component-format-script-4-prefix-stores-with-$-to-access-their-values):
 
 ```svelte
 <script>

@@ -2,7 +2,7 @@
 title: <svelte:window>
 ---
 
-Just as you can add event listeners to any DOM element, you can add event listeners to the `window` object with `<svelte:window>`.
+Just as you can add event listeners to any DOM element, you can add event listeners to the `window` object with [`<svelte:window>`]($docs#template-syntax-svelte-window).
 
 On line 11, add the `keydown` listener:
 

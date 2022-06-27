@@ -10,7 +10,7 @@ Just like elements can have children...
 </div>
 ```
 
-...so can components. Before a component can accept children, though, it needs to know where to put them. We do this with the `<slot>` element. Put this inside `Box.svelte`:
+...so can components. Before a component can accept children, though, it needs to know where to put them. We do this with the [`<slot>`]($docs#template-syntax-slot) element. Put this inside `Box.svelte`:
 
 ```svelte
 <div class="box">

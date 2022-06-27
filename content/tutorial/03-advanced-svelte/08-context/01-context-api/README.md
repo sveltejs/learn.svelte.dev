@@ -6,7 +6,7 @@ The context API provides a mechanism for components to 'talk' to each other with
 
 Take this example app using a [Mapbox GL](https://docs.mapbox.com/mapbox-gl-js/overview/) map. We'd like to display the markers, using the `<MapMarker>` component, but we don't want to have to pass around a reference to the underlying Mapbox instance as a prop on each component.
 
-There are two halves to the context API — `setContext` and `getContext`. If a component calls `setContext(key, context)`, then any _child_ component can retrieve the context with `const context = getContext(key)`.
+There are two halves to the context API — [`setContext`]($docs#run-time-svelte-setcontext) and [`getContext`]($docs#run-time-svelte-getcontext). If a component calls `setContext(key, context)`, then any _child_ component can retrieve the context with `const context = getContext(key)`.
 
 Let's set the context first. In `Map.svelte`, import `setContext` from `svelte` and `key` from `mapbox.js` and call `setContext`:
 

@@ -2,7 +2,7 @@
 title: <svelte:fragment>
 ---
 
-The `<svelte:fragment>` element allows you to place content in a named slot without wrapping it in a container DOM element. This keeps the flow layout of your document intact.
+The [`<svelte:fragment>`]($docs#template-syntax-svelte-fragment) element allows you to place content in a named slot without wrapping it in a container DOM element. This keeps the flow layout of your document intact.
 
 In the example notice how we applied a flex layout with a gap of `1em` to the box.
 

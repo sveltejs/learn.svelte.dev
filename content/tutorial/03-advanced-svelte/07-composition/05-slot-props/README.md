@@ -4,7 +4,7 @@ title: Slot props
 
 In this app, we have a `<Hoverable>` component that tracks whether the mouse is currently over it. It needs to pass that data _back_ to the parent component, so that we can update the slotted contents.
 
-For this, we use _slot props_. In `Hoverable.svelte`, pass the `hovering` value into the slot:
+For this, we use [_slot props_]($docs#template-syntax-slot-slot-key-value). In `Hoverable.svelte`, pass the `hovering` value into the slot:
 
 ```svelte
 <div on:mouseenter={enter} on:mouseleave={leave}>

@@ -2,7 +2,7 @@
 title: <svelte:options>
 ---
 
-The `<svelte:options>` element allows you to specify compiler options.
+The [`<svelte:options>`]($docs#template-syntax-svelte-options) element allows you to specify compiler options.
 
 We'll use the `immutable` option as an example. In this app, the `<Todo>` component flashes whenever it receives new data. Clicking on one of the items toggles its `done` state by creating an updated `todos` array. This causes the _other_ `<Todo>` items to flash, even though they don't end up making any changes to the DOM.
 

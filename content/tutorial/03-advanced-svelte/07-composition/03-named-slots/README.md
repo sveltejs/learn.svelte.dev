@@ -2,7 +2,7 @@
 title: Named slots
 ---
 
-The previous example contained a _default slot_, which renders the direct children of a component. Sometimes you will need more control over placement, such as with this `<ContactCard>`. In those cases, we can use _named slots_.
+The previous example contained a _default slot_, which renders the direct children of a component. Sometimes you will need more control over placement, such as with this `<ContactCard>`. In those cases, we can use [_named slots_]($docs#template-syntax-slot-slot-name-name).
 
 In `ContactCard.svelte`, add a `name` attribute to each slot:
 

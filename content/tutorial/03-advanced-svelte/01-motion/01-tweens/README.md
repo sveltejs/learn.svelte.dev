@@ -2,11 +2,11 @@
 title: Tweens
 ---
 
-Now that we've covered the basics of SvelteKit, it's time to learn some advanced Svelte techniques, starting with _motion_.
+Now that we've covered the basics of SvelteKit, it's time to learn some advanced Svelte techniques, starting with [_motion_]($docs#run-time-svelte-motion).
 
 Setting values and watching the DOM update automatically is cool. Know what's even cooler? Tweening those values. Svelte includes tools to help you build slick user interfaces that use animation to communicate changes.
 
-Let's start by changing the `progress` store to a `tweened` value:
+Let's start by changing the `progress` store to a [`tweened`]($docs#run-time-svelte-motion-tweened) value:
 
 ```svelte
 <script>
@@ -30,7 +30,7 @@ Clicking the buttons causes the progress bar to animate to its new value. It's a
 </script>
 ```
 
-> The `svelte/easing` module contains the [Penner easing equations](https://web.archive.org/web/20190805215728/http://robertpenner.com/easing/), or you can supply your own `p => t` function where `p` and `t` are both values between 0 and 1.
+> The [`svelte/easing`]($docs#run-time-svelte-easing) module contains the [Penner easing equations](https://web.archive.org/web/20190805215728/http://robertpenner.com/easing/), or you can supply your own `p => t` function where `p` and `t` are both values between 0 and 1.
 
 The full set of options available to `tweened`:
 
