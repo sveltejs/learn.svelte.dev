@@ -17,7 +17,7 @@ export async function create(stubs) {
 		file: { contents: common.unzip }
 	};
 
-	if (/safari/i.test(navigator.userAgent)) {
+	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
 		throw new Error('WebContainers are not supported by Safari');
 	}
 

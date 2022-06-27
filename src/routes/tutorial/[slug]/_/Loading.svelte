@@ -12,10 +12,10 @@
 		}
 
 		if (/firefox/i.test(navigator.userAgent)) {
-			return `<p>Failed to start WebContainer. Please enable third party cookies and disable Enhanced Tracking Protection.</p><small>${error.message}</small>`;
+			return `<p>Failed to start WebContainer. You may need to enable third party cookies and disable Enhanced Tracking Protection.</p><small>Error message: ${error.message}</small>`;
 		}
 
-		return `<p>Failed to start WebContainer. Please enable third party cookies.<p><small>${error.message}</small>`;
+		return `<p>Failed to start WebContainer. You may need to enable third party cookies.</p><small>Error message: ${error.message}</small>`;
 	}
 </script>
 
