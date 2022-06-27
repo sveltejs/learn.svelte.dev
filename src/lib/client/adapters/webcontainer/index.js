@@ -2,8 +2,6 @@ import { load } from '@webcontainer/api';
 import base64 from 'base64-js';
 import { ready } from '../common/index.js';
 
-const WebContainer = await load();
-
 /**
  * @param {import('$lib/types').Stub[]} stubs
  * @returns {Promise<import('$lib/types').Adapter>}
@@ -19,30 +17,48 @@ export async function create(stubs) {
 		file: { contents: common.unzip }
 	};
 
-	const vm = await WebContainer.boot();
-	await vm.loadFiles(tree);
-
-	const unzip = await vm.run(
-		{
-			command: 'node',
-			args: ['unzip.cjs']
-		},
-		{
-			stderr: (data) => console.error(`[unzip] ${data}`)
-		}
-	);
-
-	const code = await unzip.onExit;
-
-	if (code !== 0) {
-		throw new Error('Failed to initialize WebContainer');
+	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
+		throw new Error('WebContainers are not supported by Safari');
 	}
 
+	/** @type {import('@webcontainer/api').WebContainer} */
+	let vm;
+
 	const base = await new Promise(async (fulfil, reject) => {
+		setTimeout(() => {
+			reject(new Error('Timed out'));
+		}, 15000);
+
+		const WebContainer = await load();
+
+		vm = await WebContainer.boot();
+
+		vm.on('error', (error) => {
+			reject(new Error(error.message));
+		});
+
 		vm.on('server-ready', (port, base) => {
 			console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
 			fulfil(base);
 		});
+
+		await vm.loadFiles(tree);
+
+		const unzip = await vm.run(
+			{
+				command: 'node',
+				args: ['unzip.cjs']
+			},
+			{
+				stderr: (data) => console.error(`[unzip] ${data}`)
+			}
+		);
+
+		const code = await unzip.onExit;
+
+		if (code !== 0) {
+			reject(new Error('Failed to initialize WebContainer'));
+		}
 
 		await vm.run(
 			{ command: 'turbo', args: ['run', 'dev'] },

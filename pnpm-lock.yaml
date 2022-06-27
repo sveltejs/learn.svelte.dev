@@ -5,7 +5,7 @@ specifiers:
   '@sveltejs/adapter-auto': next
   '@sveltejs/kit': next
   '@sveltejs/site-kit': ^2.1.0
-  '@webcontainer/api': ^0.0.1
+  '@webcontainer/api': ^0.0.4
   adm-zip: ^0.5.9
   base64-js: ^1.5.1
   diff: ^5.1.0
@@ -25,7 +25,7 @@ specifiers:
 
 dependencies:
   '@fontsource/roboto-mono': 4.5.7
-  '@webcontainer/api': 0.0.1
+  '@webcontainer/api': 0.0.4
   adm-zip: 0.5.9
   base64-js: 1.5.1
   marked: 4.0.16
@@ -36,8 +36,8 @@ dependencies:
   ws: 8.8.0
 
 devDependencies:
-  '@sveltejs/adapter-auto': 1.0.0-next.50
-  '@sveltejs/kit': 1.0.0-next.350_svelte@3.48.0
+  '@sveltejs/adapter-auto': 1.0.0-next.52
+  '@sveltejs/kit': 1.0.0-next.354_svelte@3.48.0
   '@sveltejs/site-kit': 2.1.0
   diff: 5.1.0
   esbuild: 0.14.43
@@ -121,12 +121,12 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /@sveltejs/adapter-auto/1.0.0-next.50:
-    resolution: {integrity: sha512-5OkBxw+0Wmq7+Cr0DcOEOTHyOm4VmiWTUsKwMrSc47zcjbXB8n4UvEC0XUtJ5ZSBJRZz7hmVubqH1zm1SANtdw==}
+  /@sveltejs/adapter-auto/1.0.0-next.52:
+    resolution: {integrity: sha512-jOuC7RauiwGg7BQQEZxBGcwtwynNqQSuGJ7MJ9kk5WIrFCMrZSclwnpO1yLmUUYFKvJ61Z7bvVoDqm6+CgLEaw==}
     dependencies:
       '@sveltejs/adapter-cloudflare': 1.0.0-next.23
-      '@sveltejs/adapter-netlify': 1.0.0-next.64
-      '@sveltejs/adapter-vercel': 1.0.0-next.58
+      '@sveltejs/adapter-netlify': 1.0.0-next.65
+      '@sveltejs/adapter-vercel': 1.0.0-next.59
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -139,8 +139,8 @@ packages:
       worktop: 0.8.0-next.14
     dev: true
 
-  /@sveltejs/adapter-netlify/1.0.0-next.64:
-    resolution: {integrity: sha512-n2oBAIdv1s4magogcCYbequDmPgOKviNfy40JJ5ZavansboYeaygFri9HcOwcHqrTOmEo3ZDIBoc1UTpbmzMYg==}
+  /@sveltejs/adapter-netlify/1.0.0-next.65:
+    resolution: {integrity: sha512-81LYVqT0Fez7xqvOdE9ITD7b5kxdzzXjXwJ0ISBfJYt6wqg0fmABm3mcDy3opXau7DoQkhkhnlqkharTHfhJQg==}
     dependencies:
       '@iarna/toml': 2.2.5
       esbuild: 0.14.43
@@ -148,18 +148,18 @@ packages:
       tiny-glob: 0.2.9
     dev: true
 
-  /@sveltejs/adapter-vercel/1.0.0-next.58:
-    resolution: {integrity: sha512-Gw76HhwHh2sWP2RN8jwm4jMmO5rnvvWsPsnAhFRCYlIs6gwKf/mNE/CfTQ1nkqKEm15YEYHjKXRVRjI8BniwxA==}
+  /@sveltejs/adapter-vercel/1.0.0-next.59:
+    resolution: {integrity: sha512-1lq5IFLWiLUXmNJVUXjwaInDb07BJg5er43xlMilpFpTA9BZI2hqjYCgtdtk7O6ee5EYJk876b2riM1m+y1M4Q==}
     dependencies:
-      '@vercel/nft': 0.19.1
+      '@vercel/nft': 0.20.0
       esbuild: 0.14.43
     transitivePeerDependencies:
       - encoding
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.350_svelte@3.48.0:
-    resolution: {integrity: sha512-qkZNjp7yIj6t91+wMhmMtGJH0Lb89OaKdVXUDy92CS5/4OHRTKcQPdfOKs4no/upkS3RiFb+rEpOkYqTMcPUXg==}
+  /@sveltejs/kit/1.0.0-next.354_svelte@3.48.0:
+    resolution: {integrity: sha512-dTfFT0c3sxztFpiw6H4bQnPd+PtHgEZG6j6ssT9sWLONfzUgWRX0S7H/WoPEjr7u65o2HNazoj8jmEq3ZTwb9g==}
     engines: {node: '>=16.7'}
     hasBin: true
     peerDependencies:
@@ -221,8 +221,8 @@ packages:
       '@types/node': 17.0.41
     dev: true
 
-  /@vercel/nft/0.19.1:
-    resolution: {integrity: sha512-klR5oN7S3WJsZz0r6Xsq7o8YlFEyU3/00VmlpZzIPVFzKfbcEjXo/sVR5lQBUqNKuOzhcbxaFtzW9aOyHjmPYA==}
+  /@vercel/nft/0.20.0:
+    resolution: {integrity: sha512-+lxsJP/sG4E8UkhfrJC6evkLLfUpZrjXxqEdunr3Q9kiECi8JYBGz6B5EpU1+MmeNnRoSphLcLh/1tI998ye4w==}
     hasBin: true
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.9
@@ -241,8 +241,8 @@ packages:
       - supports-color
     dev: true
 
-  /@webcontainer/api/0.0.1:
-    resolution: {integrity: sha512-+XLRvdpYA1j3CH/jYFCCras4+fsMaPTxCyMH0rbheWn67sWhReOJQuOdbNaIkGYhvx+2+fYj7vUu2TSr5h5ZWw==}
+  /@webcontainer/api/0.0.4:
+    resolution: {integrity: sha512-JFNnPj82tKQ1yZAsCWvPS3lcn3XpeRGHzkaD89rYJW5cBC88tKc+jagdCa9mWEZgCjqQqkpn3jaB2JP6LoTzSA==}
     dev: false
 
   /abbrev/1.1.1:
@@ -1632,7 +1632,7 @@ packages:
     dev: true
 
   /util-deprecate/1.0.2:
-    resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=}
+    resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
 
   /vite/2.9.11:
@@ -1660,11 +1660,11 @@ packages:
     dev: true
 
   /webidl-conversions/3.0.1:
-    resolution: {integrity: sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE=}
+    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
     dev: true
 
   /whatwg-url/5.0.0:
-    resolution: {integrity: sha1-lmRU6HZUYuN2RNNib2dCzotwll0=}
+    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
     dependencies:
       tr46: 0.0.3
       webidl-conversions: 3.0.1

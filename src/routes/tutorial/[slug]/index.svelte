@@ -49,6 +49,9 @@
 	let loading = true;
 	let initial = true;
 
+	/** @type {Error | null} */
+	let error = null;
+
 	/** @type {Record<string, boolean>}*/
 	let complete_states = {};
 	let completed = false;
@@ -142,7 +145,12 @@
 				? await import('$lib/client/adapters/filesystem/index.js')
 				: await import('$lib/client/adapters/webcontainer/index.js');
 
-			adapter = await module.create(Object.values(b));
+			try {
+				adapter = await module.create(Object.values(b));
+			} catch (e) {
+				error = /** @type {Error} */ (e);
+				return;
+			}
 		}
 
 		set_iframe_src(adapter.base);
@@ -404,8 +412,8 @@
 					<div class="content">
 						<iframe bind:this={iframe} title="Output" />
 
-						{#if loading}
-							<Loading {initial} />
+						{#if loading || error}
+							<Loading {initial} {error} />
 						{/if}
 					</div>
 				</section>
