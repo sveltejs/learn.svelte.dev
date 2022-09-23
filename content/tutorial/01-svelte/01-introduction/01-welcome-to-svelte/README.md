@@ -2,6 +2,8 @@
 title: Welcome to Svelte
 ---
 
+> WARNING: this content is a work in progress and may be out of date. If you are learning Svelte, please refer to the [tutorial on svelte.dev](https://svelte.dev/tutorial) for now. If you are learning SvelteKit, refer to the [SvelteKit docs](https://kit.svelte.dev/docs).
+
 Welcome to the Svelte tutorial! This will teach you everything you need to know to easily build fast, small web applications.
 
 You can also consult the [API docs](https://svelte.dev/docs) and the [examples](https://svelte.dev/examples), or — if you're impatient to start hacking on your machine locally — create a project with `npm init svelte`.
