@@ -20,7 +20,6 @@ const ignored_extensions = ['.d.ts', '.map', '.md'];
 const ignored_directories = ['.svelte-kit', 'node_modules/.bin', 'node_modules/rollup/dist/shared'];
 
 const ignored_files = new Set([
-	'node_modules/vite/dist/node/terser.js',
 	'node_modules/rollup/dist/es/rollup.browser.js',
 	'node_modules/rollup/dist/rollup.browser.js',
 	'node_modules/svelte/compiler.js'
