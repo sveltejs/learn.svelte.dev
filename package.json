@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
-		"@sveltejs/site-kit": "^2.1.0",
+		"@sveltejs/site-kit": "^2.1.2",
 		"diff": "^5.1.0",
 		"esbuild": "^0.14.43",
 		"prettier": "^2.6.2",
