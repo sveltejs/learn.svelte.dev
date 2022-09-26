@@ -1,7 +1,7 @@
-import { clear, update } from './_apps';
+import { clear, update } from '../_apps';
 
-/** @type {import('./__types/[id]').RequestHandler} */
-export async function put({ url, request, params }) {
+/** @type {import('./$types').RequestHandler} */
+export async function PUT({ url, request, params }) {
 	const { id } = params;
 	const files = await request.json();
 
@@ -11,7 +11,7 @@ export async function put({ url, request, params }) {
 
 	update({ id, files });
 
-	return {
+	return new Response(undefined, {
 		status: 201
-	};
+	});
 }

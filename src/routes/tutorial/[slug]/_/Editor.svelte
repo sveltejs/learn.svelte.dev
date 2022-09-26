@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { dev } from '$app/env';
+	import { dev } from '$app/environment';
 
 	/** @type {import('monaco-editor').editor.ITextModel} */
 	export let model;

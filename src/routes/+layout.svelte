@@ -1,15 +1,3 @@
-<script context="module">
-	/** @type {import('./__types/__layout').Load} */
-	export async function load({ fetch }) {
-		const res = await fetch('/tutorial.json');
-		const { index } = await res.json();
-
-		return {
-			stuff: { index }
-		};
-	}
-</script>
-
 <script>
 	import '@sveltejs/site-kit/base.css';
 	import '@sveltejs/site-kit/code.css';

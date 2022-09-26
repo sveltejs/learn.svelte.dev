@@ -1,15 +1,3 @@
-<script context="module">
-	/** @type {import('./__types/index').Load} */
-	export function load({ props, stuff }) {
-		return {
-			props: {
-				...props,
-				index: stuff.index
-			}
-		};
-	}
-</script>
-
 <script>
 	import { afterNavigate } from '$app/navigation';
 	import { setContext, onMount } from 'svelte';
@@ -17,22 +5,19 @@
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './_/Editor.svelte';
 	import Folder from './_/Folder.svelte';
-	import { dev } from '$app/env';
+	import { dev } from '$app/environment';
 	import ImageViewer from './_/ImageViewer.svelte';
 	import Sidebar from './_/Sidebar.svelte';
 	import Chrome from './_/Chrome.svelte';
 	import { Icon } from '@sveltejs/site-kit';
 	import Loading from './_/Loading.svelte';
 
-	/** @type {import('$lib/types').PartStub[]} */
-	export let index;
-
-	/** @type {import('$lib/types').Section} */
-	export let section;
+	/** @type {import('./$types').PageData} */
+	export let data;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
 	const selected = writable(
-		/** @type {import('$lib/types').FileStub} */ (section.a[section.focus])
+		/** @type {import('$lib/types').FileStub} */ (data.section.a[data.section.focus])
 	);
 
 	/** @type {Map<string, string>} */
@@ -58,7 +43,7 @@
 	let completing = false;
 	let path = '/';
 
-	$: b = { ...section.a, ...section.b };
+	$: b = { ...data.section.a, ...data.section.b };
 
 	const { select } = setContext('filetree', {
 		/** @param {import('$lib/types').FileStub} file */
@@ -99,7 +84,7 @@
 
 		complete_states = {};
 
-		const stubs = Object.values(section.a);
+		const stubs = Object.values(data.section.a);
 
 		const { monaco } = await import('$lib/client/monaco/monaco.js');
 
@@ -129,7 +114,7 @@
 
 		select(
 			/** @type {import('$lib/types').FileStub} */ (
-				stubs.find((stub) => stub.name === section.focus)
+				stubs.find((stub) => stub.name === data.section.focus)
 			)
 		);
 
@@ -170,10 +155,10 @@
 				});
 			});
 
-			expected = await get_transformed_modules(section.scope.prefix, Object.values(b));
+			expected = await get_transformed_modules(data.section.scope.prefix, Object.values(b));
 
 			await adapter.reset(stubs);
-			const actual = await get_transformed_modules(section.scope.prefix, stubs);
+			const actual = await get_transformed_modules(data.section.scope.prefix, stubs);
 
 			for (const [name, transformed] of expected.entries()) {
 				complete_states[name] = transformed === actual.get(name);
@@ -309,17 +294,17 @@
 <svelte:window on:message={handle_message} />
 
 <svelte:head>
-	<title>{section.chapter.title} / {section.title} • Svelte Tutorial</title>
+	<title>{data.section.chapter.title} / {data.section.title} • Svelte Tutorial</title>
 </svelte:head>
 
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="33%">
 		<section class="content" slot="a">
 			<Sidebar
-				{index}
-				{section}
+				index={data.index}
+				section={data.section}
 				on:select={(e) => {
-					select(/** @type {import('$lib/types').FileStub} */ (section.a[e.detail.file]));
+					select(/** @type {import('$lib/types').FileStub} */ (data.section.a[e.detail.file]));
 				}}
 			/>
 		</section>
@@ -331,27 +316,27 @@
 						<section class="navigator" slot="a">
 							<div class="filetree">
 								<Folder
-									{...section.scope}
-									files={Object.values(section.a).filter((stub) => !hidden.has(stub.basename))}
+									{...data.section.scope}
+									files={Object.values(data.section.a).filter((stub) => !hidden.has(stub.basename))}
 									expanded
 								/>
 							</div>
 
 							<button
 								class:completed
-								disabled={Object.keys(section.b).length === 0}
+								disabled={Object.keys(data.section.b).length === 0}
 								on:click={(e) => {
 									completing = true;
 
 									completed = !completed;
 
-									const target = completed ? b : section.a;
+									const target = completed ? b : data.section.a;
 
 									const changes = [];
 
 									for (const name in target) {
 										const model = models.get(
-											/** @type {import('$lib/types').FileStub} */ (section.a[name])
+											/** @type {import('$lib/types').FileStub} */ (data.section.a[name])
 										);
 
 										// if model exists, it's a file
@@ -380,7 +365,7 @@
 									completing = false;
 								}}
 							>
-								{#if completed && Object.keys(section.b).length > 0}
+								{#if completed && Object.keys(data.section.b).length > 0}
 									reset
 								{:else}
 									solve <Icon name="arrow-right" />

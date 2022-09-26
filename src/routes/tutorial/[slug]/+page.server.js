@@ -1,14 +1,15 @@
 import { get_section } from '$lib/server/content';
+import { error } from '@sveltejs/kit';
 
-/** @type {import('./__types/index').RequestHandler} */
-export function get({ params }) {
+/** @type {import('./$types').PageServerLoad} */
+export function load({ params }) {
 	const section = get_section(params.slug);
 
 	if (section) {
 		return {
-			body: { section }
+			section
 		};
 	}
 
-	return { status: 404 };
+	throw error(404, 'No such tutorial found');
 }
