@@ -1,4 +1,4 @@
-import { clear, update } from '../_apps';
+import { clear, update } from '../apps';
 
 /** @type {import('./$types').RequestHandler} */
 export async function PUT({ url, request, params }) {

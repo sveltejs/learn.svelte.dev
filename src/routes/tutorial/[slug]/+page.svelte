@@ -3,14 +3,14 @@
 	import { setContext, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import SplitPane from '$lib/components/SplitPane.svelte';
-	import Editor from './_/Editor.svelte';
-	import Folder from './_/Folder.svelte';
+	import Editor from './Editor.svelte';
+	import Folder from './Folder.svelte';
 	import { dev } from '$app/environment';
-	import ImageViewer from './_/ImageViewer.svelte';
-	import Sidebar from './_/Sidebar.svelte';
-	import Chrome from './_/Chrome.svelte';
+	import ImageViewer from './ImageViewer.svelte';
+	import Sidebar from './Sidebar.svelte';
+	import Chrome from './Chrome.svelte';
 	import { Icon } from '@sveltejs/site-kit';
-	import Loading from './_/Loading.svelte';
+	import Loading from './Loading.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;

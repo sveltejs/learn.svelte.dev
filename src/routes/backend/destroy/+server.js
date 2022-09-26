@@ -1,4 +1,4 @@
-import { destroy } from '../_apps';
+import { destroy } from '../apps';
 
 // this is implemented as a POST handler because it is
 // triggered by `navigator.sendBeacon` rather than `fetch`

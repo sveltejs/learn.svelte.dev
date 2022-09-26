@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import Modal from '$lib/components/Modal.svelte';
-	import Menu from './Menu/Menu.svelte';
+	import Menu from './Menu.svelte';
 
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
