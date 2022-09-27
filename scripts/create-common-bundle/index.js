@@ -16,7 +16,7 @@ const zip = new AdmZip();
 // we selectively exclude certain files to minimise the bundle size.
 // this is a bit ropey, but it works
 const ignored_basenames = ['.DS_Store', 'LICENSE'];
-const ignored_extensions = ['.d.ts', '.map', '.md'];
+const ignored_extensions = ['.d.ts', '.map'];
 const ignored_directories = ['.svelte-kit', 'node_modules/.bin', 'node_modules/rollup/dist/shared'];
 
 const ignored_files = new Set([
