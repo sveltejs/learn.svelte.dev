@@ -2,9 +2,9 @@
 	"name": "~TODO~",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview"
+		"dev": "./node_modules/vite/bin/vite.js dev",
+		"build": "./node_modules/vite/bin/vite.js build",
+		"preview": "./node_modules/vite/bin/vite.js preview"
 	},
 	"devDependencies": {
 		"@sveltejs/kit": "next",

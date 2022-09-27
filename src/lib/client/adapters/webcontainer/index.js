@@ -60,6 +60,8 @@ export async function create(stubs) {
 			reject(new Error('Failed to initialize WebContainer'));
 		}
 
+		await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
+
 		await vm.run(
 			{ command: 'turbo', args: ['run', 'dev'] },
 			{
