@@ -3,7 +3,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import * as ports from 'port-authority';
-import { broadcast, ready } from './_ws';
+import { broadcast, ready } from './ws';
 
 /**
  * @typedef {{

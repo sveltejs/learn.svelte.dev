@@ -1,12 +1,14 @@
-import { destroy } from './_apps';
+import { destroy } from '../apps';
 
 // this is implemented as a POST handler because it is
 // triggered by `navigator.sendBeacon` rather than `fetch`
 
-/** @type {import('./__types/destroy').RequestHandler} */
-export function post({ url }) {
+/** @type {import('./$types').RequestHandler} */
+export function POST({ url }) {
 	const id = /** @type {string} */ (url.searchParams.get('id'));
 	destroy({ id });
 
-	return {};
+	return new Response(undefined, {
+		status: 204
+	});
 }

@@ -4,7 +4,7 @@
 	import arrow from './arrow.svg';
 
 	import { Icon } from '@sveltejs/site-kit';
-	import { browser } from '$app/env';
+	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('$lib/types').PartStub[]}*/
@@ -56,13 +56,13 @@
 				is_open = false;
 			}
 		}
-		document.addEventListener('focusin', handle_focus_in)
+		document.addEventListener('focusin', handle_focus_in);
 
 		return {
 			destroy: () => {
 				document.removeEventListener('focusin', handle_focus_in);
 			}
-		}
+		};
 	}
 </script>
 
@@ -78,7 +78,7 @@
 		</button>
 	</div>
 
-	<nav class:open={is_open} aria-label="tutorial sections" >
+	<nav class:open={is_open} aria-label="tutorial sections">
 		<div class="controls">
 			<input
 				type="search"
@@ -133,7 +133,7 @@
 															: undefined}
 													>
 														<a
-															sveltekit:prefetch
+															data-sveltekit-prefetch
 															href="/tutorial/{section.slug}"
 															on:click={() => (is_open = false)}
 														>

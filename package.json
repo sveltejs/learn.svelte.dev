@@ -2,11 +2,9 @@
 	"name": "learn.svelte.dev",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "svelte-kit dev",
-		"build": "node scripts/create-common-bundle && svelte-kit build && node scripts/create-middleware",
-		"package": "svelte-kit package",
-		"preview": "svelte-kit preview",
-		"prepare": "svelte-kit sync",
+		"dev": "vite dev",
+		"build": "node scripts/create-common-bundle && vite build && node scripts/create-middleware",
+		"preview": "vite preview",
 		"check": "svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./jsconfig.json --watch",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. .",
@@ -15,7 +13,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
-		"@sveltejs/site-kit": "^2.1.0",
+		"@sveltejs/site-kit": "^2.1.2",
 		"diff": "^5.1.0",
 		"esbuild": "^0.14.43",
 		"prettier": "^2.6.2",
@@ -23,7 +21,8 @@
 		"svelte": "^3.48.0",
 		"svelte-check": "^2.7.2",
 		"tiny-glob": "^0.2.9",
-		"typescript": "~4.6.4"
+		"typescript": "~4.6.4",
+		"vite": "^3.1.3"
 	},
 	"type": "module",
 	"dependencies": {
