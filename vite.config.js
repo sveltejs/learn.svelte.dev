@@ -16,5 +16,11 @@ export default {
 		watch: {
 			ignored: ['**/.apps/**']
 		}
+	},
+	ssr: {
+		noExternal: ['@sveltejs/site-kit']
+	},
+	optimizeDeps: {
+		exclude: ['@sveltejs/site-kit']
 	}
 };
