@@ -117,6 +117,9 @@ export async function create(stubs) {
 				}
 			}
 
+			// For some reason, server-ready is fired again on resetting the files here.
+			// We need to wait for it to finish before we can continue, else we might
+			// request files from Vite before it's ready, leading to a timeout.
 			const promise = new Promise((fulfil, reject) => {
 				const error_unsub = vm.on('error', (error) => {
 					error_unsub();
