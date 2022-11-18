@@ -120,69 +120,68 @@
 
 		completed = false;
 
-		load_adapter();
+		load_exercise();
 	});
 
-	async function load_adapter() {
-		clearTimeout(timeout);
-		loading = true;
-
+	/**
+	 * Loads the adapter initially or resets it. This method can throw.
+	 * @param {import('$lib/types').Stub[]} stubs
+	 */
+	async function reset_adapter(stubs) {
 		if (adapter) {
-			await adapter.reset(Object.values(b));
+			await adapter.reset(stubs);
+			return adapter;
 		} else {
 			const module = import.meta.env.VITE_USE_FILESYSTEM
 				? await import('$lib/client/adapters/filesystem/index.js')
 				: await import('$lib/client/adapters/webcontainer/index.js');
 
-			try {
-				adapter = await module.create(Object.values(b));
-			} catch (e) {
-				error = /** @type {Error} */ (e);
-				return;
-			}
+			adapter = await module.create(stubs);
 		}
 
 		set_iframe_src(adapter.base);
 
-		try {
-			await new Promise((fulfil, reject) => {
-				let called = false;
+		await new Promise((fulfil, reject) => {
+			let called = false;
 
-				window.addEventListener('message', function handler(e) {
-					console.log(
-						'incoming message',
-						e.origin !== adapter?.base,
-						e.origin,
-						adapter?.base,
-						e.data
-					);
-					if (e.origin !== adapter?.base) return;
-					if (e.data.type === 'ping') {
-						window.removeEventListener('message', handler);
-						called = true;
-						fulfil(undefined);
-					}
-				});
-
-				setTimeout(() => {
-					if (!called && adapter) {
-						// Updating the iframe too soon sometimes results in a blank screen,
-						// so we try again after a short delay if we haven't heard back
-						set_iframe_src(adapter.base);
-					}
-				}, 5000);
-
-				setTimeout(() => {
-					if (!called) {
-						reject(new Error('Timed out (re)starting adapter'));
-					}
-				}, 10000);
+			window.addEventListener('message', function handler(e) {
+				if (e.origin !== adapter?.base) return;
+				if (e.data.type === 'ping') {
+					window.removeEventListener('message', handler);
+					called = true;
+					fulfil(undefined);
+				}
 			});
 
+			setTimeout(() => {
+				if (!called && adapter) {
+					// Updating the iframe too soon sometimes results in a blank screen,
+					// so we try again after a short delay if we haven't heard back
+					set_iframe_src(adapter.base);
+				}
+			}, 5000);
+
+			setTimeout(() => {
+				if (!called) {
+					reject(new Error('Timed out (re)setting adapter'));
+				}
+			}, 10000);
+		});
+
+		return adapter;
+	}
+
+	async function load_exercise() {
+		try {
+			clearTimeout(timeout);
+			loading = true;
+
+			// Load expected output first so we can compare it to the actual output to determine when it's completed
+			let adapter = await reset_adapter(Object.values(b));
 			expected = await get_transformed_modules(data.section.scope.prefix, Object.values(b));
 
 			const stubs = Object.values(data.section.a);
-			await adapter.reset(stubs);
+			adapter = await reset_adapter(stubs);
 			const actual = await get_transformed_modules(data.section.scope.prefix, stubs);
 
 			for (const [name, transformed] of expected.entries()) {
@@ -194,6 +193,7 @@
 			loading = false;
 			initial = false;
 		} catch (e) {
+			loading = false;
 			error = /** @type {Error} */ (e);
 			console.error(e);
 		}
@@ -433,7 +433,7 @@
 								{error}
 								on:reload={async () => {
 									error = null;
-									load_adapter();
+									load_exercise();
 								}}
 							/>
 						{/if}
