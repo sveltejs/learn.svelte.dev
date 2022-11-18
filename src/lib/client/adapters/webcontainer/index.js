@@ -26,23 +26,33 @@ export async function create(stubs) {
 
 	const base = await new Promise(async (fulfil, reject) => {
 		setTimeout(() => {
-			reject(new Error('Timed out'));
+			reject(new Error('Timed out starting WebContainer'));
 		}, 15000);
+
+		console.log('loading webcontainer');
 
 		const WebContainer = await load();
 
+		console.log('booting webcontainer');
+
 		vm = await WebContainer.boot();
 
-		vm.on('error', (error) => {
+		const error_unsub = vm.on('error', (error) => {
+			error_unsub();
 			reject(new Error(error.message));
 		});
 
-		vm.on('server-ready', (port, base) => {
+		const ready_unsub = vm.on('server-ready', (port, base) => {
+			ready_unsub();
 			console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
 			fulfil(base);
 		});
 
+		console.log('loading files');
+
 		await vm.loadFiles(tree);
+
+		console.log('unpacking modules');
 
 		const unzip = await vm.run(
 			{
@@ -59,6 +69,8 @@ export async function create(stubs) {
 		if (code !== 0) {
 			reject(new Error('Failed to initialize WebContainer'));
 		}
+
+		console.log('starting dev server');
 
 		await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
 
@@ -86,6 +98,24 @@ export async function create(stubs) {
 				}
 			}
 
+			// For some reason, server-ready is fired again on resetting the files here.
+			// We need to wait for it to finish before we can continue, else we might
+			// request files from Vite before it's ready, leading to a timeout.
+			const promise = new Promise((fulfil, reject) => {
+				const error_unsub = vm.on('error', (error) => {
+					error_unsub();
+					reject(new Error(error.message));
+				});
+
+				const ready_unsub = vm.on('server-ready', (port, base) => {
+					ready_unsub();
+					console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
+					fulfil(undefined);
+				});
+
+				setTimeout(() => reject(new Error('Timed out resetting WebContainer')), 10000);
+			});
+
 			for (const file of old) {
 				// TODO this fails with a cryptic error
 				// index.svelte:155 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'rmSync')
@@ -106,6 +136,8 @@ export async function create(stubs) {
 			}
 
 			await vm.loadFiles(convert_stubs_to_tree(stubs));
+
+			await promise;
 
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 		},
