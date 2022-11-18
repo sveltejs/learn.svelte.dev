@@ -174,7 +174,7 @@
 
 				setTimeout(() => {
 					if (!called) {
-						reject(new Error('Timed out'));
+						reject(new Error('Timed out (re)starting adapter'));
 					}
 				}, 10000);
 			});
@@ -248,7 +248,7 @@
 			});
 
 			setTimeout(() => {
-				reject(new Error('Timed out'));
+				reject(new Error('Timed out fetching files from Vite'));
 			}, 5000);
 		});
 	}

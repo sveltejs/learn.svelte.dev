@@ -26,7 +26,7 @@ export async function create(stubs) {
 
 	const base = await new Promise(async (fulfil, reject) => {
 		setTimeout(() => {
-			reject(new Error('Timed out'));
+			reject(new Error('Timed out starting WebContainer'));
 		}, 15000);
 
 		console.log('loading webcontainer');
