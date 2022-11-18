@@ -23,9 +23,9 @@ if (globalThis.__apps) {
 }
 
 const require = createRequire(import.meta.url);
-const sveltekit_pkg_file = require.resolve('@sveltejs/kit/package.json');
-const sveltekit_pkg = JSON.parse(fs.readFileSync(sveltekit_pkg_file, 'utf-8'));
-const sveltekit = path.resolve(sveltekit_pkg_file, '..', sveltekit_pkg.bin['svelte-kit']);
+const vite_pkg_file = require.resolve('vite/package.json');
+const vite_pkg = JSON.parse(fs.readFileSync(vite_pkg_file, 'utf-8'));
+const vite = path.resolve(vite_pkg_file, '..', vite_pkg.bin['vite']);
 
 /** @type {Map<string, App>} */
 const apps = new Map();
@@ -144,7 +144,7 @@ export function destroy({ id }) {
 function launch(id, port) {
 	const cwd = `.apps/${id}`;
 
-	const process = spawn(`${sveltekit}`, ['dev', '--port', port], {
+	const process = spawn('node', [vite, 'dev', '--port', port], {
 		cwd
 	});
 

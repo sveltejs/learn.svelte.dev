@@ -25,7 +25,9 @@ const ignored_files = new Set([
 	'node_modules/svelte/compiler.js'
 ]);
 
-for (const file of glob('**', { cwd, filesOnly: true, dot: true })) {
+for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
+	file.replaceAll('\\', '/')
+)) {
 	if (ignored_extensions.find((ext) => file.endsWith(ext))) continue;
 	if (ignored_basenames.find((basename) => file.endsWith('/' + basename))) continue;
 	if (ignored_directories.find((dir) => file.startsWith(dir + '/'))) continue;
