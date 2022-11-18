@@ -98,6 +98,24 @@ export async function create(stubs) {
 				}
 			}
 
+			// For some reason, server-ready is fired again on resetting the files here.
+			// We need to wait for it to finish before we can continue, else we might
+			// request files from Vite before it's ready, leading to a timeout.
+			const promise = new Promise((fulfil, reject) => {
+				const error_unsub = vm.on('error', (error) => {
+					error_unsub();
+					reject(new Error(error.message));
+				});
+
+				const ready_unsub = vm.on('server-ready', (port, base) => {
+					ready_unsub();
+					console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
+					fulfil(undefined);
+				});
+
+				setTimeout(() => reject(new Error('Timed out resetting WebContainer')), 10000);
+			});
+
 			for (const file of old) {
 				// TODO this fails with a cryptic error
 				// index.svelte:155 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'rmSync')
@@ -116,22 +134,6 @@ export async function create(stubs) {
 					console.error(e);
 				}
 			}
-
-			// For some reason, server-ready is fired again on resetting the files here.
-			// We need to wait for it to finish before we can continue, else we might
-			// request files from Vite before it's ready, leading to a timeout.
-			const promise = new Promise((fulfil, reject) => {
-				const error_unsub = vm.on('error', (error) => {
-					error_unsub();
-					reject(new Error(error.message));
-				});
-
-				const ready_unsub = vm.on('server-ready', (port, base) => {
-					ready_unsub();
-					console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
-					fulfil(base);
-				});
-			});
 
 			await vm.loadFiles(convert_stubs_to_tree(stubs));
 
