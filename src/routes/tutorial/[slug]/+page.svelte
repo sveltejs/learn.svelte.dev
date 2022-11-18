@@ -163,13 +163,13 @@
 						// so we try again after a short delay if we haven't heard back
 						set_iframe_src(adapter.base);
 					}
-				}, 2000);
+				}, 5000);
 
 				setTimeout(() => {
 					if (!called) {
 						reject(new Error('Timed out'));
 					}
-				}, 5000);
+				}, 10000);
 			});
 
 			expected = await get_transformed_modules(data.section.scope.prefix, Object.values(b));
