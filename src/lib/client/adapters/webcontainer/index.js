@@ -29,7 +29,11 @@ export async function create(stubs) {
 			reject(new Error('Timed out'));
 		}, 15000);
 
+		console.log('loading webcontainer');
+
 		const WebContainer = await load();
+
+		console.log('booting webcontainer');
 
 		vm = await WebContainer.boot();
 
@@ -42,7 +46,11 @@ export async function create(stubs) {
 			fulfil(base);
 		});
 
+		console.log('loading files');
+
 		await vm.loadFiles(tree);
+
+		console.log('unpacking modules');
 
 		const unzip = await vm.run(
 			{
@@ -59,6 +67,8 @@ export async function create(stubs) {
 		if (code !== 0) {
 			reject(new Error('Failed to initialize WebContainer'));
 		}
+
+		console.log('starting dev server');
 
 		await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
 
