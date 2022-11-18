@@ -149,6 +149,13 @@
 				let called = false;
 
 				window.addEventListener('message', function handler(e) {
+					console.log(
+						'incoming message',
+						e.origin !== adapter?.base,
+						e.origin,
+						adapter?.base,
+						e.data
+					);
 					if (e.origin !== adapter?.base) return;
 					if (e.data.type === 'ping') {
 						window.removeEventListener('message', handler);
