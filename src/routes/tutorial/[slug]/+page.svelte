@@ -55,7 +55,7 @@
 		selected
 	});
 
-	/** @type {import('$lib/types').Adapter} */
+	/** @type {import('$lib/types').Adapter | undefined} */
 	let adapter;
 
 	/** @type {Record<string, string>}*/
@@ -104,7 +104,7 @@
 					const contents = model.getValue();
 
 					if (!completing) {
-						adapter.update([{ ...stub, contents }]);
+						adapter?.update([{ ...stub, contents }]);
 					}
 				});
 
@@ -120,6 +120,10 @@
 
 		completed = false;
 
+		load_webcontainer();
+	});
+
+	async function load_webcontainer() {
 		clearTimeout(timeout);
 		loading = true;
 
@@ -142,21 +146,35 @@
 
 		try {
 			await new Promise((fulfil, reject) => {
+				let called = false;
+
 				window.addEventListener('message', function handler(e) {
-					if (e.origin !== adapter.base) return;
+					if (e.origin !== adapter?.base) return;
 					if (e.data.type === 'ping') {
 						window.removeEventListener('message', handler);
+						called = true;
 						fulfil(undefined);
 					}
-
-					setTimeout(() => {
-						reject(new Error('Timed out'));
-					}, 5000);
 				});
+
+				setTimeout(() => {
+					if (!called && adapter) {
+						// Updating the iframe too soon sometimes results in a blank screen,
+						// so we try again after a short delay if we haven't heard back
+						set_iframe_src(adapter.base);
+					}
+				}, 2000);
+
+				setTimeout(() => {
+					if (!called) {
+						reject(new Error('Timed out'));
+					}
+				}, 5000);
 			});
 
 			expected = await get_transformed_modules(data.section.scope.prefix, Object.values(b));
 
+			const stubs = Object.values(data.section.a);
 			await adapter.reset(stubs);
 			const actual = await get_transformed_modules(data.section.scope.prefix, stubs);
 
@@ -169,9 +187,10 @@
 			loading = false;
 			initial = false;
 		} catch (e) {
+			error = /** @type {Error} */ (e);
 			console.error(e);
 		}
-	});
+	}
 
 	/** @type {NodeJS.Timeout} */
 	let timeout;
@@ -186,7 +205,7 @@
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
-				if (dev && !iframe) return;
+				if ((dev && !iframe) || !adapter) return;
 
 				// we lost contact, refresh the page
 				loading = true;
@@ -361,7 +380,7 @@
 										}
 									}
 
-									adapter.update(changes);
+									adapter?.update(changes);
 									completing = false;
 								}}
 							>
@@ -385,12 +404,16 @@
 						{path}
 						{loading}
 						on:refresh={() => {
-							set_iframe_src(adapter.base + path);
+							if (adapter) {
+								set_iframe_src(adapter.base + path);
+							}
 						}}
 						on:change={(e) => {
-							const url = new URL(e.detail.value, adapter.base);
-							path = url.pathname + url.search + url.hash;
-							set_iframe_src(adapter.base + path);
+							if (adapter) {
+								const url = new URL(e.detail.value, adapter.base);
+								path = url.pathname + url.search + url.hash;
+								set_iframe_src(adapter.base + path);
+							}
 						}}
 					/>
 
@@ -398,7 +421,15 @@
 						<iframe bind:this={iframe} title="Output" />
 
 						{#if loading || error}
-							<Loading {initial} {error} />
+							<Loading
+								{initial}
+								{error}
+								on:reload={async () => {
+									await adapter?.destroy();
+									adapter = undefined;
+									load_webcontainer();
+								}}
+							/>
 						{/if}
 					</div>
 				</section>

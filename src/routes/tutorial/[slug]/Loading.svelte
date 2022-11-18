@@ -1,4 +1,6 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
+
 	/** @type {boolean} */
 	export let initial;
 
@@ -17,11 +19,14 @@
 
 		return `<p>Failed to start WebContainer. You may need to enable third party cookies.</p><small>Error message: ${error.message}</small>`;
 	}
+
+	const dispatch = createEventDispatcher();
 </script>
 
 <div class="loading" class:error>
 	{#if error}
 		{@html get_error_message(error)}
+		<button on:click={() => dispatch('reload')}>Reload</button>
 	{:else}
 		{#if initial}
 			<p>initializing... this may take a few seconds</p>
