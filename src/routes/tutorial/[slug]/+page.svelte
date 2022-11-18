@@ -237,6 +237,7 @@
 	 * @return {Promise<Array<{ name: string, code: string }>>}
 	 */
 	async function fetch_from_vite(names) {
+		console.trace('fetching the following files:', names);
 		/** @type {Window} */ (iframe.contentWindow).postMessage({ type: 'fetch', names }, '*');
 
 		return new Promise((fulfil, reject) => {
