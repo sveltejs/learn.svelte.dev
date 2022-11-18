@@ -37,11 +37,13 @@ export async function create(stubs) {
 
 		vm = await WebContainer.boot();
 
-		vm.on('error', (error) => {
+		const error_unsub = vm.on('error', (error) => {
+			error_unsub();
 			reject(new Error(error.message));
 		});
 
-		vm.on('server-ready', (port, base) => {
+		const ready_unsub = vm.on('server-ready', (port, base) => {
+			ready_unsub();
 			console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
 			fulfil(base);
 		});
@@ -115,7 +117,22 @@ export async function create(stubs) {
 				}
 			}
 
+			const promise = new Promise((fulfil, reject) => {
+				const error_unsub = vm.on('error', (error) => {
+					error_unsub();
+					reject(new Error(error.message));
+				});
+
+				const ready_unsub = vm.on('server-ready', (port, base) => {
+					ready_unsub();
+					console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
+					fulfil(base);
+				});
+			});
+
 			await vm.loadFiles(convert_stubs_to_tree(stubs));
+
+			await promise;
 
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 		},
