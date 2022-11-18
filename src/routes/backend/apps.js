@@ -53,10 +53,10 @@ export async function create({ files }) {
 
 	// TODO this enables embedding on cross-origin sites, which is
 	// necessary for the JSNation talk, but will currently break if an app
-	// already has a src/hooks.js file (though it could be worked
+	// already has a src/hooks.server.js file (though it could be worked
 	// around easily enough if necessary)
-	if (!files.find((stub) => stub.name === '/src/hooks.js')) {
-		fs.writeFileSync(`.apps/${id}/src/hooks.js`, hooks_src);
+	if (!files.find((stub) => stub.name === '/src/hooks.server.js')) {
+		fs.writeFileSync(`.apps/${id}/src/hooks.server.js`, hooks_src);
 	}
 
 	const port = await ports.find(3001);
