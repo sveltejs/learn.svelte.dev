@@ -425,6 +425,7 @@
 								{initial}
 								{error}
 								on:reload={async () => {
+									error = null;
 									load_adapter();
 								}}
 							/>
