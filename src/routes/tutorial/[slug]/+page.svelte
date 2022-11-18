@@ -120,10 +120,10 @@
 
 		completed = false;
 
-		load_webcontainer();
+		load_adapter();
 	});
 
-	async function load_webcontainer() {
+	async function load_adapter() {
 		clearTimeout(timeout);
 		loading = true;
 
@@ -425,9 +425,7 @@
 								{initial}
 								{error}
 								on:reload={async () => {
-									await adapter?.destroy();
-									adapter = undefined;
-									load_webcontainer();
+									load_adapter();
 								}}
 							/>
 						{/if}
