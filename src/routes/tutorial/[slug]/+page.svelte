@@ -11,6 +11,7 @@
 	import Chrome from './Chrome.svelte';
 	import { Icon } from '@sveltejs/site-kit';
 	import Loading from './Loading.svelte';
+	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -132,7 +133,7 @@
 			await adapter.reset(stubs);
 			return adapter;
 		} else {
-			const module = import.meta.env.VITE_USE_FILESYSTEM
+			const module = PUBLIC_USE_FILESYSTEM
 				? await import('$lib/client/adapters/filesystem/index.js')
 				: await import('$lib/client/adapters/webcontainer/index.js');
 
