@@ -29,13 +29,15 @@ export async function create(stubs) {
 			reject(new Error('Timed out starting WebContainer'));
 		}, 15000);
 
-		console.log('loading webcontainer');
+		if (!vm) {
+			console.log('loading webcontainer');
 
-		const WebContainer = await load();
+			const WebContainer = await load();
 
-		console.log('booting webcontainer');
+			console.log('booting webcontainer');
 
-		vm = await WebContainer.boot();
+			vm = await WebContainer.boot();
+		}
 
 		const error_unsub = vm.on('error', (error) => {
 			error_unsub();
