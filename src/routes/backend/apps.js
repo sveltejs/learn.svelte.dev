@@ -23,9 +23,9 @@ if (globalThis.__apps) {
 }
 
 const require = createRequire(import.meta.url);
-const sveltekit_pkg_file = require.resolve('@sveltejs/kit/package.json');
-const sveltekit_pkg = JSON.parse(fs.readFileSync(sveltekit_pkg_file, 'utf-8'));
-const sveltekit = path.resolve(sveltekit_pkg_file, '..', sveltekit_pkg.bin['svelte-kit']);
+const vite_pkg_file = require.resolve('vite/package.json');
+const vite_pkg = JSON.parse(fs.readFileSync(vite_pkg_file, 'utf-8'));
+const vite = path.resolve(vite_pkg_file, '..', vite_pkg.bin['vite']);
 
 /** @type {Map<string, App>} */
 const apps = new Map();
@@ -53,10 +53,10 @@ export async function create({ files }) {
 
 	// TODO this enables embedding on cross-origin sites, which is
 	// necessary for the JSNation talk, but will currently break if an app
-	// already has a src/hooks.js file (though it could be worked
+	// already has a src/hooks.server.js file (though it could be worked
 	// around easily enough if necessary)
-	if (!files.find((stub) => stub.name === '/src/hooks.js')) {
-		fs.writeFileSync(`.apps/${id}/src/hooks.js`, hooks_src);
+	if (!files.find((stub) => stub.name === '/src/hooks.server.js')) {
+		fs.writeFileSync(`.apps/${id}/src/hooks.server.js`, hooks_src);
 	}
 
 	const port = await ports.find(3001);
@@ -144,7 +144,7 @@ export function destroy({ id }) {
 function launch(id, port) {
 	const cwd = `.apps/${id}`;
 
-	const process = spawn(`${sveltekit}`, ['dev', '--port', port], {
+	const process = spawn('node', [vite, 'dev', '--port', port], {
 		cwd
 	});
 

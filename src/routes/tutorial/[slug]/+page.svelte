@@ -11,6 +11,7 @@
 	import Chrome from './Chrome.svelte';
 	import { Icon } from '@sveltejs/site-kit';
 	import Loading from './Loading.svelte';
+	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -55,7 +56,7 @@
 		selected
 	});
 
-	/** @type {import('$lib/types').Adapter} */
+	/** @type {import('$lib/types').Adapter | undefined} */
 	let adapter;
 
 	/** @type {Record<string, string>}*/
@@ -104,7 +105,7 @@
 					const contents = model.getValue();
 
 					if (!completing) {
-						adapter.update([{ ...stub, contents }]);
+						adapter?.update([{ ...stub, contents }]);
 					}
 				});
 
@@ -120,44 +121,68 @@
 
 		completed = false;
 
-		clearTimeout(timeout);
-		loading = true;
+		load_exercise();
+	});
 
+	/**
+	 * Loads the adapter initially or resets it. This method can throw.
+	 * @param {import('$lib/types').Stub[]} stubs
+	 */
+	async function reset_adapter(stubs) {
 		if (adapter) {
-			await adapter.reset(Object.values(b));
+			await adapter.reset(stubs);
+			return adapter;
 		} else {
-			const module = import.meta.env.VITE_USE_FILESYSTEM
+			const module = PUBLIC_USE_FILESYSTEM
 				? await import('$lib/client/adapters/filesystem/index.js')
 				: await import('$lib/client/adapters/webcontainer/index.js');
 
-			try {
-				adapter = await module.create(Object.values(b));
-			} catch (e) {
-				error = /** @type {Error} */ (e);
-				return;
-			}
+			adapter = await module.create(stubs);
 		}
 
 		set_iframe_src(adapter.base);
 
-		try {
-			await new Promise((fulfil, reject) => {
-				window.addEventListener('message', function handler(e) {
-					if (e.origin !== adapter.base) return;
-					if (e.data.type === 'ping') {
-						window.removeEventListener('message', handler);
-						fulfil(undefined);
-					}
+		await new Promise((fulfil, reject) => {
+			let called = false;
 
-					setTimeout(() => {
-						reject(new Error('Timed out'));
-					}, 5000);
-				});
+			window.addEventListener('message', function handler(e) {
+				if (e.origin !== adapter?.base) return;
+				if (e.data.type === 'ping') {
+					window.removeEventListener('message', handler);
+					called = true;
+					fulfil(undefined);
+				}
 			});
 
+			setTimeout(() => {
+				if (!called && adapter) {
+					// Updating the iframe too soon sometimes results in a blank screen,
+					// so we try again after a short delay if we haven't heard back
+					set_iframe_src(adapter.base);
+				}
+			}, 5000);
+
+			setTimeout(() => {
+				if (!called) {
+					reject(new Error('Timed out (re)setting adapter'));
+				}
+			}, 10000);
+		});
+
+		return adapter;
+	}
+
+	async function load_exercise() {
+		try {
+			clearTimeout(timeout);
+			loading = true;
+
+			// Load expected output first so we can compare it to the actual output to determine when it's completed
+			let adapter = await reset_adapter(Object.values(b));
 			expected = await get_transformed_modules(data.section.scope.prefix, Object.values(b));
 
-			await adapter.reset(stubs);
+			const stubs = Object.values(data.section.a);
+			adapter = await reset_adapter(stubs);
 			const actual = await get_transformed_modules(data.section.scope.prefix, stubs);
 
 			for (const [name, transformed] of expected.entries()) {
@@ -169,9 +194,11 @@
 			loading = false;
 			initial = false;
 		} catch (e) {
+			loading = false;
+			error = /** @type {Error} */ (e);
 			console.error(e);
 		}
-	});
+	}
 
 	/** @type {NodeJS.Timeout} */
 	let timeout;
@@ -186,7 +213,7 @@
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
-				if (dev && !iframe) return;
+				if ((dev && !iframe) || !adapter) return;
 
 				// we lost contact, refresh the page
 				loading = true;
@@ -222,7 +249,7 @@
 			});
 
 			setTimeout(() => {
-				reject(new Error('Timed out'));
+				reject(new Error('Timed out fetching files from Vite'));
 			}, 5000);
 		});
 	}
@@ -361,7 +388,7 @@
 										}
 									}
 
-									adapter.update(changes);
+									adapter?.update(changes);
 									completing = false;
 								}}
 							>
@@ -385,12 +412,16 @@
 						{path}
 						{loading}
 						on:refresh={() => {
-							set_iframe_src(adapter.base + path);
+							if (adapter) {
+								set_iframe_src(adapter.base + path);
+							}
 						}}
 						on:change={(e) => {
-							const url = new URL(e.detail.value, adapter.base);
-							path = url.pathname + url.search + url.hash;
-							set_iframe_src(adapter.base + path);
+							if (adapter) {
+								const url = new URL(e.detail.value, adapter.base);
+								path = url.pathname + url.search + url.hash;
+								set_iframe_src(adapter.base + path);
+							}
 						}}
 					/>
 
@@ -398,7 +429,14 @@
 						<iframe bind:this={iframe} title="Output" />
 
 						{#if loading || error}
-							<Loading {initial} {error} />
+							<Loading
+								{initial}
+								{error}
+								on:reload={async () => {
+									error = null;
+									load_exercise();
+								}}
+							/>
 						{/if}
 					</div>
 				</section>
