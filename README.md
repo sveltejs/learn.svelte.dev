@@ -14,10 +14,10 @@ The next steps depend on whether you want to run this locally in filesystem mode
 
 ### Local/filesystem mode
 
-1. add an `.env` file with `VITE_USE_FILESYSTEM=true` in it
+1. add an `.env` file with `PUBLIC_USE_FILESYSTEM=true` in it
 2. Run the app locally with `pnpm dev` or `pnpm build && pnpm preview`.
 
 ### WebContainer mode
 
-1. if an `.env` file exists, modify it so there's `VITE_USE_FILESYSTEM=` in it
+1. if an `.env` file exists, modify it so there's `PUBLIC_USE_FILESYSTEM=` in it
 2. Run the app locally with `pnpm dev` or `pnpm build && pnpm preview`.
