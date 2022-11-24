@@ -1,15 +1,77 @@
 <script>
 	import { getContext } from 'svelte';
+	import { open } from './ContextMenu.svelte';
 
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
 
-	const { select, selected } = getContext('filetree');
+	/** @type {import('$lib/types').FileTreeContext} */
+	const { select, selected, edit, remove } = getContext('filetree');
+
+	const restricted = new Set([
+		'package.json',
+		'vite.config.js',
+		'svelte.config.js',
+		'favicon.png',
+		'app.html'
+	]);
+
+	let editing = false;
+	let new_name = '';
+
+	/** @param {MouseEvent} e */
+	function open_menu(e) {
+		if (restricted.has(file.basename)) return;
+		open(e.clientX, e.clientY, [
+			{
+				name: 'Rename',
+				action: () => {
+					new_name = file.basename;
+					editing = true;
+				}
+			},
+			{
+				name: 'Delete',
+				action: () => {
+					remove(file);
+				}
+			}
+		]);
+	}
+
+	/** @param {Event} e */
+	function done(e) {
+		if (/** @type {KeyboardEvent} */ (e).key === 'Escape') {
+			editing = false;
+			new_name = '';
+			return;
+		}
+
+		if ('key' in e && /** @type {KeyboardEvent} */ (e).key !== 'Enter') {
+			return;
+		}
+
+		if (new_name) {
+			edit(file, new_name);
+		}
+
+		new_name = '';
+		editing = false;
+	}
 </script>
 
-<button class:selected={file === $selected} on:click={() => select(file)}>
-	{file.basename}
-</button>
+{#if !editing}
+	<button
+		class:selected={file === $selected}
+		on:click={() => select(file)}
+		on:contextmenu|preventDefault={open_menu}
+	>
+		{file.basename}
+	</button>
+{:else}
+	<!-- svelte-ignore a11y-autofocus -->
+	<input type="text" autofocus bind:value={new_name} on:blur={done} on:keydown={done} />
+{/if}
 
 <style>
 	button {
