@@ -8,11 +8,20 @@
 	/** @type {import('$lib/types').FileTreeContext} */
 	const { select, selected, edit, remove } = getContext('filetree');
 
+	const restricted = new Set([
+		'package.json',
+		'vite.config.js',
+		'svelte.config.js',
+		'favicon.png',
+		'app.html'
+	]);
+
 	let editing = false;
 	let new_name = '';
 
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
+		if (restricted.has(file.basename)) return;
 		open(e.clientX, e.clientY, [
 			{
 				name: 'Rename',

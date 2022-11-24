@@ -155,18 +155,17 @@
 		models.clear();
 
 		complete_states = {};
-
-		const stubs = (current_stubs = Object.values(data.section.a));
+		current_stubs = Object.values(data.section.a);
 
 		const { monaco } = await import('$lib/client/monaco/monaco.js');
 
-		stubs.forEach((stub) => {
+		current_stubs.forEach((stub) => {
 			create_monaco_file(stub, monaco);
 		});
 
 		select(
 			/** @type {import('$lib/types').FileStub} */ (
-				stubs.find((stub) => stub.name === data.section.focus)
+				current_stubs.find((stub) => stub.name === data.section.focus)
 			)
 		);
 

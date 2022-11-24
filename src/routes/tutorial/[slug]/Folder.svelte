@@ -25,7 +25,8 @@
 	/** @type {import('$lib/types').FileTreeContext} */
 	const { edit, add, remove } = getContext('filetree');
 
-	$: children = files
+	$: _files = files || []; // workaround for what seems to be a Svelte bug, where files is undefined on navigation
+	$: children = _files
 		.filter((file) => file.name.startsWith(prefix))
 		.sort((a, b) => (a.name < b.name ? -1 : 1));
 	$: child_directories = children.filter(
@@ -34,7 +35,7 @@
 	$: child_files = /** @type {import('$lib/types').FileStub[]} */ (
 		children.filter((child) => child.depth === depth + 1 && child.type === 'file')
 	);
-	$: file = files.find((file) => file.name === prefix.slice(0, -1));
+	$: file = _files.find((file) => file.name === prefix.slice(0, -1));
 
 	function toggle() {
 		if (toggleable) expanded = !expanded;
@@ -42,6 +43,8 @@
 
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
+		if (depth === 0) return;
+
 		open(e.clientX, e.clientY, [
 			{
 				name: 'New File',

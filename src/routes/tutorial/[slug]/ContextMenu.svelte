@@ -19,7 +19,6 @@
 	 * @param {MenuItems} items
 	 */
 	export function open(x, y, items) {
-		console.log('calling open');
 		menu_items.set({ x, y, items });
 	}
 </script>
