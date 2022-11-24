@@ -12,6 +12,7 @@
 	import { Icon } from '@sveltejs/site-kit';
 	import Loading from './Loading.svelte';
 	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
+	import ContextMenu from './ContextMenu.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -29,6 +30,8 @@
 
 	/** @type {import('monaco-editor').editor.ITextModel} */
 	let current_model;
+	/** @type {import('$lib/types').Stub[]}*/
+	let current_stubs = [];
 
 	/** @type {HTMLIFrameElement} */
 	let iframe;
@@ -46,11 +49,79 @@
 
 	$: b = { ...data.section.a, ...data.section.b };
 
+	/** @type {import('$lib/types').FileTreeContext} */
 	const { select } = setContext('filetree', {
-		/** @param {import('$lib/types').FileStub} file */
 		select: (file) => {
 			$selected = file;
 			current_model = /** @type {import('monaco-editor').editor.ITextModel} */ (models.get(file));
+		},
+
+		add: async (stubs) => {
+			current_stubs = [...current_stubs, ...stubs];
+
+			const { monaco } = await import('$lib/client/monaco/monaco.js');
+			for (const stub of stubs) {
+				create_monaco_file(stub, monaco);
+			}
+
+			await load_files(current_stubs);
+
+			if (stubs[0].type === 'file') {
+				select(stubs[0]);
+			}
+		},
+
+		edit: async (to_rename, new_name) => {
+			/** @type {Array<[import('$lib/types').Stub, import('$lib/types').Stub]>}*/
+			const changed = [];
+			current_stubs = current_stubs.map((s) => {
+				if (!s.name.startsWith(to_rename.name)) {
+					return s;
+				}
+
+				const name =
+					s.name.slice(0, to_rename.name.length - to_rename.basename.length) +
+					new_name +
+					s.name.slice(to_rename.name.length);
+				const basename = s === to_rename ? new_name : s.basename;
+				const new_stub = { ...s, name, basename };
+
+				changed.push([s, new_stub]);
+				return new_stub;
+			});
+
+			const { monaco } = await import('$lib/client/monaco/monaco.js');
+			for (const [old_s, new_s] of changed) {
+				if (old_s.type === 'file') {
+					models.get(old_s)?.dispose();
+					models.delete(old_s);
+					create_monaco_file(new_s, monaco);
+				}
+			}
+
+			await load_files(current_stubs);
+
+			if (to_rename.type === 'file') {
+				select(/** @type {any} */ (changed.find(([old_s]) => old_s === to_rename))[1]);
+			}
+		},
+
+		remove: async (stub) => {
+			const out = current_stubs.filter((s) => s.name.startsWith(stub.name));
+			current_stubs = current_stubs.filter((s) => !out.includes(s));
+
+			for (const s of out) {
+				if (s.type === 'file') {
+					models.get(s)?.dispose();
+					models.delete(s);
+				}
+			}
+
+			if ($selected && out.includes($selected)) {
+				$selected = null;
+			}
+
+			await load_files(current_stubs);
 		},
 
 		selected
@@ -85,32 +156,12 @@
 
 		complete_states = {};
 
-		const stubs = Object.values(data.section.a);
+		const stubs = (current_stubs = Object.values(data.section.a));
 
 		const { monaco } = await import('$lib/client/monaco/monaco.js');
 
 		stubs.forEach((stub) => {
-			if (stub.type === 'file') {
-				const type = /** @type {string} */ (stub.basename.split('.').pop());
-
-				const model = monaco.editor.createModel(
-					stub.contents,
-					types[type] || type,
-					new monaco.Uri().with({ path: stub.name })
-				);
-
-				model.updateOptions({ tabSize: 2 });
-
-				model.onDidChangeContent(() => {
-					const contents = model.getValue();
-
-					if (!completing) {
-						adapter?.update([{ ...stub, contents }]);
-					}
-				});
-
-				models.set(stub, model);
-			}
+			create_monaco_file(stub, monaco);
 		});
 
 		select(
@@ -123,6 +174,35 @@
 
 		load_exercise();
 	});
+
+	/**
+	 * @param {import('$lib/types').Stub} stub
+	 * @param {import('monaco-editor')} monaco
+	 */
+	function create_monaco_file(stub, monaco) {
+		if (stub.type === 'file') {
+			const type = /** @type {string} */ (stub.basename.split('.').pop());
+
+			const model = monaco.editor.createModel(
+				stub.contents,
+				types[type] || type,
+				new monaco.Uri().with({ path: stub.name })
+			);
+
+			model.updateOptions({ tabSize: 2 });
+
+			model.onDidChangeContent(() => {
+				const contents = model.getValue();
+
+				if (!completing) {
+					stub.contents = contents;
+					adapter?.update([stub]);
+				}
+			});
+
+			models.set(stub, model);
+		}
+	}
 
 	/**
 	 * Loads the adapter initially or resets it. This method can throw.
@@ -178,18 +258,11 @@
 			loading = true;
 
 			// Load expected output first so we can compare it to the actual output to determine when it's completed
-			let adapter = await reset_adapter(Object.values(b));
+			await reset_adapter(Object.values(b));
 			expected = await get_transformed_modules(data.section.scope.prefix, Object.values(b));
 
 			const stubs = Object.values(data.section.a);
-			adapter = await reset_adapter(stubs);
-			const actual = await get_transformed_modules(data.section.scope.prefix, stubs);
-
-			for (const [name, transformed] of expected.entries()) {
-				complete_states[name] = transformed === actual.get(name);
-			}
-
-			set_iframe_src(adapter.base);
+			await load_files(stubs);
 
 			loading = false;
 			initial = false;
@@ -198,6 +271,20 @@
 			error = /** @type {Error} */ (e);
 			console.error(e);
 		}
+	}
+
+	/**
+	 * @param {import('$lib/types').Stub[]} stubs
+	 */
+	async function load_files(stubs) {
+		adapter = await reset_adapter(stubs);
+		const actual = await get_transformed_modules(data.section.scope.prefix, stubs);
+
+		for (const [name, transformed] of expected.entries()) {
+			complete_states[name] = transformed === actual.get(name);
+		}
+
+		set_iframe_src(adapter.base);
 	}
 
 	/** @type {NodeJS.Timeout} */
@@ -324,6 +411,8 @@
 	<title>{data.section.chapter.title} / {data.section.title} • Svelte Tutorial</title>
 </svelte:head>
 
+<ContextMenu />
+
 <div class="container">
 	<SplitPane type="horizontal" min="360px" max="50%" pos="33%">
 		<section class="content" slot="a">
@@ -344,7 +433,7 @@
 							<div class="filetree">
 								<Folder
 									{...data.section.scope}
-									files={Object.values(data.section.a).filter((stub) => !hidden.has(stub.basename))}
+									files={current_stubs.filter((stub) => !hidden.has(stub.basename))}
 									expanded
 								/>
 							</div>
