@@ -1,15 +1,35 @@
 <script>
-	import { onMount } from 'svelte';
 	import { dev } from '$app/environment';
+	import { onMount } from 'svelte';
 
-	/** @type {import('monaco-editor').editor.ITextModel} */
-	export let model;
+	/**
+	 * file extension -> monaco language
+	 * @type {Record<string, string>}
+	 * */
+	const types = {
+		js: 'javascript',
+		ts: 'typescript',
+		svelte: 'html' // TODO
+	};
+
+	/**
+	 * URL -> model
+	 * @type {Map<string, import('monaco-editor').editor.ITextModel>}
+	 * */
+	const models = new Map();
+
+	/** @type {import('$lib/types').Stub[]} */
+	export let stubs;
+	/** @type {import('$lib/types').Stub | null} */
+	export let selected = null;
+	/** @type {import('$lib/types').Adapter | undefined} */
+	export let adapter;
 
 	/** @type {HTMLDivElement} */
 	let container;
 
-	/** @type {import('monaco-editor').editor.IStandaloneCodeEditor}*/
-	let editor;
+	/** @type {ReturnType<typeof init> | undefined}*/
+	let instance;
 
 	let w = 0;
 	let h = 0;
@@ -25,56 +45,147 @@
 
 		import('$lib/client/monaco/monaco.js').then(({ monaco }) => {
 			if (destroyed) return;
-
-			monaco.editor.defineTheme('svelte', {
-				base: 'vs',
-				inherit: false,
-				rules: [
-					// TODO more rules
-					{ token: '', foreground: '5f5c53' },
-					{ token: 'keyword', foreground: '0b69a8' },
-					{ token: 'string', foreground: '856e3d' },
-					{ token: 'delimiter', foreground: '5f5c53' },
-					{ token: 'variable', foreground: 'c05726' },
-					{ token: 'constant', foreground: 'c05726' },
-					{ token: 'tag', foreground: 'c05726' },
-					{ token: 'number', foreground: '72a25d' },
-					{ token: 'boolean', foreground: '3080b5' },
-					{ token: 'keyword', foreground: '0b69a8' }
-				],
-				colors: {
-					'editor.background': '#f4f8fb',
-					'token.keyword': '#ff0000'
-				}
-			});
-
-			monaco.editor.setTheme('svelte');
-
-			editor = monaco.editor.create(container, {
-				fontFamily: 'Roboto Mono',
-				fontSize: 13,
-				padding: {
-					top: 16,
-					bottom: 16
-				},
-				minimap: {
-					enabled: false
-				}
-			});
+			instance = init(monaco);
 		});
 
 		return () => {
 			destroyed = true;
-			if (editor) editor.dispose();
+			if (instance) {
+				instance.update_files([]); // removes all files
+				instance.editor.dispose();
+			}
 		};
 	});
 
-	$: if (editor) {
-		editor.setModel(model);
+	/** @param {import('monaco-editor')} monaco */
+	function init(monaco) {
+		monaco.editor.defineTheme('svelte', {
+			base: 'vs',
+			inherit: false,
+			rules: [
+				// TODO more rules
+				{ token: '', foreground: '5f5c53' },
+				{ token: 'keyword', foreground: '0b69a8' },
+				{ token: 'string', foreground: '856e3d' },
+				{ token: 'delimiter', foreground: '5f5c53' },
+				{ token: 'variable', foreground: 'c05726' },
+				{ token: 'constant', foreground: 'c05726' },
+				{ token: 'tag', foreground: 'c05726' },
+				{ token: 'number', foreground: '72a25d' },
+				{ token: 'boolean', foreground: '3080b5' },
+				{ token: 'keyword', foreground: '0b69a8' }
+			],
+			colors: {
+				'editor.background': '#f4f8fb',
+				'token.keyword': '#ff0000'
+			}
+		});
+
+		monaco.editor.setTheme('svelte');
+
+		const editor = monaco.editor.create(container, {
+			fontFamily: 'Roboto Mono',
+			fontSize: 13,
+			padding: {
+				top: 16,
+				bottom: 16
+			},
+			minimap: {
+				enabled: false
+			}
+		});
+
+		let notify_adapter = true;
+
+		/**
+		 *
+		 * @param {import('$lib/types').Stub[]} stubs
+		 */
+		function update_files(stubs) {
+			notify_adapter = false;
+			for (const stub of stubs) {
+				if (stub.type === 'directory') {
+					continue;
+				}
+
+				const model = models.get(stub.name);
+
+				if (model) {
+					const value = model.getValue();
+
+					if (stub.contents !== value) {
+						model.pushEditOperations(
+							[],
+							[
+								{
+									range: model.getFullModelRange(),
+									text: stub.contents
+								}
+							],
+							() => null
+						);
+					}
+				} else {
+					create_file(stub);
+				}
+			}
+
+			for (const [name, model] of models) {
+				if (!stubs.some((stub) => stub.name === name)) {
+					model.dispose();
+					models.delete(name);
+				}
+			}
+			notify_adapter = true;
+		}
+
+		/**
+		 * @param {import('$lib/types').FileStub} stub
+		 */
+		function create_file(stub) {
+			// deep-copy stub so we can mutate it and not create a memory leak
+			stub = JSON.parse(JSON.stringify(stub));
+
+			const type = /** @type {string} */ (stub.basename.split('.').pop());
+
+			const model = monaco.editor.createModel(
+				stub.contents,
+				types[type] || type,
+				new monaco.Uri().with({ path: stub.name })
+			);
+
+			model.updateOptions({ tabSize: 2 });
+
+			model.onDidChangeContent(() => {
+				const contents = model.getValue();
+
+				if (notify_adapter) {
+					stub.contents = contents;
+					adapter?.update([stub]);
+				}
+			});
+
+			models.set(stub.name, model);
+		}
+
+		return {
+			editor,
+			update_files,
+			create_file
+		};
 	}
 
-	$: if (editor && (w || h)) {
-		editor.layout();
+	$: if (instance) {
+		instance.update_files(stubs);
+	}
+
+	$: if (instance && stubs /* to retrigger on stubs change */) {
+		const model = selected && models.get(selected.name);
+		instance.editor.setModel(model ?? null);
+	}
+
+	$: if (instance && (w || h)) {
+		instance.editor.layout();
 	}
 </script>
 

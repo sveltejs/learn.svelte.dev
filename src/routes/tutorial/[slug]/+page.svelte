@@ -5,7 +5,7 @@
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './Editor.svelte';
 	import Folder from './Folder.svelte';
-	import { browser, dev } from '$app/environment';
+	import { dev } from '$app/environment';
 	import ImageViewer from './ImageViewer.svelte';
 	import Sidebar from './Sidebar.svelte';
 	import Chrome from './Chrome.svelte';
@@ -25,14 +25,6 @@
 	/** @type {Map<string, string>} */
 	let expected;
 
-	/**
-	 * Only available in the browser
-	 * @type {Promise<typeof import('$lib/client/monaco/monaco.js')>}
-	 * */
-	const monaco_import = browser ? import('$lib/client/monaco/monaco.js') : new Promise(() => {});
-
-	/** @type {import('monaco-editor').editor.ITextModel} */
-	let current_model;
 	/** @type {import('$lib/types').Stub[]}*/
 	let current_stubs = [];
 
@@ -71,17 +63,10 @@
 	const { select } = setContext('filetree', {
 		select: async (file) => {
 			$selected = file;
-			const { get_model } = await monaco_import;
-			current_model = /** @type {import("monaco-editor").editor.ITextModel} */ (
-				get_model(file.name)
-			);
 		},
 
 		add: async (stubs) => {
 			current_stubs = [...current_stubs, ...stubs];
-
-			const { update_files } = await monaco_import;
-			update_files(current_stubs, () => adapter);
 
 			await load_files(current_stubs);
 
@@ -109,9 +94,6 @@
 				return new_stub;
 			});
 
-			const { update_files } = await monaco_import;
-			update_files(current_stubs, () => adapter);
-
 			await load_files(current_stubs);
 
 			if (to_rename.type === 'file') {
@@ -122,9 +104,6 @@
 		remove: async (stub) => {
 			const out = current_stubs.filter((s) => s.name.startsWith(stub.name));
 			current_stubs = current_stubs.filter((s) => !out.includes(s));
-
-			const { update_files } = await monaco_import;
-			update_files(current_stubs, () => adapter);
 
 			if ($selected && out.includes($selected)) {
 				$selected = null;
@@ -153,9 +132,6 @@
 	afterNavigate(async () => {
 		complete_states = {};
 		current_stubs = Object.values(data.section.a);
-
-		const { update_files } = await monaco_import;
-		update_files(current_stubs, () => adapter);
 
 		select(
 			/** @type {import('$lib/types').FileStub} */ (
@@ -410,8 +386,6 @@
 
 									completed = !completed;
 									current_stubs = Object.values(completed ? b : data.section.a);
-									const { update_files } = await monaco_import;
-									update_files(current_stubs, () => adapter, false);
 									adapter?.reset(current_stubs);
 
 									completing = false;
@@ -426,7 +400,7 @@
 						</section>
 
 						<section class="editor-container" slot="b">
-							<Editor model={current_model} />
+							<Editor stubs={current_stubs} selected={$selected} {adapter} />
 							<ImageViewer selected={$selected} />
 						</section>
 					</SplitPane>
