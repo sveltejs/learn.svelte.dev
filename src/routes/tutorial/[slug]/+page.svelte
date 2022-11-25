@@ -5,7 +5,7 @@
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './Editor.svelte';
 	import Folder from './Folder.svelte';
-	import { dev } from '$app/environment';
+	import { browser, dev } from '$app/environment';
 	import ImageViewer from './ImageViewer.svelte';
 	import Sidebar from './Sidebar.svelte';
 	import Chrome from './Chrome.svelte';
@@ -25,8 +25,11 @@
 	/** @type {Map<string, string>} */
 	let expected;
 
-	/** @type {Map<import('$lib/types').FileStub, import('monaco-editor').editor.ITextModel>} */
-	const models = new Map();
+	/**
+	 * Only available in the browser
+	 * @type {Promise<typeof import('$lib/client/monaco/monaco.js')>}
+	 * */
+	const monaco_import = browser ? import('$lib/client/monaco/monaco.js') : new Promise(() => {});
 
 	/** @type {import('monaco-editor').editor.ITextModel} */
 	let current_model;
@@ -51,18 +54,19 @@
 
 	/** @type {import('$lib/types').FileTreeContext} */
 	const { select } = setContext('filetree', {
-		select: (file) => {
+		select: async (file) => {
 			$selected = file;
-			current_model = /** @type {import('monaco-editor').editor.ITextModel} */ (models.get(file));
+			const { get_model } = await monaco_import;
+			current_model = /** @type {import("monaco-editor").editor.ITextModel} */ (
+				get_model(file.name)
+			);
 		},
 
 		add: async (stubs) => {
 			current_stubs = [...current_stubs, ...stubs];
 
-			const { monaco } = await import('$lib/client/monaco/monaco.js');
-			for (const stub of stubs) {
-				create_monaco_file(stub, monaco);
-			}
+			const { update_files } = await monaco_import;
+			update_files(current_stubs, () => adapter);
 
 			await load_files(current_stubs);
 
@@ -90,14 +94,8 @@
 				return new_stub;
 			});
 
-			const { monaco } = await import('$lib/client/monaco/monaco.js');
-			for (const [old_s, new_s] of changed) {
-				if (old_s.type === 'file') {
-					models.get(old_s)?.dispose();
-					models.delete(old_s);
-					create_monaco_file(new_s, monaco);
-				}
-			}
+			const { update_files } = await monaco_import;
+			update_files(current_stubs, () => adapter);
 
 			await load_files(current_stubs);
 
@@ -110,12 +108,8 @@
 			const out = current_stubs.filter((s) => s.name.startsWith(stub.name));
 			current_stubs = current_stubs.filter((s) => !out.includes(s));
 
-			for (const s of out) {
-				if (s.type === 'file') {
-					models.get(s)?.dispose();
-					models.delete(s);
-				}
-			}
+			const { update_files } = await monaco_import;
+			update_files(current_stubs, () => adapter);
 
 			if ($selected && out.includes($selected)) {
 				$selected = null;
@@ -130,13 +124,6 @@
 	/** @type {import('$lib/types').Adapter | undefined} */
 	let adapter;
 
-	/** @type {Record<string, string>}*/
-	const types = {
-		js: 'javascript',
-		ts: 'typescript',
-		svelte: 'html' // TODO
-	};
-
 	onMount(() => {
 		function destroy() {
 			if (adapter) {
@@ -149,19 +136,11 @@
 	});
 
 	afterNavigate(async () => {
-		models.forEach((model) => {
-			model.dispose();
-		});
-		models.clear();
-
 		complete_states = {};
 		current_stubs = Object.values(data.section.a);
 
-		const { monaco } = await import('$lib/client/monaco/monaco.js');
-
-		current_stubs.forEach((stub) => {
-			create_monaco_file(stub, monaco);
-		});
+		const { update_files } = await monaco_import;
+		update_files(current_stubs, () => adapter);
 
 		select(
 			/** @type {import('$lib/types').FileStub} */ (
@@ -173,35 +152,6 @@
 
 		load_exercise();
 	});
-
-	/**
-	 * @param {import('$lib/types').Stub} stub
-	 * @param {import('monaco-editor')} monaco
-	 */
-	function create_monaco_file(stub, monaco) {
-		if (stub.type === 'file') {
-			const type = /** @type {string} */ (stub.basename.split('.').pop());
-
-			const model = monaco.editor.createModel(
-				stub.contents,
-				types[type] || type,
-				new monaco.Uri().with({ path: stub.name })
-			);
-
-			model.updateOptions({ tabSize: 2 });
-
-			model.onDidChangeContent(() => {
-				const contents = model.getValue();
-
-				if (!completing) {
-					stub.contents = contents;
-					adapter?.update([stub]);
-				}
-			});
-
-			models.set(stub, model);
-		}
-	}
 
 	/**
 	 * Loads the adapter initially or resets it. This method can throw.
@@ -440,43 +390,15 @@
 							<button
 								class:completed
 								disabled={Object.keys(data.section.b).length === 0}
-								on:click={(e) => {
+								on:click={async () => {
 									completing = true;
 
 									completed = !completed;
+									current_stubs = Object.values(completed ? b : data.section.a);
+									const { update_files } = await monaco_import;
+									update_files(current_stubs, () => adapter, false);
+									adapter?.reset(current_stubs);
 
-									const target = completed ? b : data.section.a;
-
-									const changes = [];
-
-									for (const name in target) {
-										const model = models.get(
-											/** @type {import('$lib/types').FileStub} */ (data.section.a[name])
-										);
-
-										// if model exists, it's a file
-										if (model) {
-											const value = model.getValue();
-											const stub = /** @type {import('$lib/types').FileStub} */ (target[name]);
-
-											if (stub.contents !== value) {
-												model.pushEditOperations(
-													[],
-													[
-														{
-															range: model.getFullModelRange(),
-															text: stub.contents
-														}
-													],
-													() => null
-												);
-
-												changes.push(stub);
-											}
-										}
-									}
-
-									adapter?.update(changes);
 									completing = false;
 								}}
 							>
