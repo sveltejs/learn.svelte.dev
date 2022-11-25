@@ -1,3 +1,5 @@
+import type { Writable } from 'svelte/store';
+
 export interface FileStub {
 	type: 'file';
 	name: string;
@@ -75,4 +77,12 @@ export interface PartStub {
 	slug: string;
 	title: string;
 	chapters: ChapterStub[];
+}
+
+export interface FileTreeContext {
+	select: (file: FileStub) => void;
+	add: (stubs: Stub[]) => Promise<void>;
+	edit: (stub: Stub, name: string) => Promise<void>;
+	remove: (stub: Stub) => Promise<void>;
+	selected: Writable<FileStub | null>;
 }
