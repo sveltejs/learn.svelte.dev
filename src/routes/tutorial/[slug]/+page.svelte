@@ -50,7 +50,22 @@
 	let completing = false;
 	let path = '/';
 
-	$: b = { ...data.section.a, ...data.section.b };
+	/** @type {Record<string, import('$lib/types').Stub>} */
+	let b;
+	$: {
+		b = { ...data.section.a };
+		for (const key in data.section.b) {
+			if (key.endsWith('__delete')) {
+				for (const k in b) {
+					if (k.startsWith(key.slice(0, -'/__delete'.length))) {
+						delete b[k];
+					}
+				}
+			} else {
+				b[key] = data.section.b[key];
+			}
+		}
+	}
 
 	/** @type {import('$lib/types').FileTreeContext} */
 	const { select } = setContext('filetree', {
