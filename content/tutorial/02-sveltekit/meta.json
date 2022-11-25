@@ -5,5 +5,5 @@
 		"depth": 0,
 		"name": "project"
 	},
-	"focus": "/src/routes/index.svelte"
+	"focus": "/src/routes/+page.svelte"
 }

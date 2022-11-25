@@ -1,4 +1,4 @@
-import { browser } from '$app/environment';
+import { browser, dev } from '$app/environment';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
@@ -9,6 +9,12 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 let monaco;
 
 if (browser) {
+	if (dev && !/chrome/i.test(navigator.userAgent)) {
+		throw new Error(
+			'The code editor requires Chrome during development, as it uses module workers'
+		);
+	}
+
 	// @ts-expect-error
 	self.MonacoEnvironment = {
 		/**

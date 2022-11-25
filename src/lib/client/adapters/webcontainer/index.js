@@ -2,6 +2,9 @@ import { load } from '@webcontainer/api';
 import base64 from 'base64-js';
 import { ready } from '../common/index.js';
 
+/** @type {import('@webcontainer/api').WebContainer} */
+let vm;
+
 /**
  * @param {import('$lib/types').Stub[]} stubs
  * @returns {Promise<import('$lib/types').Adapter>}
@@ -21,14 +24,13 @@ export async function create(stubs) {
 		throw new Error('WebContainers are not supported by Safari');
 	}
 
-	/** @type {import('@webcontainer/api').WebContainer} */
-	let vm;
-
 	const base = await new Promise(async (fulfil, reject) => {
 		setTimeout(() => {
 			reject(new Error('Timed out starting WebContainer'));
 		}, 15000);
 
+		// There can only be one instance, else it throws an error - guard against this case
+		// if there was an error later on or a timeout and the user tries again
 		if (!vm) {
 			console.log('loading webcontainer');
 
@@ -84,15 +86,31 @@ export async function create(stubs) {
 		);
 	});
 
-	let current = stubs;
+	/**
+	 * Paths of the currently loaded file stubs
+	 */
+	let current = new Set(stubs.filter((stub) => stub.type === 'file').map((stub) => stub.name));
+	/**
+	 * Keeps track of the latest create/reset to ensure things are not processed in parallel.
+	 * (if this turns out to be insufficient, we can use a queue)
+	 */
+	let running = base;
 
 	return {
 		base,
 
-		/** @param {import('$lib/types').Stub[]} stubs */
+		/**
+		 * Deletes old files and adds new ones
+		 * @param {import('$lib/types').Stub[]} stubs
+		 */
 		async reset(stubs) {
-			const old = new Set(current.filter((stub) => stub.type === 'file').map((stub) => stub.name));
-			current = stubs;
+			await running;
+			/** @type {Function} */
+			let resolve = () => {};
+			running = new Promise((fulfil) => (resolve = fulfil));
+
+			const old = current;
+			current = new Set(stubs.filter((stub) => stub.type === 'file').map((stub) => stub.name));
 
 			for (const stub of stubs) {
 				if (stub.type === 'file') {
@@ -106,16 +124,21 @@ export async function create(stubs) {
 			const promise = new Promise((fulfil, reject) => {
 				const error_unsub = vm.on('error', (error) => {
 					error_unsub();
+					resolve();
 					reject(new Error(error.message));
 				});
 
 				const ready_unsub = vm.on('server-ready', (port, base) => {
 					ready_unsub();
 					console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
+					resolve();
 					fulfil(undefined);
 				});
 
-				setTimeout(() => reject(new Error('Timed out resetting WebContainer')), 10000);
+				setTimeout(() => {
+					resolve();
+					reject(new Error('Timed out resetting WebContainer'));
+				}, 10000);
 			});
 
 			for (const file of old) {
@@ -142,10 +165,17 @@ export async function create(stubs) {
 			await promise;
 
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
+
+			resolve();
 		},
 
-		/** @param {import('$lib/types').FileStub[]} stubs */
+		/**
+		 * Loads new files but keeps the old ones
+		 * @param {import('$lib/types').FileStub[]} stubs
+		 */
 		async update(stubs) {
+			await running;
+
 			/** @type {import('@webcontainer/api').FileSystemTree} */
 			const root = {};
 
@@ -178,6 +208,8 @@ export async function create(stubs) {
 
 		async destroy() {
 			vm.teardown();
+			// @ts-ignore
+			vm = null;
 		}
 	};
 }
