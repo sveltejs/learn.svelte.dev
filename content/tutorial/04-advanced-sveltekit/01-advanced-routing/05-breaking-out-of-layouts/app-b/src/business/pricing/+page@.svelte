@@ -1,0 +1,1 @@
+<p>Pricing page</p>
