@@ -22,9 +22,6 @@
 		/** @type {import('$lib/types').FileStub} */ (data.section.a[data.section.focus])
 	);
 
-	/** @type {Map<string, string>} */
-	let expected;
-
 	/** @type {import('$lib/types').Stub[]}*/
 	let current_stubs = [];
 
@@ -36,10 +33,13 @@
 	/** @type {Error | null} */
 	let error = null;
 
+	/** @type {Record<string, string>} */
+	let expected = {};
 	/** @type {Record<string, boolean>}*/
 	let complete_states = {};
-	let completed = false;
-	let completing = false;
+	$: completed =
+		Object.keys(complete_states).length > 0 && Object.values(complete_states).every(Boolean);
+
 	let path = '/';
 
 	/** @type {Record<string, import('$lib/types').Stub>} */
@@ -129,20 +129,7 @@
 		return destroy;
 	});
 
-	afterNavigate(async () => {
-		complete_states = {};
-		current_stubs = Object.values(data.section.a);
-
-		select(
-			/** @type {import('$lib/types').FileStub} */ (
-				current_stubs.find((stub) => stub.name === data.section.focus)
-			)
-		);
-
-		completed = false;
-
-		load_exercise();
-	});
+	afterNavigate(load_exercise);
 
 	/**
 	 * Loads the adapter initially or resets it. This method can throw.
@@ -194,15 +181,26 @@
 
 	async function load_exercise() {
 		try {
+			current_stubs = Object.values(data.section.a);
+			select(
+				/** @type {import('$lib/types').FileStub} */ (
+					current_stubs.find((stub) => stub.name === data.section.focus)
+				)
+			);
+
 			clearTimeout(timeout);
 			loading = true;
 
-			// Load expected output first so we can compare it to the actual output to determine when it's completed
-			await reset_adapter(Object.values(b));
-			expected = await get_transformed_modules(data.section.scope.prefix, Object.values(b));
+			expected = {};
+			complete_states = {};
+			for (const stub of Object.values(b)) {
+				if (stub.type === 'file') {
+					complete_states[stub.name] = false;
+					expected[stub.name] = normalise(stub.contents);
+				}
+			}
 
-			const stubs = Object.values(data.section.a);
-			await load_files(stubs);
+			await load_files(current_stubs);
 
 			loading = false;
 			initial = false;
@@ -218,13 +216,33 @@
 	 */
 	async function load_files(stubs) {
 		adapter = await reset_adapter(stubs);
-		const actual = await get_transformed_modules(data.section.scope.prefix, stubs);
-
-		for (const [name, transformed] of expected.entries()) {
-			complete_states[name] = transformed === actual.get(name);
-		}
-
+		update_complete_states(stubs);
 		set_iframe_src(adapter.base);
+	}
+
+	/**
+	 * @param {CustomEvent<import('$lib/types').FileStub>} event
+	 */
+	function update_stub(event) {
+		const stub = event.detail;
+		const index = current_stubs.findIndex((s) => s.name === stub.name);
+		current_stubs[index] = stub;
+		adapter?.update([stub]);
+		update_complete_states([stub]);
+	}
+
+	/**
+	 * @param {import('$lib/types').Stub[]} stubs
+	 */
+	function update_complete_states(stubs) {
+		for (const stub of stubs) {
+			if (stub.type === 'file' && stub.name in complete_states) {
+				complete_states[stub.name] = expected[stub.name] === normalise(stub.contents);
+				if (dev) {
+					compare(stub.name, normalise(stub.contents), expected[stub.name]);
+				}
+			}
+		}
 	}
 
 	/** @type {NodeJS.Timeout} */
@@ -247,38 +265,7 @@
 				set_iframe_src(adapter.base + path);
 				loading = false;
 			}, 500);
-		} else if (e.data.type === 'hmr') {
-			const transformed = await fetch_from_vite(e.data.data.map(({ path }) => path));
-
-			for (const { name, code } of transformed) {
-				const normalised = normalise(code);
-				complete_states[name] = normalised === expected.get(name);
-				if (dev) compare(name, normalised, expected.get(name));
-			}
-
-			completed = Object.values(complete_states).every((value) => value);
 		}
-	}
-
-	/**
-	 * @param {string[]} names
-	 * @return {Promise<Array<{ name: string, code: string }>>}
-	 */
-	async function fetch_from_vite(names) {
-		/** @type {Window} */ (iframe.contentWindow).postMessage({ type: 'fetch', names }, '*');
-
-		return new Promise((fulfil, reject) => {
-			window.addEventListener('message', function handler(e) {
-				if (e.data.type === 'fetch-result') {
-					fulfil(e.data.data);
-					window.removeEventListener('message', handler);
-				}
-			});
-
-			setTimeout(() => {
-				reject(new Error('Timed out fetching files from Vite'));
-			}, 5000);
-		});
 	}
 
 	/**
@@ -296,39 +283,10 @@
 		console.groupEnd();
 	}
 
-	/**
-	 * @param {string} prefix
-	 * @param {import('$lib/types').Stub[]} stubs
-	 * @returns {Promise<Map<string, string>>}
-	 */
-	async function get_transformed_modules(prefix, stubs) {
-		const names = stubs
-			.filter((stub) => {
-				if (stub.name === '/src/__client.js') return;
-				if (stub.type !== 'file') return;
-				if (!/\.(js|ts|svelte)$/.test(stub.name)) return;
-
-				return stub.name.startsWith(prefix);
-			})
-			.map((stub) => stub.name);
-
-		const transformed = await fetch_from_vite(names);
-
-		const map = new Map();
-		transformed.forEach(({ name, code }) => {
-			map.set(name, normalise(code));
-		});
-
-		return map;
-	}
-
 	/** @param {string} code */
 	function normalise(code) {
-		return code
-			.replace(/add_location\([^)]+\)/g, 'add_location(...)')
-			.replace(/\?[tv]=[a-zA-Z0-9]+/g, '')
-			.replace(/[&?]svelte&type=style&lang\.css/, '')
-			.replace(/\/\/# sourceMappingURL=.+/, '');
+		// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
+		return code.replace(/\s+/g, ' ').trim();
 	}
 
 	/** @param {string} src */
@@ -381,14 +339,9 @@
 							<button
 								class:completed
 								disabled={Object.keys(data.section.b).length === 0}
-								on:click={async () => {
-									completing = true;
-
-									completed = !completed;
-									current_stubs = Object.values(completed ? b : data.section.a);
-									adapter?.reset(current_stubs);
-
-									completing = false;
+								on:click={() => {
+									current_stubs = Object.values(completed ? data.section.a : b);
+									load_files(current_stubs);
 								}}
 							>
 								{#if completed && Object.keys(data.section.b).length > 0}
@@ -400,7 +353,7 @@
 						</section>
 
 						<section class="editor-container" slot="b">
-							<Editor stubs={current_stubs} selected={$selected} {adapter} />
+							<Editor stubs={current_stubs} selected={$selected} on:change={update_stub} />
 							<ImageViewer selected={$selected} />
 						</section>
 					</SplitPane>
