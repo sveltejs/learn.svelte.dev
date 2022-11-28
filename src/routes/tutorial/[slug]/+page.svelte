@@ -57,7 +57,6 @@
 				b[key] = data.section.b[key];
 			}
 		}
-		console.log('b is ', b);
 	}
 
 	/** @type {import('$lib/types').FileTreeContext} */
