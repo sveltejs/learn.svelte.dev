@@ -1,1 +1,1 @@
-TODO
+<p>Home Page</p>

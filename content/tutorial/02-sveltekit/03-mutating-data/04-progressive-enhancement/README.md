@@ -8,7 +8,7 @@ The easiest way to progressively enhance our `<form>` is to add the `enhance` ac
 
 ```svelte
 <script>
-	+++import { enhance } from '$app/forms';
+	+++import { enhance } from '$app/forms';+++
 	export let form;
 </script>
 
