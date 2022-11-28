@@ -4,6 +4,10 @@ import { ready } from '../common/index.js';
 
 /** @type {import('@webcontainer/api').WebContainer} */
 let vm;
+/** Keep track of startup progress, so we don't repeat previous steps in case of a timeout */
+let step = 0;
+/** @type {string} */
+let base;
 
 /**
  * @param {import('$lib/types').Stub[]} stubs
@@ -24,10 +28,22 @@ export async function create(stubs) {
 		throw new Error('WebContainers are not supported by Safari');
 	}
 
-	const base = await new Promise(async (fulfil, reject) => {
-		setTimeout(() => {
-			reject(new Error('Timed out starting WebContainer'));
-		}, 15000);
+	base = await new Promise(async (fulfil, reject) => {
+		if (base) {
+			// startup was successful in the meantime
+			fulfil(base);
+		}
+
+		/** @type {any} */
+		let timeout;
+		function reset_timeout() {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => {
+				reject(new Error('Timed out starting WebContainer'));
+			}, 8000);
+		}
+
+		reset_timeout();
 
 		// There can only be one instance, else it throws an error - guard against this case
 		// if there was an error later on or a timeout and the user tries again
@@ -46,44 +62,62 @@ export async function create(stubs) {
 			reject(new Error(error.message));
 		});
 
-		const ready_unsub = vm.on('server-ready', (port, base) => {
+		const ready_unsub = vm.on('server-ready', (port, _base) => {
+			base = _base;
 			ready_unsub();
-			console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
-			fulfil(base);
+			console.log(`server ready on port ${port} at ${performance.now()}: ${_base}`);
+			fulfil(_base);
 		});
 
-		console.log('loading files');
+		if (step < 1) {
+			reset_timeout();
+			step = 1;
+			console.log('loading files');
 
-		await vm.loadFiles(tree);
-
-		console.log('unpacking modules');
-
-		const unzip = await vm.run(
-			{
-				command: 'node',
-				args: ['unzip.cjs']
-			},
-			{
-				stderr: (data) => console.error(`[unzip] ${data}`)
-			}
-		);
-
-		const code = await unzip.onExit;
-
-		if (code !== 0) {
-			reject(new Error('Failed to initialize WebContainer'));
+			await vm.loadFiles(tree);
 		}
 
-		console.log('starting dev server');
+		if (step < 2) {
+			reset_timeout();
+			step = 2;
+			console.log('unpacking modules');
 
-		await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
+			const unzip = await vm.run(
+				{
+					command: 'node',
+					args: ['unzip.cjs']
+				},
+				{
+					stderr: (data) => console.error(`[unzip] ${data}`)
+				}
+			);
 
-		await vm.run(
-			{ command: 'turbo', args: ['run', 'dev'] },
-			{
-				stderr: (data) => console.error(`[dev] ${data}`)
+			const code = await unzip.onExit;
+
+			if (code !== 0) {
+				reject(new Error('Failed to initialize WebContainer'));
 			}
-		);
+		}
+
+		if (step < 3) {
+			reset_timeout();
+			step = 3;
+			console.log('starting dev server');
+
+			await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
+
+			await vm.run(
+				{ command: 'turbo', args: ['run', 'dev'] },
+				{
+					stdout: () => {
+						if (!base) {
+							reset_timeout();
+						}
+					},
+					stderr: (data) => console.error(`[dev] ${data}`)
+				}
+			);
+		}
 	});
 
 	/**
@@ -94,7 +128,7 @@ export async function create(stubs) {
 	 * Keeps track of the latest create/reset to ensure things are not processed in parallel.
 	 * (if this turns out to be insufficient, we can use a queue)
 	 */
-	let running = base;
+	let running = Promise.resolve();
 
 	return {
 		base,
