@@ -216,25 +216,29 @@
 	 */
 	async function load_files(stubs) {
 		adapter = await reset_adapter(stubs);
-
-		for (const stub of stubs) {
-			if (stub.type === 'file' && stub.name in complete_states) {
-				complete_states[stub.name] = expected[stub.name] === normalise(stub.contents);
-			}
-		}
-
+		update_complete_states(stubs);
 		set_iframe_src(adapter.base);
 	}
 
-	/** @param {CustomEvent<import('$lib/types').FileStub>} event */
+	/**
+	 * @param {CustomEvent<import('$lib/types').FileStub>} event
+	 */
 	function update_stub(event) {
 		const stub = event.detail;
 		const index = current_stubs.findIndex((s) => s.name === stub.name);
 		current_stubs[index] = stub;
 		adapter?.update([stub]);
+		update_complete_states([stub]);
+	}
 
-		if (stub.type === 'file' && stub.name in complete_states) {
-			complete_states[stub.name] = expected[stub.name] === normalise(stub.contents);
+	/**
+	 * @param {import('$lib/types').Stub[]} stubs
+	 */
+	function update_complete_states(stubs) {
+		for (const stub of stubs) {
+			if (stub.type === 'file' && stub.name in complete_states) {
+				complete_states[stub.name] = expected[stub.name] === normalise(stub.contents);
+			}
 		}
 	}
 
@@ -333,6 +337,7 @@
 								disabled={Object.keys(data.section.b).length === 0}
 								on:click={async () => {
 									current_stubs = Object.values(completed ? b : data.section.a);
+									update_complete_states(current_stubs);
 									adapter?.reset(current_stubs);
 								}}
 							>
