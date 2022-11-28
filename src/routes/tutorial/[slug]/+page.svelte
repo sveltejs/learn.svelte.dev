@@ -238,6 +238,9 @@
 		for (const stub of stubs) {
 			if (stub.type === 'file' && stub.name in complete_states) {
 				complete_states[stub.name] = expected[stub.name] === normalise(stub.contents);
+				if (dev) {
+					compare(stub.name, normalise(stub.contents), expected[stub.name]);
+				}
 			}
 		}
 	}
@@ -282,7 +285,8 @@
 
 	/** @param {string} code */
 	function normalise(code) {
-		return code.replace(/\s+/g, ' ');
+		// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
+		return code.replace(/\s+/g, ' ').trim();
 	}
 
 	/** @param {string} src */
@@ -337,8 +341,7 @@
 								disabled={Object.keys(data.section.b).length === 0}
 								on:click={() => {
 									current_stubs = Object.values(completed ? data.section.a : b);
-									update_complete_states(current_stubs);
-									adapter?.reset(current_stubs);
+									load_files(current_stubs);
 								}}
 							>
 								{#if completed && Object.keys(data.section.b).length > 0}
