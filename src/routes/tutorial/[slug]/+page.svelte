@@ -335,8 +335,8 @@
 							<button
 								class:completed
 								disabled={Object.keys(data.section.b).length === 0}
-								on:click={async () => {
-									current_stubs = Object.values(completed ? b : data.section.a);
+								on:click={() => {
+									current_stubs = Object.values(completed ? data.section.a : b);
 									update_complete_states(current_stubs);
 									adapter?.reset(current_stubs);
 								}}
