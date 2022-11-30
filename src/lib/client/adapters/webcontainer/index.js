@@ -165,28 +165,39 @@ async function _create(stubs) {
 			}
 		}
 
-		// For some reason, server-ready is fired again on resetting the files here.
+		stubs = stubs.filter(
+			(stub) => stub.type !== 'file' || file_contents.get(stub.name) !== stub.contents
+		);
+
+		// For some reason, server-ready is fired again when the vite dev server is restarted.
 		// We need to wait for it to finish before we can continue, else we might
 		// request files from Vite before it's ready, leading to a timeout.
-		const promise = new Promise((fulfil, reject) => {
-			const error_unsub = vm.on('error', (error) => {
-				error_unsub();
-				resolve();
-				reject(new Error(error.message));
-			});
+		const will_restart = stubs.some(
+			(stub) =>
+				stub.type === 'file' &&
+				(stub.name === '/vite.config.js' || stub.name === '/svelte.config.js')
+		);
+		const promise = will_restart
+			? new Promise((fulfil, reject) => {
+					const error_unsub = vm.on('error', (error) => {
+						error_unsub();
+						resolve();
+						reject(new Error(error.message));
+					});
 
-			const ready_unsub = vm.on('server-ready', (port, base) => {
-				ready_unsub();
-				console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
-				resolve();
-				fulfil(undefined);
-			});
+					const ready_unsub = vm.on('server-ready', (port, base) => {
+						ready_unsub();
+						console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
+						resolve();
+						fulfil(undefined);
+					});
 
-			setTimeout(() => {
-				resolve();
-				reject(new Error('Timed out resetting WebContainer'));
-			}, 10000);
-		});
+					setTimeout(() => {
+						resolve();
+						reject(new Error('Timed out resetting WebContainer'));
+					}, 10000);
+			  })
+			: Promise.resolve();
 
 		for (const file of old) {
 			// TODO this fails with a cryptic error
@@ -206,10 +217,6 @@ async function _create(stubs) {
 				console.error(e);
 			}
 		}
-
-		stubs = stubs.filter(
-			(stub) => stub.type !== 'file' || file_contents.get(stub.name) !== stub.contents
-		);
 
 		await vm.loadFiles(convert_stubs_to_tree(stubs));
 		await promise;
