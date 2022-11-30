@@ -124,9 +124,7 @@ async function _create(stubs) {
 	 * @param {import('$lib/types').Stub[]} stubs
 	 */
 	async function reset(stubs) {
-		console.log('resetting');
 		await running;
-		console.log('running awaited');
 		/** @type {Function} */
 		let resolve = () => {};
 		running = new Promise((fulfil) => (resolve = fulfil));
@@ -146,14 +144,12 @@ async function _create(stubs) {
 		const promise = new Promise((fulfil, reject) => {
 			const error_unsub = vm.on('error', (error) => {
 				error_unsub();
-				console.log('EERROOORRRRRR', error);
 				resolve();
 				reject(new Error(error.message));
 			});
 
 			const ready_unsub = vm.on('server-ready', (port, base) => {
 				ready_unsub();
-				console.log('SERVER READYYYY');
 				console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
 				resolve();
 				fulfil(undefined);
@@ -183,15 +179,12 @@ async function _create(stubs) {
 				console.error(e);
 			}
 		}
-		console.log('old deteled');
 
 		await vm.loadFiles(convert_stubs_to_tree(stubs));
 
-		console.log('new loaded');
 		await promise;
 
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
-		console.log('finish');
 
 		resolve();
 	}

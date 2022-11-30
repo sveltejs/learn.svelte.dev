@@ -143,16 +143,14 @@
 	async function reset_adapter(stubs) {
 		if (adapter) {
 			await adapter.reset(stubs);
-			return adapter;
 		} else {
 			const module = PUBLIC_USE_FILESYSTEM
 				? await import('$lib/client/adapters/filesystem/index.js')
 				: await import('$lib/client/adapters/webcontainer/index.js');
 
 			adapter = await module.create(stubs);
+			set_iframe_src(adapter.base);
 		}
-
-		set_iframe_src(adapter.base);
 
 		await new Promise((fulfil, reject) => {
 			let called = false;
@@ -185,7 +183,6 @@
 		await new Promise((fulfil) => setTimeout(fulfil, 200));
 		set_iframe_src(adapter.base);
 
-		console.log('did (re)set adapter');
 		return adapter;
 	}
 
