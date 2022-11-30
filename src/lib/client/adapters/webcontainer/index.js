@@ -106,17 +106,29 @@ async function _create(stubs) {
 		reset_timeout();
 		console.log('starting dev server');
 		await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
-		await vm.run(
-			{ command: 'turbo', args: ['run', 'dev'] },
-			{
-				stdout: () => {
-					if (!base) {
-						reset_timeout();
-					}
-				},
-				stderr: (data) => console.error(`[dev] ${data}`)
-			}
-		);
+		await run_dev();
+
+		async function run_dev() {
+			const process = await vm.run(
+				{ command: 'turbo', args: ['run', 'dev'] },
+				{
+					stdout: () => {
+						if (!base) {
+							reset_timeout();
+						}
+					},
+					stderr: (data) => console.error(`[dev] ${data}`)
+				}
+			);
+			// keep restarting dev server (can crash in case of illegal +files for example)
+			process.onExit.then((code) => {
+				if (code !== 0) {
+					setTimeout(() => {
+						run_dev();
+					}, 2000);
+				}
+			});
+		}
 	});
 
 	/**
