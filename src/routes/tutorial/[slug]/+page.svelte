@@ -222,7 +222,6 @@
 	async function load_files(stubs) {
 		adapter = await reset_adapter(stubs);
 		update_complete_states(stubs);
-		set_iframe_src(adapter.base);
 	}
 
 	/**
