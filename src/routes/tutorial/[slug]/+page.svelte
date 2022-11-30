@@ -141,8 +141,9 @@
 	 * @param {import('$lib/types').Stub[]} stubs
 	 */
 	async function reset_adapter(stubs) {
+		let reload_iframe = true;
 		if (adapter) {
-			await adapter.reset(stubs);
+			reload_iframe = await adapter.reset(stubs);
 		} else {
 			const module = PUBLIC_USE_FILESYSTEM
 				? await import('$lib/client/adapters/filesystem/index.js')
@@ -179,9 +180,10 @@
 			}, 10000);
 		});
 
-		// necessary for some reason, else the iframe is out of date
-		await new Promise((fulfil) => setTimeout(fulfil, 200));
-		set_iframe_src(adapter.base);
+		if (reload_iframe) {
+			await new Promise((fulfil) => setTimeout(fulfil, 200));
+			set_iframe_src(adapter.base);
+		}
 
 		return adapter;
 	}

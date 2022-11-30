@@ -34,6 +34,8 @@ async function _create(stubs) {
 	let running;
 	/** @type {Map<string, string>} Paths and contents of the currently loaded file stubs */
 	let current = stubs_to_map(stubs);
+	/** @type {boolean} Track whether there was an error from vite dev server */
+	let vite_error = false;
 
 	const tree = convert_stubs_to_tree(stubs);
 
@@ -116,7 +118,10 @@ async function _create(stubs) {
 							reset_timeout();
 						}
 					},
-					stderr: (data) => console.error(`[dev] ${data}`)
+					stderr: (data) => {
+						vite_error = true;
+						console.error(`[dev] ${data}`);
+					}
 				}
 			);
 			// keep restarting dev server (can crash in case of illegal +files for example)
@@ -139,6 +144,7 @@ async function _create(stubs) {
 		/** @type {Function} */
 		let resolve = () => {};
 		running = new Promise((fulfil) => (resolve = fulfil));
+		vite_error = false;
 
 		const old = current;
 		const new_stubs = stubs.filter(
@@ -191,6 +197,8 @@ async function _create(stubs) {
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
 		resolve();
+
+		return !will_restart && !vite_error;
 	}
 
 	/**
