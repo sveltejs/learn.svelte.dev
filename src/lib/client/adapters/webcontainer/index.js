@@ -198,7 +198,7 @@ async function _create(stubs) {
 
 		resolve();
 
-		return !will_restart && !vite_error;
+		return will_restart || vite_error;
 	}
 
 	/**

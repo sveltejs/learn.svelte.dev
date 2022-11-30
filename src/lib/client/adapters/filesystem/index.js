@@ -37,7 +37,7 @@ export async function create(stubs) {
 
 			await new Promise((f) => setTimeout(f, 100)); // wait for chokidar
 
-			return false; // always reload page, not worth optimizing for local dev at this point
+			return true; // always reload page, not worth optimizing for local dev at this point
 		},
 
 		/** @param {import('$lib/types').FileStub[]} stubs */
