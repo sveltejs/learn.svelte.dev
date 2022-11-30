@@ -6,6 +6,8 @@ import { ready } from '../common/index.js';
 let vm;
 /** @type {Promise<import('$lib/types').Adapter> | undefined} */
 let instance;
+/** @type {Map<string, string>} latest contents of some special files for comparison */
+const file_contents = new Map();
 
 /**
  * @param {import('$lib/types').Stub[]} stubs
@@ -34,6 +36,19 @@ async function _create(stubs) {
 	let running;
 	/** @type {Set<string>} Paths of the currently loaded file stubs */
 	let current = new Set();
+
+	for (const stub of stubs) {
+		if (
+			stub.type === 'file' &&
+			(stub.name === '/src/__client.js' ||
+				stub.name === '/src/app.html' ||
+				stub.name === '/package.json' ||
+				stub.name === '/vite.config.js' ||
+				stub.name === '/svelte.config.js')
+		) {
+			file_contents.set(stub.name, stub.contents);
+		}
+	}
 
 	const tree = convert_stubs_to_tree(stubs);
 
@@ -192,10 +207,12 @@ async function _create(stubs) {
 			}
 		}
 
+		stubs = stubs.filter(
+			(stub) => stub.type !== 'file' || file_contents.get(stub.name) !== stub.contents
+		);
+
 		await vm.loadFiles(convert_stubs_to_tree(stubs));
-
 		await promise;
-
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
 		resolve();
