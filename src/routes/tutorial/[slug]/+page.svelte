@@ -5,7 +5,7 @@
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './Editor.svelte';
 	import Folder from './Folder.svelte';
-	import { dev } from '$app/environment';
+	import { browser, dev } from '$app/environment';
 	import ImageViewer from './ImageViewer.svelte';
 	import Sidebar from './Sidebar.svelte';
 	import Chrome from './Chrome.svelte';
@@ -13,6 +13,7 @@
 	import Loading from './Loading.svelte';
 	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 	import ContextMenu from './ContextMenu.svelte';
+	import ScreenToggle from './ScreenToggle.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -41,6 +42,10 @@
 		Object.keys(complete_states).length > 0 && Object.values(complete_states).every(Boolean);
 
 	let path = '/';
+
+	let width = browser ? window.innerWidth : 1000;
+	let selected_view = 0;
+	$: mobile = width < 768;
 
 	/** @type {Record<string, import('$lib/types').Stub>} */
 	let b;
@@ -303,7 +308,7 @@
 	const hidden = new Set(['__client.js', 'node_modules']);
 </script>
 
-<svelte:window on:message={handle_message} />
+<svelte:window on:message={handle_message} bind:innerWidth={width} />
 
 <svelte:head>
 	<title>{data.section.chapter.title} / {data.section.title} • Svelte Tutorial</title>
@@ -311,9 +316,14 @@
 
 <ContextMenu />
 
-<div class="container">
-	<SplitPane type="horizontal" min="360px" max="50%" pos="33%">
-		<section class="content" slot="a">
+<div class="container" style="--toggle-height: {mobile ? '4.6rem' : '0px'}">
+	<SplitPane
+		type="horizontal"
+		min={mobile ? '0px' : '360px'}
+		max={mobile ? '100%' : '50%'}
+		pos={mobile ? (selected_view === 0 ? '100%' : '0%') : '33%'}
+	>
+		<section slot="a" class="content">
 			<Sidebar
 				index={data.index}
 				section={data.section}
@@ -323,8 +333,13 @@
 			/>
 		</section>
 
-		<section slot="b">
-			<SplitPane type="vertical" min="100px" max="-100px" pos="50%">
+		<section slot="b" class:hidden={mobile && selected_view === 0}>
+			<SplitPane
+				type="vertical"
+				min={mobile ? '0px' : '100px'}
+				max={mobile ? '100%' : '50%'}
+				pos={mobile ? (selected_view === 1 ? '100%' : '0%') : '50%'}
+			>
 				<section slot="a">
 					<SplitPane type="horizontal" min="80px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
@@ -333,6 +348,7 @@
 									{...data.section.scope}
 									files={current_stubs.filter((stub) => !hidden.has(stub.basename))}
 									expanded
+									read_only={mobile}
 								/>
 							</div>
 
@@ -353,13 +369,18 @@
 						</section>
 
 						<section class="editor-container" slot="b">
-							<Editor stubs={current_stubs} selected={$selected} on:change={update_stub} />
+							<Editor
+								stubs={current_stubs}
+								selected={$selected}
+								read_only={mobile}
+								on:change={update_stub}
+							/>
 							<ImageViewer selected={$selected} />
 						</section>
 					</SplitPane>
 				</section>
 
-				<section class="preview" slot="b">
+				<section slot="b" class="preview">
 					<Chrome
 						{path}
 						{loading}
@@ -395,12 +416,15 @@
 			</SplitPane>
 		</section>
 	</SplitPane>
+	{#if mobile}
+		<ScreenToggle labels={['Tutorial', 'Input', 'Output']} bind:selected={selected_view} />
+	{/if}
 </div>
 
 <style>
 	.container {
 		--border-color: hsl(206, 44%, 90%);
-		height: 100%;
+		height: calc(100% - var(--toggle-height));
 		max-height: 100%;
 	}
 
@@ -484,5 +508,9 @@
 	.editor-container {
 		position: relative;
 		background-color: var(--light-blue);
+	}
+
+	.hidden {
+		display: none;
 	}
 </style>

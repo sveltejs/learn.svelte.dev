@@ -19,8 +19,9 @@
 	let dragging = false;
 	let w = 0;
 	let h = 0;
+	let position = pos;
 
-	// constrain pos
+	// constrain position
 	$: if (container) {
 		const size = type === 'horizontal' ? w : h;
 
@@ -40,7 +41,7 @@
 				? Math.max(min_px, Math.min(max_px, pos_px))
 				: Math.min(max_px, Math.max(min_px, pos_px));
 
-		pos = pos.endsWith('%') ? `${(100 * pos_px) / size}%` : `${pos_px}px`;
+		position = pos.endsWith('%') ? (size ? `${(100 * pos_px) / size}%` : '0%') : `${pos_px}px`;
 	}
 
 	/**
@@ -55,7 +56,7 @@
 		const pos_px = type === 'horizontal' ? x - left : y - top;
 		const size = type === 'horizontal' ? w : h;
 
-		pos = pos.endsWith('%') ? `${(100 * pos_px) / size}%` : `${pos_px}px`;
+		position = pos.endsWith('%') ? `${(100 * pos_px) / size}%` : `${pos_px}px`;
 
 		dispatch('change');
 	}
@@ -132,7 +133,7 @@
 	bind:this={container}
 	bind:clientWidth={w}
 	bind:clientHeight={h}
-	style="--pos: {pos}"
+	style="--pos: {position}"
 >
 	<div class="pane">
 		<slot name="a" />
@@ -142,12 +143,14 @@
 		<slot name="b" />
 	</div>
 
-	<div
-		class="{type} divider"
-		class:disabled
-		use:drag={(e) => update(e.clientX, e.clientY)}
-		use:touchDrag={(e) => update(e.touches[0].clientX, e.touches[0].clientY)}
-	/>
+	{#if pos !== '0%' && pos !== '100%'}
+		<div
+			class="{type} divider"
+			class:disabled
+			use:drag={(e) => update(e.clientX, e.clientY)}
+			use:touchDrag={(e) => update(e.touches[0].clientX, e.touches[0].clientY)}
+		/>
+	{/if}
 </div>
 
 {#if dragging}

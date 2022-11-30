@@ -22,6 +22,7 @@
 	export let stubs;
 	/** @type {import('$lib/types').Stub | null} */
 	export let selected = null;
+	export let read_only = false;
 
 	const dispatch = createEventDispatcher();
 
@@ -179,6 +180,10 @@
 		instance.update_files(stubs);
 	}
 
+	$: if (instance) {
+		instance.editor.updateOptions({ readOnly: read_only });
+	}
+
 	$: if (instance && stubs /* to retrigger on stubs change */) {
 		const model = selected && models.get(selected.name);
 		instance.editor.setModel(model ?? null);
@@ -218,5 +223,13 @@
 
 	div :global(.monaco-editor .view-overlays .current-line) {
 		border: none;
+	}
+
+	/* reposition overlay message that appears when trying to edit in readonly mode */
+	div :global(.monaco-editor-overlaymessage) {
+		margin-top: 6rem;
+	}
+	div :global(.monaco-editor-overlaymessage .anchor.below) {
+		display: none;
 	}
 </style>

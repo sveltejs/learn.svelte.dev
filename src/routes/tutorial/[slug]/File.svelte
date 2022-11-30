@@ -4,6 +4,7 @@
 
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
+	export let read_only = false;
 
 	/** @type {import('$lib/types').FileTreeContext} */
 	const { select, selected, edit, remove } = getContext('filetree');
@@ -21,7 +22,7 @@
 
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
-		if (restricted.has(file.basename)) return;
+		if (restricted.has(file.basename) || read_only) return;
 		open(e.clientX, e.clientY, [
 			{
 				name: 'Rename',
