@@ -56,7 +56,7 @@ async function _create(stubs) {
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
 				reject(new Error('Timed out starting WebContainer'));
-			}, 10000);
+			}, 15000);
 		}
 
 		reset_timeout();
