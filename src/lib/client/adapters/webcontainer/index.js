@@ -4,24 +4,39 @@ import { ready } from '../common/index.js';
 
 /** @type {import('@webcontainer/api').WebContainer} Web container singleton */
 let vm;
-/** Keep track of startup progress, so we don't repeat previous steps in case of a timeout */
-let step = 0;
-/** @type {string} path to the web container server instance */
-let base;
-/**
- * Keeps track of the latest create/reset to ensure things are not processed in parallel.
- * (if this turns out to be insufficient, we can use a queue)
- * @type {Promise<any> | undefined}
- */
-let running;
-/** @type {Set<string>} Paths of the currently loaded file stubs */
-let current = new Set();
+/** @type {Promise<import('$lib/types').Adapter> | undefined} */
+let instance;
 
 /**
  * @param {import('$lib/types').Stub[]} stubs
  * @returns {Promise<import('$lib/types').Adapter>}
  */
 export async function create(stubs) {
+	if (!instance) {
+		instance = _create(stubs);
+	} else {
+		const adapter = await instance;
+		await adapter.reset(stubs);
+	}
+	return instance;
+}
+
+/**
+ * @param {import('$lib/types').Stub[]} stubs
+ * @returns {Promise<import('$lib/types').Adapter>}
+ */
+async function _create(stubs) {
+	/**
+	 * Keeps track of the latest create/reset to ensure things are not processed in parallel.
+	 * (if this turns out to be insufficient, we can use a queue)
+	 * @type {Promise<any> | undefined}
+	 */
+	let running;
+	/** @type {Map<string, string>} Paths and contents of the currently loaded file stubs */
+	let current = stubs_to_map(stubs);
+	/** @type {boolean} Track whether there was an error from vite dev server */
+	let vite_error = false;
+
 	const tree = convert_stubs_to_tree(stubs);
 
 	const common = await ready;
@@ -36,21 +51,14 @@ export async function create(stubs) {
 		throw new Error('WebContainers are not supported by Safari');
 	}
 
-	await running; // wait for any previous create to finish
-
-	const init = new Promise(async (fulfil, reject) => {
-		if (base) {
-			// startup was successful in the meantime
-			fulfil(base);
-		}
-
+	const base = await new Promise(async (fulfil, reject) => {
 		/** @type {any} */
 		let timeout;
 		function reset_timeout() {
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
 				reject(new Error('Timed out starting WebContainer'));
-			}, 8000);
+			}, 15000);
 		}
 
 		reset_timeout();
@@ -59,11 +67,9 @@ export async function create(stubs) {
 		// if there was an error later on or a timeout and the user tries again
 		if (!vm) {
 			console.log('loading webcontainer');
-
 			const WebContainer = await load();
 
 			console.log('booting webcontainer');
-
 			vm = await WebContainer.boot();
 		}
 
@@ -72,53 +78,39 @@ export async function create(stubs) {
 			reject(new Error(error.message));
 		});
 
-		const ready_unsub = vm.on('server-ready', (port, _base) => {
-			base = _base;
+		const ready_unsub = vm.on('server-ready', (port, base) => {
 			ready_unsub();
-			console.log(`server ready on port ${port} at ${performance.now()}: ${_base}`);
-			fulfil(_base);
+			console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
+			fulfil(base); // this will be the last thing that happens if everything goes well
 		});
 
-		if (step < 1) {
-			reset_timeout();
-			step = 1;
-			console.log('loading files');
+		reset_timeout();
+		console.log('loading files');
+		await vm.loadFiles(tree);
 
-			await vm.loadFiles(tree);
-
-			current = new Set(stub_filenames(stubs));
-		}
-
-		if (step < 2) {
-			reset_timeout();
-			step = 2;
-			console.log('unpacking modules');
-
-			const unzip = await vm.run(
-				{
-					command: 'node',
-					args: ['unzip.cjs']
-				},
-				{
-					stderr: (data) => console.error(`[unzip] ${data}`)
-				}
-			);
-
-			const code = await unzip.onExit;
-
-			if (code !== 0) {
-				reject(new Error('Failed to initialize WebContainer'));
+		reset_timeout();
+		console.log('unpacking modules');
+		const unzip = await vm.run(
+			{
+				command: 'node',
+				args: ['unzip.cjs']
+			},
+			{
+				stderr: (data) => console.error(`[unzip] ${data}`)
 			}
+		);
+		const code = await unzip.onExit;
+		if (code !== 0) {
+			reject(new Error('Failed to initialize WebContainer'));
 		}
 
-		if (step < 3) {
-			reset_timeout();
-			step = 3;
-			console.log('starting dev server');
+		reset_timeout();
+		console.log('starting dev server');
+		await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
+		await run_dev();
 
-			await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
-
-			await vm.run(
+		async function run_dev() {
+			const process = await vm.run(
 				{ command: 'turbo', args: ['run', 'dev'] },
 				{
 					stdout: () => {
@@ -126,18 +118,22 @@ export async function create(stubs) {
 							reset_timeout();
 						}
 					},
-					stderr: (data) => console.error(`[dev] ${data}`)
+					stderr: (data) => {
+						vite_error = true;
+						console.error(`[dev] ${data}`);
+					}
 				}
 			);
+			// keep restarting dev server (can crash in case of illegal +files for example)
+			process.onExit.then((code) => {
+				if (code !== 0) {
+					setTimeout(() => {
+						run_dev();
+					}, 2000);
+				}
+			});
 		}
 	});
-
-	running = init.catch(() => {});
-	base = await init;
-
-	if (stub_filenames(stubs).some((name) => !current.has(name))) {
-		await reset(stubs);
-	}
 
 	/**
 	 * Deletes old files and adds new ones
@@ -148,9 +144,13 @@ export async function create(stubs) {
 		/** @type {Function} */
 		let resolve = () => {};
 		running = new Promise((fulfil) => (resolve = fulfil));
+		vite_error = false;
 
 		const old = current;
-		current = new Set(stub_filenames(stubs));
+		const new_stubs = stubs.filter(
+			(stub) => stub.type !== 'file' || old.get(stub.name) !== stub.contents
+		);
+		current = stubs_to_map(stubs);
 
 		for (const stub of stubs) {
 			if (stub.type === 'file') {
@@ -158,55 +158,47 @@ export async function create(stubs) {
 			}
 		}
 
-		// For some reason, server-ready is fired again on resetting the files here.
+		// For some reason, server-ready is fired again when the vite dev server is restarted.
 		// We need to wait for it to finish before we can continue, else we might
 		// request files from Vite before it's ready, leading to a timeout.
-		const promise = new Promise((fulfil, reject) => {
-			const error_unsub = vm.on('error', (error) => {
-				error_unsub();
-				resolve();
-				reject(new Error(error.message));
-			});
+		const will_restart = new_stubs.some(
+			(stub) =>
+				stub.type === 'file' &&
+				(stub.name === '/vite.config.js' || stub.name === '/svelte.config.js')
+		);
+		const promise = will_restart
+			? new Promise((fulfil, reject) => {
+					const error_unsub = vm.on('error', (error) => {
+						error_unsub();
+						resolve();
+						reject(new Error(error.message));
+					});
 
-			const ready_unsub = vm.on('server-ready', (port, base) => {
-				ready_unsub();
-				console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
-				resolve();
-				fulfil(undefined);
-			});
+					const ready_unsub = vm.on('server-ready', (port, base) => {
+						ready_unsub();
+						console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
+						resolve();
+						fulfil(undefined);
+					});
 
-			setTimeout(() => {
-				resolve();
-				reject(new Error('Timed out resetting WebContainer'));
-			}, 10000);
-		});
+					setTimeout(() => {
+						resolve();
+						reject(new Error('Timed out resetting WebContainer'));
+					}, 10000);
+			  })
+			: Promise.resolve();
 
-		for (const file of old) {
-			// TODO this fails with a cryptic error
-			// index.svelte:155 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'rmSync')
-			// at Object.rm (webcontainer.e2e246a845f9e80283581d6b944116e399af6950.js:6:121171)
-			// at MessagePort._0x4ec3f4 (webcontainer.e2e246a845f9e80283581d6b944116e399af6950.js:6:110957)
-			// at MessagePort.nrWrapper (headless:5:29785)
-			// await vm.fs.rm(file);
-
-			// temporary workaround
-			try {
-				await vm.run({
-					command: 'node',
-					args: ['-e', `fs.rmSync('${file.slice(1)}')`]
-				});
-			} catch (e) {
-				console.error(e);
-			}
+		for (const file of old.keys()) {
+			await vm.fs.rm(file, { force: true, recursive: true });
 		}
 
-		await vm.loadFiles(convert_stubs_to_tree(stubs));
-
+		await vm.loadFiles(convert_stubs_to_tree(new_stubs));
 		await promise;
-
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
 		resolve();
+
+		return will_restart || vite_error;
 	}
 
 	/**
@@ -307,9 +299,15 @@ function to_file(stub) {
 }
 
 /**
- *
  * @param {import('$lib/types').Stub[]} stubs
+ * @returns {Map<string, string>}
  */
-function stub_filenames(stubs) {
-	return stubs.filter((stub) => stub.type === 'file').map((stub) => stub.name);
+function stubs_to_map(stubs) {
+	const map = new Map();
+	for (const stub of stubs) {
+		if (stub.type === 'file') {
+			map.set(stub.name, stub.contents);
+		}
+	}
+	return map;
 }

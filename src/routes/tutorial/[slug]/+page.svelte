@@ -141,18 +141,17 @@
 	 * @param {import('$lib/types').Stub[]} stubs
 	 */
 	async function reset_adapter(stubs) {
+		let reload_iframe = true;
 		if (adapter) {
-			await adapter.reset(stubs);
-			return adapter;
+			reload_iframe = await adapter.reset(stubs);
 		} else {
 			const module = PUBLIC_USE_FILESYSTEM
 				? await import('$lib/client/adapters/filesystem/index.js')
 				: await import('$lib/client/adapters/webcontainer/index.js');
 
 			adapter = await module.create(stubs);
+			set_iframe_src(adapter.base);
 		}
-
-		set_iframe_src(adapter.base);
 
 		await new Promise((fulfil, reject) => {
 			let called = false;
@@ -180,6 +179,11 @@
 				}
 			}, 10000);
 		});
+
+		if (reload_iframe) {
+			await new Promise((fulfil) => setTimeout(fulfil, 200));
+			set_iframe_src(adapter.base);
+		}
 
 		return adapter;
 	}
@@ -222,7 +226,6 @@
 	async function load_files(stubs) {
 		adapter = await reset_adapter(stubs);
 		update_complete_states(stubs);
-		set_iframe_src(adapter.base);
 	}
 
 	/**
