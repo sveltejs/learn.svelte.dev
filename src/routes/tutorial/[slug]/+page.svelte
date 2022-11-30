@@ -181,9 +181,16 @@
 			}, 10000);
 		});
 
+		console.log('before');
 		// necessary for some reason, else the iframe is out of date
 		await new Promise((fulfil) => setTimeout(fulfil, 200));
 		set_iframe_src(adapter.base);
+		console.log('after');
+
+		// necessary for some reason, else the iframe is out of date
+		await new Promise((fulfil) => setTimeout(fulfil, 2000));
+		set_iframe_src(adapter.base);
+		console.log('way after');
 
 		return adapter;
 	}
