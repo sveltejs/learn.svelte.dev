@@ -6,8 +6,6 @@ import { ready } from '../common/index.js';
 let vm;
 /** @type {Promise<import('$lib/types').Adapter> | undefined} */
 let instance;
-/** @type {Map<string, string>} latest contents of some special files for comparison */
-const file_contents = new Map();
 
 /**
  * @param {import('$lib/types').Stub[]} stubs
@@ -34,21 +32,8 @@ async function _create(stubs) {
 	 * @type {Promise<any> | undefined}
 	 */
 	let running;
-	/** @type {Set<string>} Paths of the currently loaded file stubs */
-	let current = new Set();
-
-	for (const stub of stubs) {
-		if (
-			stub.type === 'file' &&
-			(stub.name === '/src/__client.js' ||
-				stub.name === '/src/app.html' ||
-				stub.name === '/package.json' ||
-				stub.name === '/vite.config.js' ||
-				stub.name === '/svelte.config.js')
-		) {
-			file_contents.set(stub.name, stub.contents);
-		}
-	}
+	/** @type {Map<string, string>} Paths and contents of the currently loaded file stubs */
+	let current = stubs_to_map(stubs);
 
 	const tree = convert_stubs_to_tree(stubs);
 
@@ -100,7 +85,6 @@ async function _create(stubs) {
 		reset_timeout();
 		console.log('loading files');
 		await vm.loadFiles(tree);
-		current = new Set(stub_filenames(stubs));
 
 		reset_timeout();
 		console.log('unpacking modules');
@@ -157,7 +141,10 @@ async function _create(stubs) {
 		running = new Promise((fulfil) => (resolve = fulfil));
 
 		const old = current;
-		current = new Set(stub_filenames(stubs));
+		const new_stubs = stubs.filter(
+			(stub) => stub.type !== 'file' || old.get(stub.name) !== stub.contents
+		);
+		current = stubs_to_map(stubs);
 
 		for (const stub of stubs) {
 			if (stub.type === 'file') {
@@ -165,14 +152,10 @@ async function _create(stubs) {
 			}
 		}
 
-		stubs = stubs.filter(
-			(stub) => stub.type !== 'file' || file_contents.get(stub.name) !== stub.contents
-		);
-
 		// For some reason, server-ready is fired again when the vite dev server is restarted.
 		// We need to wait for it to finish before we can continue, else we might
 		// request files from Vite before it's ready, leading to a timeout.
-		const will_restart = stubs.some(
+		const will_restart = new_stubs.some(
 			(stub) =>
 				stub.type === 'file' &&
 				(stub.name === '/vite.config.js' || stub.name === '/svelte.config.js')
@@ -199,7 +182,7 @@ async function _create(stubs) {
 			  })
 			: Promise.resolve();
 
-		for (const file of old) {
+		for (const file of old.keys()) {
 			// TODO this fails with a cryptic error
 			// index.svelte:155 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'rmSync')
 			// at Object.rm (webcontainer.e2e246a845f9e80283581d6b944116e399af6950.js:6:121171)
@@ -218,7 +201,7 @@ async function _create(stubs) {
 			}
 		}
 
-		await vm.loadFiles(convert_stubs_to_tree(stubs));
+		await vm.loadFiles(convert_stubs_to_tree(new_stubs));
 		await promise;
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
@@ -323,9 +306,15 @@ function to_file(stub) {
 }
 
 /**
- *
  * @param {import('$lib/types').Stub[]} stubs
+ * @returns {Map<string, string>}
  */
-function stub_filenames(stubs) {
-	return stubs.filter((stub) => stub.type === 'file').map((stub) => stub.name);
+function stubs_to_map(stubs) {
+	const map = new Map();
+	for (const stub of stubs) {
+		if (stub.type === 'file') {
+			map.set(stub.name, stub.contents);
+		}
+	}
+	return map;
 }
