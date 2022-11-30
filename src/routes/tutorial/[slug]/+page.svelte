@@ -181,6 +181,10 @@
 			}, 10000);
 		});
 
+		// necessary for some reason, else the iframe is out of date
+		await new Promise((fulfil) => setTimeout(fulfil, 200));
+		set_iframe_src(adapter.base);
+
 		return adapter;
 	}
 
