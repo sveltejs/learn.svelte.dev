@@ -84,9 +84,10 @@
 		},
 
 		add: async (stubs) => {
-			const illegal_create = editing_constraints.create.some(
-				(c) => !stubs.some((s) => (s.type === 'directory' && c.startsWith(s.name)) || s.name === c)
+			const illegal_create = stubs.some(
+				(s) => !editing_constraints.create.some((c) => s.name === c)
 			);
+
 			if (illegal_create) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this tutorial chapter:\n' +
@@ -104,14 +105,15 @@
 		},
 
 		edit: async (to_rename, new_name) => {
-			const illegal_rename = editing_constraints.remove.some(
-				(r) =>
-					(to_rename.type === 'directory' && r.startsWith(to_rename.name)) || to_rename.name === r
-			);
+			const illegal_rename =
+				!editing_constraints.remove.some((r) => to_rename.name === r) ||
+				!editing_constraints.create.some((c) => new_name === c);
 			if (illegal_rename) {
 				modal_text =
 					'Only the following files and folders are allowed to be renamed in this tutorial chapter:\n' +
-					editing_constraints.remove.join('\n');
+					editing_constraints.remove.join('\n') +
+					'\n\nThey can only be renamed to the following:\n' +
+					editing_constraints.create.join('\n');
 				return;
 			}
 
@@ -141,9 +143,7 @@
 		},
 
 		remove: async (stub) => {
-			const illegal_delete = editing_constraints.remove.some(
-				(r) => (stub.type === 'directory' && r.startsWith(stub.name)) || stub.name === r
-			);
+			const illegal_delete = !editing_constraints.remove.some((r) => stub.name === r);
 			if (illegal_delete) {
 				modal_text =
 					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +

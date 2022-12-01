@@ -24,7 +24,7 @@
 </script>
 
 {#if $menu_items}
-	<nav style="position: fixed; z-index: 1; top:{$menu_items.y}px; left:{$menu_items.x}px">
+	<nav style="position: fixed; z-index: 5; top:{$menu_items.y}px; left:{$menu_items.x}px">
 		<div class="navbar" id="navbar">
 			<ul>
 				{#each $menu_items.items as item}

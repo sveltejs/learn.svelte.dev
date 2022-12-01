@@ -114,14 +114,14 @@
 				for (let i = 1; i <= parts.length; i++) {
 					const part = parts.slice(0, i).join('/');
 					const basename = /** @type{string} */ (part.split('/').pop());
-					const name = prefix + part + '/';
+					const name = prefix + part;
 					if (!files.some((file) => file.name === name)) {
 						if (i < parts.length || state === 'add_folder') {
 							stubs.push({ type: 'directory', name, depth: depth + i, basename });
 						} else if (i === parts.length && state === 'add_file') {
 							stubs.push({
 								type: 'file',
-								name: name.slice(0, -1),
+								name,
 								depth: depth + i,
 								basename,
 								text: true,
@@ -131,7 +131,9 @@
 					}
 				}
 
-				add(stubs);
+				if (stubs.length) {
+					add(stubs);
+				}
 			}
 		}
 
