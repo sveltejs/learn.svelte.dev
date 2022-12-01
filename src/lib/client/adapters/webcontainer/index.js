@@ -235,6 +235,8 @@ async function _create(stubs) {
 
 		await vm.loadFiles(root);
 
+		stubs_to_map(stubs, current);
+
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 	}
 
@@ -302,8 +304,7 @@ function to_file(stub) {
  * @param {import('$lib/types').Stub[]} stubs
  * @returns {Map<string, string>}
  */
-function stubs_to_map(stubs) {
-	const map = new Map();
+function stubs_to_map(stubs, map = new Map()) {
 	for (const stub of stubs) {
 		if (stub.type === 'file') {
 			map.set(stub.name, stub.contents);
