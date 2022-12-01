@@ -2,8 +2,6 @@
 title: What is SvelteKit?
 ---
 
-> WARNING: this content is a work in progress and is not up to date with breaking changes in the latest version of SvelteKit. For the latest information, refer to the [SvelteKit docs](https://kit.svelte.dev/docs).
-
 So far, we've been working on individual components, or groups of components, in isolation. But to build a complete app, you need more than just components.
 
 That's where SvelteKit comes in. Whereas Svelte is a _component framework_, SvelteKit is an _app framework_ (or 'metaframework', depending on who you ask) that solves the tricky problems of building something production-ready:

@@ -8,4 +8,8 @@ A SvelteKit app can be thought of as two distinct entities working in tandem —
 
 'Client' refers to the JavaScript that loads in the browser.
 
-TODO
+SvelteKit makes the two communicate with each other seamlessly. It takes care of all the annoying stuff so you don't have to.
+
+On first page hit, SvelteKit will render the HTML on the server and send it to the browser. This means content is visible as fast as possible to the user. SvelteKit will then take over that HTML in a process called hydration, so that subsequent navigations will happen in the browser, allowing for a better user experience.
+
+> You can adjust this behavior to your liking if you want - SvelteKit is very versatile!

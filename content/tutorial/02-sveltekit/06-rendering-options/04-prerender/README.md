@@ -12,6 +12,6 @@ Setting it to `true` is useful if you have pages that don't have any dependency 
 +++export const prerender = true;+++
 ```
 
-To really see this in effect, you'd need to run the build step, which we can't in this tutorial.
+To really see this in effect, you'd need to run the build step and look at the result in preview mode, which we can't in this tutorial.
 
 > If you set `prerender` to `true` inside your root `+layout.js`, you turn SvelteKit into a static site generator!
