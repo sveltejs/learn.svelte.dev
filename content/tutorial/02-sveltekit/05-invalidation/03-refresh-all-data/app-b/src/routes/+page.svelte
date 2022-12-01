@@ -5,8 +5,9 @@
 	export let data;
 
 	onMount(() => {
-		const interval = setInterval(() =>
-			invalidateAll()
+		const interval = setInterval(
+			() => invalidateAll(),
+			1000
 		);
 		return () => clearInterval(interval);
 	});

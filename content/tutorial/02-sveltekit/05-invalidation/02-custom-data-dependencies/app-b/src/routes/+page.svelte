@@ -5,8 +5,9 @@
 	export let data;
 
 	onMount(() => {
-		const interval = setInterval(() =>
-			invalidate('tick:tock')
+		const interval = setInterval(
+			() => invalidate('tick:tock'),
+			1000
 		);
 		return () => clearInterval(interval);
 	});

@@ -25,8 +25,9 @@ export async function load({ ---fetch---+++depends+++ }) {
 	export let data;
 
 	onMount(() => {
-		const interval = setInterval(() =>
-			invalidate(---'/api/clock'---+++'tick:tock'+++)
+		const interval = setInterval(
+			() => invalidate(---'/api/clock'---+++'tick:tock'+++),
+			1000
 		);
 		return () => clearInterval(interval);
 	});

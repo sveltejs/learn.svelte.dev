@@ -14,8 +14,9 @@ Let's use `invalidateAll` in our clock example. First we'll update the component
 	export let data;
 
 	onMount(() => {
-		const interval = setInterval(() =>
-			---invalidate('tick:tock')---+++invalidateAll()+++
+		const interval = setInterval(
+			() => ---invalidate('tick:tock')---+++invalidateAll()+++,
+			1000
 		);
 		return () => clearInterval(interval);
 	});

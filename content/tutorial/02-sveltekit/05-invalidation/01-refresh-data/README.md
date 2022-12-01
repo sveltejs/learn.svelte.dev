@@ -25,7 +25,10 @@ export async function load({ fetch }) {
     export let data;
 
     +++onMount(() => {
-        const interval = setInterval(() => invalidate('/api/clock'));
+        const interval = setInterval(
+            () => invalidate('/api/clock'),
+            1000
+        );
         return () => clearInterval(interval);
     });+++
 </script>
