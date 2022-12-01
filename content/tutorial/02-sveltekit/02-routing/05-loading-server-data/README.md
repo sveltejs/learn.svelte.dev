@@ -20,7 +20,7 @@ Then make a call to our fake database inside `src/routes/+page.server.js` and sh
 import { db } from './fake-db.js';
 
 +++export async function load() {
-	const greeting = await db.getGreeting();
+	const greeting = await db.greet();
 	return { greeting };
 }+++
 ```

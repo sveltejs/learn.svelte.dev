@@ -21,7 +21,7 @@ Then add the `load` function, calling the API inside, and passing the result to 
 
 ```js
 +++export async function load({ fetch }) {
-	const greeting = await fetch('/api?layout').then((r) => r.text());
+	const greeting = await fetch('/api').then((r) => r.text());
 	return { greeting };
 }+++
 ```

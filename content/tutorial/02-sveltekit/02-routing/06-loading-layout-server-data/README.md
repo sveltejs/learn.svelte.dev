@@ -24,7 +24,7 @@ Then make a call to our fake database inside `src/routes/+layout.server.js` and 
 +++import { db } from './fake-db.js';
 
 export async function load() {
-	const greeting = await db.getGreeting('layout');
+	const greeting = await db.greet();
 	return { greeting };
 }+++
 ```

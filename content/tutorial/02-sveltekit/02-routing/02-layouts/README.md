@@ -35,8 +35,7 @@ Then remove the duplicated content from the `+page.svelte` files and add it to `
 		padding: 1em;
 		background-color: #eee;
 	}
-</style>
-+++
+</style>+++
 ```
 
 > Layouts can also be nested

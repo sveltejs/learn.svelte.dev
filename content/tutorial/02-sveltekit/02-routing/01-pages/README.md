@@ -22,7 +22,9 @@ Clicking the `about` link on the home page will now take you to the about page (
 Let's add some content (including a link back to the homepage) to `src/routes/about/+page.svelte` :
 
 ```svelte
-+++<p>This is the about page.</p>
++++<h1>About</h1>
+
+<p>This is the about page.</p>
 <p>Go to the <a href="/">home</a> page</p>+++
 ```
 

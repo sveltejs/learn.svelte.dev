@@ -1,4 +1,4 @@
 export async function load({ fetch }) {
-	const greeting = await fetch('/api?layout').then((r) => r.text());
+	const greeting = await fetch('/api').then((r) => r.text());
 	return { greeting };
 }

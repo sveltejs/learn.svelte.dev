@@ -1,3 +1,3 @@
 export const db = {
-	getGreeting: (toGreet) => Promise.resolve('Hello ' + toGreet)
+	greet: () => Promise.resolve('Hello from your fake data base')
 };

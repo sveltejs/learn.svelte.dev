@@ -1,5 +1,5 @@
 // We'll get to +server.js in a later chapter
 
-export function GET({ url }) {
-	return new Response('Hello ' + url.search);
+export function GET() {
+	return new Response('Hello from your API');
 }
