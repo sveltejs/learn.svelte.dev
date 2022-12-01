@@ -1,6 +1,6 @@
 <script>
 	import { dev } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	/**
 	 * file extension -> monaco language
@@ -22,8 +22,9 @@
 	export let stubs;
 	/** @type {import('$lib/types').Stub | null} */
 	export let selected = null;
-	/** @type {import('$lib/types').Adapter | undefined} */
-	export let adapter;
+	export let read_only = false;
+
+	const dispatch = createEventDispatcher();
 
 	/** @type {HTMLDivElement} */
 	let container;
@@ -95,14 +96,14 @@
 			}
 		});
 
-		let notify_adapter = true;
+		let notify = true;
 
 		/**
 		 *
 		 * @param {import('$lib/types').Stub[]} stubs
 		 */
 		function update_files(stubs) {
-			notify_adapter = false;
+			notify = false;
 			for (const stub of stubs) {
 				if (stub.type === 'directory') {
 					continue;
@@ -136,7 +137,7 @@
 					models.delete(name);
 				}
 			}
-			notify_adapter = true;
+			notify = true;
 		}
 
 		/**
@@ -159,9 +160,9 @@
 			model.onDidChangeContent(() => {
 				const contents = model.getValue();
 
-				if (notify_adapter) {
+				if (notify) {
 					stub.contents = contents;
-					adapter?.update([stub]);
+					dispatch('change', stub);
 				}
 			});
 
@@ -177,6 +178,10 @@
 
 	$: if (instance) {
 		instance.update_files(stubs);
+	}
+
+	$: if (instance) {
+		instance.editor.updateOptions({ readOnly: read_only });
 	}
 
 	$: if (instance && stubs /* to retrigger on stubs change */) {
@@ -218,5 +223,13 @@
 
 	div :global(.monaco-editor .view-overlays .current-line) {
 		border: none;
+	}
+
+	/* reposition overlay message that appears when trying to edit in readonly mode */
+	div :global(.monaco-editor-overlaymessage) {
+		margin-top: 6rem;
+	}
+	div :global(.monaco-editor-overlaymessage .anchor.below) {
+		display: none;
 	}
 </style>

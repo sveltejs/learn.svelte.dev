@@ -18,6 +18,8 @@
 	/** @type {Array<import('$lib/types').Stub>} */
 	export let files;
 
+	export let read_only = false;
+
 	/** @type {'idle' | 'add_file' | 'add_folder' | 'edit_folder'} */
 	let state = 'idle';
 	let new_name = '';
@@ -43,7 +45,7 @@
 
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
-		if (depth === 0) return;
+		if (depth === 0 || read_only) return;
 
 		open(e.clientX, e.clientY, [
 			{
@@ -154,13 +156,14 @@
 					prefix={directory.name + '/'}
 					depth={depth + 1}
 					files={children}
+					{read_only}
 				/>
 			</li>
 		{/each}
 
 		{#each child_files as file}
 			<li>
-				<File {file} />
+				<File {file} {read_only} />
 			</li>
 		{/each}
 	</ul>

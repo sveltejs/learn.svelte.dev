@@ -5,7 +5,7 @@
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './Editor.svelte';
 	import Folder from './Folder.svelte';
-	import { dev } from '$app/environment';
+	import { browser, dev } from '$app/environment';
 	import ImageViewer from './ImageViewer.svelte';
 	import Sidebar from './Sidebar.svelte';
 	import Chrome from './Chrome.svelte';
@@ -13,6 +13,7 @@
 	import Loading from './Loading.svelte';
 	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 	import ContextMenu from './ContextMenu.svelte';
+	import ScreenToggle from './ScreenToggle.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -21,9 +22,6 @@
 	const selected = writable(
 		/** @type {import('$lib/types').FileStub} */ (data.section.a[data.section.focus])
 	);
-
-	/** @type {Map<string, string>} */
-	let expected;
 
 	/** @type {import('$lib/types').Stub[]}*/
 	let current_stubs = [];
@@ -36,11 +34,18 @@
 	/** @type {Error | null} */
 	let error = null;
 
+	/** @type {Record<string, string>} */
+	let expected = {};
 	/** @type {Record<string, boolean>}*/
 	let complete_states = {};
-	let completed = false;
-	let completing = false;
+	$: completed =
+		Object.keys(complete_states).length > 0 && Object.values(complete_states).every(Boolean);
+
 	let path = '/';
+
+	let width = browser ? window.innerWidth : 1000;
+	let selected_view = 0;
+	$: mobile = width < 768;
 
 	/** @type {Record<string, import('$lib/types').Stub>} */
 	let b;
@@ -129,38 +134,24 @@
 		return destroy;
 	});
 
-	afterNavigate(async () => {
-		complete_states = {};
-		current_stubs = Object.values(data.section.a);
-
-		select(
-			/** @type {import('$lib/types').FileStub} */ (
-				current_stubs.find((stub) => stub.name === data.section.focus)
-			)
-		);
-
-		completed = false;
-
-		load_exercise();
-	});
+	afterNavigate(load_exercise);
 
 	/**
 	 * Loads the adapter initially or resets it. This method can throw.
 	 * @param {import('$lib/types').Stub[]} stubs
 	 */
 	async function reset_adapter(stubs) {
+		let reload_iframe = true;
 		if (adapter) {
-			await adapter.reset(stubs);
-			return adapter;
+			reload_iframe = await adapter.reset(stubs);
 		} else {
 			const module = PUBLIC_USE_FILESYSTEM
 				? await import('$lib/client/adapters/filesystem/index.js')
 				: await import('$lib/client/adapters/webcontainer/index.js');
 
 			adapter = await module.create(stubs);
+			set_iframe_src(adapter.base);
 		}
-
-		set_iframe_src(adapter.base);
 
 		await new Promise((fulfil, reject) => {
 			let called = false;
@@ -189,20 +180,36 @@
 			}, 10000);
 		});
 
+		if (reload_iframe) {
+			await new Promise((fulfil) => setTimeout(fulfil, 200));
+			set_iframe_src(adapter.base);
+		}
+
 		return adapter;
 	}
 
 	async function load_exercise() {
 		try {
+			current_stubs = Object.values(data.section.a);
+			select(
+				/** @type {import('$lib/types').FileStub} */ (
+					current_stubs.find((stub) => stub.name === data.section.focus)
+				)
+			);
+
 			clearTimeout(timeout);
 			loading = true;
 
-			// Load expected output first so we can compare it to the actual output to determine when it's completed
-			await reset_adapter(Object.values(b));
-			expected = await get_transformed_modules(data.section.scope.prefix, Object.values(b));
+			expected = {};
+			complete_states = {};
+			for (const stub of Object.values(b)) {
+				if (stub.type === 'file') {
+					complete_states[stub.name] = false;
+					expected[stub.name] = normalise(stub.contents);
+				}
+			}
 
-			const stubs = Object.values(data.section.a);
-			await load_files(stubs);
+			await load_files(current_stubs);
 
 			loading = false;
 			initial = false;
@@ -218,13 +225,32 @@
 	 */
 	async function load_files(stubs) {
 		adapter = await reset_adapter(stubs);
-		const actual = await get_transformed_modules(data.section.scope.prefix, stubs);
+		update_complete_states(stubs);
+	}
 
-		for (const [name, transformed] of expected.entries()) {
-			complete_states[name] = transformed === actual.get(name);
+	/**
+	 * @param {CustomEvent<import('$lib/types').FileStub>} event
+	 */
+	function update_stub(event) {
+		const stub = event.detail;
+		const index = current_stubs.findIndex((s) => s.name === stub.name);
+		current_stubs[index] = stub;
+		adapter?.update([stub]);
+		update_complete_states([stub]);
+	}
+
+	/**
+	 * @param {import('$lib/types').Stub[]} stubs
+	 */
+	function update_complete_states(stubs) {
+		for (const stub of stubs) {
+			if (stub.type === 'file' && stub.name in complete_states) {
+				complete_states[stub.name] = expected[stub.name] === normalise(stub.contents);
+				if (dev) {
+					compare(stub.name, normalise(stub.contents), expected[stub.name]);
+				}
+			}
 		}
-
-		set_iframe_src(adapter.base);
 	}
 
 	/** @type {NodeJS.Timeout} */
@@ -247,38 +273,7 @@
 				set_iframe_src(adapter.base + path);
 				loading = false;
 			}, 500);
-		} else if (e.data.type === 'hmr') {
-			const transformed = await fetch_from_vite(e.data.data.map(({ path }) => path));
-
-			for (const { name, code } of transformed) {
-				const normalised = normalise(code);
-				complete_states[name] = normalised === expected.get(name);
-				if (dev) compare(name, normalised, expected.get(name));
-			}
-
-			completed = Object.values(complete_states).every((value) => value);
 		}
-	}
-
-	/**
-	 * @param {string[]} names
-	 * @return {Promise<Array<{ name: string, code: string }>>}
-	 */
-	async function fetch_from_vite(names) {
-		/** @type {Window} */ (iframe.contentWindow).postMessage({ type: 'fetch', names }, '*');
-
-		return new Promise((fulfil, reject) => {
-			window.addEventListener('message', function handler(e) {
-				if (e.data.type === 'fetch-result') {
-					fulfil(e.data.data);
-					window.removeEventListener('message', handler);
-				}
-			});
-
-			setTimeout(() => {
-				reject(new Error('Timed out fetching files from Vite'));
-			}, 5000);
-		});
 	}
 
 	/**
@@ -296,39 +291,10 @@
 		console.groupEnd();
 	}
 
-	/**
-	 * @param {string} prefix
-	 * @param {import('$lib/types').Stub[]} stubs
-	 * @returns {Promise<Map<string, string>>}
-	 */
-	async function get_transformed_modules(prefix, stubs) {
-		const names = stubs
-			.filter((stub) => {
-				if (stub.name === '/src/__client.js') return;
-				if (stub.type !== 'file') return;
-				if (!/\.(js|ts|svelte)$/.test(stub.name)) return;
-
-				return stub.name.startsWith(prefix);
-			})
-			.map((stub) => stub.name);
-
-		const transformed = await fetch_from_vite(names);
-
-		const map = new Map();
-		transformed.forEach(({ name, code }) => {
-			map.set(name, normalise(code));
-		});
-
-		return map;
-	}
-
 	/** @param {string} code */
 	function normalise(code) {
-		return code
-			.replace(/add_location\([^)]+\)/g, 'add_location(...)')
-			.replace(/\?[tv]=[a-zA-Z0-9]+/g, '')
-			.replace(/[&?]svelte&type=style&lang\.css/, '')
-			.replace(/\/\/# sourceMappingURL=.+/, '');
+		// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
+		return code.replace(/\s+/g, ' ').trim();
 	}
 
 	/** @param {string} src */
@@ -345,7 +311,7 @@
 	const hidden = new Set(['__client.js', 'node_modules']);
 </script>
 
-<svelte:window on:message={handle_message} />
+<svelte:window on:message={handle_message} bind:innerWidth={width} />
 
 <svelte:head>
 	<title>{data.section.chapter.title} / {data.section.title} • Svelte Tutorial</title>
@@ -353,9 +319,14 @@
 
 <ContextMenu />
 
-<div class="container">
-	<SplitPane type="horizontal" min="360px" max="50%" pos="33%">
-		<section class="content" slot="a">
+<div class="container" style="--toggle-height: {mobile ? '4.6rem' : '0px'}">
+	<SplitPane
+		type="horizontal"
+		min={mobile ? '0px' : '360px'}
+		max={mobile ? '100%' : '50%'}
+		pos={mobile ? (selected_view === 0 ? '100%' : '0%') : '33%'}
+	>
+		<section slot="a" class="content">
 			<Sidebar
 				index={data.index}
 				section={data.section}
@@ -365,8 +336,13 @@
 			/>
 		</section>
 
-		<section slot="b">
-			<SplitPane type="vertical" min="100px" max="-100px" pos="50%">
+		<section slot="b" class:hidden={mobile && selected_view === 0}>
+			<SplitPane
+				type="vertical"
+				min={mobile ? '0px' : '100px'}
+				max={mobile ? '100%' : '50%'}
+				pos={mobile ? (selected_view === 1 ? '100%' : '0%') : '50%'}
+			>
 				<section slot="a">
 					<SplitPane type="horizontal" min="80px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
@@ -375,20 +351,16 @@
 									{...data.section.scope}
 									files={current_stubs.filter((stub) => !hidden.has(stub.basename))}
 									expanded
+									read_only={mobile}
 								/>
 							</div>
 
 							<button
 								class:completed
 								disabled={Object.keys(data.section.b).length === 0}
-								on:click={async () => {
-									completing = true;
-
-									completed = !completed;
-									current_stubs = Object.values(completed ? b : data.section.a);
-									adapter?.reset(current_stubs);
-
-									completing = false;
+								on:click={() => {
+									current_stubs = Object.values(completed ? data.section.a : b);
+									load_files(current_stubs);
 								}}
 							>
 								{#if completed && Object.keys(data.section.b).length > 0}
@@ -400,13 +372,18 @@
 						</section>
 
 						<section class="editor-container" slot="b">
-							<Editor stubs={current_stubs} selected={$selected} {adapter} />
+							<Editor
+								stubs={current_stubs}
+								selected={$selected}
+								read_only={mobile}
+								on:change={update_stub}
+							/>
 							<ImageViewer selected={$selected} />
 						</section>
 					</SplitPane>
 				</section>
 
-				<section class="preview" slot="b">
+				<section slot="b" class="preview">
 					<Chrome
 						{path}
 						{loading}
@@ -442,12 +419,15 @@
 			</SplitPane>
 		</section>
 	</SplitPane>
+	{#if mobile}
+		<ScreenToggle labels={['Tutorial', 'Input', 'Output']} bind:selected={selected_view} />
+	{/if}
 </div>
 
 <style>
 	.container {
 		--border-color: hsl(206, 44%, 90%);
-		height: 100%;
+		height: calc(100% - var(--toggle-height));
 		max-height: 100%;
 	}
 
@@ -531,5 +511,9 @@
 	.editor-container {
 		position: relative;
 		background-color: var(--light-blue);
+	}
+
+	.hidden {
+		display: none;
 	}
 </style>
