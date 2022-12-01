@@ -10,7 +10,7 @@ In `+page.server.js` we do that by first getting the form data from the `request
 import { redirect, +++invalid+++ } from '@sveltejs/kit';
 
 export const actions = {
-	default: +++async+++ (+++request+++) => {
+	default: +++async+++ (+++{ request }+++) => {
 		+++const fields = await request.formData();
 		if (fields.get('email') !== 'svelte@kit.dev' || fields.get('password') !== 'tutorial') {
 			return invalid(422, { message: 'Invalid Credentials' });

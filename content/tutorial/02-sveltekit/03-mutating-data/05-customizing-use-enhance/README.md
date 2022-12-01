@@ -8,7 +8,7 @@ In the last chapter we have seen how to progressively enhance our `<form>` by ad
 <script>
 	import { enhance } from '$app/forms';
 	export let form;
-	let submitting = false;
+	+++let submitting = false;+++
 </script>
 
 <form method="POST" action="?/login" use:enhance+++={() => {

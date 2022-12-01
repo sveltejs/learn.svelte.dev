@@ -4,9 +4,11 @@ title: Forms
 
 A fundamental part of a web app is not only loading data, but also manipulating and saving it back. The way to do this on the web is to use `<form>` elements.
 
-Let's create a login form with email and password. First we write the HTML:
+Let's create a login form with email and password. First we write the HTML in `+page.svelte`:
 
 ```svelte
+<p>Please log in</p>
+
 +++<form method="POST">
 	<input type="text" name="email">
 	<input type="text" name="password">

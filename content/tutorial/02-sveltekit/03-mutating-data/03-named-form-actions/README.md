@@ -11,7 +11,7 @@ Let's add a "Register" button to our existing form and introduce two form action
 	export let form;
 </script>
 
-<form method="POST" +++action="?/login">
+<form method="POST" +++action="?/login"+++>
 	<input name="email" type="email">
 	<input name="password" type="password">
 	{#if form?.message}
@@ -32,14 +32,14 @@ In `+page.server.js`, we react to these named actions by adding them as properti
 import { redirect, invalid } from '@sveltejs/kit';
 
 export const actions = {
-	---default---+++login+++: async (request) => {
+	---default---+++login+++: async ({ request }) => {
 		const fields = await request.formData();
 		if (fields.get('email') !== 'svelte@kit.dev' || fields.get('password') !== 'tutorial') {
 			return invalid(422, { message: 'Invalid Credentials' });
 		}
 		throw redirect(307, '/user');
-	},
-	+++register: async (request) => {
+	}+++,
+	register: async ({ request }) => {
 		const fields = await request.formData();
 		if (fields.get('email') === 'svelte@kit.dev') {
 			return invalid(422, { message: 'Email already in use' });
