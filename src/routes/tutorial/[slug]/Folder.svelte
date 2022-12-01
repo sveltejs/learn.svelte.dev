@@ -18,6 +18,10 @@
 	/** @type {Array<import('$lib/types').Stub>} */
 	export let files;
 
+	export let can_create = true;
+
+	export let can_remove = true;
+
 	export let read_only = false;
 
 	/** @type {'idle' | 'add_file' | 'add_folder' | 'edit_folder'} */
@@ -45,35 +49,46 @@
 
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
-		if (depth === 0 || read_only) return;
+		if (depth === 0 || read_only || (!can_create && !can_remove)) {
+			return;
+		}
 
-		open(e.clientX, e.clientY, [
-			{
-				name: 'New File',
-				action: () => {
-					state = 'add_file';
+		/** @type {import('./ContextMenu.svelte').MenuItems} */
+		const actions = [];
+		if (can_create) {
+			actions.push(
+				{
+					name: 'New File',
+					action: () => {
+						state = 'add_file';
+					}
+				},
+				{
+					name: 'New Folder',
+					action: () => {
+						state = 'add_folder';
+					}
 				}
-			},
-			{
-				name: 'New Folder',
-				action: () => {
-					state = 'add_folder';
-				}
-			},
-			{
+			);
+		}
+		if (can_create && can_remove) {
+			actions.push({
 				name: 'Rename',
 				action: () => {
 					new_name = name;
 					state = 'edit_folder';
 				}
-			},
-			{
+			});
+		}
+		if (can_remove) {
+			actions.push({
 				name: 'Delete',
 				action: () => {
 					remove(/** @type {import('$lib/types').DirectoryStub} */ (file));
 				}
-			}
-		]);
+			});
+		}
+		open(e.clientX, e.clientY, actions);
 	}
 
 	/** @param {Event} e */
@@ -133,7 +148,7 @@
 
 {#if state === 'edit_folder'}
 	<!-- svelte-ignore a11y-autofocus -->
-	<input type="text" autofocus bind:value={new_name} on:blur={done} on:keydown={done} />
+	<input type="text" autofocus bind:value={new_name} on:blur={done} on:keyup={done} />
 {/if}
 
 {#if expanded}
@@ -146,7 +161,7 @@
 				autofocus
 				bind:value={new_name}
 				on:blur={done}
-				on:keydown={done}
+				on:keyup={done}
 			/>
 		{/if}
 		{#each child_directories as directory}
@@ -157,13 +172,15 @@
 					depth={depth + 1}
 					files={children}
 					{read_only}
+					{can_create}
+					{can_remove}
 				/>
 			</li>
 		{/each}
 
 		{#each child_files as file}
 			<li>
-				<File {file} {read_only} />
+				<File {file} {read_only} {can_create} {can_remove} />
 			</li>
 		{/each}
 	</ul>

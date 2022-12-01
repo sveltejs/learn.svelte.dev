@@ -14,6 +14,7 @@
 	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 	import ContextMenu from './ContextMenu.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
+	import Modal from '$lib/components/Modal.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -42,6 +43,7 @@
 		Object.keys(complete_states).length > 0 && Object.values(complete_states).every(Boolean);
 
 	let path = '/';
+	let modal_text = '';
 
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
@@ -49,16 +51,27 @@
 
 	/** @type {Record<string, import('$lib/types').Stub>} */
 	let b;
+	/** @type {import('$lib/types').EditingConstraints} list of files user is allowed to create/delete in the tutorial chapter */
+	let editing_constraints;
 	$: {
 		b = { ...data.section.a };
+		editing_constraints = {
+			create: [],
+			remove: []
+		};
 		for (const key in data.section.b) {
 			if (key.endsWith('__delete')) {
+				const to_delete = key.slice(0, -'/__delete'.length);
+				editing_constraints.remove.push(to_delete);
 				for (const k in b) {
-					if (k.startsWith(key.slice(0, -'/__delete'.length))) {
+					if (k.startsWith(to_delete)) {
 						delete b[k];
 					}
 				}
 			} else {
+				if (!b[key]) {
+					editing_constraints.create.push(key);
+				}
 				b[key] = data.section.b[key];
 			}
 		}
@@ -71,6 +84,16 @@
 		},
 
 		add: async (stubs) => {
+			const illegal_create = editing_constraints.create.some(
+				(c) => !stubs.some((s) => (s.type === 'directory' && c.startsWith(s.name)) || s.name === c)
+			);
+			if (illegal_create) {
+				modal_text =
+					'Only the following files and folders are allowed to be created in this tutorial chapter:\n' +
+					editing_constraints.create.join('\n');
+				return;
+			}
+
 			current_stubs = [...current_stubs, ...stubs];
 
 			await load_files(current_stubs);
@@ -81,6 +104,17 @@
 		},
 
 		edit: async (to_rename, new_name) => {
+			const illegal_rename = editing_constraints.remove.some(
+				(r) =>
+					(to_rename.type === 'directory' && r.startsWith(to_rename.name)) || to_rename.name === r
+			);
+			if (illegal_rename) {
+				modal_text =
+					'Only the following files and folders are allowed to be renamed in this tutorial chapter:\n' +
+					editing_constraints.remove.join('\n');
+				return;
+			}
+
 			/** @type {Array<[import('$lib/types').Stub, import('$lib/types').Stub]>}*/
 			const changed = [];
 			current_stubs = current_stubs.map((s) => {
@@ -107,6 +141,16 @@
 		},
 
 		remove: async (stub) => {
+			const illegal_delete = editing_constraints.remove.some(
+				(r) => (stub.type === 'directory' && r.startsWith(stub.name)) || stub.name === r
+			);
+			if (illegal_delete) {
+				modal_text =
+					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
+					editing_constraints.remove.join('\n');
+				return;
+			}
+
 			const out = current_stubs.filter((s) => s.name.startsWith(stub.name));
 			current_stubs = current_stubs.filter((s) => !out.includes(s));
 
@@ -319,6 +363,20 @@
 
 <ContextMenu />
 
+{#if modal_text}
+	<Modal on:close={() => (modal_text = '')}>
+		<div class="modal-contents">
+			<h2>This action is not allowed</h2>
+
+			<p>
+				{modal_text}
+			</p>
+
+			<button on:click={() => (modal_text = '')}>OK</button>
+		</div>
+	</Modal>
+{/if}
+
 <div class="container" style="--toggle-height: {mobile ? '4.6rem' : '0px'}">
 	<SplitPane
 		type="horizontal"
@@ -352,6 +410,8 @@
 									files={current_stubs.filter((stub) => !hidden.has(stub.basename))}
 									expanded
 									read_only={mobile}
+									can_create={!!editing_constraints.create.length}
+									can_remove={!!editing_constraints.remove.length}
 								/>
 							</div>
 
@@ -515,5 +575,20 @@
 
 	.hidden {
 		display: none;
+	}
+
+	.modal-contents p {
+		white-space: pre-line;
+	}
+
+	.modal-contents button {
+		display: block;
+		background: var(--prime);
+		color: white;
+		padding: 1rem;
+		width: 10em;
+		margin: 1em 0 0 0;
+		border-radius: var(--border-r);
+		line-height: 1;
 	}
 </style>
