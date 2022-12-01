@@ -198,7 +198,9 @@ async function _create(stubs) {
 
 		resolve();
 
-		return will_restart || vite_error;
+		// Also trigger a reload of the iframe in case new files were added / old ones deleted,
+		// because that can result in a broken UI state
+		return will_restart || vite_error || old.size || new_stubs.length;
 	}
 
 	/**
