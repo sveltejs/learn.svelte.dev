@@ -8,16 +8,26 @@ In this app we have two routes — `src/routes/+page.svelte`, and `src/routes/ab
 
 We can deduplicate this code by moving the common UI into a `+layout.svelte` file. All pages in the same folder or below this file will share that UI. The layout itself needs a `<slot />` at minimum to define where the content is projected.
 
-Let's move the duplicate content from `src/routes/+page.svelte` and `src/routes/about/+page.svelte` into `src/routes/+layout.svelte`:
+Let's move the duplicate content from `src/routes/+page.svelte` and `src/routes/about/+page.svelte` into `src/routes/+layout.svelte`. First, create that file:
+
+```diff
+src/routes/
+├ about/
+│ └ +page.svelte
++├ +layout.svelte
+└ +page.svelte
+```
+
+Then remove the duplicated content from the `+page.svelte` files and add it to `+layout.svelte` instead:
 
 ```svelte
 +++<nav>
 	<a href="/">Home</a>
 	<a href="/about">About</a>
 </nav>
-+++
+
 <slot />
-+++
+
 <style>
 	nav {
 		display: flex;

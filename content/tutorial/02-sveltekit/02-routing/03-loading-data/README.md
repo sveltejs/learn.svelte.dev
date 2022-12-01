@@ -12,7 +12,22 @@ This `load` function runs on the server when the user visits your page initially
 
 The return type of the `load` function needs to be an object at the top level, below that everything is allowed. If we return a promise, it's awaited. The result is passed to the `data` prop inside `+page.svelte`, so we can access it through `export let data`.
 
-Let's move the call inside `src/routes/+page.svelte` into `+page.js`:
+Let's move the call inside `src/routes/+page.svelte` into `+page.js`. First, create the file:
+
+```diff
+src/routes/
++  +page.js
+  +page.svelte
+```
+
+Then, move the call into the `load` function:
+
+```js
++++export async function load({ fetch }) {
+	const greeting = await fetch('/api').then((r) => r.text());
+	return { greeting };
+}+++
+```
 
 ```svelte
 <script>
@@ -28,11 +43,4 @@ Let's move the call inside `src/routes/+page.svelte` into `+page.js`:
 </script>
 
 <p>{+++data.+++greeting}</p>
-```
-
-```js
-+++export async function load({ fetch }) {
-	const greeting = await fetch('/api').then((r) => r.text());
-	return { greeting };
-}+++
 ```

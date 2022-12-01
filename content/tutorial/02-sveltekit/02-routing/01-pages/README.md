@@ -6,13 +6,24 @@ SvelteKit uses filesystem-based routing, which means that the _routes_ of your a
 
 The routes are located within `src/routes`. Every directory within which contains a `+page.svelte` file creates a route in your app.
 
-In this app we have two routes — `src/routes/+page.svelte`, which maps to `/`, and `src/routes/about/+page.svelte`, which maps to `/about`. Clicking the `about` link will take you from the home page to the about page.
+In this app we currently have one route — `src/routes/+page.svelte`, which maps to `/`.
 
-> Unlike traditional multi-page apps, navigating to `/about` updates the contents of the current page, like a single-page app. This gives us the best of both worlds — fast server-rendered startup, then instant navigation.
+Let's add a second route, `src/routes/about/+page.svelte`, which maps to `/about`:
 
-Let's add a link in `src/routes/about/+page.svelte` back to the homepage:
+```diff
+src/routes/
++├ about/
++│ └ +page.svelte
+└ +page.svelte
+```
+
+Clicking the `about` link on the home page will now take you to the about page (which is empty right now).
+
+Let's add some content (including a link back to the homepage) to `src/routes/about/+page.svelte` :
 
 ```svelte
-<p>This is the about page.</p>
-<p>Go to the +++<a href="/">+++home+++</a>+++ page</p>
++++<p>This is the about page.</p>
+<p>Go to the <a href="/">home</a> page</p>+++
 ```
+
+> Unlike traditional multi-page apps, navigating to `/about` and back updates the contents of the current page, like a single-page app. This gives us the best of both worlds — fast server-rendered startup, then instant navigation.
