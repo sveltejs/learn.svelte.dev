@@ -16,5 +16,3 @@ export function load() {
 ```
 
 In contrast to unexpected error, the message of `error`s you throw yourself this way do _not_ call the `handleError` hook and are propagated to `$page.error` directly.
-
-> If you defined the error shape through the `App.Error` interface, the second parameter passed to the `error` function expects this shape.
