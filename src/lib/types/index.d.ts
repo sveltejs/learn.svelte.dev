@@ -87,3 +87,8 @@ export interface FileTreeContext {
 	remove: (stub: Stub) => Promise<void>;
 	selected: Writable<FileStub | null>;
 }
+
+export interface EditingConstraints {
+	create: string[];
+	remove: string[];
+}

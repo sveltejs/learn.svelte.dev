@@ -8,7 +8,7 @@
 		const selection = window.getSelection();
 
 		const active = document.activeElement;
-		const sfnsp = selection.focusNode.parentElement;
+		const sfnsp = selection?.focusNode?.parentElement;
 
 		if (modal.showModal) modal.showModal();
 
