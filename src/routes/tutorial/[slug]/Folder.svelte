@@ -107,33 +107,7 @@
 			if (state === 'edit_folder') {
 				edit(/** @type {import('$lib/types').DirectoryStub} */ (file), new_name);
 			} else {
-				const parts = new_name.split('/');
-				/** @type {import('$lib/types').Stub[]} */
-				const stubs = [];
-
-				for (let i = 1; i <= parts.length; i++) {
-					const part = parts.slice(0, i).join('/');
-					const basename = /** @type{string} */ (part.split('/').pop());
-					const name = prefix + part;
-					if (!files.some((file) => file.name === name)) {
-						if (i < parts.length || state === 'add_folder') {
-							stubs.push({ type: 'directory', name, depth: depth + i, basename });
-						} else if (i === parts.length && state === 'add_file') {
-							stubs.push({
-								type: 'file',
-								name,
-								depth: depth + i,
-								basename,
-								text: true,
-								contents: ''
-							});
-						}
-					}
-				}
-
-				if (stubs.length) {
-					add(stubs);
-				}
+				add(prefix + new_name, state === 'add_folder' ? 'directory' : 'file');
 			}
 		}
 

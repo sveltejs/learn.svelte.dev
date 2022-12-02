@@ -83,11 +83,12 @@
 			$selected = file;
 		},
 
-		add: async (stubs) => {
-			const illegal_create = stubs.some(
+		add: async (name, type) => {
+			const new_stubs = add_stub(name, type, current_stubs);
+
+			const illegal_create = new_stubs.some(
 				(s) => !editing_constraints.create.some((c) => s.name === c)
 			);
-
 			if (illegal_create) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this tutorial chapter:\n' +
@@ -95,37 +96,34 @@
 				return;
 			}
 
-			current_stubs = [...current_stubs, ...stubs];
-
+			current_stubs = [...current_stubs, ...new_stubs];
 			await load_files(current_stubs);
 
-			if (stubs[0].type === 'file') {
-				select(stubs[0]);
+			if (new_stubs[0].type === 'file') {
+				select(new_stubs[0]);
 			}
 		},
 
 		edit: async (to_rename, new_name) => {
-			/** @type {Array<[import('$lib/types').Stub, import('$lib/types').Stub]>}*/
-			const changed = [];
-			const updated_stubs = current_stubs.map((s) => {
-				if (!s.name.startsWith(to_rename.name)) {
-					return s;
-				}
-
+			// treat edit as a remove followed by an add
+			const out = current_stubs.filter((s) => s.name.startsWith(to_rename.name));
+			const updated_stubs = current_stubs.filter((s) => !out.includes(s));
+			/** @type {Map<string, import('$lib/types').Stub>} */
+			const new_stubs = new Map();
+			for (const s of out) {
 				const name =
 					s.name.slice(0, to_rename.name.length - to_rename.basename.length) +
 					new_name +
 					s.name.slice(to_rename.name.length);
-				const basename = s === to_rename ? new_name : s.basename;
-				const new_stub = { ...s, name, basename };
-
-				changed.push([s, new_stub]);
-				return new_stub;
-			});
+				// deduplicate
+				for (const to_add of add_stub(name, s.type, updated_stubs)) {
+					new_stubs.set(to_add.name, to_add);
+				}
+			}
 
 			const illegal_rename =
 				!editing_constraints.remove.some((r) => to_rename.name === r) ||
-				changed.some(([, s]) => !editing_constraints.create.some((c) => s.name === c));
+				[...new_stubs.keys()].some((name) => !editing_constraints.create.some((c) => name === c));
 			if (illegal_rename) {
 				modal_text =
 					'Only the following files and folders are allowed to be renamed in this tutorial chapter:\n' +
@@ -135,11 +133,11 @@
 				return;
 			}
 
-			current_stubs = updated_stubs;
+			current_stubs = updated_stubs.concat(...new_stubs.values());
 			await load_files(current_stubs);
 
-			if (to_rename.type === 'file') {
-				select(/** @type {any} */ (changed.find(([old_s]) => old_s === to_rename))[1]);
+			if (to_rename.type === 'file' && $selected?.name === to_rename.name) {
+				select(/** @type {any} */ ([...new_stubs.values()].find((s) => s.type === 'file')));
 			}
 		},
 
@@ -164,6 +162,55 @@
 
 		selected
 	});
+
+	/**
+	 * @param {string} name
+	 * @param {'file' | 'directory'} type
+	 * @param {import('$lib/types').Stub[]} current
+	 */
+	function add_stub(name, type, current) {
+		// find directory which contains the new file
+		/** @type {import('$lib/types').DirectoryStub} */
+		let dir = /** @type {any} we know it will be assigned after the loop */ (null);
+		for (const stub of current) {
+			if (
+				stub.type === 'directory' &&
+				name.startsWith(stub.name) &&
+				(!dir || dir.name.length < stub.name.length)
+			) {
+				dir = stub;
+			}
+		}
+
+		const new_name = name.slice(dir.name.length + 1);
+		const prefix = dir.name + '/';
+		const depth = prefix.split('/').length - 2;
+		const parts = new_name.split('/');
+		/** @type {import('$lib/types').Stub[]} */
+		const stubs = [];
+
+		for (let i = 1; i <= parts.length; i++) {
+			const part = parts.slice(0, i).join('/');
+			const basename = /** @type{string} */ (part.split('/').pop());
+			const name = prefix + part;
+			if (!current.some((s) => s.name === name)) {
+				if (i < parts.length || type === 'directory') {
+					stubs.push({ type: 'directory', name, depth: depth + i, basename });
+				} else if (i === parts.length && type === 'file') {
+					stubs.push({
+						type: 'file',
+						name,
+						depth: depth + i,
+						basename,
+						text: true,
+						contents: ''
+					});
+				}
+			}
+		}
+
+		return stubs;
+	}
 
 	/** @type {import('$lib/types').Adapter | undefined} */
 	let adapter;
