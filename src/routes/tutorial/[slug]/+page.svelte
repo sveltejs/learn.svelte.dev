@@ -117,6 +117,9 @@
 					s.name.slice(to_rename.name.length);
 				// deduplicate
 				for (const to_add of add_stub(name, s.type, updated_stubs)) {
+					if (s.type === 'file' && to_add.type === 'file') {
+						to_add.contents = s.contents;
+					}
 					new_stubs.set(to_add.name, to_add);
 				}
 			}
