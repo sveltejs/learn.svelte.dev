@@ -10,8 +10,14 @@ Let's create a login form with email and password. First we write the HTML in `+
 <p>Please log in</p>
 
 +++<form method="POST">
-	<input type="text" name="email">
-	<input type="text" name="password">
+	<label>
+		Email
+		<input type="email" name="email" />
+	</label>
+	<label>
+		Password
+		<input type="password" name="password" />
+	</label>
 	<button>Log In</button>
 </form>+++
 ```
