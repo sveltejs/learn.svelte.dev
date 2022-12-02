@@ -1,5 +1,5 @@
 ---
-title: Optional Parameters
+title: Optional parameters
 ---
 
 Congratulations, you've gone through the whole advanced Svelte tutorial! Now let's get to the final chapter - the advanced SvelteKit tutorial. We'll start with optional route parameters.
