@@ -1,5 +1,5 @@
 ---
-title: Loading Data on the Server
+title: Loading data on the server
 ---
 
 We have seen how to load data for pages and layouts through `load` functions in `+page.js` and `+layout.js`. These functions run on both the server and the client. This has some advantages but also some drawbacks, for example you can't directly query your database, you have to use `fetch`.

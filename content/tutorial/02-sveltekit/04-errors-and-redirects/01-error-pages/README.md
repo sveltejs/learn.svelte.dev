@@ -1,5 +1,5 @@
 ---
-title: Error Pages
+title: Error pages
 ---
 
 If something goes wrong during executing the `load` functions for a page, we can "catch" these errors with `+error.svelte` pages.

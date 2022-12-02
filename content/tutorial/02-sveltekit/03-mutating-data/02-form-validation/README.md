@@ -1,5 +1,5 @@
 ---
-title: Form Validation
+title: Form validation
 ---
 
 In the previous section we created a form and redirected the user without even checking the credentials - a rather insecure application we built there. Let's change that by adding some validation!

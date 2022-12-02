@@ -1,5 +1,5 @@
 ---
-title: Named Form Actions
+title: Named form actions
 ---
 
 Some pages have more than one `<form>`. That's why SvelteKit supports named form actions.

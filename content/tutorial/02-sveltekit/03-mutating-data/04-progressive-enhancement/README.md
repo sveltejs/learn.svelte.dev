@@ -1,5 +1,5 @@
 ---
-title: Progressive Enhancement
+title: Progressive enhancement
 ---
 
 So far, the `<form>` we have built works completely without JavaScript - which is great! If we have JavaScript enabled though ([which may be less often than you think](https://kryogenix.org/code/browser/everyonehasjs.html)), we can provide a better user experience by not reloading the whole page, showing loading animations, and more.
