@@ -1,5 +1,5 @@
 ---
-title: Rest Parameters
+title: Rest parameters
 ---
 
 The number of route segments might be unknown sometimes. Other times, you might want to have a catch-all route for everything that wasn't already matched to another route. For these use cases, use rest parameters.
