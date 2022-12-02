@@ -1,5 +1,5 @@
 ---
-title: Server Side Rendering
+title: Server-side rendering
 ---
 
 The `ssr` option controls whether or not a page is rendered on the server.
