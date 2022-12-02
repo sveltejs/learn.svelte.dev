@@ -1,5 +1,5 @@
 ---
-title: Route Parameters
+title: Route parameters
 ---
 
 Many URLs are static, but sometimes it's useful to make them dynamic at certain parts of the URL. This is where route parameters come in.
