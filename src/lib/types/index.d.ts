@@ -82,7 +82,7 @@ export interface PartStub {
 
 export interface FileTreeContext {
 	select: (file: FileStub) => void;
-	add: (stubs: Stub[]) => Promise<void>;
+	add: (name: string, type: 'file' | 'directory') => Promise<void>;
 	edit: (stub: Stub, name: string) => Promise<void>;
 	remove: (stub: Stub) => Promise<void>;
 	selected: Writable<FileStub | null>;
