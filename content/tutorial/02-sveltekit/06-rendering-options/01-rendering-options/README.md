@@ -1,5 +1,5 @@
 ---
-title: Rendering Options Basics
+title: Basics
 ---
 
 SvelteKit lets you customize when and how pages are rendered.
