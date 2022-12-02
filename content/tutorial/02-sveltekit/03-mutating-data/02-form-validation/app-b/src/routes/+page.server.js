@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect, invalid } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ request }) => {
