@@ -1,5 +1,5 @@
 ---
-title: Layout Groups
+title: Layout groups
 ---
 
 Sections of your app often share a common UI. To not repeat that code, we can use layouts. These form a hierarchy, a page inherits all layouts above it. Sometimes it's necessary to break out of this hierarchy. For this, we can use layout groups.
