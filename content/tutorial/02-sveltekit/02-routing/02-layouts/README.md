@@ -2,7 +2,7 @@
 title: Layouts
 ---
 
-Sections of your app often share a common UI. To not repeat that code, we can use layouts.
+Different routes of your app will often share common UI. Instead of repeating it in each `+page.svelte` component, we can use a `+layout.svelte` component that applies to all routes in the same directory.
 
 In this app we have two routes — `src/routes/+page.svelte`, and `src/routes/about/+page.svelte`. Both contain the same header which enables us to navigate around.
 
