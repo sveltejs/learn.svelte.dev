@@ -14,7 +14,7 @@ src/routes/
 └ +page.svelte
 ```
 
-Then remove the duplicated content from the `+page.svelte` files and add it to `+layout.svelte` instead:
+...and move the duplicated content from the `+page.svelte` files into the new `+layout.svelte` file. The `<slot />` element is where the page content will be rendered:
 
 ```svelte
 +++<nav>
