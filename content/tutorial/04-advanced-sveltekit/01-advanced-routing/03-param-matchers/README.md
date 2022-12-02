@@ -1,5 +1,5 @@
 ---
-title: Param Matchers
+title: Param matchers
 ---
 
 A route like `src/routes/archive/[page]` would match `/archive/3`, but it would also match `/archive/potato`. We don't want that. You can ensure that route parameters are well-formed by adding a matcher — which takes the parameter string (`"3"` or `"potato"`) and returns `true` if it is valid.
