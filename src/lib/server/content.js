@@ -11,7 +11,8 @@ const text_files = new Set([
 	'.css',
 	'.svg',
 	'.html',
-	'.md'
+	'.md',
+	'.env'
 ]);
 
 const excluded = new Set(['.DS_Store', '.gitkeep', '.svelte-kit', 'package-lock.json']);
@@ -211,7 +212,7 @@ export function walk(cwd, options = {}) {
 
 				walk_dir(name + '/', depth + 1);
 			} else {
-				const text = text_files.has(path.extname(name));
+				const text = text_files.has(path.extname(name) || path.basename(name));
 				const contents = fs.readFileSync(resolved, text ? 'utf-8' : 'base64');
 
 				result[name] = {

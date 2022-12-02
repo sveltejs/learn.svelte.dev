@@ -6,6 +6,7 @@
 .env
 .env.*
 !.env.example
+!/content/tutorial/04-advanced-sveltekit/02-environment-variables/**/.env
 .apps
 .vercel
 /content/tutorial/common/.svelte-kit
