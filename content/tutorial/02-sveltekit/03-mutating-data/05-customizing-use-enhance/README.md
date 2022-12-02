@@ -1,5 +1,5 @@
 ---
-title: Customizing `use:enhance`
+title: Customizing use:enhance
 ---
 
 In the last chapter we have seen how to progressively enhance our `<form>` by adding the `enhance` action to it, which enables the native form behavior just without the full page reload. We can further customize the submission experience by adding a custom callback to the `enhance` action. Let's do that by disabling the buttons while an action is in progress:
