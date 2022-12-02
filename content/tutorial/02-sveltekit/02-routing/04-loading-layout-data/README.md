@@ -1,5 +1,5 @@
 ---
-title: Loading Layout Data
+title: Loading layout data
 ---
 
 Layouts can provide common UI across pages. They, too, can make use of `load` functions.
