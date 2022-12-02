@@ -2,7 +2,7 @@
 title: Prerendering
 ---
 
-Prerendering means computing the contents of a page at build time and saving the HTML for display. You can opt in to prerendering on a per-page-basis or even the whole app when using SvelteKit.
+Prerendering means computing the contents of a page at build time and saving the HTML. You can opt in to prerendering for a single page, the entire app, or anything in between.
 
 This approach has the same benefits as traditional server-rendered pages, but avoids recomputing the page for each visitor and so scales nearly for free as the number of visitors increases. The tradeoff is that the build process is more expensive and prerendered content can only be updated by building and deploying a new version of the application.
 
