@@ -4,11 +4,7 @@ title: Layouts
 
 Different routes of your app will often share common UI. Instead of repeating it in each `+page.svelte` component, we can use a `+layout.svelte` component that applies to all routes in the same directory.
 
-In this app we have two routes — `src/routes/+page.svelte`, and `src/routes/about/+page.svelte`. Both contain the same header which enables us to navigate around.
-
-We can deduplicate this code by moving the common UI into a `+layout.svelte` file. All pages in the same folder or below this file will share that UI. The layout itself needs a `<slot />` at minimum to define where the content is projected.
-
-Let's move the duplicate content from `src/routes/+page.svelte` and `src/routes/about/+page.svelte` into `src/routes/+layout.svelte`. First, create that file:
+In this app we have two routes, `src/routes/+page.svelte` and `src/routes/about/+page.svelte`, that contain the same navigation UI. Let's create a new file, `src/routes/+layout.svelte`...
 
 ```diff
 src/routes/
