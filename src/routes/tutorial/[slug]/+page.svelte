@@ -105,21 +105,9 @@
 		},
 
 		edit: async (to_rename, new_name) => {
-			const illegal_rename =
-				!editing_constraints.remove.some((r) => to_rename.name === r) ||
-				!editing_constraints.create.some((c) => new_name === c);
-			if (illegal_rename) {
-				modal_text =
-					'Only the following files and folders are allowed to be renamed in this tutorial chapter:\n' +
-					editing_constraints.remove.join('\n') +
-					'\n\nThey can only be renamed to the following:\n' +
-					editing_constraints.create.join('\n');
-				return;
-			}
-
 			/** @type {Array<[import('$lib/types').Stub, import('$lib/types').Stub]>}*/
 			const changed = [];
-			current_stubs = current_stubs.map((s) => {
+			const updated_stubs = current_stubs.map((s) => {
 				if (!s.name.startsWith(to_rename.name)) {
 					return s;
 				}
@@ -135,6 +123,19 @@
 				return new_stub;
 			});
 
+			const illegal_rename =
+				!editing_constraints.remove.some((r) => to_rename.name === r) ||
+				changed.some(([, s]) => !editing_constraints.create.some((c) => s.name === c));
+			if (illegal_rename) {
+				modal_text =
+					'Only the following files and folders are allowed to be renamed in this tutorial chapter:\n' +
+					editing_constraints.remove.join('\n') +
+					'\n\nThey can only be renamed to the following:\n' +
+					editing_constraints.create.join('\n');
+				return;
+			}
+
+			current_stubs = updated_stubs;
 			await load_files(current_stubs);
 
 			if (to_rename.type === 'file') {
