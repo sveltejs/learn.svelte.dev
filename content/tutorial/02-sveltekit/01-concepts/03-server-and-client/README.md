@@ -10,4 +10,4 @@ A SvelteKit app can be thought of as two distinct entities working in tandem —
 
 SvelteKit makes the two communicate with each other seamlessly. On the initial page load, the server renders the HTML, meaning content is visible as quickly as possible. The client then takes over in a process called 'hydration', so that subsequent navigations happen without full page reloads. It will request additional code and data from the server as needed.
 
-> You can adjust this behavior to your liking if you want - SvelteKit is very versatile!
+> You can [adjust this behavior](https://kit.svelte.dev/docs/page-options) as needed. SvelteKit is very versatile!
