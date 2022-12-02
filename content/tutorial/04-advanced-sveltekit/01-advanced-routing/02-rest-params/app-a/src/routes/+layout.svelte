@@ -5,3 +5,5 @@
 	Go to a <a href="/non-existing">non-existing</a>
 	page.
 </p>
+
+<slot />

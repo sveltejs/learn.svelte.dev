@@ -4,7 +4,7 @@ title: Error Pages
 
 If something goes wrong during executing the `load` functions for a page, we can "catch" these errors with `+error.svelte` pages.
 
-To showcase this, our `+page.js` `load` function throws an error. That error will bubble up the file tree until it finds a `+error.svelte` or falls back to a generic error page if there's none - which is what happens right now.
+To showcase this, the `src/routes/about/+page.js` `load` function throws an error. That error will bubble up the file tree until it finds a `+error.svelte` or falls back to a generic error page if there's none - which is what happens right now. Navigate to the about page to see it in action
 
 Let's place a `+error.svelte` file right next to the erroring `+page.js`:
 

@@ -15,4 +15,4 @@ export function load() {
 }
 ```
 
-In contrast to unexpected error, the message of `error`s you throw yourself this way do _not_ call the `handleError` hook and are propagated to `$page.error` directly.
+In contrast to unexpected errors, the message of `error`s you throw yourself do _not_ call the `handleError` hook and are propagated to `$page.error` directly.

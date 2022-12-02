@@ -4,11 +4,11 @@ title: Param Matchers
 
 A route like `src/routes/archive/[page]` would match `/archive/3`, but it would also match `/archive/potato`. We don't want that. You can ensure that route parameters are well-formed by adding a matcher — which takes the parameter string (`"3"` or `"potato"`) and returns `true` if it is valid.
 
-First add a matcher to your `params` directory:
+First add a `params` directory (all matchers go in there) with a matcher in it:
 
 ```diff
 src/
-├ params/
++├ params/
 +│ └ integer.js
 ├ routes/
 │ ├ archive/
@@ -40,6 +40,6 @@ src/
 │ └ +page.svelte
 ```
 
-If the pathname doesn't match, SvelteKit will try to match other routes (using the sort order specified below), before eventually returning a 404.
+Now, whenever someone navigates to that page, the validator will try to match the `[page]` parameter to see if it's valid. If the pathname doesn't match, SvelteKit will try to match other routes (using the sort order specified below), before eventually returning a 404.
 
 > Matchers run both on the server and in the browser.

@@ -4,7 +4,7 @@ title: Redirects
 
 Besides errors there's one more thing you can `throw`, and that's `redirect`s.
 
-Let's use that navigate away from our login page when we're logged in.
+Let's use that to navigate away from our login page when we're logged in.
 
 ```js
 // login/+page.js

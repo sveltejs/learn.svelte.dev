@@ -6,13 +6,24 @@ The number of route segments might be unknown sometimes. Other times, you might 
 
 Rest parameters look like an array spread: `[...rest]`. The variable name inside - in this case `rest` - is available to the `load` function through the `params` object and also through the `$page.params` store.
 
-Let's use this rest parameter to implement a catch-all route to redirect to our nice-look error page instead. Add the following to `[...rest]/+page.js`:
+Let's use this rest parameter to implement a catch-all route to redirect to our better-looking error page instead. First add `[...rest]/+page.js` to `src/routes`:
+
+```diff
+src/routes/
++├ [...rest]/
++│ └ +page.svelte
+├ +error.svelte
+├ +layout.svelte
+└ +page.svelte
+```
+
+Then add a `load` function to it which throws a 404:
 
 ```js
 +++import { error } from '@sveltejs/kit';
 
-export function load() {
-	throw error(404, 'Page not found');
+export function load({ url }) {
+	throw error(404, `Page ${url.pathname} not found`);
 }+++
 ```
 

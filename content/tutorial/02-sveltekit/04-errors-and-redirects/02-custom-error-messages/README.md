@@ -12,7 +12,7 @@ For this, SvelteKit provides you with `$page.error` and `$page.status`, which co
 </script>+++
 <h2>{$page.status}</h2>
 <p>On no, something went wrong!</p>
-+++<p>{$page.error.message}</p>
++++<p>{$page.error.message}</p>+++
 ```
 
 That's better, but `$page.error.message` always contains "Internal Error" - how so? This is because SvelteKit plays it safe and prevents you from accidentally showing sensitive information as part of the error message.

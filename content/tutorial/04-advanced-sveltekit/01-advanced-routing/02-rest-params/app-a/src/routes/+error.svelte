@@ -1,3 +1,7 @@
-<h1>404</h1>
+<script>
+	import { page } from '$app/stores';
+</script>
 
-<p>Page not found</p>
+<h1>{$page.status}</h1>
+
+<p>{$page.error.message}</p>
