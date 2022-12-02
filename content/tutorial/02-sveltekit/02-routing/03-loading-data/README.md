@@ -1,5 +1,5 @@
 ---
-title: Loading Data
+title: Loading data
 ---
 
 So far, we have seen how to create pages and layouts with static UI data. Most of your apps need to load some kind of data. You could do this with a regular `fetch` inside `onMount`. However, that doesn't work with server-side-rendering or prerendering, and you'd end up with half-finished pages that load data only after they are rendered.
