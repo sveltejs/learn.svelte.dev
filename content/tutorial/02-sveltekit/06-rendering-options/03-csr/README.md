@@ -1,5 +1,5 @@
 ---
-title: Client Side Rendering
+title: Client-side rendering
 ---
 
 The `csr` option controls whether or not a page is rendered on the client.
