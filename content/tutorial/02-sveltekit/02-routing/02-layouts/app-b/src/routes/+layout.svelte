@@ -8,7 +8,7 @@
 <style>
 	nav {
 		display: flex;
-		justify-content: space-between;
+		gap: 1em;
 		padding: 1em;
 		background-color: #eee;
 	}
