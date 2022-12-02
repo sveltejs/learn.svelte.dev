@@ -8,16 +8,16 @@ In this example we have three pages — the home page, the about page, and a pri
 
 A group is denoted by its surrounding parantheses. A group is ignored when creating the url: `(marketing)/price/+page.svelte` means that the URL to access this page is `/price`.
 
-Create a `(marketing)` folder inside `routes` and move the home and pricing page inside. Last, create a new `+layout.svelte` inside `(marketing)`:
+Create a `(marketing)` folder inside `routes` and move the home and pricing page inside (implementation hint: it's easiest if you use the rename feature). Last, create a new `+layout.svelte` inside `(marketing)`:
 
 ```diff
 src/routes/
 +├ (marketing)
-│ ├ about/
+│ ├ pricing/
 │ │ └ +page.svelte
 +│ ├ +layout.svelte
 +│ └ +page.svelte
-├ pricing/
+├ about/
 │ └ +page.svelte
 ├ +layout.svelte
 -└ +page.svelte
