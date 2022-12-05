@@ -117,9 +117,39 @@
 </script>
 
 {#if state !== 'edit_folder'}
-	<button data-folder class:expanded on:click={toggle} on:contextmenu|preventDefault={open_menu}
-		>{name}</button
-	>
+	<div class="folder-row">
+		<div class="folder-highlight" />
+		<button data-folder class:expanded on:click={toggle} on:contextmenu|preventDefault={open_menu}
+			>{name}</button
+		>
+		<div class="folder-actions">
+			{#if can_create}
+				<button aria-label="New file" class="icon file-new" on:click={() => (state = 'add_file')} />
+				<button
+					aria-label="New folder"
+					class="icon folder-new"
+					on:click={() => (state = 'add_folder')}
+				/>
+			{/if}
+			{#if can_create && can_remove}
+				<button
+					aria-label="Rename"
+					class="icon rename"
+					on:click={() => {
+						new_name = name;
+						state = 'edit_folder';
+					}}
+				/>
+			{/if}
+			{#if can_remove}
+				<button
+					aria-label="Delete"
+					class="icon delete"
+					on:click={() => remove(/** @type {import('$lib/types').DirectoryStub} */ (file))}
+				/>
+			{/if}
+		</div>
+	</div>
 {/if}
 
 {#if state === 'edit_folder'}
@@ -205,5 +235,57 @@
 
 	li {
 		padding: 0;
+	}
+
+	.folder-row {
+		position: relative;
+		height: 2.5rem;
+		z-index: 1;
+	}
+
+	.folder-actions {
+		position: absolute;
+		right: 0;
+		top: 0;
+		display: none;
+		background-color: var(--back-light);
+	}
+	.folder-row:hover .folder-actions {
+		display: block;
+	}
+
+	.folder-highlight {
+		display: none;
+		position: absolute;
+		right: -10rem;
+		left: -20rem;
+		height: 2.5rem;
+		background: var(--back-light);
+		z-index: -1;
+	}
+	.folder-row:hover .folder-highlight {
+		display: block;
+	}
+
+	.icon {
+		height: 2.5rem;
+		width: 1.5rem;
+		padding: 0;
+	}
+
+	.rename {
+		background-image: url(./file-edit.svg);
+	}
+
+	.file-new {
+		background-image: url(./plus.svg);
+	}
+
+	.folder-new {
+		background-image: url(./folder-new.svg);
+	}
+
+	.delete {
+		background-image: url(./delete.svg);
 	}
 </style>
