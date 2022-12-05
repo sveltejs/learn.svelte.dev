@@ -1,32 +1,38 @@
 ---
-title: Endpoints
+title: API routes
 ---
 
-So far, we have loaded data directly related to a page. Besides that, SvelteKit also provides you a way to retrieve and manipulate data through endpoints.
+As well as pages, we can create _API routes_ by adding a `+server.js` file that exports functions corresponding to HTTP methods: `GET`, `PUT`, `POST`, `PATCH` and `DELETE`.
 
-An endpoint is created by putting a `+server.js` in a directory. `src/routes/api/user/+server.js` becomes an endpoint accessible at `api/user`. The endpoint can provide methods corresponding to the http verbs you already may know from previous experience: `GET`, `PUT`, `POST`, `PATCH` and `DELETE`.
-
-Create a simple endpoint at `api/user/+server.js` with a `GET` method from which you return a JSON response using the standard `Response` object:
+This app fetches data from a `/roll` API route when you click the button. Create that route by adding a `src/routes/roll/+server.js` file:
 
 ```js
-// api/user/+server.js
+/// file: src/routes/roll/+server.js
+/** @type {import('./$types').RequestHandler} */
 export function GET() {
-	return new Response(JSON.stringify({ name: 'John Doe' }), {
-		headers: { 'content-type': 'application/json' }
+	const number = Math.ceil(Math.random() * 6);
+
+	return new Response(number, {
+		'Content-Type': 'application/json'
 	});
 }
 ```
 
-Since returning JSON is probably what you want most of the time, SvelteKit provides you with a helper function to save you some boilerplate:
+Clicking the button now works.
+
+Request handlers must return a [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response/Response) object. Since it's common to return JSON from an API route, SvelteKit provides a convenience function for generating these responses, complete with the appropriate `Content-Type` header:
 
 ```js
-// api/user/+server.js
+/// file: src/routes/roll/+server.js
 +++import { json } from '@sveltejs/kit';+++
 
+/** @type {import('./$types').RequestHandler} */
 export function GET() {
-	---return new Response(JSON.stringify({ name: 'John Doe' }), {
-		headers: { 'content-type': 'application/json' }
+	const number = Math.ceil(Math.random() * 6);
+
+---	return new Response(number, {
+		'Content-Type': 'application/json'
 	});---
-    +++return json({ name: 'John Doe' });+++
++++	return json(number);+++
 }
 ```
