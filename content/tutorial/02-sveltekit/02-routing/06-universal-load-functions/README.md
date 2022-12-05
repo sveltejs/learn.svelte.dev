@@ -1,36 +1,20 @@
 ---
-title: Loading data on the server
+title: Universal load functions
 ---
 
-We have seen how to load data for pages and layouts through `load` functions in `+page.js` and `+layout.js`. These functions run on both the server and the client. This has some advantages but also some drawbacks, for example you can't directly query your database, you have to use `fetch`.
+> TODO this doesn't work, because the body isn't completely buffered before `request.json()` fulfils. Bug in webcontainer?
 
-Luckily, SvelteKit provides a way to run a `load` _only_ on the server so you can access all your server-related data directly, by placing it inside `+page.server.js`. We call it a "server-only `load` function". The return type of the `load` function needs to be an object at the top level, and it needs to be serializable with [`devalue`](https://www.npmjs.com/package/devalue), which means JSON-objects and some JavaScript objects like `Date`s are allowed, but not custom classes for example. If we return a promise, it's awaited. The result is passed to the `data` prop inside `+page.svelte`, so we can access it through `export let data`.
+In the previous two exercises we loaded data from the server using `+page.server.js` and `+layout.server.js` files. This is very convenient if you need to do things like getting data directly from a database, or reading cookies.
 
-Create a `+page.server.js` file next to `+page.svelte`:
+Sometimes it doesn't make sense to load data from the server when doing a client-side navigation. For example:
 
-```diff
-src/routes/
-+  +page.server.js
-  +page.svelte
-```
+- You're loading data from an external API
+- You want to use in-memory data if it's available
+- You want to delay navigation until an image has been preloaded, to avoid pop-in
+- You need to return something from `load` that can't be serialized (SvelteKit uses [devalue](https://github.com/Rich-Harris/devalue) to turn data into JSON), such as a component or a store
 
-Then make a call to our fake database inside `src/routes/+page.server.js` and show the result in `src/routes/+page.svelte`:
+In this example, we're loading data from a [Hacker News API](https://api.hnpwa.com/v0/) in `src/routes/+page.server.js` and `src/routes/item/[id]/+page.server.js`. That means that every time we navigate from one page to another, we're making a request to our server, which in turn makes a request to the API. That's an unnecessary detour that slows requests down and increases load on our server.
 
-```js
-import { db } from './fake-db.js';
+Let's cut out the middleman: rename both `+page.server.js` files to `+page.js`.
 
-+++export async function load() {
-	const greeting = await db.greet();
-	return { greeting };
-}+++
-```
-
-```svelte
-+++<script>
-	export let data
-</script>
-+++
-<p>---TODO---+++{data.greeting}+++</p>
-```
-
-> Noticed how we can place `fake-db.js` right next to our page and layout files without risking to accidentally creating another route? This is one of several advantages of the "`+X` creates a route-related file"-convention
+Now, the `load` functions will run on the server during server-side rendering, but will run in the browser for subsequent client-side navigations. The trade-off is that we no longer have access to things that need a server (databases, cookies, private environment variables and so on), but in this case we don't need those things. Read the [documentation](https://kit.svelte.dev/docs/load#shared-vs-server) to learn more about the distinction between server `load` functions and universal `load` functions.
