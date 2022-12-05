@@ -2,36 +2,37 @@
 title: Loading layout data
 ---
 
-Layouts can provide common UI across pages. They, too, can make use of `load` functions.
+> TODO this fails for some reason — need to investigate. Also, need to implement file renaming/deleting
 
-Providing this data is similar to the `load` function in `+page.js`, only that we place it inside `+layout.js` - notice the symmetry?
+Just as `+layout.svelte` files create UI for every child route, `+layout.server.js` files load data for every child route.
 
-This `load` function works the same as the `load` function in `+page.js`.
+Suppose we'd like to add a 'more posts' sidebar to our blog post page. We _could_ return `summaries` from the `load` function in `src/blog/[slug]/+page.server.js`, like we do in `src/blog/+page.server.js`, but that would be repetitive.
 
-Let's make the same call inside `src/routes/+layout.js` as we did in the previous chapter in `src/routes/+page.js`. First, create the `+layout.js` file:
+Instead, let's rename `src/blog/+page.server.js` to `src/blog/+layout.server.js`. Notice that the `/blog` route continues to work — `data.summaries` is still available to the page.
 
-```diff
-src/routes/
-+  +layout.js
-  +layout.svelte
-  +page.svelte
-```
-
-Then add the `load` function, calling the API inside, and passing the result to `+layout.svelte` for display:
-
-```js
-+++export async function load({ fetch }) {
-	const greeting = await fetch('/api').then((r) => r.text());
-	return { greeting };
-}+++
-```
+Now, create a layout for the post page:
 
 ```svelte
-+++<script>
+/// file: src/routes/blog/[slug]/+layout.svelte
+<script>
+	/** @type {import('./$types').PageData} */
 	export let data;
 </script>
-+++
-<h1>---TODO---+++{data.greeting}+++</h1>
+
+<div class="layout">
+	<main>
+		<slot />
+	</main>
+
+	<aside>
+		<h2>More posts</h2>
+		<ul>
+			{#each data.summaries as { slug, title }}
+				<li><a href={slug === data.post.slug ? '' : `/blog/${slug}`}>{title}</a></li>
+			{/each}
+		</ul>
+	</aside>
+</div>
 ```
 
-> The `load` functions in `+page.js` and `+layout.js` files will be called in parallel, so your UI renders faster
+When we navigate from one post to another, we only need to load the data for the post itself — the layout data is still valid. See the documentation on [invalidation](https://kit.svelte.dev/docs/load#invalidation) to learn more.
