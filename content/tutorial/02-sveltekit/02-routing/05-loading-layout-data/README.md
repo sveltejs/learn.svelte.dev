@@ -35,6 +35,18 @@ Now, create a layout for the post page:
 		</ul>
 	</aside>
 </div>
+
+<style>
+	@media (min-width: 640px) {
+		.layout {
+			display: grid;
+			gap: 2em;
+			grid-template-columns: 1fr 16em;
+		}
+	}
+</style>
 ```
+
+The layout (and the page below it) inherits `data.summaries` from the parent `+layout.server.js`.
 
 When we navigate from one post to another, we only need to load the data for the post itself — the layout data is still valid. See the documentation on [invalidation](https://kit.svelte.dev/docs/load#invalidation) to learn more.
