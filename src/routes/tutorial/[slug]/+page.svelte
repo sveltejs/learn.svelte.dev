@@ -60,11 +60,19 @@
 			remove: []
 		};
 		for (const key in data.section.b) {
-			if (key.endsWith('__delete')) {
-				const to_delete = key.slice(0, -'/__delete'.length);
-				editing_constraints.remove.push(to_delete);
+			const stub = data.section.b[key];
+
+			if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
+				// remove file
+				editing_constraints.remove.push(key);
+				delete b[key];
+			} else if (key.endsWith('/__delete')) {
+				// remove directory
+				const parent = key.slice(0, key.lastIndexOf('/'));
+				editing_constraints.remove.push(parent);
+				delete b[parent];
 				for (const k in b) {
-					if (k.startsWith(to_delete)) {
+					if (k.startsWith(parent + '/')) {
 						delete b[k];
 					}
 				}
