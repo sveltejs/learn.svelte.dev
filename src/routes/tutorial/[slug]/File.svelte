@@ -72,13 +72,31 @@
 </script>
 
 {#if !editing}
-	<button
-		class:selected={file === $selected}
-		on:click={() => select(file)}
-		on:contextmenu|preventDefault={open_menu}
-	>
-		{file.basename}
-	</button>
+	<div class="file-row">
+		<div class="file-highlight" />
+		<button
+			class:selected={file === $selected}
+			on:click={() => select(file)}
+			on:contextmenu|preventDefault={open_menu}
+		>
+			{file.basename}
+		</button>
+		<div class="file-actions">
+			{#if can_create && can_remove}
+				<button
+					aria-label="Rename"
+					class="icon rename"
+					on:click={() => {
+						new_name = file.basename;
+						editing = true;
+					}}
+				/>
+			{/if}
+			{#if can_remove}
+				<button aria-label="Delete" class="icon delete" on:click={() => remove(file)} />
+			{/if}
+		</div>
+	</div>
 {:else}
 	<!-- svelte-ignore a11y-autofocus -->
 	<input type="text" autofocus bind:value={new_name} on:blur={done} on:keyup={done} />
@@ -117,5 +135,52 @@
 	button:focus-visible {
 		outline: none;
 		border: 2px solid var(--flash);
+	}
+
+	.file-row {
+		position: relative;
+		height: 2.5rem;
+		z-index: 1;
+	}
+
+	.file-actions {
+		position: absolute;
+		right: 0;
+		top: 0;
+		display: none;
+		background-color: var(--back-light);
+	}
+	.file-row:hover .file-actions {
+		display: block;
+	}
+
+	.file-highlight {
+		display: none;
+		position: absolute;
+		right: -10rem;
+		left: -20rem;
+		height: 2.5rem;
+		background: var(--back-light);
+		z-index: -1;
+	}
+	.file-row:hover .file-highlight {
+		display: block;
+	}
+
+	.icon {
+		margin-top: 0.2rem;
+		height: 2.5rem;
+		width: 1.5rem;
+		padding: 0;
+		background-size: 1.4rem 1.4rem;
+		background-repeat: no-repeat;
+	}
+
+	.rename {
+		background-image: url(./file-edit.svg);
+	}
+
+	.delete {
+		background-image: url(./delete.svg);
 	}
 </style>
