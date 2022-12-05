@@ -150,13 +150,30 @@
 		background-size: 100% 100%;
 	}
 
+	.text :global(.code-block) :global(h5) {
+		display: block;
+		width: 100%;
+		font-family: var(--font-mono);
+		font-size: 1.2rem;
+		font-weight: 400;
+		padding: 1rem 1rem 0.8rem 1rem;
+		margin: 0 0 0 0;
+		color: var(--sk-text-2);
+		background: var(--back-api);
+		box-shadow: 0 1px 6px hsla(205.7, 63.6%, 30.8%, 0.06);
+		border-radius: var(--border-r) var(--border-r) 0 0;
+	}
+
 	.text :global(pre) {
 		background: white;
 		padding: 1rem 1.5rem;
 		margin: 0 0 1.6rem 0;
 		line-height: 1.3;
-		border-radius: 0.5rem;
 		box-shadow: inset 1px 1px 3px hsl(206deg 20% 93%);
+	}
+
+	.text :global(.code-block) :global(h5) + :global(pre) {
+		border-radius: 0 0 var(--border-r) var(--border-r);
 	}
 
 	.text :global(pre) :global(code) {

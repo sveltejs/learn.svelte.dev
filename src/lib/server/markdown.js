@@ -115,12 +115,10 @@ const default_renderer = {
 				return highlight_spans(content, 'highlight');
 			});
 	}
-}
+};
 
 marked.use({
-	renderer: {
-
-	}
+	renderer: {}
 });
 
 /**
