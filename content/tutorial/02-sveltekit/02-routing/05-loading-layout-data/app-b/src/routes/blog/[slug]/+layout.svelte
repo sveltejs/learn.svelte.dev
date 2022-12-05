@@ -1,6 +1,8 @@
 <script>
 	/** @type {import('./$types').PageData} */
 	export let data;
+
+	console.log(data);
 </script>
 
 <div class="layout">
@@ -13,13 +15,7 @@
 		<ul>
 			{#each data.summaries as { slug, title }}
 				<li>
-					<a
-						href={slug === data.post.slug
-							? ''
-							: `/blog/${slug}`}
-					>
-						{title}
-					</a>
+					<a href="/blog/{slug}">{title}</a>
 				</li>
 			{/each}
 		</ul>

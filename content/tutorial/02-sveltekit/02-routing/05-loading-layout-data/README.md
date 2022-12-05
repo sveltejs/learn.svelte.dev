@@ -2,7 +2,7 @@
 title: Loading layout data
 ---
 
-> TODO this fails for some reason — need to investigate. Also, need to implement file renaming/deleting
+> TODO need to implement file renaming/deleting
 
 Just as `+layout.svelte` files create UI for every child route, `+layout.server.js` files load data for every child route.
 
