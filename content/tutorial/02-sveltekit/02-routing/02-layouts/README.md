@@ -34,4 +34,4 @@ src/routes/
 </style>+++
 ```
 
-> Layouts can also be nested
+A `+layout.svelte` file applies to every child route, including the sibling `+page.svelte` (if it exists). You can nested layouts to arbitrary depth.
