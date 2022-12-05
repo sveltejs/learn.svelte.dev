@@ -28,7 +28,9 @@ Now, create a layout for the post page:
 		<h2>More posts</h2>
 		<ul>
 			{#each data.summaries as { slug, title }}
-				<li><a href={slug === data.post.slug ? '' : `/blog/${slug}`}>{title}</a></li>
+				<li>
+					<a href="/blog/{slug}">{title}</a>
+				</li>
 			{/each}
 		</ul>
 	</aside>
