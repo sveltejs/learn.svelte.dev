@@ -1,37 +1,65 @@
 <script>
-	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
+
+	// we don't want to use <svelte:window bind:online> here, because we only care about the online
+	// state when the page first loads
+	let online = typeof navigator !== 'undefined' ? navigator.onLine : true;
 </script>
 
-<div class="error">
-	<div class="content">
-		<h1>{$page.status}</h1>
+<svelte:head>
+	<title>{$page.status}</title>
+</svelte:head>
 
-		{#if dev && $page.error}
-			<pre>{$page.error.stack}</pre>
+<div class="container">
+	{#if $page.status === 404}
+		<h1>Not found!</h1>
+	{:else if online}
+		<h1>Yikes!</h1>
+
+		{#if $page.error.message}
+			<p class="error">{$page.status}: {$page.error.message}</p>
 		{/if}
-	</div>
+
+		<p>Please try reloading the page.</p>
+
+		<p>
+			If the error persists, please drop by <a href="https://svelte.dev/chat">Discord chatroom</a>
+			and let us know, or raise an issue on
+			<a href="https://github.com/sveltejs/svelte">GitHub</a>. Thanks!
+		</p>
+	{:else}
+		<h1>It looks like you're offline</h1>
+
+		<p>Reload the page once you've found the internet.</p>
+	{/if}
 </div>
 
 <style>
-	.error {
-		display: flex;
-		width: 100%;
-		height: 100%;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 2rem;
+	.container {
+		padding: 4rem;
+	}
+
+	h1,
+	p {
+		margin: 0 auto;
 	}
 
 	h1 {
-		font-weight: 400;
-		font-size: 8rem;
-		text-align: center;
+		font-size: 2.8em;
+		font-weight: 300;
+		margin: 0;
+		margin-bottom: 0.5em;
 	}
 
-	pre {
-		/* max-width: 40em; */
-		font-size: 1.4rem;
+	p {
+		margin: 1em auto;
+	}
+
+	.error {
+		background-color: #da106e;
+		color: white;
+		padding: 12px 16px;
+		font: 600 16px/1.7 var(--sk-font);
+		border-radius: 2px;
 	}
 </style>
