@@ -38,19 +38,23 @@
 	.container {
 		padding: 4rem;
 	}
+
 	h1,
 	p {
 		margin: 0 auto;
 	}
+
 	h1 {
 		font-size: 2.8em;
 		font-weight: 300;
 		margin: 0;
 		margin-bottom: 0.5em;
 	}
+
 	p {
 		margin: 1em auto;
 	}
+
 	.error {
 		background-color: #da106e;
 		color: white;
