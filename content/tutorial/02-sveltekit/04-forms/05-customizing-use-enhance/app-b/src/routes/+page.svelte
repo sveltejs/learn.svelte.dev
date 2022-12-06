@@ -1,38 +1,58 @@
 <script>
+	import { fly, slide } from 'svelte/transition';
 	import { enhance } from '$app/forms';
+
+	export let data;
 	export let form;
-	let submitting = false;
+
+	let creating = false;
+	let deleting = [];
 </script>
 
-<p>Please log in</p>
+<h1>Todos</h1>
+
+{#if form?.error}
+	<p class="error">{form.error}</p>
+{/if}
 
 <form
 	method="POST"
-	action="?/login"
+	action="?/create"
 	use:enhance={() => {
-		submitting = true;
+		creating = true;
+
 		return async ({ update }) => {
 			await update();
-			submitting = false;
+			creating = false;
 		};
 	}}
 >
 	<label>
-		Email
-		<input type="email" name="email" />
+		{creating? 'Saving...' : 'Add a todo'}
+		<input
+			disabled={creating}
+			name="description"
+			value={form?.description ?? ''}
+			required
+		/>
 	</label>
-	<label>
-		Password
-		<input type="password" name="password" />
-	</label>
-	{#if form?.message}
-		<span>{form?.message}</span>
-	{/if}
-	<button disabled={submitting}>Log in</button>
-	<button
-		disabled={submitting}
-		formAction="?/register"
-	>
-		Register
-	</button>
 </form>
+
+<ul>
+	{#each data.todos.filter((todo) => !deleting.includes(todo.id)) as todo (todo.id)}
+		<li class="todo" in:fly={{ y: 20 }} out:slide>
+			{todo.description}
+
+			<form
+				method="POST"
+				action="?/delete"
+				use:enhance={() => {
+					deleting = [...deleting, todo.id];
+				}}
+			>
+				<input type="hidden" name="id" value={todo.id} />
+				<button>Done!</button>
+			</form>
+		</li>
+	{/each}
+</ul>

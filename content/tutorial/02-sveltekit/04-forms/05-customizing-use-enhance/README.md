@@ -2,38 +2,87 @@
 title: Customizing use:enhance
 ---
 
-In the last chapter we have seen how to progressively enhance our `<form>` by adding the `enhance` action to it, which enables the native form behavior just without the full page reload. We can further customize the submission experience by adding a custom callback to the `enhance` action. Let's do that by disabling the buttons while an action is in progress:
+With `use:enhance`, we can go further than just emulating the browser's native behaviour. By providing a callback, we can add things like **pending states** and **optimistic UI**. Let's simulate a slow network by adding an artificial delay to our two actions:
+
+```js
+/// file: src/routes/+page.server.js
+export const actions = {
+	create: async ({ cookies, request }) => {
+		+++await new Promise((fulfil) => setTimeout(fulfil, 1000));+++
+		...
+	},
+
+	delete: async ({ cookies, request }) => {
+		+++await new Promise((fulfil) => setTimeout(fulfil, 1000));+++
+		...
+	}
+};
+```
+
+When we create or delete items, it now takes a full second before the UI updates, leaving the user wondering if they messed up somehow. To solve that, add some local state...
 
 ```svelte
+/// file: src/routes/+page.svelte
 <script>
+	import { fly, slide } from 'svelte/transition';
 	import { enhance } from '$app/forms';
-	export let form;
-	+++let submitting = false;+++
-</script>
 
-<form method="POST" action="?/login" use:enhance+++={() => {
-	submitting = true;
-	return async ({ update }) => {
-		await update();
-		submitting = false;
-	}
-}}+++>
+	export let data;
+	export let form;
+
++++	let creating = false;
+	let deleting = [];+++
+</script>
+```
+
+...and toggle `creating` inside the first `use:enhance`:
+
+```svelte
+<form
+	method="POST"
+	action="?/create"
++++	use:enhance={() => {
+		creating = true;
+
+		return async ({ update }) => {
+			await update();
+			creating = false;
+		};
+	}}+++
+>
 	<label>
-		Email
-		<input type="email" name="email" />
+		+++{creating? 'Saving...' : 'Add a todo'}+++
+		<input
+			+++disabled={creating}+++
+			name="description"
+			value={form?.description ?? ''}
+			required
+		/>
 	</label>
-	<label>
-		Password
-		<input type="password" name="password" />
-	</label>
-	{#if form?.message}
-		<span>{form?.message}</span>
-	{/if}
-	<button +++disabled={submitting}+++>Log in</button>
-	<button +++disabled={submitting}+++ formAction="?/register">Register</button>
 </form>
 ```
 
-`submitting = true` is set as soon as the user presses on of the buttons. The returned callback function is called as soon as the form submission was processed by the server and a response was returned. We call the `update` function to get the native browser behavior without the reloads (updating the `form` prop and so on) and set `submitting` to `false` afterwards.
+In the case of deletions, we don't really need to wait for the server to validate anything — we can just update the UI immediately:
 
-> `use:enhance` provides a range of properties which makes it very customizable. You can also abort submissions by calling a `cancel` function for example. Play around with it a little to see what's possible!
+```svelte
+<ul>
+	{#each +++data.todos.filter((todo) => !deleting.includes(todo.id))+++ as todo (todo.id)}
+		<li class="todo" in:fly={{ y: 20 }} out:slide>
+			{todo.description}
+
+			<form
+				method="POST"
+				action="?/delete"
++++				use:enhance={() => {
+					deleting = [...deleting, todo.id];
+				}}+++
+			>
+				<input type="hidden" name="id" value={todo.id} />
+				<button>Done!</button>
+			</form>
+		</li>
+	{/each}
+</ul>
+```
+
+> `use:enhance` is very customizable — you can `cancel()` submissions, handle redirects, control whether the form is reset, and so on. [See the docs](https://kit.svelte.dev/docs/modules#$app-forms-enhance) for full details.

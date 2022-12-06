@@ -1,13 +1,25 @@
-<p>Please log in</p>
+<script>
+	export let data;
+</script>
 
-<form method="POST">
+<h1>Todos</h1>
+
+<form method="POST" action="?/create">
 	<label>
-		Email
-		<input type="email" name="email" />
+		Add a todo
+		<input name="description" />
 	</label>
-	<label>
-		Password
-		<input type="password" name="password" />
-	</label>
-	<button>Log in</button>
 </form>
+
+<ul>
+	{#each data.todos as todo (todo.id)}
+		<li class="todo">
+			{todo.description}
+
+			<form method="POST" action="?/delete">
+				<input type="hidden" name="id" value={todo.id} />
+				<button>Done!</button>
+			</form>
+		</li>
+	{/each}
+</ul>

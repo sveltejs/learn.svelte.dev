@@ -1,11 +1,34 @@
-import { redirect, invalid } from '@sveltejs/kit';
+import { invalid } from '@sveltejs/kit';
+import * as db from '$lib/server/database.js';
+
+export function load({ cookies }) {
+	const id = cookies.get('userid');
+
+	if (!id) {
+		cookies.set('userid', crypto.randomUUID(), { path: '/' });
+	}
+
+	return {
+		todos: db.getTodos(id) ?? []
+	};
+}
 
 export const actions = {
-	default: async ({ request }) => {
-		const fields = await request.formData();
-		if (fields.get('email') !== 'svelte@kit.dev' || fields.get('password') !== 'tutorial') {
-			return invalid(422, { message: 'Invalid Credentials' });
+	create: async ({ cookies, request }) => {
+		const data = await request.formData();
+
+		try {
+			db.createTodo(cookies.get('userid'), data.get('description'));
+		} catch (error) {
+			return invalid(422, {
+				description: data.get('description'),
+				error: error.message
+			});
 		}
-		throw redirect(307, '/user');
+	},
+
+	delete: async ({ cookies, request }) => {
+		const data = await request.formData();
+		db.deleteTodo(cookies.get('userid'), data.get('id'));
 	}
 };

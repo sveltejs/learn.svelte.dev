@@ -1,22 +1,34 @@
 <script>
+	export let data;
 	export let form;
 </script>
 
-<p>Please log in</p>
+<h1>Todos</h1>
 
-<form method="POST" action="?/login">
+{#if form?.error}
+	<p class="error">{form.error}</p>
+{/if}
+
+<form method="POST" action="?/create">
 	<label>
-		Email
-		<input type="email" name="email" />
+		Add a todo
+		<input
+			name="description"
+			value={form?.description ?? ''}
+			required
+		/>
 	</label>
-	<label>
-		Password
-		<input type="password" name="password" />
-	</label>
-	{#if form?.message}
-		<span>{form?.message}</span>
-	{/if}
-	<button>Log in</button>
-	<button formAction="?/register">Register</button
-	>
 </form>
+
+<ul>
+	{#each data.todos as todo (todo.id)}
+		<li class="todo">
+			{todo.description}
+
+			<form method="POST" action="?/delete">
+				<input type="hidden" name="id" value={todo.id} />
+				<button>Done!</button>
+			</form>
+		</li>
+	{/each}
+</ul>

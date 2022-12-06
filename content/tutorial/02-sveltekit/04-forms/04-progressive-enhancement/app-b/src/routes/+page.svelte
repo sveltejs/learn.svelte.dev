@@ -1,23 +1,37 @@
 <script>
+	import { fly, slide } from 'svelte/transition';
 	import { enhance } from '$app/forms';
+
+	export let data;
 	export let form;
 </script>
 
-<p>Please log in</p>
+<h1>Todos</h1>
 
-<form method="POST" action="?/login" use:enhance>
+{#if form?.error}
+	<p class="error">{form.error}</p>
+{/if}
+
+<form method="POST" action="?/create" use:enhance>
 	<label>
-		Email
-		<input type="email" name="email" />
+		Add a todo
+		<input
+			name="description"
+			value={form?.description ?? ''}
+			required
+		/>
 	</label>
-	<label>
-		Password
-		<input type="password" name="password" />
-	</label>
-	{#if form?.message}
-		<span>{form?.message}</span>
-	{/if}
-	<button>Log in</button>
-	<button formAction="?/register">Register</button
-	>
 </form>
+
+<ul>
+	{#each data.todos as todo (todo.id)}
+		<li class="todo" in:fly={{ y: 20 }} out:slide>
+			{todo.description}
+
+			<form method="POST" action="?/delete" use:enhance>
+				<input type="hidden" name="id" value={todo.id} />
+				<button>Done!</button>
+			</form>
+		</li>
+	{/each}
+</ul>

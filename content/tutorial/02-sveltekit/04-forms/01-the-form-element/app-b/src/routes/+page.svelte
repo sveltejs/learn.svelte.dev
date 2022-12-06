@@ -5,21 +5,16 @@
 <h1>Todos</h1>
 
 <form method="POST">
-	<input
-		name="description"
-		placeholder="What needs to be done?"
-	/>
+	<label>
+		Add a todo
+		<input name="description" />
+	</label>
 </form>
 
-{#each data.todos as todo (todo.id)}
-	<div class="todo">
-		<input
-			name="description"
-			value={todo.description}
-		/>
-
-		<button>
-			{todo.done ? 'mark todo' : 'mark done'}
-		</button>
-	</div>
-{/each}
+<ul>
+	{#each data.todos as todo (todo.id)}
+		<li class="todo">
+			{todo.description}
+		</li>
+	{/each}
+</ul>

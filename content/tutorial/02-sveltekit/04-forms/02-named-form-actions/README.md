@@ -2,57 +2,55 @@
 title: Named form actions
 ---
 
-Some pages have more than one `<form>`. That's why SvelteKit supports named form actions.
+A page that only has a single action is, in practice, quite rare. Most of the time you'll need to have multiple actions on a page. In this app, creating a todo isn't enough — we'd like to delete them once they're complete.
 
-Let's add a "Register" button to our existing form and introduce two form actions named `login` and `register`:
+Begin by replacing our `default` action with named `create` and `delete` actions:
+
+```js
+/// file: src/routes/+page.server.js
+export const actions = {
+	+++create+++: async ({ cookies, request }) => {
+		const data = await request.formData();
+		db.createTodo(cookies.get('userid'), data.get('description'));
+	},
+
++++	delete: async ({ cookies, request }) => {
+		const data = await request.formData();
+		db.deleteTodo(cookies.get('userid'), data.get('id'));
+	}+++
+};
+```
+
+> Default actions cannot coexist with named actions.
+
+The `<form>` element has an optional `action` attribute, which is similar to an `<a>` element's `href` attribute. Update the existing form so that it points to the new `create` action:
 
 ```svelte
-<script>
-	export let form;
-</script>
-
-<form method="POST" +++action="?/login"+++>
-	<label>
-		Email
-		<input type="email" name="email" />
-	</label>
-	<label>
-		Password
-		<input type="password" name="password" />
-	</label>
-	{#if form?.message}
-		<span>{form?.message}</span>
-	{/if}
-	<button>Log in</button>
-	+++<button formAction="?/register">Register</button>+++
+/// file: src/routes/+page.svelte
+<form method="POST" +++action="?/create"+++>
+	<input
+		name="description"
+		placeholder="What needs to be done?"
+	/>
 </form>
 ```
 
-The `?` means that this string is appended as a query string to the existing URL, the `/` is used to uniquly identify the query parameter as a form action, and the name can then be whatever we want.
+> The `action` attribute can be any URL — if the action was defined on another page, you might have something like `/todos?/create`. Since the action is on _this_ page, we can omit the pathname altogether, hence the leading `?` character.
 
-> The `action`/`formAction` attributes are standard HTML attributes, and you can also link to actions on other pages through them.
+Next, we want to create a form for each todo, complete with a hidden `<input>` that uniquely identifies it:
 
-In `+page.server.js`, we react to these named actions by adding them as properties to the `actions` object:
+```svelte
+/// file: src/routes/+page.svelte
+<ul>
+	{#each data.todos as todo (todo.id)}
+		<li class="todo">
+			{todo.description}
 
-```js
-import { redirect, invalid } from '@sveltejs/kit';
-
-export const actions = {
-	---default---+++login+++: async ({ request }) => {
-		const fields = await request.formData();
-		if (fields.get('email') !== 'svelte@kit.dev' || fields.get('password') !== 'tutorial') {
-			return invalid(422, { message: 'Invalid Credentials' });
-		}
-		throw redirect(307, '/user');
-	}+++,
-	register: async ({ request }) => {
-		const fields = await request.formData();
-		if (fields.get('email') === 'svelte@kit.dev') {
-			return invalid(422, { message: 'Email already in use' });
-		}
-		throw redirect(307, '/user');
-	}+++
-}
++++			<form method="POST" method="?/delete">
+				<input type="hidden" name="id" value={todo.id} />
+				<button>Done!</button>
+			</form>+++
+		</li>
+	{/each}
+</ul>
 ```
-
-> We can't have default actions next to named actions, because if you POST to a named action without a redirect, the query parameter is persisted in the URL, which means the next default POST would go through the named action from before.
