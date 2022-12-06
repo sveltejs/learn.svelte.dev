@@ -20,7 +20,7 @@ export function GET() {
 
 Clicking the button now works.
 
-Request handlers must return a [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response/Response) object. Since it's common to return JSON from an API route, SvelteKit provides a convenience function for generating these responses, complete with the appropriate `Content-Type` header:
+Request handlers must return a [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response/Response) object. Since it's common to return JSON from an API route, SvelteKit provides a convenience function for generating these responses:
 
 ```js
 /// file: src/routes/roll/+server.js
