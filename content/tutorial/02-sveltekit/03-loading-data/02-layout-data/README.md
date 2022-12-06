@@ -1,5 +1,5 @@
 ---
-title: Loading layout data
+title: Layout data
 ---
 
 Just as `+layout.svelte` files create UI for every child route, `+layout.server.js` files load data for every child route.

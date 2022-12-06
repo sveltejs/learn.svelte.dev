@@ -1,5 +1,5 @@
 ---
-title: Loading data
+title: Page data
 ---
 
 At its core, SvelteKit's job boils down to three things:
