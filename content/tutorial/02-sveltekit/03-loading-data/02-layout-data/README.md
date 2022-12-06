@@ -13,7 +13,6 @@ Now, create a layout for the post page:
 ```svelte
 /// file: src/routes/blog/[slug]/+layout.svelte
 <script>
-	/** @type {import('./$types').PageData} */
 	export let data;
 </script>
 
