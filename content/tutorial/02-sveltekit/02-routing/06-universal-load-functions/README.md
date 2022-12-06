@@ -11,7 +11,7 @@ Sometimes it doesn't make sense to load data from the server when doing a client
 - You're loading data from an external API
 - You want to use in-memory data if it's available
 - You want to delay navigation until an image has been preloaded, to avoid pop-in
-- You need to return something from `load` that can't be serialized (SvelteKit uses [devalue](https://github.com/Rich-Harris/devalue) to turn data into JSON), such as a component or a store
+- You need to return something from `load` that can't be serialized (SvelteKit uses [devalue](https://github.com/Rich-Harris/devalue) to turn server data into JSON), such as a component or a store
 
 In this example, we're loading data from a [Hacker News API](https://api.hnpwa.com/v0/) in `src/routes/+page.server.js` and `src/routes/item/[id]/+page.server.js`. That means that every time we navigate from one page to another, we're making a request to our server, which in turn makes a request to the API. That's an unnecessary detour that slows requests down and increases load on our server.
 

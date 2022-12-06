@@ -2,8 +2,6 @@
 title: Loading layout data
 ---
 
-> TODO need to implement file renaming/deleting
-
 Just as `+layout.svelte` files create UI for every child route, `+layout.server.js` files load data for every child route.
 
 Suppose we'd like to add a 'more posts' sidebar to our blog post page. We _could_ return `summaries` from the `load` function in `src/blog/[slug]/+page.server.js`, like we do in `src/blog/+page.server.js`, but that would be repetitive.
