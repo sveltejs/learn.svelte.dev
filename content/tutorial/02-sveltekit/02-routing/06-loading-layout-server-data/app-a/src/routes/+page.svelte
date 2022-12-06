@@ -1,1 +1,0 @@
-<p>Home page</p>
