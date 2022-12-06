@@ -115,7 +115,7 @@ export function get_section(slug) {
 				const scope = chapter.meta.scope ?? part.meta.scope;
 				const filenames = new Set(
 					Object.keys(a)
-						.filter((filename) => filename.startsWith(scope.prefix))
+						.filter((filename) => filename.startsWith(scope.prefix) && a[filename].type === 'file')
 						.map((filename) => filename.slice(scope.prefix.length))
 				);
 
