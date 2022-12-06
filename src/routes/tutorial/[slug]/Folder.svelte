@@ -285,11 +285,11 @@
 	}
 
 	.rename {
-		background-image: url(./file-edit.svg);
+		background-image: url(./rename.svg);
 	}
 
 	.file-new {
-		background-image: url(./plus.svg);
+		background-image: url(./file-new.svg);
 	}
 
 	.folder-new {

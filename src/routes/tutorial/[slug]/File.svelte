@@ -177,7 +177,7 @@
 	}
 
 	.rename {
-		background-image: url(./file-edit.svg);
+		background-image: url(./rename.svg);
 	}
 
 	.delete {
