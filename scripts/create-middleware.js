@@ -29,7 +29,13 @@ config.routes.unshift({
 });
 fs.writeFileSync('.vercel/output/config.json', JSON.stringify(config));
 
-fs.mkdirSync('.vercel/output/functions/_middleware.func');
+try {
+	fs.mkdirSync('.vercel/output/functions/_middleware.func', {
+		recursive: true
+	});
+} catch {
+	// ignore
+}
 
 fs.writeFileSync(
 	'.vercel/output/functions/_middleware.func/.vc-config.json',
