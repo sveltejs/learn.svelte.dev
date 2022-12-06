@@ -32,8 +32,19 @@
 	const { edit, add, remove } = getContext('filetree');
 
 	$: _files = files || []; // workaround for what seems to be a Svelte bug, where files is undefined on navigation
+	$: hidden_children = _files
+		.filter((file) =>
+			file.name.startsWith(prefix + file.name.slice(prefix.length).split('/').shift() + '/__hidden')
+		)
+		.map((file) => file.name.slice(0, -'/__hidden'.length));
 	$: children = _files
-		.filter((file) => file.name.startsWith(prefix))
+		.filter(
+			(file) =>
+				file.name.startsWith(prefix) &&
+				!hidden_children.some(
+					(hidden) => file.name.startsWith(hidden + '/') || file.name === hidden
+				)
+		)
 		.sort((a, b) => (a.name < b.name ? -1 : 1));
 	$: child_directories = children.filter(
 		(child) => child.depth === depth + 1 && child.type === 'directory'
