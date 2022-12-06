@@ -587,7 +587,7 @@
 		color: white;
 	}
 
-	.navigator button.completed {
+	.navigator button:not(:disabled).completed {
 		background: var(--second);
 	}
 
