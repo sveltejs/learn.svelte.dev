@@ -18,6 +18,6 @@ That's where SvelteKit comes in. Whereas Svelte is a _component framework_, Svel
 - Deploying to different hosting providers
 - ...and so on
 
-It also provides a world-class development experience powered by [Vite](https://vitejs.dev). SvelteKit apps are server-rendered by default (like traditional 'multi-page apps' or MPAs) for excellent first load performance and SEO characteristics, but can then transition to client-side navigation (like modern 'single-page apps' or SPAs) to avoid jankily reloading everything (including things like third-party analytics code) when the user navigates. They can run anywhere JavaScript runs, though — as we'll see — your users may not need to run any JavaScript at all.
+SvelteKit apps are server-rendered by default (like traditional 'multi-page apps' or MPAs) for excellent first load performance and SEO characteristics, but can then transition to client-side navigation (like modern 'single-page apps' or SPAs) to avoid jankily reloading everything (including things like third-party analytics code) when the user navigates. They can run anywhere JavaScript runs, though — as we'll see — your users may not need to run any JavaScript at all.
 
 If that sounds complicated, worry not: you've been using SvelteKit this whole time!
