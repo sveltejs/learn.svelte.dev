@@ -2,22 +2,37 @@
 title: Error pages
 ---
 
-If something goes wrong during executing the `load` functions for a page, we can "catch" these errors with `+error.svelte` pages.
+If something goes wrong inside a `load` function, SvelteKit will render an error page. In this example, the `/about` route will blow up, because the `load` function in `src/routes/about/+page.server.js` throws an error.
 
-To showcase this, the `src/routes/about/+page.js` `load` function throws an error. That error will bubble up the file tree until it finds a `+error.svelte` or falls back to a generic error page if there's none - which is what happens right now. Navigate to the about page to see it in action
+The default error page is somewhat bland. We can customize it by creating a `src/routes/+error.svelte` component:
 
-Let's place a `+error.svelte` file right next to the erroring `+page.js`:
+```svelte
+/// file: src/routes/+error.svelte
+<script>
+	import { page } from '$app/stores';
 
-```diff
-src/routes/
-├ about/
-+│ ├ +error.svelte
-│ ├ +page.js
-│ └ +page.svelte
-├ +layout.svelte
-└ +page.svelte
+	let online = typeof navigator !== 'undefined'
+		? navigator.onLine
+		: true;
+</script>
+
+{#if $page.status === 404}
+	<h1>Not found</h1>
+{:else if !online}
+	<h1>You're offline</h1>
+{:else}
+	<h1>Oops!</p>
+	<p>{$page.error.message}</p>
+{/if}
 ```
 
-Notice how now the outer layout still renders after the error and keeps the app functioning.
+If you navigate to `/about` to trigger the error, you'll notice that the error page is rendered inside our root `+layout.svelte` component.
 
-Inside `+error.svelte`, you are free to put any content you like. Just play around with it a little!
+We can have more granular error boundaries. Create a new file, `src/routes/about/+error.svelte`:
+
+```svelte
+/// file: src/routes/about/+error.svelte
+<h1>Something went wrong while rendering the about page</h1>
+```
+
+This component will be rendered for `/about`, while the root `+error.svelte` page will be rendered for any other errors that occur.
