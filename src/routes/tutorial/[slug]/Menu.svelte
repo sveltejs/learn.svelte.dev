@@ -175,8 +175,8 @@
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
-		border-bottom: 1px solid var(--border-color);
-		border-right: 1px solid var(--border-color);
+		border-bottom: 1px solid var(--sk-back-5);
+		border-right: 1px solid var(--sk-back-5);
 		padding: 0 0 0 var(--menu-width);
 		height: var(--menu-width);
 		align-items: center;
@@ -188,11 +188,11 @@
 	}
 
 	header strong {
-		color: var(--prime);
+		color: var(--sk-theme-1);
 	}
 
 	header h1 {
-		color: var(--second);
+		color: var(--sk-text-2);
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -223,10 +223,10 @@
 		/* when the nav is closing, wait to change visibility until the slide out completes */
 		transition: var(--transform-transition), visibility 0s 0.2s;
 		transform: translate(-100%, 0);
-		background: var(--light-blue);
+		background: var(--sk-back-3);
 		z-index: 2;
 		/* filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.1)); */
-		border-right: 1px solid var(--border-color);
+		border-right: 1px solid var(--sk-back-5);
 		display: flex;
 		flex-direction: column;
 		visibility: hidden;
@@ -242,24 +242,19 @@
 	.controls {
 		height: var(--menu-width);
 		display: flex;
-		border-bottom: 1px solid var(--border-color);
+		border-bottom: 1px solid var(--sk-back-5);
 		padding: 0 0 0 var(--menu-width);
 	}
 
 	.controls input {
 		flex: 1;
 		border: none;
-		padding: 0.6rem 1rem 0.5rem 1rem;
+		padding: 0.8rem 1rem 0.4rem 1rem;
 		font-family: inherit;
 		font-size: inherit;
-		background: rgba(255, 255, 255, 0.5);
+		background: var(--sk-back-2);
 		border: 2px solid transparent;
-		color: var(--text);
-	}
-
-	.controls input:focus {
-		outline: none;
-		border: 2px solid var(--flash);
+		color: var(--sk-text-2);
 	}
 
 	.menu-toggle-container {
@@ -269,22 +264,17 @@
 		width: var(--menu-width);
 		height: var(--menu-width);
 		z-index: 3;
-		border-right: 1px solid var(--border-color);
-		border-bottom: 1px solid var(--border-color);
+		border-right: 1px solid var(--sk-back-5);
+		border-bottom: 1px solid var(--sk-back-5);
 	}
 
 	.menu-toggle {
 		width: 100%;
 		height: 100%;
-		background: var(--light-blue);
+		background: var(--sk-back-3);
 		border: 2px solid transparent;
 		box-sizing: border-box;
 		padding: 0.2rem 0 0 0;
-	}
-
-	.menu-toggle:focus-visible {
-		outline: none;
-		border: 2px solid var(--flash);
 	}
 
 	.sections {
@@ -337,24 +327,17 @@
 
 	.section {
 		--dot-size: 1.2rem;
-		--color: var(--second);
+		--color: var(--sk-text-2);
 	}
 
 	a,
 	button {
-		color: var(--second);
+		color: var(--sk-text-2);
 		padding: 0 0 0 0.5rem;
 		margin: 0 0.5rem 0 0;
 		display: block;
 		font-variant-numeric: tabular-nums;
 		border: 2px solid transparent;
 		box-sizing: border-box;
-	}
-
-	a:focus-visible,
-	.sections button:focus-visible {
-		/* outline-color: var(--flash); */
-		outline: none;
-		border: 2px solid var(--flash);
 	}
 </style>

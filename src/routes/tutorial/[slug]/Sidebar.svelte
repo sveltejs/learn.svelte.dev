@@ -106,87 +106,12 @@
 		flex: 1 1;
 		overflow-y: auto;
 		padding: 2.2rem 3rem;
-		color: var(--second);
-		border-right: 1px solid var(--border-color);
-	}
-
-	.text :global(a) {
-		color: inherit;
-		text-decoration: underline;
-	}
-
-	.text :global(h2) {
-		font-size: 2.8rem;
-		font-weight: normal;
-		margin: 1.5em 0 0.5em 0;
+		border-right: 1px solid var(--sk-back-5);
 	}
 
 	.text :global(ul),
 	.text :global(ol) {
-		padding: 0 0 0 2rem;
-	}
-
-	.text :global(code) {
-		background: hsl(206, 44%, 92%);
-		padding: 0.1em 0.4em 0.2em;
-		white-space: nowrap;
-		position: relative;
-		top: -0.1em;
-	}
-
-	.text :global(code[data-file]) {
-		padding-right: 1.8em;
-		cursor: pointer;
-	}
-
-	.text :global(code[data-file])::after {
-		content: '';
-		position: absolute;
-		width: 1em;
-		height: 1em;
-		top: calc(50% - 0.55em);
-		right: 0.5em;
-		background: url(./file-edit.svg);
-		background-size: 100% 100%;
-	}
-
-	.text :global(.code-block) :global(h5) {
-		display: block;
-		width: 100%;
-		font-family: var(--font-mono);
-		font-size: 1.2rem;
-		font-weight: 400;
-		padding: 1rem 1rem 0.8rem 1rem;
-		margin: 0 0 0 0;
-		color: var(--sk-text-2);
-		background: var(--back-api);
-		box-shadow: 0 1px 6px hsla(205.7, 63.6%, 30.8%, 0.06);
-		border-radius: var(--border-r) var(--border-r) 0 0;
-	}
-
-	.text :global(pre) {
-		background: white;
-		padding: 1rem 1.5rem;
-		margin: 0 0 1.6rem 0;
-		line-height: 1.3;
-		box-shadow: inset 1px 1px 3px hsl(206deg 20% 93%);
-	}
-
-	.text :global(.code-block) :global(h5) + :global(pre) {
-		border-radius: 0 0 var(--border-r) var(--border-r);
-	}
-
-	.text :global(pre) :global(code) {
-		background: none;
-		color: var(--code-base);
-		padding: 0;
-		top: 0;
-		white-space: pre;
-	}
-
-	.text :global(pre) :global(code)::before,
-	.text :global(pre) :global(code)::after {
-		content: none;
+		list-style: initial;
 	}
 
 	.text :global(pre) :global(.highlight) {
@@ -197,55 +122,23 @@
 	}
 
 	.text :global(pre) :global(.highlight.add) {
-		--color: rgba(0, 255, 0, 0.2);
+		--color: rgba(0, 255, 0, 0.1);
 	}
 
 	.text :global(pre) :global(.highlight.remove) {
-		--color: rgba(255, 0, 0, 0.2);
-	}
-
-	.text :global(blockquote) {
-		margin: 2rem 0;
-		padding: 2rem;
-		border-radius: 0.5rem;
-		border: 1.5px solid var(--flash);
-		color: hsl(204, 100%, 40%);
-	}
-
-	.text :global(blockquote)::before {
-		content: '!';
-		position: relative;
-		top: -0.1rem;
-		right: -0.1rem;
-		float: right;
-		color: var(--flash);
-		width: 2rem;
-		height: 2rem;
-		display: block;
-		align-items: center;
-		justify-content: center;
-		border: 1.5px solid var(--flash);
-		background: var(--flash);
-		color: var(--light-blue);
-		border-radius: 50%;
-		text-align: center;
-		font-size: 1.2rem;
-		font-weight: bold;
-		line-height: 1.9;
-		margin: 0 0 1rem 1rem;
-		opacity: 0.8;
+		--color: rgba(255, 0, 0, 0.1);
 	}
 
 	footer {
 		padding: 1rem 3rem;
 		display: flex;
 		justify-content: space-between;
-		border-top: 1px solid var(--border-color);
-		border-right: 1px solid var(--border-color);
+		border-top: 1px solid var(--sk-back-5);
+		border-right: 1px solid var(--sk-back-5);
 	}
 
 	footer .edit {
-		color: var(--second);
+		color: var(--sk-text-2);
 		font-size: 1.4rem;
 		padding: 0 0 0 1.4em;
 		background: url(./file-edit.svg) no-repeat 0 calc(50% - 0.1em);
@@ -268,7 +161,7 @@
 		padding: 1rem;
 		width: 10em;
 		margin: 1em 0 0 0;
-		border-radius: var(--border-r);
+		border-radius: var(--sk-border-radius);
 		line-height: 1;
 	}
 </style>

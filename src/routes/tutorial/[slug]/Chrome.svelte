@@ -32,7 +32,7 @@
 		height: 4rem;
 		display: flex;
 		background: #f9f9f9;
-		border-top: 1px solid var(--border-color);
+		border-top: 1px solid var(--sk-back-5);
 	}
 
 	.chrome button {

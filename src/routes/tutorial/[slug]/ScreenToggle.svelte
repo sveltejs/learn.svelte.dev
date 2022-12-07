@@ -21,7 +21,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		border-top: 1px solid var(--second);
+		border-top: 1px solid var(--sk-text-2);
 		background-color: white;
 	}
 	button {
@@ -29,7 +29,7 @@
 		width: 4em;
 		height: 1em;
 		padding: 0.3em 0.4em;
-		border-radius: var(--border-r);
+		border-radius: var(--sk-border-radius);
 		line-height: 1em;
 		box-sizing: content-box;
 		color: #888;

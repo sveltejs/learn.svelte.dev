@@ -1,6 +1,5 @@
 <script>
-	import '@sveltejs/site-kit/base.css';
-	import '@sveltejs/site-kit/code.css';
+	import '@sveltejs/site-kit/styles/index.css';
 	import '../app.css';
 	import { page, navigating } from '$app/stores';
 	import { Icon, Icons, Nav, NavItem, SkipLink } from '@sveltejs/site-kit';
@@ -74,7 +73,7 @@
 			height: 100%;
 			display: flex;
 			align-items: center;
-			color: var(--second);
+			color: var(--sk-text-2);
 			text-transform: uppercase;
 			font-size: 1.2rem;
 			opacity: 1;

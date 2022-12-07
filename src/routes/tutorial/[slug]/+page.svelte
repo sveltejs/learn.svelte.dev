@@ -545,7 +545,6 @@
 
 <style>
 	.container {
-		--border-color: hsl(206, 44%, 90%);
 		height: calc(100% - var(--toggle-height));
 		max-height: 100%;
 	}
@@ -556,39 +555,38 @@
 		min-height: 0;
 		height: 100%;
 		max-height: 100%;
-		background: var(--light-blue);
+		background: var(--sk-back-2);
 		--menu-width: 5.4rem;
 	}
 
 	.navigator {
 		position: relative;
-		background: white;
+		background: var(--sk-back-2);
 		display: flex;
 		flex-direction: column;
 	}
 
 	.navigator button {
 		position: relative;
-		background: #ddd;
+		background: var(--sk-theme-2);
 		padding: 0.5rem;
 		width: 100%;
 		height: 4rem;
-		border-right: 1px solid var(--border-color);
+		border-right: 1px solid var(--sk-back-5);
+		color: white;
 		opacity: 1;
 	}
 
 	.navigator button:disabled {
-		background: #f9f9f9; /* TODO consistent grays */
-		color: #ddd;
+		opacity: 0.5;
 	}
 
 	.navigator button:not(:disabled) {
-		background: var(--prime);
-		color: white;
+		background: var(--sk-theme-1);
 	}
 
 	.navigator button.completed {
-		background: var(--second);
+		background: var(--sk-theme-2);
 	}
 
 	.filetree {
@@ -605,7 +603,7 @@
 		height: 100%;
 		top: 0;
 		right: 0;
-		border-right: 1px solid var(--border-color);
+		border-right: 1px solid var(--sk-back-5);
 	}
 
 	.preview {
@@ -629,7 +627,7 @@
 
 	.editor-container {
 		position: relative;
-		background-color: var(--light-blue);
+		background-color: var(--sk-back-3);
 	}
 
 	.hidden {
@@ -642,12 +640,12 @@
 
 	.modal-contents button {
 		display: block;
-		background: var(--prime);
+		background: var(--sk-theme-1);
 		color: white;
 		padding: 1rem;
 		width: 10em;
 		margin: 1em 0 0 0;
-		border-radius: var(--border-r);
+		border-radius: var(--sk-border-radius);
 		line-height: 1;
 	}
 </style>
