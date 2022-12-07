@@ -2,7 +2,7 @@
 title: Layout groups
 ---
 
-Sections of your app often share a common UI. To not repeat that code, we can use layouts. These form a hierarchy, a page inherits all layouts above it. Sometimes it's necessary to break out of this hierarchy. For this, we can use layout groups.
+Layouts form a hierarchy. A page inherits all layouts above it. Sometimes it's necessary to create a layout hierarchy that doesn't strictly follow the page hierarchy. For this, we can use layout groups.
 
 In this example we have three pages — the home page, the about page, and a pricing page. The home and pricing page should both have a marketing layout, the about page should not. All three pages are at the same level, so we can't just put a common layout for the home and pricing page in the route hierarchy. To achieve this, we add a group.
 
@@ -21,4 +21,11 @@ src/routes/
 │ └ +page.svelte
 ├ +layout.svelte
 -└ +page.svelte
+```
+
+```svelte
+/// file: src/routes/(marketing)/+layout.svelte
+<div>Marketing Layout</div>
+
+<slot />
 ```

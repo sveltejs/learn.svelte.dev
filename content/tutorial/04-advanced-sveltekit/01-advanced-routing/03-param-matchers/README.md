@@ -19,10 +19,10 @@ src/
 ```
 
 ```js
-// src/params/integer.js
-+++export function match(param) {
+/// file: src/params/integer.js
+export function match(param) {
 	return /^\d+$/.test(param);
-}+++
+}
 ```
 
 Then augment your routes with the matcher:

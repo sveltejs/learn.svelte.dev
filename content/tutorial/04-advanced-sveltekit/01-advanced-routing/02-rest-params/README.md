@@ -11,7 +11,7 @@ Let's use this rest parameter to implement a catch-all route to redirect to our 
 ```diff
 src/routes/
 +├ [...rest]/
-+│ └ +page.svelte
++│ └ +page.js
 ├ +error.svelte
 ├ +layout.svelte
 └ +page.svelte
@@ -20,11 +20,12 @@ src/routes/
 Then add a `load` function to it which throws a 404:
 
 ```js
-+++import { error } from '@sveltejs/kit';
+/// file: src/routes/[...rest]/+page.js
+import { error } from '@sveltejs/kit';
 
 export function load({ url }) {
 	throw error(404, `Page ${url.pathname} not found`);
-}+++
+}
 ```
 
 Now, when the user ends up on a route that isn't know to the app, the catch-all route will be matched, throwing the error, which means we end up on `+error.svelte`.
