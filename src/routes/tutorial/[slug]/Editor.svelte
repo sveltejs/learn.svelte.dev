@@ -1,5 +1,6 @@
 <script>
 	import { dev } from '$app/environment';
+	import { monaco } from '$lib/client/monaco/monaco.js';
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	/**
@@ -44,13 +45,28 @@
 			return;
 		}
 
+		let dark_mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
 		import('$lib/client/monaco/monaco.js').then(({ monaco }) => {
 			if (destroyed) return;
-			instance = init(monaco);
+			instance = init(monaco, dark_mode);
 		});
+
+		/** @param {MediaQueryListEvent} event */
+		const on_mode_change = (event) => {
+			const dark = event.matches;
+			if (dark !== dark_mode) {
+				dark_mode = dark;
+				instance?.set_theme(dark ? 'svelte-dark' : 'svelte');
+			}
+		};
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', on_mode_change);
 
 		return () => {
 			destroyed = true;
+			window
+				.matchMedia('(prefers-color-scheme: dark)')
+				.removeEventListener('change', on_mode_change);
 			if (instance) {
 				instance.update_files([]); // removes all files
 				instance.editor.dispose();
@@ -58,8 +74,11 @@
 		};
 	});
 
-	/** @param {import('monaco-editor')} monaco */
-	function init(monaco) {
+	/**
+	 * @param {import('monaco-editor')} monaco
+	 * @param {boolean} dark_mode
+	 */
+	function init(monaco, dark_mode) {
 		monaco.editor.defineTheme('svelte', {
 			base: 'vs',
 			inherit: false,
@@ -73,8 +92,7 @@
 				{ token: 'constant', foreground: 'c05726' },
 				{ token: 'tag', foreground: 'c05726' },
 				{ token: 'number', foreground: '72a25d' },
-				{ token: 'boolean', foreground: '3080b5' },
-				{ token: 'keyword', foreground: '0b69a8' }
+				{ token: 'boolean', foreground: '3080b5' }
 			],
 			colors: {
 				'editor.background': '#f4f8fb',
@@ -82,7 +100,28 @@
 			}
 		});
 
-		monaco.editor.setTheme('svelte');
+		monaco.editor.defineTheme('svelte-dark', {
+			base: 'vs-dark',
+			inherit: false,
+			rules: [
+				// TODO more rules
+				{ token: '', foreground: 'e6e6e6' },
+				{ token: 'keyword', foreground: '3384ba' },
+				{ token: 'string', foreground: '856e3d' },
+				{ token: 'delimiter', foreground: '5f5c53' },
+				{ token: 'variable', foreground: 'd47346' },
+				{ token: 'constant', foreground: 'd47346' },
+				{ token: 'tag', foreground: 'd47346' },
+				{ token: 'number', foreground: '91bd7f' },
+				{ token: 'boolean', foreground: '499cd3' }
+			],
+			colors: {
+				'editor.background': '#2e2e2e',
+				'token.keyword': '#ff0000'
+			}
+		});
+
+		monaco.editor.setTheme(dark_mode ? 'svelte-dark' : 'svelte');
 
 		const editor = monaco.editor.create(container, {
 			fontFamily: 'Roboto Mono',
@@ -171,6 +210,7 @@
 
 		return {
 			editor,
+			set_theme: monaco.editor.setTheme,
 			update_files,
 			create_file
 		};
