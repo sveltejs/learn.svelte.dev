@@ -4,16 +4,15 @@ title: Redirects
 
 Besides errors there's one more thing you can `throw`, and that's `redirect`s.
 
-Let's use that to navigate away from our login page when we're logged in.
+Let's use that to navigate the user from `/docs` to the first documentation page.
 
 ```js
-// login/+page.js
-+++import { redirect } from '@sveltejs/kit';+++
+/// file: src/routes/blog/+page.server.js
+import { redirect } from '@sveltejs/kit';
 
 export function load() {
-    // let's assume for simplicity we are always logged in
-    +++throw redirect(307, '/user');+++
+	throw redirect(307, '/docs/introduction');
 }
 ```
 
-> You may remember this function from the form actions chapter, where it was used to navigate to the user page after a successful login
+> You can also `throw redirect(..)` inside a [form action](/tutorial/the-form-element), for example to redirect the user after a successful login

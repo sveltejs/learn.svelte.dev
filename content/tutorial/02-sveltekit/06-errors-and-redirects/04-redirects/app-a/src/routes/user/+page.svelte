@@ -1,1 +1,0 @@
-<p>User page</p>
