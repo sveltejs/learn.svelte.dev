@@ -40,6 +40,6 @@ src/
 │ └ +page.svelte
 ```
 
-Now, whenever someone navigates to that page, the validator will try to match the `[page]` parameter to see if it's valid. If the pathname doesn't match, SvelteKit will try to match other routes (using the sort order specified below), before eventually returning a 404.
+Now, whenever someone navigates to that page, the validator will try to match the `[page]` parameter to see if it's valid. If the pathname doesn't match, SvelteKit will try to match other routes, before eventually returning a 404.
 
 > Matchers run both on the server and in the browser.
