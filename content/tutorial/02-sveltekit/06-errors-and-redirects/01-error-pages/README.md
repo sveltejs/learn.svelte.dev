@@ -9,20 +9,16 @@ The default error page is somewhat bland. We can customize it by creating a `src
 ```svelte
 /// file: src/routes/+error.svelte
 <script>
-	import { page } from '$app/stores';
-
 	let online = typeof navigator !== 'undefined'
 		? navigator.onLine
 		: true;
 </script>
 
-{#if $page.status === 404}
-	<h1>Not found</h1>
-{:else if !online}
+{#if !online}
 	<h1>You're offline</h1>
 {:else}
 	<h1>Oops!</p>
-	<p>{$page.error.message}</p>
+	<p>Something went wrong</p>
 {/if}
 ```
 
