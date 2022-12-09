@@ -7,6 +7,7 @@ Sometimes you can't or don't want to get data using `fetch`, which means that th
 Did you know that `foo:bar` is a valid `url`? We can use this to our advantage to create valid custom `url`s that are readable. Let's do that to move our "calculation" of the current time into the `load` function:
 
 ```js
+/// file: src/routes/+page.js
 export async function load({ ---fetch---+++depends+++ }) {
     ---const response = await fetch('/api/clock');
 	return response.json();---
@@ -18,6 +19,7 @@ export async function load({ ---fetch---+++depends+++ }) {
 ```
 
 ```svelte
+/// file: src/routes/+page.svelte
 <script>
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';

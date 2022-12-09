@@ -2,7 +2,7 @@
 title: Layout groups
 ---
 
-Layouts form a hierarchy. A page inherits all layouts above it. Sometimes it's necessary to create a layout hierarchy that doesn't strictly follow the page hierarchy. For this, we can use layout groups.
+Layouts form a hierarchy. A page inherits all layouts above it. Sometimes it's necessary to create a layout hierarchy that doesn't strictly follow the page hierarchy.
 
 In this example we have three pages — the home page, the about page, and a pricing page. The home and pricing page should both have a marketing layout, the about page should not. All three pages are at the same level, so we can't just put a common layout for the home and pricing page in the route hierarchy. To achieve this, we add a group.
 

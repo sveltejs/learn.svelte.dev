@@ -6,9 +6,10 @@ When SvelteKit navigates to a site, it runs the related `load` functions. After 
 
 Let's start with `invalidate`. You call it inside a component with a `url`. All `load` functions that have a dependency on this `url` will then be rerun. This works nicely in combination with `fetch`, which registers the `url` as a dependency of the `load` function.
 
-Let's get the clock in our example ticking by first fetching some data in `+page.js`...
+Let's get the clock in our example ticking by first fetching some data...
 
 ```js
+/// file: src/routes/+page.js
 export async function load({ fetch }) {
     +++const response = await fetch('/api/clock');
     return response.json();+++
@@ -18,6 +19,7 @@ export async function load({ fetch }) {
 ...and refreshing that data every second inside our component by using `invalidate` and passing the same `url` we passed to `fetch`.
 
 ```svelte
+/// file: src/routes/+page.svelte
 <script>
     +++import { invalidate } from '$app/navigation';
     import { onMount } from 'svelte';+++

@@ -7,6 +7,7 @@ Sometimes you want to refresh all data across the site, regardless of any `url` 
 Let's use `invalidateAll` in our clock example. First we'll update the component:
 
 ```svelte
+/// file: src/routes/+page.svelte
 <script>
 	import { ---invalidate---+++invalidateAll+++ } from '$app/navigation';
 	import { onMount } from 'svelte';
@@ -28,6 +29,7 @@ Let's use `invalidateAll` in our clock example. First we'll update the component
 Since `invalidateAll` runs _all_ `load` functions regardless of their `url` dependencies, we can simplify the code in `+page.js` by removing the `depends` call:
 
 ```js
+/// file: src/routes/+page.js
 export async function load(---{ depends }---) {
     ---depends('tick:tock');---
 	return {
