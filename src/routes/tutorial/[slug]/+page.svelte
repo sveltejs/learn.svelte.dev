@@ -338,8 +338,23 @@
 		const stub = event.detail;
 		const index = current_stubs.findIndex((s) => s.name === stub.name);
 		current_stubs[index] = stub;
-		adapter?.update([stub]);
+		adapter?.update([stub]).then((reload) => {
+			if (reload) {
+				schedule_iframe_reload();
+			}
+		});
 		update_complete_states([stub]);
+	}
+
+	/** @type {any} */
+	let reload_timeout;
+	function schedule_iframe_reload() {
+		clearTimeout(reload_timeout);
+		reload_timeout = setTimeout(() => {
+			if (adapter) {
+				set_iframe_src(adapter.base);
+			}
+		}, 1000);
 	}
 
 	/**
@@ -356,7 +371,7 @@
 		}
 	}
 
-	/** @type {NodeJS.Timeout} */
+	/** @type {any} */
 	let timeout;
 
 	/** @param {MessageEvent} e */

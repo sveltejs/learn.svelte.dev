@@ -161,13 +161,7 @@ async function _create(stubs) {
 		// For some reason, server-ready is fired again when the vite dev server is restarted.
 		// We need to wait for it to finish before we can continue, else we might
 		// request files from Vite before it's ready, leading to a timeout.
-		const will_restart = new_stubs.some(
-			(stub) =>
-				stub.type === 'file' &&
-				(stub.name === '/vite.config.js' ||
-					stub.name === '/svelte.config.js' ||
-					stub.name === '/.env')
-		);
+		const will_restart = will_restart_vite_dev_server(new_stubs);
 		const promise = will_restart
 			? new Promise((fulfil, reject) => {
 					const error_unsub = vm.on('error', (error) => {
@@ -242,6 +236,8 @@ async function _create(stubs) {
 		stubs_to_map(stubs, current);
 
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
+
+		return will_restart_vite_dev_server(stubs);
 	}
 
 	async function destroy() {
@@ -256,6 +252,19 @@ async function _create(stubs) {
 		update,
 		destroy
 	};
+}
+
+/**
+ * @param {import('$lib/types').Stub[]} stubs
+ */
+function will_restart_vite_dev_server(stubs) {
+	return stubs.some(
+		(stub) =>
+			stub.type === 'file' &&
+			(stub.name === '/vite.config.js' ||
+				stub.name === '/svelte.config.js' ||
+				stub.name === '/.env')
+	);
 }
 
 /**
