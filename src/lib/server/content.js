@@ -25,8 +25,8 @@ function json(file) {
 export function get_index() {
 	const parts = [];
 
-	/** @type {import('$lib/types').SectionRaw | null} */
-	let last_section = null;
+	/** @type {import('$lib/types').ExerciseRaw | null} */
+	let last_exercise = null;
 
 	for (const part of fs.readdirSync('content/tutorial')) {
 		if (!/^\d{2}-/.test(part)) continue;
@@ -46,27 +46,27 @@ export function get_index() {
 				slug: chapter
 			};
 
-			const sections = [];
+			const exercises = [];
 
-			for (const section of fs.readdirSync(`content/tutorial/${part}/${chapter}`)) {
-				const dir = `content/tutorial/${part}/${chapter}/${section}`;
+			for (const exercise of fs.readdirSync(`content/tutorial/${part}/${chapter}`)) {
+				const dir = `content/tutorial/${part}/${chapter}/${exercise}`;
 				if (!fs.statSync(dir).isDirectory()) continue;
 
 				const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
 				const { frontmatter, markdown } = extract_frontmatter(text, dir);
 				const { title } = frontmatter;
 
-				const slug = section.slice(3);
+				const slug = exercise.slice(3);
 
-				if (last_section) last_section.next = { slug, title };
+				if (last_exercise) last_exercise.next = { slug, title };
 
-				sections.push(
-					(last_section = {
-						slug: section.slice(3),
+				exercises.push(
+					(last_exercise = {
+						slug: exercise.slice(3),
 						title: frontmatter.title,
 						markdown,
 						dir,
-						prev: last_section ? { slug: last_section.slug, title: last_section.title } : null,
+						prev: last_exercise ? { slug: last_exercise.slug, title: last_exercise.title } : null,
 						next: null
 					})
 				);
@@ -77,7 +77,7 @@ export function get_index() {
 					...part_meta,
 					...chapter_meta
 				},
-				sections
+				exercises
 			});
 		}
 
@@ -93,24 +93,24 @@ export function get_index() {
 
 /**
  * @param {string} slug
- * @returns {import('$lib/types').Section | undefined}
+ * @returns {import('$lib/types').Exercise | undefined}
  */
-export function get_section(slug) {
+export function get_exercise(slug) {
 	const index = get_index();
 	for (let i = 0; i < index.length; i += 1) {
 		const part = index[i];
 
 		for (const chapter of part.chapters) {
-			for (const section of chapter.sections) {
-				if (section.slug !== slug) continue;
+			for (const exercise of chapter.exercises) {
+				if (exercise.slug !== slug) continue;
 
 				const a = {
 					...walk('content/tutorial/common', { exclude: ['node_modules'] }),
 					...walk(`content/tutorial/${part.slug}/common`),
-					...walk(`${section.dir}/app-a`)
+					...walk(`${exercise.dir}/app-a`)
 				};
 
-				const b = walk(`${section.dir}/app-b`);
+				const b = walk(`${exercise.dir}/app-b`);
 
 				const scope = chapter.meta.scope ?? part.meta.scope;
 				const filenames = new Set(
@@ -131,12 +131,12 @@ export function get_section(slug) {
 					},
 					scope,
 					focus: chapter.meta.focus ?? part.meta.focus,
-					title: section.title,
-					slug: section.slug,
-					prev: section.prev,
-					next: section.next,
-					dir: section.dir,
-					html: transform(section.markdown, {
+					title: exercise.title,
+					slug: exercise.slug,
+					prev: exercise.prev,
+					next: exercise.next,
+					dir: exercise.dir,
+					html: transform(exercise.markdown, {
 						codespan: (text) =>
 							filenames.size > 1 && filenames.has(text)
 								? `<code data-file="${scope.prefix + text}">${text}</code>`

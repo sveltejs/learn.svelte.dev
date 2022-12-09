@@ -2,7 +2,7 @@
 title: Public static environment variables
 ---
 
-In the previous section we saw how to leverage `$env/static/private` for secret environment variables which can't be exposed to front-end code. But what to do if we _do_ want to expose such an environment variable, because it's public?
+In the previous exercise we saw how to leverage `$env/static/private` for secret environment variables which can't be exposed to front-end code. But what to do if we _do_ want to expose such an environment variable, because it's public?
 
 For this, first prefix the environment variable inside `.env` with `PUBLIC_`. This prefix (which is [configurable](https://kit.svelte.dev/docs/configuration#env)) marks an environment variable as eligible for use in front-end code.
 

@@ -10,7 +10,7 @@
 	/** @type {import('$lib/types').PartStub[]}*/
 	export let index;
 
-	/** @type {import('$lib/types').Section} */
+	/** @type {import('$lib/types').Exercise} */
 	export let current;
 
 	let is_open = false;
@@ -29,15 +29,15 @@
 				.map((chapter, i) => ({
 					...chapter,
 					label: String.fromCharCode(97 + i),
-					first: chapter.sections[0].slug,
-					sections: chapter.sections.filter((section) => regex.test(section.title))
+					first: chapter.exercises[0].slug,
+					exercises: chapter.exercises.filter((exercise) => regex.test(exercise.title))
 				}))
-				.filter((chapter) => chapter.sections.length > 0 || regex.test(chapter.title));
+				.filter((chapter) => chapter.exercises.length > 0 || regex.test(chapter.title));
 
 			return {
 				...part,
 				label: i + 1,
-				first: part.chapters[0].sections[0].slug,
+				first: part.chapters[0].exercises[0].slug,
 				chapters
 			};
 		})
@@ -78,7 +78,7 @@
 		</button>
 	</div>
 
-	<nav class:open={is_open} aria-label="tutorial sections">
+	<nav class:open={is_open} aria-label="tutorial exercises">
 		<div class="controls">
 			<input
 				type="search"
@@ -89,7 +89,7 @@
 			/>
 		</div>
 
-		<div class="sections">
+		<div class="exercises">
 			<ul>
 				{#each filtered as part (part.slug)}
 					<li
@@ -124,20 +124,20 @@
 
 										{#if search.length >= 2 || chapter.slug === expanded_chapter}
 											<ul transition:slide|local={{ duration }}>
-												{#each chapter.sections as section (section.slug)}
+												{#each chapter.exercises as exercise (exercise.slug)}
 													<li
 														transition:slide|local={{ duration }}
-														class="section"
-														aria-current={$page.url.pathname === `/tutorial/${section.slug}`
+														class="exercise"
+														aria-current={$page.url.pathname === `/tutorial/${exercise.slug}`
 															? 'page'
 															: undefined}
 													>
 														<a
-															data-sveltekit-prefetch
-															href="/tutorial/{section.slug}"
+															data-sveltekit-preload-data
+															href="/tutorial/{exercise.slug}"
 															on:click={() => (is_open = false)}
 														>
-															{section.title}
+															{exercise.title}
 														</a>
 													</li>
 												{/each}
@@ -287,7 +287,7 @@
 		border: 2px solid var(--flash);
 	}
 
-	.sections {
+	.exercises {
 		padding: 2rem 0;
 		flex: 1;
 		overflow: auto;
@@ -335,7 +335,7 @@
 		position: absolute;
 	}
 
-	.section {
+	.exercise {
 		--dot-size: 1.2rem;
 		--color: var(--second);
 	}
@@ -352,7 +352,7 @@
 	}
 
 	a:focus-visible,
-	.sections button:focus-visible {
+	.exercises button:focus-visible {
 		/* outline-color: var(--flash); */
 		outline: none;
 		border: 2px solid var(--flash);

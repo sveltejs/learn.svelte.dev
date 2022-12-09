@@ -12,9 +12,9 @@ export function GET() {
 			chapters: part.chapters.map((chapter) => ({
 				title: chapter.meta.title,
 				slug: chapter.meta.slug,
-				sections: chapter.sections.map((section) => ({
-					title: section.title,
-					slug: section.slug
+				exercises: chapter.exercises.map((exercise) => ({
+					title: exercise.title,
+					slug: exercise.slug
 				}))
 			}))
 		}))

@@ -2,7 +2,7 @@
 title: Customizing the error message
 ---
 
-The error page in the previous section is rather static. Maybe you want to show the error message so you can help people turning up in your support channels faster.
+The error page in the previous exercise is rather static. Maybe you want to show the error message so you can help people turning up in your support channels faster.
 
 For this, SvelteKit provides you with `$page.error` and `$page.status`, which contain information about the error and the status code. Let's add it to `+error.svelte`:
 

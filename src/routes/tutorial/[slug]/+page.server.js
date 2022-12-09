@@ -1,15 +1,15 @@
-import { get_section } from '$lib/server/content';
+import { get_exercise } from '$lib/server/content';
 import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ params }) {
-	const section = get_section(params.slug);
+	const exercise = get_exercise(params.slug);
 
-	if (section) {
-		return {
-			section
-		};
+	if (!exercise) {
+		throw error(404, 'No such tutorial found');
 	}
 
-	throw error(404, 'No such tutorial found');
+	return {
+		exercise
+	};
 }

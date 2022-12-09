@@ -2,7 +2,7 @@
 title: Public dynamic environment variables
 ---
 
-In the previous section we saw how to leverage `$env/dynamic/private` for secret environment variables which can't be exposed to front-end code. Similar to their static counterpart, there's also an export to import public environment variables.
+In the previous exercise we saw how to leverage `$env/dynamic/private` for secret environment variables which can't be exposed to front-end code. Similar to their static counterpart, there's also an export to import public environment variables.
 
 For this, first prefix the environment variable inside `.env` with `PUBLIC_`. This prefix marks an environment variable as eligible for use in front-end code.
 

@@ -26,7 +26,7 @@ export interface Adapter {
 	destroy(): Promise<void>;
 }
 
-export interface Section {
+export interface Exercise {
 	part: {
 		slug: string;
 		title: string;
@@ -52,7 +52,7 @@ export interface Section {
 	b: Record<string, Stub>;
 }
 
-export interface SectionRaw {
+export interface ExerciseRaw {
 	title: string;
 	slug: string;
 	prev: { slug: string; title: string } | null;
@@ -61,7 +61,7 @@ export interface SectionRaw {
 	dir: string;
 }
 
-export interface SectionStub {
+export interface ExerciseStub {
 	title: string;
 	slug: string;
 	prev: { slug: string; title: string } | null;
@@ -71,7 +71,7 @@ export interface SectionStub {
 export interface ChapterStub {
 	slug: string;
 	title: string;
-	sections: SectionStub[];
+	exercises: ExerciseStub[];
 }
 
 export interface PartStub {

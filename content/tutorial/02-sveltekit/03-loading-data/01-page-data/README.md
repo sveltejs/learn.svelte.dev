@@ -91,4 +91,4 @@ export function load({ params }) {
 }
 ```
 
-We'll learn more about error handling in later sections.
+We'll learn more about error handling in later chapters.

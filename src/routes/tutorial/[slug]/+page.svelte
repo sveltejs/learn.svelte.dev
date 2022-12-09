@@ -21,7 +21,7 @@
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
 	const selected = writable(
-		/** @type {import('$lib/types').FileStub} */ (data.section.a[data.section.focus])
+		/** @type {import('$lib/types').FileStub} */ (data.exercise.a[data.exercise.focus])
 	);
 
 	/** @type {import('$lib/types').Stub[]}*/
@@ -54,13 +54,13 @@
 	/** @type {import('$lib/types').EditingConstraints} list of files user is allowed to create/delete in the tutorial chapter */
 	let editing_constraints;
 	$: {
-		b = { ...data.section.a };
+		b = { ...data.exercise.a };
 		editing_constraints = {
 			create: [],
 			remove: []
 		};
-		for (const key in data.section.b) {
-			const stub = data.section.b[key];
+		for (const key in data.exercise.b) {
+			const stub = data.exercise.b[key];
 
 			if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
 				// remove file
@@ -80,7 +80,7 @@
 				if (!b[key]) {
 					editing_constraints.create.push(key);
 				}
-				b[key] = data.section.b[key];
+				b[key] = data.exercise.b[key];
 			}
 		}
 	}
@@ -293,10 +293,10 @@
 
 	async function load_exercise() {
 		try {
-			current_stubs = Object.values(data.section.a);
+			current_stubs = Object.values(data.exercise.a);
 			select(
 				/** @type {import('$lib/types').FileStub} */ (
-					current_stubs.find((stub) => stub.name === data.section.focus)
+					current_stubs.find((stub) => stub.name === data.exercise.focus)
 				)
 			);
 
@@ -432,7 +432,7 @@
 <svelte:window on:message={handle_message} bind:innerWidth={width} />
 
 <svelte:head>
-	<title>{data.section.chapter.title} / {data.section.title} • Svelte Tutorial</title>
+	<title>{data.exercise.chapter.title} / {data.exercise.title} • Svelte Tutorial</title>
 </svelte:head>
 
 <ContextMenu />
@@ -461,9 +461,9 @@
 		<section slot="a" class="content">
 			<Sidebar
 				index={data.index}
-				section={data.section}
+				exercise={data.exercise}
 				on:select={(e) => {
-					select(/** @type {import('$lib/types').FileStub} */ (data.section.a[e.detail.file]));
+					select(/** @type {import('$lib/types').FileStub} */ (data.exercise.a[e.detail.file]));
 				}}
 			/>
 		</section>
@@ -480,7 +480,7 @@
 						<section class="navigator" slot="a">
 							<div class="filetree">
 								<Folder
-									{...data.section.scope}
+									{...data.exercise.scope}
 									files={current_stubs.filter((stub) => !hidden.has(stub.basename))}
 									expanded
 									read_only={mobile}
@@ -491,13 +491,13 @@
 
 							<button
 								class:completed
-								disabled={Object.keys(data.section.b).length === 0}
+								disabled={Object.keys(data.exercise.b).length === 0}
 								on:click={() => {
-									current_stubs = Object.values(completed ? data.section.a : b);
+									current_stubs = Object.values(completed ? data.exercise.a : b);
 									load_files(current_stubs);
 								}}
 							>
-								{#if completed && Object.keys(data.section.b).length > 0}
+								{#if completed && Object.keys(data.exercise.b).length > 0}
 									reset
 								{:else}
 									solve <Icon name="arrow-right" />
