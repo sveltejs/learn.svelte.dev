@@ -49,6 +49,8 @@ export function get_index() {
 			const exercises = [];
 
 			for (const exercise of fs.readdirSync(`content/tutorial/${part}/${chapter}`)) {
+				if (!/^\d{2}-/.test(exercise)) continue;
+
 				const dir = `content/tutorial/${part}/${chapter}/${exercise}`;
 				if (!fs.statSync(dir).isDirectory()) continue;
 
