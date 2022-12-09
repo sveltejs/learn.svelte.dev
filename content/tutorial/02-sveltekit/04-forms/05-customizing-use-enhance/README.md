@@ -75,6 +75,10 @@ In the case of deletions, we don't really need to wait for the server to validat
 				action="?/delete"
 +++				use:enhance={() => {
 					deleting = [...deleting, todo.id];
+					return async ({ update }) => {
+						await update();
+						deleting = deleting.filter((id) => id !== todo.id);
+					};
 				}}+++
 			>
 				<input type="hidden" name="id" value={todo.id} />

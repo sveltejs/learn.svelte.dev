@@ -28,7 +28,7 @@
 	}}
 >
 	<label>
-		{creating? 'Saving...' : 'Add a todo'}
+		{creating ? 'Saving...' : 'Add a todo'}
 		<input
 			disabled={creating}
 			name="description"
@@ -48,6 +48,10 @@
 				action="?/delete"
 				use:enhance={() => {
 					deleting = [...deleting, todo.id];
+					return async ({ update }) => {
+						await update();
+						deleting = deleting.filter((id) => id !== todo.id);
+					};
 				}}
 			>
 				<input type="hidden" name="id" value={todo.id} />
