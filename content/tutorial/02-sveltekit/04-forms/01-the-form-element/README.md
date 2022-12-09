@@ -11,10 +11,10 @@ Let's build a todo app. We've already got an in-memory database set up in `src/l
 <h1>Todos</h1>
 
 +++<form method="POST">
-	<input
-		name="description"
-		placeholder="What needs to be done?"
-	/>
+	<label>
+		Add a todo
+		<input name="description" />
+	</label>
 </form>+++
 
 {#each data.todos as todo}
