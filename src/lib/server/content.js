@@ -100,51 +100,70 @@ export function get_exercise(slug) {
 	for (let i = 0; i < index.length; i += 1) {
 		const part = index[i];
 
+		/** @type {string[]} */
+		const chain = [];
+
 		for (const chapter of part.chapters) {
 			for (const exercise of chapter.exercises) {
-				if (exercise.slug !== slug) continue;
+				if (exercise.slug === slug) {
+					const a = {
+						...walk('content/tutorial/common', { exclude: ['node_modules'] }),
+						...walk(`content/tutorial/${part.slug}/common`)
+					};
 
-				const a = {
-					...walk('content/tutorial/common', { exclude: ['node_modules'] }),
-					...walk(`content/tutorial/${part.slug}/common`),
-					...walk(`${exercise.dir}/app-a`)
-				};
+					for (const dir of chain) {
+						Object.assign(a, walk(dir));
+					}
 
-				const b = walk(`${exercise.dir}/app-b`);
+					Object.assign(a, walk(`${exercise.dir}/app-a`));
 
-				const scope = chapter.meta.scope ?? part.meta.scope;
-				const filenames = new Set(
-					Object.keys(a)
-						.filter((filename) => filename.startsWith(scope.prefix) && a[filename].type === 'file')
-						.map((filename) => filename.slice(scope.prefix.length))
-				);
+					const b = walk(`${exercise.dir}/app-b`);
 
-				return {
-					part: {
-						slug: part.meta.slug,
-						title: part.meta.title,
-						index: i
-					},
-					chapter: {
-						slug: chapter.meta.slug,
-						title: chapter.meta.title
-					},
-					scope,
-					focus: chapter.meta.focus ?? part.meta.focus,
-					title: exercise.title,
-					slug: exercise.slug,
-					prev: exercise.prev,
-					next: exercise.next,
-					dir: exercise.dir,
-					html: transform(exercise.markdown, {
-						codespan: (text) =>
-							filenames.size > 1 && filenames.has(text)
-								? `<code data-file="${scope.prefix + text}">${text}</code>`
-								: `<code>${text}</code>`
-					}),
-					a,
-					b
-				};
+					const scope = chapter.meta.scope ?? part.meta.scope;
+					const filenames = new Set(
+						Object.keys(a)
+							.filter(
+								(filename) => filename.startsWith(scope.prefix) && a[filename].type === 'file'
+							)
+							.map((filename) => filename.slice(scope.prefix.length))
+					);
+
+					return {
+						part: {
+							slug: part.meta.slug,
+							title: part.meta.title,
+							index: i
+						},
+						chapter: {
+							slug: chapter.meta.slug,
+							title: chapter.meta.title
+						},
+						scope,
+						focus: chapter.meta.focus ?? part.meta.focus,
+						title: exercise.title,
+						slug: exercise.slug,
+						prev: exercise.prev,
+						next: exercise.next,
+						dir: exercise.dir,
+						html: transform(exercise.markdown, {
+							codespan: (text) =>
+								filenames.size > 1 && filenames.has(text)
+									? `<code data-file="${scope.prefix + text}">${text}</code>`
+									: `<code>${text}</code>`
+						}),
+						a,
+						b
+					};
+				}
+
+				if (fs.existsSync(`${exercise.dir}/app-a`)) {
+					chain.length = 0;
+					chain.push(`${exercise.dir}/app-a`);
+				}
+
+				if (fs.existsSync(`${exercise.dir}/app-b`)) {
+					chain.push(`${exercise.dir}/app-b`);
+				}
 			}
 		}
 	}
