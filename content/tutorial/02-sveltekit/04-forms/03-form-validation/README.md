@@ -8,11 +8,13 @@ The first line of defense is the browser's [built-in form validation](https://de
 
 ```svelte
 <form method="POST" action="?/create">
-	<input
-		name="description"
-		placeholder="What needs to be done?"
-		+++required+++
-	/>
+	<label>
+		Add a todo
+		<input
+			name="description"
+			+++required+++
+		/>
+	</label>
 </form>
 ```
 
@@ -88,12 +90,14 @@ In `src/routes/+page.svelte`, we can access the returned value via the `form` pr
 {/if}+++
 
 <form method="POST" action="?/create">
-	<input
-		name="description"
-		+++value={form?.description ?? ''}+++
-		placeholder="What needs to be done?"
-		required
-	/>
+	<label>
+		Add a todo
+		<input
+			name="description"
+			+++value={form?.description ?? ''}+++
+			required
+		/>
+	</label>
 </form>
 ```
 

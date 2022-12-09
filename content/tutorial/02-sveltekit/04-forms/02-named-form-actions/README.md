@@ -28,10 +28,10 @@ The `<form>` element has an optional `action` attribute, which is similar to an 
 ```svelte
 /// file: src/routes/+page.svelte
 <form method="POST" +++action="?/create"+++>
-	<input
-		name="description"
-		placeholder="What needs to be done?"
-	/>
+	<label>
+		Add a todo
+		<input name="description" />
+	</label>
 </form>
 ```
 
