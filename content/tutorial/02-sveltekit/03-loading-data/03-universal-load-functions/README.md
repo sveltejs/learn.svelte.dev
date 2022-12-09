@@ -2,7 +2,7 @@
 title: Universal load functions
 ---
 
-> TODO this doesn't work, because the body isn't completely buffered before `request.json()` fulfils. Bug in webcontainer?
+> TODO use an external API instead of a hidden one. This doesn't currently work, because the body isn't completely buffered before `request.json()` fulfils. Bug in webcontainer?
 
 In the previous two exercises we loaded data from the server using `+page.server.js` and `+layout.server.js` files. This is very convenient if you need to do things like getting data directly from a database, or reading cookies.
 

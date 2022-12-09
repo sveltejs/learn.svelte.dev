@@ -1,6 +1,4 @@
 <script>
-	import Comment from './Comment.svelte';
-
 	export let data;
 </script>
 
