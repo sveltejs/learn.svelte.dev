@@ -12,11 +12,11 @@ Environment variables are [loaded by Vite](https://vitejs.dev/guide/env-and-mode
 SvelteKit solves both these drawbacks through its `$env/*` exports. Let's replace the environment variable in `src/routes/+page.server.js` using an import with the same name from `$env/static/private`:
 
 ```js
-+++import { VITE_SECRET } from '$env/static/private';+++
++++import { VITE_API_SECRET } from '$env/static/private';+++
 import { db } from './db.js';
 
 export function load() {
-    return db.getData(---import.meta.env.---VITE_SECRET);
+    return db.getData(---import.meta.env.---VITE_API_SECRET);
 }
 ```
 
@@ -25,7 +25,7 @@ You are allowed to import private environment variables inside files ending with
 ```svelte
 /// file: src/routes/+page.svelte
 <script>
-    +++import { VITE_SECRET } from '$env/static/private';+++
+    +++import { VITE_API_SECRET } from '$env/static/private';+++
     export let data;
 </script>
 
@@ -33,5 +33,22 @@ You are allowed to import private environment variables inside files ending with
 ```
 
 ... you get an error. (Don't worry about the text still showing up in the background, this is a dev environment limitation - your prod build would fail.)
+
+Now that we're using SvelteKit's mechanism for environment variables, we can also get rid of the `VITE_` prefix:
+
+```js
+/// file: .env
+---VITE_---API_SECRET="Oh no, you shouldn't see this!"
+```
+
+```js
+/// file: src/routes/+page.server.js
+import { ---VITE_---API_SECRET } from '$env/static/private';
+import { db } from './db.js';
+
+export function load() {
+    return db.getData(---VITE_---API_SECRET);
+}
+```
 
 > Don't commit your `.env` file to Git if it contains sensitive information such as API keys!
