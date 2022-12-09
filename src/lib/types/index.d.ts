@@ -22,7 +22,7 @@ export interface Adapter {
 	base: string;
 	/** Returns `false` if the reset was in such a way that a reload of the iframe isn't needed */
 	reset(files: Array<Stub>): Promise<boolean>;
-	update(file: Array<FileStub>): Promise<void>;
+	update(file: Array<FileStub>): Promise<boolean>;
 	destroy(): Promise<void>;
 }
 

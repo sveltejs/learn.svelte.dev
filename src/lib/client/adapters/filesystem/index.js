@@ -51,10 +51,25 @@ export async function create(stubs) {
 			});
 
 			await new Promise((f) => setTimeout(f, 100)); // wait for chokidar
+
+			return will_restart_vite_dev_server(stubs);
 		},
 
 		async destroy() {
 			navigator.sendBeacon(`/backend/destroy?id=${id}`);
 		}
 	};
+}
+
+/**
+ * @param {import('$lib/types').Stub[]} stubs
+ */
+function will_restart_vite_dev_server(stubs) {
+	return stubs.some(
+		(stub) =>
+			stub.type === 'file' &&
+			(stub.name === '/vite.config.js' ||
+				stub.name === '/svelte.config.js' ||
+				stub.name === '/.env')
+	);
 }
