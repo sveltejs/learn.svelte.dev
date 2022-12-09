@@ -164,7 +164,9 @@ async function _create(stubs) {
 		const will_restart = new_stubs.some(
 			(stub) =>
 				stub.type === 'file' &&
-				(stub.name === '/vite.config.js' || stub.name === '/svelte.config.js')
+				(stub.name === '/vite.config.js' ||
+					stub.name === '/svelte.config.js' ||
+					stub.name === '/.env')
 		);
 		const promise = will_restart
 			? new Promise((fulfil, reject) => {
@@ -200,7 +202,7 @@ async function _create(stubs) {
 
 		// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 		// because that can result in a broken UI state
-		return will_restart || vite_error || old.size || new_stubs.length;
+		return will_restart || vite_error || !!old.size || !!new_stubs.length;
 	}
 
 	/**
