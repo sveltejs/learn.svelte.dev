@@ -51,11 +51,11 @@ export function createTodo(userid, description) {
 
 Try submitting a duplicate todo. Yikes! SvelteKit takes us to an unfriendly-looking error page. On the server, we see a 'Todos must be unique' error, but SvelteKit hides unexpected error messages from users because they often contain sensitive data.
 
-It would be much better to stay on the same page and provide an indication of what went wrong so that the user can fix it. To do this, we can use the `invalid` function to return data from the action along with an appropriate HTTP status code:
+It would be much better to stay on the same page and provide an indication of what went wrong so that the user can fix it. To do this, we can use the `fail` function to return data from the action along with an appropriate HTTP status code:
 
 ```js
 /// file: src/routes/+page.server.js
-+++import { invalid } from '@sveltejs/kit';+++
++++import { fail } from '@sveltejs/kit';+++
 
 export function load({ cookies }) {...}
 
@@ -66,7 +66,7 @@ export const actions = {
 +++		try {+++
 			db.createTodo(cookies.get('userid'), data.get('description'));
 +++		} catch (error) {
-			return invalid(422, {
+			return fail(422, {
 				description: data.get('description'),
 				error: error.message
 			});
@@ -101,4 +101,4 @@ In `src/routes/+page.svelte`, we can access the returned value via the `form` pr
 </form>
 ```
 
-> You can also return data from an action _without_ wrapping it in `invalid` — for example to show a 'Success!' message when data was saved — and it will be available via the `form` prop.
+> You can also return data from an action _without_ wrapping it in `fail` — for example to show a 'Success!' message when data was saved — and it will be available via the `form` prop.
