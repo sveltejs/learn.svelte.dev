@@ -1,7 +1,5 @@
 <script>
+	export let data;
 </script>
 
-<p>
-	My secret environment variable is:
-	{import.meta.env.VITE_SECRET}
-</p>
+<p>{data.text}</p>

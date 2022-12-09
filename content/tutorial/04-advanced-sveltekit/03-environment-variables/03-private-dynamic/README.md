@@ -6,15 +6,17 @@ Some environment variables aren't statically known at build time - for example t
 
 To access dynamic environment variables, replace the `$env/static/private` import with `$env/dynamic/private` and use the `env` variable instead, since we can't know the name statically:
 
-```svelte
-<script>
-    import { ---SECRET---+++env+++ } from '$env/---static---+++dynamic+++/private';
-</script>
+```js
+/// file: src/routes/+page.server.js
+import { ---VITE_SECRET---+++env+++ } from '$env/---static---+++dynamic+++/private';
+import { db } from './db.js';
 
-<p>My secret environment variable is: {+++env.+++SECRET}</p>
+export function load() {
+    return db.getData(+++env.+++VITE_SECRET);
+}
 ```
 
-As you can see, we still get an error, since the variable is marked as private. You will also get auto-completion on the `env` object if you added this variable to your local `.env` file.
+Just like with private static variables you would get an error when importing it in public code. You will also get auto-completion on the `env` object if you added this variable to your local `.env` file.
 
 > In dev, `$env/dynamic` always includes environment variables from `.env`. In prod, this behavior will depend on your adapter.
 

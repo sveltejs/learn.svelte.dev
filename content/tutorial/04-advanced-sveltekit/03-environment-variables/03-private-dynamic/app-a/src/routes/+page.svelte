@@ -1,7 +1,5 @@
 <script>
-	import { SECRET } from '$env/static/private';
+	export let data;
 </script>
 
-<p>
-	My secret environment variable is: {SECRET}
-</p>
+<p>{data.text}</p>

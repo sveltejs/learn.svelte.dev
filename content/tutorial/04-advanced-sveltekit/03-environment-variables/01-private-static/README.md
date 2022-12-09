@@ -9,18 +9,29 @@ Environment variables are [loaded by Vite](https://vitejs.dev/guide/env-and-mode
 - There's no way to distinguish between variables we want to expose on the server and on the client. It's easy to accidentally expose sensitive data to your front-end code
 - It's not type safe
 
-SvelteKit solves both these drawbacks through its `$env/*` exports. Let's replace the environment variable in `src/routes/+page.svelte` using an import with the same name from `$env/static/private`:
+SvelteKit solves both these drawbacks through its `$env/*` exports. Let's replace the environment variable in `src/routes/+page.server.js` using an import with the same name from `$env/static/private`:
 
-```svelte
-<script>
-    +++import { VITE_SECRET } from '$env/static/private';+++
-</script>
+```js
++++import { VITE_SECRET } from '$env/static/private';+++
+import { db } from './db.js';
 
-<p>My secret environment variable is: {---import.meta.env.VITE_SECRET---+++VITE_SECRET+++}</p>
+export function load() {
+    return db.getData(---import.meta.env.---VITE_SECRET);
+}
 ```
 
-As you can see, we now get an error, since the variable is marked as private - crisis averted! Don't worry about the text still showing up in the background, this is a dev environment limitation - your prod build would fail.
+You are allowed to import private environment variables inside files ending with `.server.js` and files inside the `src/lib/server` folder. If you import that same variable in client code ...
 
-You are allowed to import private environment variables inside `+page.server.js` or `+server.js` files, for example. For more info, see the docs on [server-only modules](https://kit.svelte.dev/docs/server-only-modules).
+```svelte
+/// file: src/routes/+page.svelte
+<script>
+    +++import { VITE_SECRET } from '$env/static/private';+++
+    export let data;
+</script>
+
+<p>{data.text}</p>
+```
+
+... you get an error. (Don't worry about the text still showing up in the background, this is a dev environment limitation - your prod build would fail.)
 
 > Don't commit your `.env` file to Git if it contains sensitive information such as API keys!
