@@ -32,10 +32,8 @@ export function load({ cookies }) {
 
 +++export const actions = {
 	default: async ({ cookies, request }) => {
-		const userid = cookies.get('userid');
 		const data = await request.formData();
-
-		db.createTodo(userid, data.get('description'));
+		db.createTodo(cookies.get('userid'), data.get('description'));
 	}
 };+++
 ```
