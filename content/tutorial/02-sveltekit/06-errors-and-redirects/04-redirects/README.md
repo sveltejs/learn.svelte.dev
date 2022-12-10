@@ -19,7 +19,7 @@ Navigating to `/a` will now take us straight to `/b`.
 
 You can `throw redirect(...)` inside `load` functions, form actions, API routes and the `handle` hook, which we'll discuss in a later chapter.
 
-The most common status codes you'll use are as follows:
+The most common status codes you'll use:
 
 - `303` — for form actions, following a successful submission
 - `307` — for temporary redirects

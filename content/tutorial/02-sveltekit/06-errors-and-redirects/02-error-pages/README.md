@@ -26,7 +26,7 @@ Notice that the `+error.svelte` component is rendered inside the root `+layout.s
 
 ```svelte
 /// file: src/routes/expected/+error.svelte
-<h1>This error was expected</h1>
+<h1>this error was expected</h1>
 ```
 
 This component will be rendered for `/expected`, while the root `src/routes/+error.svelte` page will be rendered for any other errors that occur.
