@@ -124,6 +124,11 @@ export function get_exercise(slug) {
 
 		for (const chapter of part.chapters) {
 			for (const exercise of chapter.exercises) {
+				if (fs.existsSync(`${exercise.dir}/app-a`)) {
+					chain.length = 0;
+					chain.push(`${exercise.dir}/app-a`);
+				}
+
 				if (exercise.slug === slug) {
 					const a = {
 						...walk('content/tutorial/common', { exclude: ['node_modules'] }),
@@ -133,8 +138,6 @@ export function get_exercise(slug) {
 					for (const dir of chain) {
 						Object.assign(a, walk(dir));
 					}
-
-					Object.assign(a, walk(`${exercise.dir}/app-a`));
 
 					const b = walk(`${exercise.dir}/app-b`);
 
@@ -175,14 +178,7 @@ export function get_exercise(slug) {
 					};
 				}
 
-				if (fs.existsSync(`${exercise.dir}/app-a`)) {
-					chain.length = 0;
-					chain.push(`${exercise.dir}/app-a`);
-				}
-
-				if (fs.existsSync(`${exercise.dir}/app-b`)) {
-					chain.push(`${exercise.dir}/app-b`);
-				}
+				chain.push(`${exercise.dir}/app-b`);
 			}
 		}
 	}
