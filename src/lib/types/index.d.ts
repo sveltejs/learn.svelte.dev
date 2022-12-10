@@ -44,7 +44,7 @@ export interface Exercise {
 	focus: string;
 	title: string;
 	slug: string;
-	prev: { slug: string; title: string } | null;
+	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;
 	html: string;
 	dir: string;
@@ -55,7 +55,7 @@ export interface Exercise {
 export interface ExerciseRaw {
 	title: string;
 	slug: string;
-	prev: { slug: string; title: string } | null;
+	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;
 	markdown: string;
 	dir: string;
@@ -64,7 +64,7 @@ export interface ExerciseRaw {
 export interface ExerciseStub {
 	title: string;
 	slug: string;
-	prev: { slug: string; title: string } | null;
+	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;
 }
 

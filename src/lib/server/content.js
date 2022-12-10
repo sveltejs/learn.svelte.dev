@@ -28,6 +28,9 @@ export function get_index() {
 	/** @type {import('$lib/types').ExerciseRaw | null} */
 	let last_exercise = null;
 
+	let last_part_meta = null;
+	let last_chapter_meta = null;
+
 	for (const part of fs.readdirSync('content/tutorial')) {
 		if (!/^\d{2}-/.test(part)) continue;
 
@@ -60,7 +63,17 @@ export function get_index() {
 
 				const slug = exercise.slice(3);
 
-				if (last_exercise) last_exercise.next = { slug, title };
+				if (last_exercise) {
+					last_exercise.next = {
+						slug,
+						title:
+							last_part_meta !== part_meta
+								? part_meta.title
+								: last_chapter_meta !== chapter_meta
+								? chapter_meta.title
+								: title
+					};
+				}
 
 				exercises.push(
 					(last_exercise = {
@@ -68,10 +81,13 @@ export function get_index() {
 						title: frontmatter.title,
 						markdown,
 						dir,
-						prev: last_exercise ? { slug: last_exercise.slug, title: last_exercise.title } : null,
+						prev: last_exercise ? { slug: last_exercise.slug } : null,
 						next: null
 					})
 				);
+
+				last_chapter_meta = chapter_meta;
+				last_part_meta = part_meta;
 			}
 
 			chapters.push({
@@ -99,6 +115,7 @@ export function get_index() {
  */
 export function get_exercise(slug) {
 	const index = get_index();
+
 	for (let i = 0; i < index.length; i += 1) {
 		const part = index[i];
 
