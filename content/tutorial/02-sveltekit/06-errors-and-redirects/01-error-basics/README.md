@@ -28,4 +28,4 @@ When you throw an expected error, you're telling SvelteKit 'don't worry, I know 
 
 > In a later chapter we'll learn about how to add custom error handling using the `handleError` hook.
 
-If you click the links in this app, you'll notice an important difference: the expected error message is shown to the user, whereas the unexpected error message is redacted. That's because error messages can contain sensitive data.
+If you click the links in this app, you'll notice an important difference: the expected error message is shown to the user, whereas the unexpected error message is redacted and replaced with a generic 'Internal Error' message and a 500 status code. That's because error messages can contain sensitive data.
