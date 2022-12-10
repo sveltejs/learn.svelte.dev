@@ -130,9 +130,9 @@
 {#if state !== 'edit_folder'}
 	<div class="folder-row">
 		<div class="folder-highlight" />
-		<button data-folder class:expanded on:click={toggle} on:contextmenu|preventDefault={open_menu}
-			>{name}</button
-		>
+		<button data-folder class:expanded on:click={toggle} on:contextmenu|preventDefault={open_menu}>
+			{name}
+		</button>
 		<div class="folder-actions">
 			{#if can_create}
 				<button aria-label="New file" class="icon file-new" on:click={() => (state = 'add_file')} />
