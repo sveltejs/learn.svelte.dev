@@ -1,1 +1,1 @@
-<p>Home Page</p>
+<h1>color picker</h1>

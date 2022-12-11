@@ -2,44 +2,19 @@
 title: Param matchers
 ---
 
-A route like `src/routes/archive/[page]` would match `/archive/3`, but it would also match `/archive/potato`. We don't want that. You can ensure that route parameters are well-formed by adding a matcher — which takes the parameter string (`"3"` or `"potato"`) and returns `true` if it is valid.
+To prevent the router from matching on invalid input, you can specify a _matcher_. For example, you might want a route like `/colors/[value]` to match hex values like `/colors/ff3e00` but not named colors like `/colors/octarine` or any other arbitrary input.
 
-First add a `params` directory (all matchers go in there) with a matcher in it:
-
-```diff
-src/
-+├ params/
-+│ └ integer.js
-├ routes/
-│ ├ archive/
-│ │ ├ [page]/
-│ │ │ └ +page.svelte
-│ ├ +layout.svelte
-│ └ +page.svelte
-```
+First, create a new file called `src/params/hex.js` and export a `match` function from it:
 
 ```js
-/// file: src/params/integer.js
-export function match(param) {
-	return /^\d+$/.test(param);
+/// file: src/params/hex.js
+export function match(value) {
+	return /^[0-9a-f]{6}$/.test(value);
 }
 ```
 
-Then augment your routes with the matcher:
+Then, to use the new matcher, rename `src/routes/colors/[color]` to `src/routes/colors/[color=hex]`.
 
-```diff
-src/
-├ params/
-│ └ integer.js
-├ routes/
-│ ├ archive/
--│ │ ├ [page]/
-+│ │ ├ [page=integer]/
-│ │ │ └ +page.svelte
-│ ├ +layout.svelte
-│ └ +page.svelte
-```
-
-Now, whenever someone navigates to that page, the validator will try to match the `[page]` parameter to see if it's valid. If the pathname doesn't match, SvelteKit will try to match other routes, before eventually returning a 404.
+Now, whenever someone navigates to that route, SvelteKit will verify that `color` is a valid `hex` value. If not, SvelteKit will try to match other routes, before eventually returning a 404.
 
 > Matchers run both on the server and in the browser.
