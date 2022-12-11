@@ -1,6 +1,6 @@
 <script>
 	import { afterNavigate } from '$app/navigation';
-	import { setContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './Editor.svelte';
