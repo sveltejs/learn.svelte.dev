@@ -1,11 +1,7 @@
-// TODO turn this into a layout endpoint, when such things exist
-
 import { get_index } from '$lib/server/content';
-import { json } from '@sveltejs/kit';
 
-/** @type {import('./$types').RequestHandler} */
-export function GET() {
-	return json({
+export function load() {
+	return {
 		index: get_index().map((part) => ({
 			title: part.meta.title,
 			slug: part.meta.slug,
@@ -18,5 +14,5 @@ export function GET() {
 				}))
 			}))
 		}))
-	});
+	};
 }
