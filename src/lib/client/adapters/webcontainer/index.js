@@ -1,5 +1,6 @@
 import { load } from '@webcontainer/api';
 import base64 from 'base64-js';
+import { get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
 
 /** @type {import('@webcontainer/api').WebContainer} Web container singleton */
@@ -276,7 +277,7 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 	const tree = {};
 
 	for (const stub of stubs) {
-		if (stub.depth === depth) {
+		if (get_depth(stub.name) === depth) {
 			if (stub.type === 'directory') {
 				const children = stubs.filter((child) => child.name.startsWith(stub.name));
 

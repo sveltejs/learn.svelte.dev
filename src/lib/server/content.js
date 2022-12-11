@@ -240,8 +240,7 @@ export function walk(cwd, options = {}) {
 				result[name] = {
 					type: 'directory',
 					name,
-					basename,
-					depth
+					basename
 				};
 
 				walk_dir(name + '/', depth + 1);
@@ -254,8 +253,7 @@ export function walk(cwd, options = {}) {
 					name,
 					basename,
 					text,
-					contents,
-					depth
+					contents
 				};
 			}
 		}

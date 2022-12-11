@@ -2,6 +2,7 @@
 	import { open } from './ContextMenu.svelte';
 	import File from './File.svelte';
 	import * as context from './context.js';
+	import { get_depth } from '$lib/utils';
 
 	export let expanded = true;
 	export let toggleable = true;
@@ -46,10 +47,10 @@
 		)
 		.sort((a, b) => (a.name < b.name ? -1 : 1));
 	$: child_directories = children.filter(
-		(child) => child.depth === depth + 1 && child.type === 'directory'
+		(child) => get_depth(child.name) === depth + 1 && child.type === 'directory'
 	);
 	$: child_files = /** @type {import('$lib/types').FileStub[]} */ (
-		children.filter((child) => child.depth === depth + 1 && child.type === 'file')
+		children.filter((child) => get_depth(child.name) === depth + 1 && child.type === 'file')
 	);
 	$: file = _files.find((file) => file.name === prefix.slice(0, -1));
 

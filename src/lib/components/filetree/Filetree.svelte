@@ -43,10 +43,12 @@
 
 <div class="filetree">
 	<Folder
-		{...scope}
+		prefix={scope.prefix}
+		depth={scope.depth}
+		name={scope.name}
 		{files}
-		expanded
 		{readonly}
+		expanded
 		can_create={!!constraints.create.length}
 		can_remove={!!constraints.remove.length}
 	/>

@@ -6,14 +6,12 @@ export interface FileStub {
 	basename: string;
 	contents: string;
 	text: boolean;
-	depth: number;
 }
 
 export interface DirectoryStub {
 	type: 'directory';
 	name: string;
 	basename: string;
-	depth: number;
 }
 
 export type Stub = FileStub | DirectoryStub;

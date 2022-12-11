@@ -106,7 +106,6 @@
 
 		const new_name = name.slice(dir.name.length + 1);
 		const prefix = dir.name + '/';
-		const depth = prefix.split('/').length - 2;
 		const parts = new_name.split('/');
 		/** @type {import('$lib/types').Stub[]} */
 		const stubs = [];
@@ -117,12 +116,11 @@
 			const name = prefix + part;
 			if (!current.some((s) => s.name === name)) {
 				if (i < parts.length || type === 'directory') {
-					stubs.push({ type: 'directory', name, depth: depth + i, basename });
+					stubs.push({ type: 'directory', name, basename });
 				} else if (i === parts.length && type === 'file') {
 					stubs.push({
 						type: 'file',
 						name,
-						depth: depth + i,
 						basename,
 						text: true,
 						contents: ''
