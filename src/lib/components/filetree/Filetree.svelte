@@ -7,6 +7,9 @@
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
 	export let files;
 
+	/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
+	export let endstate;
+
 	/** @type {{ prefix: string, depth: number, name: string }} */
 	export let scope;
 
@@ -26,17 +29,16 @@
 	const hidden = new Set(['__client.js', 'node_modules']);
 
 	context.set({
+		endstate,
+		files,
 		selected,
-		constraints,
 
 		select: async (file) => {
 			selected.set(file);
 		},
 
 		add: async (name, type) => {
-			const can_create = $constraints.create.some((c) => name === c);
-
-			if (!can_create) {
+			if (!$endstate[name]) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
 					$constraints.create.join('\n');
@@ -63,16 +65,14 @@
 				return;
 			}
 
-			const can_create = $constraints.create.some((c) => new_full_name === c);
-			if (!can_create) {
+			if (!$endstate[new_full_name]) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
 					$constraints.create.join('\n');
 				return;
 			}
 
-			const can_remove = $constraints.remove.some((c) => to_rename.name === c);
-			if (!can_remove) {
+			if ($endstate[new_full_name]) {
 				modal_text =
 					'Only the following files and folders are allowed to be removed in this exercise:\n' +
 					$constraints.remove.join('\n');
@@ -96,9 +96,7 @@
 		},
 
 		remove: async (stub) => {
-			const can_remove = $constraints.remove.some((r) => stub.name === r);
-
-			if (!can_remove) {
+			if ($endstate[stub.name]) {
 				modal_text =
 					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
 					$constraints.remove.join('\n');

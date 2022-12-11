@@ -25,7 +25,7 @@
 	let state = 'idle';
 	let new_name = '';
 
-	const { constraints, edit, add, remove } = context.get();
+	const { endstate, files: all_files, edit, add, remove } = context.get();
 
 	$: _files = files || []; // workaround for what seems to be a Svelte bug, where files is undefined on navigation
 	$: hidden_children = _files
@@ -48,42 +48,75 @@
 	$: child_files = /** @type {import('$lib/types').FileStub[]} */ (
 		children.filter((child) => get_depth(child.name) === depth + 1 && child.type === 'file')
 	);
+
+	// TODO get rid of this
 	$: file = _files.find((file) => file.name === prefix.slice(0, -1));
 
 	function toggle() {
 		if (toggleable) expanded = !expanded;
 	}
 
-	$: can_create_children = $constraints.create.some(
-		(constraint) => constraint.startsWith(prefix) && get_depth(constraint) === depth + 1
-	);
+	const can_create = { file: false, directory: false };
 
-	$: can_rename_or_remove = $constraints.remove.includes(name);
+	$: {
+		can_create.file = false;
+		can_create.directory = false;
+
+		if (!readonly) {
+			const child_prefixes = [];
+
+			for (const stub of $all_files) {
+				if (
+					stub.type === 'directory' &&
+					stub.name.startsWith(prefix) &&
+					get_depth(stub.name) === depth + 1
+				) {
+					child_prefixes.push(stub.name + '/');
+				}
+			}
+
+			for (const stub of Object.values($endstate)) {
+				if (!stub.name.startsWith(prefix)) continue;
+
+				// if already exists in $files, bail
+				if ($all_files.find((s) => s.name === stub.name)) continue;
+
+				// if intermediate directory exists, bail
+				if (child_prefixes.some((prefix) => stub.name.startsWith(prefix))) continue;
+
+				can_create[stub.type] = true;
+			}
+		}
+	}
+
+	$: can_rename_or_remove = file && !$endstate[file.name];
 
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
-		if (readonly || (!can_create_children && !can_rename_or_remove)) {
+		if (readonly || (!can_create.file && !can_create.directory && !can_rename_or_remove)) {
 			return;
 		}
 
 		/** @type {import('./ContextMenu.svelte').MenuItems} */
 		const actions = [];
-		if (can_create_children) {
-			actions.push(
-				{
-					name: 'New file',
-					action: () => {
-						state = 'add_file';
-					}
-				},
-				{
-					name: 'New folder',
-					action: () => {
-						state = 'add_folder';
-					}
+		if (can_create.file) {
+			actions.push({
+				name: 'New file',
+				action: () => {
+					state = 'add_file';
 				}
-			);
+			});
 		}
+
+		if (can_create.directory) {
+			actions.push({
+				name: 'New folder',
+				action: () => {
+					state = 'add_folder';
+				}
+			});
+		}
+
 		if (can_rename_or_remove) {
 			actions.push(
 				{
@@ -101,6 +134,7 @@
 				}
 			);
 		}
+
 		open(e.clientX, e.clientY, actions);
 	}
 
@@ -135,8 +169,11 @@
 			{name}
 		</button>
 		<div class="folder-actions">
-			{#if can_create_children}
+			{#if can_create.file}
 				<button aria-label="New file" class="icon file-new" on:click={() => (state = 'add_file')} />
+			{/if}
+
+			{#if can_create.directory}
 				<button
 					aria-label="New folder"
 					class="icon folder-new"

@@ -18,11 +18,11 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	/** @type {import('svelte/store').Writable<import('$lib/types').Exercise>} */
-	const exercise = writable(data.exercise);
-
 	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
 	const files = writable([]);
+
+	/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
+	const endstate = writable({});
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
 	const selected = writable(null);
@@ -48,40 +48,36 @@
 	let selected_view = 0;
 	$: mobile = width < 768;
 
-	/** @type {Record<string, import('$lib/types').Stub>} */
-	let b;
-
 	/** @type {import('svelte/store').Writable<import('$lib/types').EditingConstraints>} */
 	const editing_constraints = writable({ create: [], remove: [] });
 
 	$: {
-		b = { ...data.exercise.a };
+		$endstate = { ...data.exercise.a };
 
 		$editing_constraints.create = [];
 		$editing_constraints.remove = [];
 
-		for (const key in data.exercise.b) {
-			const stub = data.exercise.b[key];
-
+		// TODO should this be an array in the first place?
+		for (const stub of Object.values(data.exercise.b)) {
 			if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
 				// remove file
-				$editing_constraints.remove.push(key);
-				delete b[key];
-			} else if (key.endsWith('/__delete')) {
+				$editing_constraints.remove.push(stub.name);
+				delete $endstate[stub.name];
+			} else if (stub.name.endsWith('/__delete')) {
 				// remove directory
-				const parent = key.slice(0, key.lastIndexOf('/'));
+				const parent = stub.name.slice(0, stub.name.lastIndexOf('/'));
 				$editing_constraints.remove.push(parent);
-				delete b[parent];
-				for (const k in b) {
+				delete $endstate[parent];
+				for (const k in $endstate) {
 					if (k.startsWith(parent + '/')) {
-						delete b[k];
+						delete $endstate[k];
 					}
 				}
 			} else {
-				if (!b[key]) {
-					$editing_constraints.create.push(key);
+				if (!$endstate[stub.name]) {
+					$editing_constraints.create.push(stub.name);
 				}
-				b[key] = data.exercise.b[key];
+				$endstate[stub.name] = data.exercise.b[stub.name];
 			}
 		}
 	}
@@ -168,7 +164,7 @@
 
 			expected = {};
 			complete_states = {};
-			for (const stub of Object.values(b)) {
+			for (const stub of Object.values($endstate)) {
 				if (stub.type === 'file') {
 					complete_states[stub.name] = false;
 					expected[stub.name] = normalise(stub.contents);
@@ -329,6 +325,7 @@
 						<section class="navigator" slot="a">
 							<Filetree
 								scope={data.exercise.scope}
+								{endstate}
 								{files}
 								readonly={mobile}
 								constraints={editing_constraints}
@@ -342,7 +339,7 @@
 								class:completed
 								disabled={Object.keys(data.exercise.b).length === 0}
 								on:click={() => {
-									$files = Object.values(completed ? data.exercise.a : b);
+									$files = Object.values(completed ? data.exercise.a : $endstate);
 									load_files($files);
 								}}
 							>

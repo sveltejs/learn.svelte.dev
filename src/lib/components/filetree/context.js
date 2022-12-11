@@ -2,8 +2,9 @@ import { setContext, getContext } from 'svelte';
 
 /**
  * @typedef {{
+ *   endstate: import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>;
+ *   files: import('svelte/store').Writable<import('$lib/types').Stub[]>;
  *   selected: import('svelte/store').Writable<import('$lib/types').FileStub | null>;
- *   constraints: import('svelte/store').Writable<import('$lib/types').EditingConstraints>;
  *   select: (file: import('$lib/types').FileStub) => void;
  *   add: (name: string, type: 'file' | 'directory') => Promise<void>;
  *   edit: (stub: import('$lib/types').Stub, name: string) => Promise<void>;

@@ -6,12 +6,12 @@
 	export let file;
 	export let read_only = false;
 
-	const { selected, constraints, select, edit, remove } = context.get();
+	const { selected, endstate, select, edit, remove } = context.get();
 
 	let editing = false;
 	let new_name = '';
 
-	$: can_remove = !read_only && $constraints.remove.includes(file.name);
+	$: can_remove = !read_only && !$endstate[file.name];
 
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
