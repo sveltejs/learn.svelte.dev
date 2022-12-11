@@ -1,6 +1,6 @@
 <script>
-	import { getContext } from 'svelte';
 	import { open } from './ContextMenu.svelte';
+	import * as context from './context.js';
 
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
@@ -8,8 +8,7 @@
 	export let can_create = true;
 	export let can_remove = true;
 
-	/** @type {import('$lib/types').FileTreeContext} */
-	const { select, selected, edit, remove } = getContext('filetree');
+	const { select, selected, edit, remove } = context.get();
 
 	const restricted = new Set([
 		'package.json',

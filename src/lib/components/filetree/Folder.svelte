@@ -1,7 +1,7 @@
 <script>
-	import { getContext } from 'svelte';
 	import { open } from './ContextMenu.svelte';
 	import File from './File.svelte';
+	import * as context from './context.js';
 
 	export let expanded = true;
 	export let toggleable = true;
@@ -22,14 +22,13 @@
 
 	export let can_remove = true;
 
-	export let read_only = false;
+	export let readonly = false;
 
 	/** @type {'idle' | 'add_file' | 'add_folder' | 'edit_folder'} */
 	let state = 'idle';
 	let new_name = '';
 
-	/** @type {import('$lib/types').FileTreeContext} */
-	const { edit, add, remove } = getContext('filetree');
+	const { edit, add, remove } = context.get();
 
 	$: _files = files || []; // workaround for what seems to be a Svelte bug, where files is undefined on navigation
 	$: hidden_children = _files
@@ -60,7 +59,7 @@
 
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
-		if (depth === 0 || read_only || (!can_create && !can_remove)) {
+		if (depth === 0 || readonly || (!can_create && !can_remove)) {
 			return;
 		}
 
@@ -187,7 +186,7 @@
 					prefix={directory.name + '/'}
 					depth={depth + 1}
 					files={children}
-					{read_only}
+					{readonly}
 					{can_create}
 					{can_remove}
 				/>
@@ -196,7 +195,7 @@
 
 		{#each child_files as file}
 			<li>
-				<File {file} {read_only} {can_create} {can_remove} />
+				<File {file} {readonly} {can_create} {can_remove} />
 			</li>
 		{/each}
 	</ul>

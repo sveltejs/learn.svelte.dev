@@ -4,7 +4,6 @@
 	import { writable } from 'svelte/store';
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './Editor.svelte';
-	import Folder from '$lib/components/filetree/Folder.svelte';
 	import ContextMenu from '$lib/components/filetree/ContextMenu.svelte';
 	import { browser, dev } from '$app/environment';
 	import ImageViewer from './ImageViewer.svelte';
@@ -15,6 +14,7 @@
 	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Modal from '$lib/components/Modal.svelte';
+	import Filetree from '$lib/components/filetree/Filetree.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -84,95 +84,6 @@
 			}
 		}
 	}
-
-	/** @type {import('$lib/types').FileTreeContext} */
-	const { select } = setContext('filetree', {
-		select: async (file) => {
-			$selected = file;
-		},
-
-		add: async (name, type) => {
-			const new_stubs = add_stub(name, type, current_stubs);
-
-			const illegal_create = new_stubs.some(
-				(s) => !editing_constraints.create.some((c) => s.name === c)
-			);
-			if (illegal_create) {
-				modal_text =
-					'Only the following files and folders are allowed to be created in this tutorial chapter:\n' +
-					editing_constraints.create.join('\n');
-				return;
-			}
-
-			current_stubs = [...current_stubs, ...new_stubs];
-			await load_files(current_stubs);
-
-			if (new_stubs[0].type === 'file') {
-				select(new_stubs[0]);
-			}
-		},
-
-		edit: async (to_rename, new_name) => {
-			// treat edit as a remove followed by an add
-			const out = current_stubs.filter((s) => s.name.startsWith(to_rename.name));
-			const updated_stubs = current_stubs.filter((s) => !out.includes(s));
-			/** @type {Map<string, import('$lib/types').Stub>} */
-			const new_stubs = new Map();
-			for (const s of out) {
-				const name =
-					s.name.slice(0, to_rename.name.length - to_rename.basename.length) +
-					new_name +
-					s.name.slice(to_rename.name.length);
-				// deduplicate
-				for (const to_add of add_stub(name, s.type, updated_stubs)) {
-					if (s.type === 'file' && to_add.type === 'file') {
-						to_add.contents = s.contents;
-					}
-					new_stubs.set(to_add.name, to_add);
-				}
-			}
-
-			const illegal_rename =
-				!editing_constraints.remove.some((r) => to_rename.name === r) ||
-				[...new_stubs.keys()].some((name) => !editing_constraints.create.some((c) => name === c));
-			if (illegal_rename) {
-				modal_text =
-					'Only the following files and folders are allowed to be renamed in this tutorial chapter:\n' +
-					editing_constraints.remove.join('\n') +
-					'\n\nThey can only be renamed to the following:\n' +
-					editing_constraints.create.join('\n');
-				return;
-			}
-
-			current_stubs = updated_stubs.concat(...new_stubs.values());
-			await load_files(current_stubs);
-
-			if (to_rename.type === 'file' && $selected?.name === to_rename.name) {
-				select(/** @type {any} */ ([...new_stubs.values()].find((s) => s.type === 'file')));
-			}
-		},
-
-		remove: async (stub) => {
-			const illegal_delete = !editing_constraints.remove.some((r) => stub.name === r);
-			if (illegal_delete) {
-				modal_text =
-					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
-					editing_constraints.remove.join('\n');
-				return;
-			}
-
-			const out = current_stubs.filter((s) => s.name.startsWith(stub.name));
-			current_stubs = current_stubs.filter((s) => !out.includes(s));
-
-			if ($selected && out.includes($selected)) {
-				$selected = null;
-			}
-
-			await load_files(current_stubs);
-		},
-
-		selected
-	});
 
 	/**
 	 * @param {string} name
@@ -294,7 +205,7 @@
 	async function load_exercise() {
 		try {
 			current_stubs = Object.values(data.exercise.a);
-			select(
+			selected.set(
 				/** @type {import('$lib/types').FileStub} */ (
 					current_stubs.find((stub) => stub.name === data.exercise.focus)
 				)
@@ -463,7 +374,9 @@
 				index={data.index}
 				exercise={data.exercise}
 				on:select={(e) => {
-					select(/** @type {import('$lib/types').FileStub} */ (data.exercise.a[e.detail.file]));
+					selected.set(
+						/** @type {import('$lib/types').FileStub} */ (data.exercise.a[e.detail.file])
+					);
 				}}
 			/>
 		</section>
@@ -478,16 +391,98 @@
 				<section slot="a">
 					<SplitPane type="horizontal" min="80px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
-							<div class="filetree">
-								<Folder
-									{...data.exercise.scope}
-									files={current_stubs.filter((stub) => !hidden.has(stub.basename))}
-									expanded
-									read_only={mobile}
-									can_create={!!editing_constraints.create.length}
-									can_remove={!!editing_constraints.remove.length}
-								/>
-							</div>
+							<Filetree
+								scope={data.exercise.scope}
+								files={current_stubs.filter((stub) => !hidden.has(stub.basename))}
+								readonly={mobile}
+								constraints={editing_constraints}
+								{selected}
+								on:add={async (e) => {
+									const new_stubs = add_stub(e.detail.name, e.detail.type, current_stubs);
+
+									const illegal_create = new_stubs.some(
+										(s) => !editing_constraints.create.some((c) => s.name === c)
+									);
+									if (illegal_create) {
+										modal_text =
+											'Only the following files and folders are allowed to be created in this tutorial chapter:\n' +
+											editing_constraints.create.join('\n');
+										return;
+									}
+
+									current_stubs = [...current_stubs, ...new_stubs];
+									await load_files(current_stubs);
+
+									if (new_stubs[0].type === 'file') {
+										selected.set(new_stubs[0]);
+									}
+								}}
+								on:edit={async (e) => {
+									const { to_rename, new_name } = e.detail;
+
+									// treat edit as a remove followed by an add
+									const out = current_stubs.filter((s) => s.name.startsWith(to_rename.name));
+									const updated_stubs = current_stubs.filter((s) => !out.includes(s));
+									/** @type {Map<string, import('$lib/types').Stub>} */
+									const new_stubs = new Map();
+									for (const s of out) {
+										const name =
+											s.name.slice(0, to_rename.name.length - to_rename.basename.length) +
+											new_name +
+											s.name.slice(to_rename.name.length);
+										// deduplicate
+										for (const to_add of add_stub(name, s.type, updated_stubs)) {
+											if (s.type === 'file' && to_add.type === 'file') {
+												to_add.contents = s.contents;
+											}
+											new_stubs.set(to_add.name, to_add);
+										}
+									}
+
+									const illegal_rename =
+										!editing_constraints.remove.some((r) => to_rename.name === r) ||
+										[...new_stubs.keys()].some(
+											(name) => !editing_constraints.create.some((c) => name === c)
+										);
+									if (illegal_rename) {
+										modal_text =
+											'Only the following files and folders are allowed to be renamed in this tutorial chapter:\n' +
+											editing_constraints.remove.join('\n') +
+											'\n\nThey can only be renamed to the following:\n' +
+											editing_constraints.create.join('\n');
+										return;
+									}
+
+									current_stubs = updated_stubs.concat(...new_stubs.values());
+									await load_files(current_stubs);
+
+									if (to_rename.type === 'file' && $selected?.name === to_rename.name) {
+										selected.set(
+											/** @type {any} */ ([...new_stubs.values()].find((s) => s.type === 'file'))
+										);
+									}
+								}}
+								on:remove={async (e) => {
+									const illegal_delete = !editing_constraints.remove.some(
+										(r) => e.detail.stub.name === r
+									);
+									if (illegal_delete) {
+										modal_text =
+											'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
+											editing_constraints.remove.join('\n');
+										return;
+									}
+
+									const out = current_stubs.filter((s) => s.name.startsWith(e.detail.stub.name));
+									current_stubs = current_stubs.filter((s) => !out.includes(s));
+
+									if ($selected && out.includes($selected)) {
+										$selected = null;
+									}
+
+									await load_files(current_stubs);
+								}}
+							/>
 
 							<button
 								class:completed
@@ -604,24 +599,6 @@
 
 	.navigator button:not(:disabled).completed {
 		background: var(--second);
-	}
-
-	.filetree {
-		--font-size: 1.4rem;
-		flex: 1;
-		overflow-y: auto;
-		overflow-x: hidden;
-		padding: 2rem;
-	}
-
-	.filetree::before {
-		content: '';
-		position: absolute;
-		width: 0;
-		height: 100%;
-		top: 0;
-		right: 0;
-		border-right: 1px solid var(--border-color);
 	}
 
 	.preview {
