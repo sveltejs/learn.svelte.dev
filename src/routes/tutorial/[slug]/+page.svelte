@@ -43,7 +43,6 @@
 		Object.keys(complete_states).length > 0 && Object.values(complete_states).every(Boolean);
 
 	let path = '/';
-	let modal_text = '';
 
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
@@ -83,53 +82,6 @@
 				b[key] = data.exercise.b[key];
 			}
 		}
-	}
-
-	/**
-	 * @param {string} name
-	 * @param {'file' | 'directory'} type
-	 * @param {import('$lib/types').Stub[]} current
-	 */
-	function add_stub(name, type, current) {
-		// find directory which contains the new file
-		/** @type {import('$lib/types').DirectoryStub} */
-		let dir = /** @type {any} we know it will be assigned after the loop */ (null);
-		for (const stub of current) {
-			if (
-				stub.type === 'directory' &&
-				name.startsWith(stub.name) &&
-				(!dir || dir.name.length < stub.name.length)
-			) {
-				dir = stub;
-			}
-		}
-
-		const new_name = name.slice(dir.name.length + 1);
-		const prefix = dir.name + '/';
-		const parts = new_name.split('/');
-		/** @type {import('$lib/types').Stub[]} */
-		const stubs = [];
-
-		for (let i = 1; i <= parts.length; i++) {
-			const part = parts.slice(0, i).join('/');
-			const basename = /** @type{string} */ (part.split('/').pop());
-			const name = prefix + part;
-			if (!current.some((s) => s.name === name)) {
-				if (i < parts.length || type === 'directory') {
-					stubs.push({ type: 'directory', name, basename });
-				} else if (i === parts.length && type === 'file') {
-					stubs.push({
-						type: 'file',
-						name,
-						basename,
-						text: true,
-						contents: ''
-					});
-				}
-			}
-		}
-
-		return stubs;
 	}
 
 	/** @type {import('$lib/types').Adapter | undefined} */
@@ -334,8 +286,6 @@
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
 	}
-
-	const hidden = new Set(['__client.js', 'node_modules']);
 </script>
 
 <svelte:window on:message={handle_message} bind:innerWidth={width} />
@@ -345,20 +295,6 @@
 </svelte:head>
 
 <ContextMenu />
-
-{#if modal_text}
-	<Modal on:close={() => (modal_text = '')}>
-		<div class="modal-contents">
-			<h2>This action is not allowed</h2>
-
-			<p>
-				{modal_text}
-			</p>
-
-			<button on:click={() => (modal_text = '')}>OK</button>
-		</div>
-	</Modal>
-{/if}
 
 <div class="container" style="--toggle-height: {mobile ? '4.6rem' : '0px'}">
 	<SplitPane
@@ -391,93 +327,12 @@
 						<section class="navigator" slot="a">
 							<Filetree
 								scope={data.exercise.scope}
-								files={current_stubs.filter((stub) => !hidden.has(stub.basename))}
+								files={current_stubs}
 								readonly={mobile}
 								constraints={editing_constraints}
 								{selected}
-								on:add={async (e) => {
-									const { name, type } = e.detail;
-
-									const can_create = editing_constraints.create.some((c) => name === c);
-
-									if (!can_create) {
-										modal_text =
-											'Only the following files and folders are allowed to be created in this exercise:\n' +
-											editing_constraints.create.join('\n');
-										return;
-									}
-
-									const new_stubs = add_stub(name, type, current_stubs);
-
-									if (e.detail.type === 'file') {
-										const file = /** @type {import('$lib/types').FileStub} */ (new_stubs.at(-1));
-										selected.set(file);
-									}
-
-									current_stubs = [...current_stubs, ...new_stubs];
-									await load_files(current_stubs);
-								}}
-								on:edit={async (e) => {
-									const { to_rename, new_name } = e.detail;
-
-									const new_full_name =
-										to_rename.name.slice(0, -to_rename.basename.length) + new_name;
-
-									if (current_stubs.some((s) => s.name === new_full_name)) {
-										modal_text = `A file or folder named ${new_full_name} already exists`;
-										return;
-									}
-
-									const can_create = editing_constraints.create.some((c) => new_full_name === c);
-									if (!can_create) {
-										modal_text =
-											'Only the following files and folders are allowed to be created in this exercise:\n' +
-											editing_constraints.create.join('\n');
-										return;
-									}
-
-									const can_remove = editing_constraints.remove.some((c) => to_rename.name === c);
-									if (!can_remove) {
-										modal_text =
-											'Only the following files and folders are allowed to be removed in this exercise:\n' +
-											editing_constraints.remove.join('\n');
-										return;
-									}
-
-									if (to_rename.type === 'directory') {
-										for (const stub of current_stubs) {
-											if (stub.name.startsWith(to_rename.name + '/')) {
-												stub.name = new_full_name + stub.name.slice(to_rename.name.length);
-											}
-										}
-									}
-
-									to_rename.basename = new_name.split('/').pop();
-									to_rename.name = new_full_name;
-
-									current_stubs = current_stubs;
-									await load_files(current_stubs);
-								}}
-								on:remove={async (e) => {
-									const can_remove = editing_constraints.remove.some(
-										(r) => e.detail.stub.name === r
-									);
-
-									if (!can_remove) {
-										modal_text =
-											'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
-											editing_constraints.remove.join('\n');
-										return;
-									}
-
-									current_stubs = current_stubs.filter((s) => {
-										if (s === e.detail.stub) return false;
-										if (s.name.startsWith(e.detail.stub.name + '/')) return false;
-										return true;
-									});
-
-									selected.set(null);
-
+								on:change={async (e) => {
+									current_stubs = e.detail.stubs;
 									await load_files(current_stubs);
 								}}
 							/>
@@ -625,20 +480,5 @@
 
 	.hidden {
 		display: none;
-	}
-
-	.modal-contents p {
-		white-space: pre-line;
-	}
-
-	.modal-contents button {
-		display: block;
-		background: var(--prime);
-		color: white;
-		padding: 1rem;
-		width: 10em;
-		margin: 1em 0 0 0;
-		border-radius: var(--border-r);
-		line-height: 1;
 	}
 </style>
