@@ -13,7 +13,6 @@
 	import Loading from './Loading.svelte';
 	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 	import ScreenToggle from './ScreenToggle.svelte';
-	import Modal from '$lib/components/Modal.svelte';
 	import Filetree from '$lib/components/filetree/Filetree.svelte';
 
 	/** @type {import('./$types').PageData} */
