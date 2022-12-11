@@ -73,7 +73,6 @@
 
 {#if !editing}
 	<div class="file-row">
-		<div class="file-highlight" />
 		<button
 			class:selected={file === $selected}
 			on:click={() => select(file)}
@@ -157,7 +156,8 @@
 		display: block;
 	}
 
-	.file-highlight {
+	.file-row::before {
+		content: '';
 		display: none;
 		position: absolute;
 		right: calc(-2rem + 1px);
@@ -167,7 +167,7 @@
 		z-index: -1;
 	}
 
-	.file-row:hover .file-highlight {
+	.file-row:hover::before {
 		display: block;
 	}
 

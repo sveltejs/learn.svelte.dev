@@ -129,7 +129,6 @@
 
 {#if state !== 'edit_folder'}
 	<div class="folder-row">
-		<div class="folder-highlight" />
 		<button data-folder class:expanded on:click={toggle} on:contextmenu|preventDefault={open_menu}>
 			{name}
 		</button>
@@ -268,7 +267,8 @@
 		display: block;
 	}
 
-	.folder-highlight {
+	.folder-row::before {
+		content: '';
 		display: none;
 		position: absolute;
 		right: calc(-2rem + 1px);
@@ -278,7 +278,7 @@
 		z-index: -1;
 	}
 
-	.folder-row:hover .folder-highlight {
+	.folder-row:hover::before {
 		display: block;
 	}
 

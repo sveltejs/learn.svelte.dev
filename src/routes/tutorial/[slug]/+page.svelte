@@ -4,7 +4,8 @@
 	import { writable } from 'svelte/store';
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './Editor.svelte';
-	import Folder from './Folder.svelte';
+	import Folder from '$lib/components/filetree/Folder.svelte';
+	import ContextMenu from '$lib/components/filetree/ContextMenu.svelte';
 	import { browser, dev } from '$app/environment';
 	import ImageViewer from './ImageViewer.svelte';
 	import Sidebar from './Sidebar.svelte';
@@ -12,7 +13,6 @@
 	import { Icon } from '@sveltejs/site-kit';
 	import Loading from './Loading.svelte';
 	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
-	import ContextMenu from './ContextMenu.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 
