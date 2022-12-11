@@ -398,24 +398,26 @@
 								constraints={editing_constraints}
 								{selected}
 								on:add={async (e) => {
-									const new_stubs = add_stub(e.detail.name, e.detail.type, current_stubs);
+									const { name, type } = e.detail;
 
-									const illegal_create = new_stubs.some(
-										(s) => !editing_constraints.create.some((c) => s.name === c)
-									);
-									if (illegal_create) {
+									const can_create = editing_constraints.create.some((c) => name === c);
+
+									if (!can_create) {
 										modal_text =
 											'Only the following files and folders are allowed to be created in this tutorial chapter:\n' +
 											editing_constraints.create.join('\n');
 										return;
 									}
 
+									const new_stubs = add_stub(name, type, current_stubs);
+
+									if (e.detail.type === 'file') {
+										const file = /** @type {import('$lib/types').FileStub} */ (new_stubs.at(-1));
+										selected.set(file);
+									}
+
 									current_stubs = [...current_stubs, ...new_stubs];
 									await load_files(current_stubs);
-
-									if (new_stubs[0].type === 'file') {
-										selected.set(new_stubs[0]);
-									}
 								}}
 								on:edit={async (e) => {
 									const { to_rename, new_name } = e.detail;
