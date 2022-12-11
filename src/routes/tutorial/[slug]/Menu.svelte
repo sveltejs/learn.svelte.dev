@@ -16,8 +16,13 @@
 	let is_open = false;
 	let search = '';
 
-	let expanded_part = current.part.slug;
-	let expanded_chapter = current.chapter.slug;
+	let expanded_part = '';
+	let expanded_chapter = '';
+
+	$: if (is_open) {
+		expanded_part = current.part.slug;
+		expanded_chapter = current.chapter.slug;
+	}
 
 	const duration = browser && matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
 
