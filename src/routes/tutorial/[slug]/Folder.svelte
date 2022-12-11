@@ -206,14 +206,14 @@
 <style>
 	button,
 	input {
-		font-size: 1.6rem;
+		font-size: var(--font-size);
 		font-family: inherit;
 		color: var(--text);
 		padding: 0 0 0 1.2em;
 		width: 100%;
 		text-align: left;
 		background: url(./folder.svg) 0 45% no-repeat;
-		background-size: 1.4rem 1.4rem;
+		background-size: 1.2rem 1.2rem;
 		user-select: none;
 		cursor: pointer;
 		border: 2px solid transparent;
@@ -250,17 +250,20 @@
 
 	.folder-row {
 		position: relative;
-		height: 2.5rem;
+		height: 1.4em;
 		z-index: 1;
 	}
 
 	.folder-actions {
 		position: absolute;
+		display: flex;
 		right: 0;
 		top: 0;
+		height: 100%;
 		display: none;
 		background-color: var(--back-light);
 	}
+
 	.folder-row:hover .folder-actions {
 		display: block;
 	}
@@ -268,18 +271,19 @@
 	.folder-highlight {
 		display: none;
 		position: absolute;
-		right: -10rem;
+		right: calc(-2rem + 1px);
 		left: -20rem;
-		height: 2.5rem;
+		height: 1.4em;
 		background: var(--back-light);
 		z-index: -1;
 	}
+
 	.folder-row:hover .folder-highlight {
 		display: block;
 	}
 
 	.icon {
-		height: 2.5rem;
+		height: 100%;
 		width: 1.5rem;
 		padding: 0;
 	}

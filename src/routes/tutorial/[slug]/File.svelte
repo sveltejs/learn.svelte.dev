@@ -106,7 +106,7 @@
 	button {
 		position: relative;
 		padding: 0 0 0 0.2em;
-		font-size: 1.6rem;
+		font-size: var(--font-size);
 		font-family: inherit;
 		color: var(--text);
 		width: 100%;
@@ -139,17 +139,20 @@
 
 	.file-row {
 		position: relative;
-		height: 2.5rem;
+		height: 1.4em;
 		z-index: 1;
 	}
 
 	.file-actions {
 		position: absolute;
+		display: flex;
 		right: 0;
 		top: 0;
+		height: 100%;
 		display: none;
 		background-color: var(--back-light);
 	}
+
 	.file-row:hover .file-actions {
 		display: block;
 	}
@@ -157,22 +160,23 @@
 	.file-highlight {
 		display: none;
 		position: absolute;
-		right: -10rem;
+		right: calc(-2rem + 1px);
 		left: -20rem;
-		height: 2.5rem;
+		height: 1.4em;
 		background: var(--back-light);
 		z-index: -1;
 	}
+
 	.file-row:hover .file-highlight {
 		display: block;
 	}
 
 	.icon {
 		margin-top: 0.2rem;
-		height: 2.5rem;
+		height: 100%;
 		width: 1.5rem;
 		padding: 0;
-		background-size: 1.4rem 1.4rem;
+		background-size: 1.2rem 1.2rem;
 		background-repeat: no-repeat;
 	}
 
