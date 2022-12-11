@@ -459,22 +459,24 @@
 									await load_files(current_stubs);
 								}}
 								on:remove={async (e) => {
-									const illegal_delete = !editing_constraints.remove.some(
+									const can_remove = editing_constraints.remove.some(
 										(r) => e.detail.stub.name === r
 									);
-									if (illegal_delete) {
+
+									if (!can_remove) {
 										modal_text =
 											'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
 											editing_constraints.remove.join('\n');
 										return;
 									}
 
-									const out = current_stubs.filter((s) => s.name.startsWith(e.detail.stub.name));
-									current_stubs = current_stubs.filter((s) => !out.includes(s));
+									current_stubs = current_stubs.filter((s) => {
+										if (s === e.detail.stub) return false;
+										if (s.name.startsWith(e.detail.stub.name + '/')) return false;
+										return true;
+									});
 
-									if ($selected && out.includes($selected)) {
-										$selected = null;
-									}
+									selected.set(null);
 
 									await load_files(current_stubs);
 								}}
