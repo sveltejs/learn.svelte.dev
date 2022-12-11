@@ -19,10 +19,10 @@ const ignored_basenames = ['.DS_Store', 'LICENSE'];
 const ignored_extensions = ['.d.ts', '.map'];
 const ignored_directories = ['.svelte-kit', 'node_modules/.bin', 'node_modules/rollup/dist/shared'];
 
-const ignored_files = [
-	/^node_modules\/svelte\/compiler\.js$/,
-	/^node_modules\/@esbuild\/.+\/bin\/esbuild$/
-];
+const ignored_files = new Set([
+	'node_modules/svelte/compiler.js',
+	'node_modules/@esbuild/darwin-arm64/bin/esbuild'
+]);
 
 for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
 	file.replaceAll('\\', '/')
@@ -31,9 +31,8 @@ for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
 	if (ignored_basenames.find((basename) => file.endsWith('/' + basename))) continue;
 	if (ignored_directories.find((dir) => file.startsWith(dir + '/'))) continue;
 
-	const ignored_index = ignored_files.findIndex((pattern) => pattern.test(file));
-	if (ignored_index !== -1) {
-		ignored_files.splice(ignored_index, 1);
+	if (ignored_files.has(file)) {
+		ignored_files.delete(file);
 		continue;
 	}
 
@@ -51,7 +50,7 @@ for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
 	zip.addFile(file, fs.readFileSync(`${cwd}/${file}`));
 }
 
-if (ignored_files.length > 0) {
+if (ignored_files.size > 0) {
 	throw new Error(`expected to find ${Array.from(ignored_files).join(', ')}`);
 }
 

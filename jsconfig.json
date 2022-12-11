@@ -5,7 +5,7 @@
 		"checkJs": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
-		"lib": ["es2021", "DOM"],
+		"lib": ["es2020", "DOM"],
 		"moduleResolution": "node",
 		"module": "es2022",
 		"resolveJsonModule": true,
@@ -13,6 +13,5 @@
 		"sourceMap": true,
 		"strict": true,
 		"target": "es2022"
-	},
-	"include": ["src", "scripts", ".svelte-kit/ambient.d.ts"]
+	}
 }
