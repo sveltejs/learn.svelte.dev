@@ -164,11 +164,11 @@
 </script>
 
 {#if state !== 'edit_folder'}
-	<div class="folder-row">
-		<button data-folder class:expanded on:click={toggle} on:contextmenu|preventDefault={open_menu}>
+	<div class="row">
+		<button class:expanded on:click={toggle} on:contextmenu|preventDefault={open_menu}>
 			{name}
 		</button>
-		<div class="folder-actions">
+		<div class="actions">
 			{#if can_create.file}
 				<button aria-label="New file" class="icon file-new" on:click={() => (state = 'add_file')} />
 			{/if}
@@ -281,39 +281,6 @@
 
 	li {
 		padding: 0;
-	}
-
-	.folder-row {
-		--bg: white;
-		position: relative;
-		width: calc(100% - 1px);
-		height: 1.4em;
-		z-index: 1;
-	}
-
-	.folder-actions {
-		position: absolute;
-		display: flex;
-		right: -2rem;
-		top: 0;
-		height: 100%;
-		background-color: var(--bg);
-		padding-right: 2rem;
-		white-space: pre;
-	}
-
-	.folder-row::before {
-		content: '';
-		position: absolute;
-		right: calc(-2rem + 1px);
-		left: -20rem;
-		height: 1.4em;
-		background: var(--bg);
-		z-index: -1;
-	}
-
-	.folder-row:hover {
-		--bg: var(--back-light);
 	}
 
 	.icon {

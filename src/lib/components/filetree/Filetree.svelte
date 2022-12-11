@@ -203,6 +203,39 @@
 		border-right: 1px solid var(--border-color);
 	}
 
+	.filetree :global(.row) {
+		--bg: white;
+		position: relative;
+		width: calc(100% - 1px);
+		height: 1.4em;
+		z-index: 1;
+	}
+
+	.filetree :global(.row::before) {
+		content: '';
+		position: absolute;
+		right: 0;
+		left: -20rem;
+		height: 1.4em;
+		background: var(--bg);
+		z-index: -1;
+	}
+
+	.filetree :global(.row:hover) {
+		--bg: var(--back-light);
+	}
+
+	.filetree :global(.actions) {
+		position: absolute;
+		display: flex;
+		right: -2rem;
+		top: 0;
+		height: 100%;
+		background-color: var(--bg);
+		padding-right: 2rem;
+		white-space: pre;
+	}
+
 	.modal-contents p {
 		white-space: pre-line;
 	}

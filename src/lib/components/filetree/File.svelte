@@ -59,7 +59,7 @@
 </script>
 
 {#if !editing}
-	<div class="file-row">
+	<div class="row">
 		<button
 			class:selected={file === $selected}
 			on:click={() => select(file)}
@@ -67,7 +67,7 @@
 		>
 			{file.basename}
 		</button>
-		<div class="file-actions">
+		<div class="actions">
 			{#if can_remove}
 				<button
 					aria-label="Rename"
@@ -119,39 +119,6 @@
 	button:focus-visible {
 		outline: none;
 		border: 2px solid var(--flash);
-	}
-
-	.file-row {
-		--bg: white;
-		position: relative;
-		width: calc(100% - 1px);
-		height: 1.4em;
-		z-index: 1;
-	}
-
-	.file-actions {
-		position: absolute;
-		display: flex;
-		right: -2rem;
-		top: 0;
-		height: 100%;
-		background-color: var(--bg);
-		padding-right: 2rem;
-		white-space: pre;
-	}
-
-	.file-row::before {
-		content: '';
-		position: absolute;
-		right: 0;
-		left: -20rem;
-		height: 1.4em;
-		background: var(--bg);
-		z-index: -1;
-	}
-
-	.file-row:hover {
-		--bg: var(--back-light);
 	}
 
 	.icon {
