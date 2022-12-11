@@ -49,25 +49,27 @@
 
 	/** @type {Record<string, import('$lib/types').Stub>} */
 	let b;
-	/** @type {import('$lib/types').EditingConstraints} list of files user is allowed to create/delete in the tutorial chapter */
-	let editing_constraints;
+
+	/** @type {import('svelte/store').Writable<import('$lib/types').EditingConstraints>} */
+	const editing_constraints = writable({ create: [], remove: [] });
+
 	$: {
 		b = { ...data.exercise.a };
-		editing_constraints = {
-			create: [],
-			remove: []
-		};
+
+		$editing_constraints.create = [];
+		$editing_constraints.remove = [];
+
 		for (const key in data.exercise.b) {
 			const stub = data.exercise.b[key];
 
 			if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
 				// remove file
-				editing_constraints.remove.push(key);
+				$editing_constraints.remove.push(key);
 				delete b[key];
 			} else if (key.endsWith('/__delete')) {
 				// remove directory
 				const parent = key.slice(0, key.lastIndexOf('/'));
-				editing_constraints.remove.push(parent);
+				$editing_constraints.remove.push(parent);
 				delete b[parent];
 				for (const k in b) {
 					if (k.startsWith(parent + '/')) {
@@ -76,7 +78,7 @@
 				}
 			} else {
 				if (!b[key]) {
-					editing_constraints.create.push(key);
+					$editing_constraints.create.push(key);
 				}
 				b[key] = data.exercise.b[key];
 			}

@@ -5,47 +5,35 @@
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
 	export let read_only = false;
-	export let can_create = true;
-	export let can_remove = true;
 
-	const { select, selected, edit, remove } = context.get();
-
-	const restricted = new Set([
-		'package.json',
-		'vite.config.js',
-		'svelte.config.js',
-		'favicon.png',
-		'app.html'
-	]);
+	const { selected, constraints, select, edit, remove } = context.get();
 
 	let editing = false;
 	let new_name = '';
 
+	$: can_remove = !read_only && $constraints.remove.includes(file.name);
+
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
-		if (restricted.has(file.basename) || read_only || !can_remove) {
-			return;
-		}
+		if (!can_remove) return;
 
 		/** @type {import('./ContextMenu.svelte').MenuItems} */
-		const actions = [];
-		if (can_create && can_remove) {
-			actions.push({
+		const actions = [
+			{
 				name: 'Rename',
 				action: () => {
 					new_name = file.basename;
 					editing = true;
 				}
-			});
-		}
-		if (can_remove) {
-			actions.push({
+			},
+			{
 				name: 'Delete',
 				action: () => {
 					remove(file);
 				}
-			});
-		}
+			}
+		];
+
 		open(e.clientX, e.clientY, actions);
 	}
 
@@ -80,7 +68,7 @@
 			{file.basename}
 		</button>
 		<div class="file-actions">
-			{#if can_create && can_remove}
+			{#if can_remove}
 				<button
 					aria-label="Rename"
 					class="icon rename"
@@ -89,8 +77,6 @@
 						editing = true;
 					}}
 				/>
-			{/if}
-			{#if can_remove}
 				<button aria-label="Delete" class="icon delete" on:click={() => remove(file)} />
 			{/if}
 		</div>
@@ -136,7 +122,9 @@
 	}
 
 	.file-row {
+		--bg: white;
 		position: relative;
+		width: calc(100% - 1px);
 		height: 1.4em;
 		z-index: 1;
 	}
@@ -147,29 +135,23 @@
 		right: -2rem;
 		top: 0;
 		height: 100%;
-		display: none;
-		background-color: var(--back-light);
+		background-color: var(--bg);
 		padding-right: 2rem;
 		white-space: pre;
 	}
 
-	.file-row:hover .file-actions {
-		display: block;
-	}
-
 	.file-row::before {
 		content: '';
-		display: none;
 		position: absolute;
-		right: calc(-2rem + 1px);
+		right: 0;
 		left: -20rem;
 		height: 1.4em;
-		background: var(--back-light);
+		background: var(--bg);
 		z-index: -1;
 	}
 
-	.file-row:hover::before {
-		display: block;
+	.file-row:hover {
+		--bg: var(--back-light);
 	}
 
 	.icon {

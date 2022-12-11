@@ -13,7 +13,7 @@
 	/** @type {boolean} */
 	export let readonly;
 
-	/** @type {import('$lib/types').EditingConstraints} */
+	/** @type {import('svelte/store').Writable<import('$lib/types').EditingConstraints>} */
 	export let constraints;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null> }*/
@@ -26,17 +26,20 @@
 	const hidden = new Set(['__client.js', 'node_modules']);
 
 	context.set({
+		selected,
+		constraints,
+
 		select: async (file) => {
 			selected.set(file);
 		},
 
 		add: async (name, type) => {
-			const can_create = constraints.create.some((c) => name === c);
+			const can_create = $constraints.create.some((c) => name === c);
 
 			if (!can_create) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
-					constraints.create.join('\n');
+					$constraints.create.join('\n');
 				return;
 			}
 
@@ -58,19 +61,19 @@
 				return;
 			}
 
-			const can_create = constraints.create.some((c) => new_full_name === c);
+			const can_create = $constraints.create.some((c) => new_full_name === c);
 			if (!can_create) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
-					constraints.create.join('\n');
+					$constraints.create.join('\n');
 				return;
 			}
 
-			const can_remove = constraints.remove.some((c) => to_rename.name === c);
+			const can_remove = $constraints.remove.some((c) => to_rename.name === c);
 			if (!can_remove) {
 				modal_text =
 					'Only the following files and folders are allowed to be removed in this exercise:\n' +
-					constraints.remove.join('\n');
+					$constraints.remove.join('\n');
 				return;
 			}
 
@@ -89,12 +92,12 @@
 		},
 
 		remove: async (stub) => {
-			const can_remove = constraints.remove.some((r) => stub.name === r);
+			const can_remove = $constraints.remove.some((r) => stub.name === r);
 
 			if (!can_remove) {
 				modal_text =
 					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
-					constraints.remove.join('\n');
+					$constraints.remove.join('\n');
 				return;
 			}
 
@@ -107,9 +110,7 @@
 					return true;
 				})
 			});
-		},
-
-		selected
+		}
 	});
 
 	/**
@@ -168,8 +169,6 @@
 		files={files.filter((stub) => !hidden.has(stub.basename))}
 		{readonly}
 		expanded
-		can_create={!!constraints.create.length}
-		can_remove={!!constraints.remove.length}
 	/>
 </div>
 

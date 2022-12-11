@@ -19,17 +19,13 @@
 	/** @type {Array<import('$lib/types').Stub>} */
 	export let files;
 
-	export let can_create = true;
-
-	export let can_remove = true;
-
 	export let readonly = false;
 
 	/** @type {'idle' | 'add_file' | 'add_folder' | 'edit_folder'} */
 	let state = 'idle';
 	let new_name = '';
 
-	const { edit, add, remove } = context.get();
+	const { constraints, edit, add, remove } = context.get();
 
 	$: _files = files || []; // workaround for what seems to be a Svelte bug, where files is undefined on navigation
 	$: hidden_children = _files
@@ -58,15 +54,21 @@
 		if (toggleable) expanded = !expanded;
 	}
 
+	$: can_create_children = $constraints.create.some(
+		(constraint) => constraint.startsWith(prefix) && get_depth(constraint) === depth + 1
+	);
+
+	$: can_rename_or_remove = $constraints.remove.includes(name);
+
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
-		if (depth === 0 || readonly || (!can_create && !can_remove)) {
+		if (readonly || (!can_create_children && !can_rename_or_remove)) {
 			return;
 		}
 
 		/** @type {import('./ContextMenu.svelte').MenuItems} */
 		const actions = [];
-		if (can_create) {
+		if (can_create_children) {
 			actions.push(
 				{
 					name: 'New file',
@@ -82,22 +84,22 @@
 				}
 			);
 		}
-		if (can_create && can_remove) {
-			actions.push({
-				name: 'Rename',
-				action: () => {
-					new_name = name;
-					state = 'edit_folder';
+		if (can_rename_or_remove) {
+			actions.push(
+				{
+					name: 'Rename',
+					action: () => {
+						new_name = name;
+						state = 'edit_folder';
+					}
+				},
+				{
+					name: 'Delete',
+					action: () => {
+						remove(/** @type {import('$lib/types').DirectoryStub} */ (file));
+					}
 				}
-			});
-		}
-		if (can_remove) {
-			actions.push({
-				name: 'Delete',
-				action: () => {
-					remove(/** @type {import('$lib/types').DirectoryStub} */ (file));
-				}
-			});
+			);
 		}
 		open(e.clientX, e.clientY, actions);
 	}
@@ -133,7 +135,7 @@
 			{name}
 		</button>
 		<div class="folder-actions">
-			{#if can_create}
+			{#if can_create_children}
 				<button aria-label="New file" class="icon file-new" on:click={() => (state = 'add_file')} />
 				<button
 					aria-label="New folder"
@@ -141,7 +143,8 @@
 					on:click={() => (state = 'add_folder')}
 				/>
 			{/if}
-			{#if can_create && can_remove}
+
+			{#if can_rename_or_remove}
 				<button
 					aria-label="Rename"
 					class="icon rename"
@@ -150,8 +153,6 @@
 						state = 'edit_folder';
 					}}
 				/>
-			{/if}
-			{#if can_remove}
 				<button
 					aria-label="Delete"
 					class="icon delete"
@@ -188,15 +189,13 @@
 					depth={depth + 1}
 					files={children}
 					{readonly}
-					{can_create}
-					{can_remove}
 				/>
 			</li>
 		{/each}
 
 		{#each child_files as file}
 			<li>
-				<File {file} {readonly} {can_create} {can_remove} />
+				<File {file} {readonly} />
 			</li>
 		{/each}
 	</ul>
@@ -248,7 +247,9 @@
 	}
 
 	.folder-row {
+		--bg: white;
 		position: relative;
+		width: calc(100% - 1px);
 		height: 1.4em;
 		z-index: 1;
 	}
@@ -259,29 +260,23 @@
 		right: -2rem;
 		top: 0;
 		height: 100%;
-		display: none;
-		background-color: var(--back-light);
+		background-color: var(--bg);
 		padding-right: 2rem;
 		white-space: pre;
 	}
 
-	.folder-row:hover .folder-actions {
-		display: block;
-	}
-
 	.folder-row::before {
 		content: '';
-		display: none;
 		position: absolute;
 		right: calc(-2rem + 1px);
 		left: -20rem;
 		height: 1.4em;
-		background: var(--back-light);
+		background: var(--bg);
 		z-index: -1;
 	}
 
-	.folder-row:hover::before {
-		display: block;
+	.folder-row:hover {
+		--bg: var(--back-light);
 	}
 
 	.icon {
