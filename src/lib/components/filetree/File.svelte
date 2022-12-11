@@ -182,10 +182,10 @@
 	}
 
 	.rename {
-		background-image: url(./rename.svg);
+		background-image: url(../icons/rename.svg);
 	}
 
 	.delete {
-		background-image: url(./delete.svg);
+		background-image: url(../icons/delete.svg);
 	}
 </style>

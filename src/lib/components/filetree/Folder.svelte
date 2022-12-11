@@ -210,7 +210,7 @@
 		padding: 0 0 0 1.2em;
 		width: 100%;
 		text-align: left;
-		background: url(./folder.svg) 0 45% no-repeat;
+		background: url(../icons/folder.svg) 0 45% no-repeat;
 		background-size: 1.2rem 1.2rem;
 		user-select: none;
 		cursor: pointer;
@@ -231,7 +231,7 @@
 	}
 
 	.expanded {
-		background-image: url(./folder-open.svg);
+		background-image: url(../icons/folder-open.svg);
 	}
 
 	ul {
@@ -290,18 +290,18 @@
 	}
 
 	.rename {
-		background-image: url(./rename.svg);
+		background-image: url(../icons/rename.svg);
 	}
 
 	.file-new {
-		background-image: url(./file-new.svg);
+		background-image: url(../icons/file-new.svg);
 	}
 
 	.folder-new {
-		background-image: url(./folder-new.svg);
+		background-image: url(../icons/folder-new.svg);
 	}
 
 	.delete {
-		background-image: url(./delete.svg);
+		background-image: url(../icons/delete.svg);
 	}
 </style>

@@ -146,7 +146,7 @@
 		height: 1em;
 		top: calc(50% - 0.55em);
 		right: 0.5em;
-		background: url(./file-edit.svg);
+		background: url($lib/icons/file-edit.svg);
 		background-size: 100% 100%;
 	}
 
@@ -248,7 +248,7 @@
 		color: var(--second);
 		font-size: 1.4rem;
 		padding: 0 0 0 1.4em;
-		background: url(./file-edit.svg) no-repeat 0 calc(50% - 0.1em);
+		background: url($lib/icons/file-edit.svg) no-repeat 0 calc(50% - 0.1em);
 		background-size: 1em 1em;
 	}
 
