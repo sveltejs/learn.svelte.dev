@@ -69,13 +69,13 @@
 		if (can_create) {
 			actions.push(
 				{
-					name: 'New File',
+					name: 'New file',
 					action: () => {
 						state = 'add_file';
 					}
 				},
 				{
-					name: 'New Folder',
+					name: 'New folder',
 					action: () => {
 						state = 'add_folder';
 					}
@@ -256,11 +256,13 @@
 	.folder-actions {
 		position: absolute;
 		display: flex;
-		right: 0;
+		right: -2rem;
 		top: 0;
 		height: 100%;
 		display: none;
 		background-color: var(--back-light);
+		padding-right: 2rem;
+		white-space: pre;
 	}
 
 	.folder-row:hover .folder-actions {

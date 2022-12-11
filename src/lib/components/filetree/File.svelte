@@ -145,11 +145,13 @@
 	.file-actions {
 		position: absolute;
 		display: flex;
-		right: 0;
+		right: -2rem;
 		top: 0;
 		height: 100%;
 		display: none;
 		background-color: var(--back-light);
+		padding-right: 2rem;
+		white-space: pre;
 	}
 
 	.file-row:hover .file-actions {

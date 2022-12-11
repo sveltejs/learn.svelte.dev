@@ -43,30 +43,42 @@
 	.navbar {
 		display: inline-flex;
 		border: 1px var(--text) solid;
-		width: 170px;
+		/* width: 170px; */
 		background-color: var(--back);
-		border-radius: 5px;
+		border-radius: var(--border-r);
 		overflow: hidden;
 		flex-direction: column;
 	}
+
 	ul {
-		margin: 1rem 0;
+		margin: 0;
+		padding: 0;
 	}
+
 	li {
 		display: block;
 		list-style-type: none;
 		width: 1fr;
 	}
+
 	button {
 		color: var(--text);
 		width: 100%;
-		height: 25px;
 		text-align: left;
 		border: 0px;
-		padding: 0.5rem 1rem;
+		padding: 0.2rem 1rem;
+		font-size: 1.4rem;
 	}
+
+	li:first-child button {
+		padding-top: 0.5rem;
+	}
+
+	li:last-child button {
+		padding-bottom: 0.4rem;
+	}
+
 	button:hover {
-		text-align: left;
 		background-color: var(--back-api);
 	}
 </style>
