@@ -402,7 +402,7 @@
 
 									if (!can_create) {
 										modal_text =
-											'Only the following files and folders are allowed to be created in this tutorial chapter:\n' +
+											'Only the following files and folders are allowed to be created in this exercise:\n' +
 											editing_constraints.create.join('\n');
 										return;
 									}
@@ -420,47 +420,43 @@
 								on:edit={async (e) => {
 									const { to_rename, new_name } = e.detail;
 
-									// treat edit as a remove followed by an add
-									const out = current_stubs.filter((s) => s.name.startsWith(to_rename.name));
-									const updated_stubs = current_stubs.filter((s) => !out.includes(s));
-									/** @type {Map<string, import('$lib/types').Stub>} */
-									const new_stubs = new Map();
-									for (const s of out) {
-										const name =
-											s.name.slice(0, to_rename.name.length - to_rename.basename.length) +
-											new_name +
-											s.name.slice(to_rename.name.length);
-										// deduplicate
-										for (const to_add of add_stub(name, s.type, updated_stubs)) {
-											if (s.type === 'file' && to_add.type === 'file') {
-												to_add.contents = s.contents;
-											}
-											new_stubs.set(to_add.name, to_add);
-										}
+									const new_full_name =
+										to_rename.name.slice(0, -to_rename.basename.length) + new_name;
+
+									if (current_stubs.some((s) => s.name === new_full_name)) {
+										modal_text = `A file or folder named ${new_full_name} already exists`;
+										return;
 									}
 
-									const illegal_rename =
-										!editing_constraints.remove.some((r) => to_rename.name === r) ||
-										[...new_stubs.keys()].some(
-											(name) => !editing_constraints.create.some((c) => name === c)
-										);
-									if (illegal_rename) {
+									const can_create = editing_constraints.create.some((c) => new_full_name === c);
+									if (!can_create) {
 										modal_text =
-											'Only the following files and folders are allowed to be renamed in this tutorial chapter:\n' +
-											editing_constraints.remove.join('\n') +
-											'\n\nThey can only be renamed to the following:\n' +
+											'Only the following files and folders are allowed to be created in this exercise:\n' +
 											editing_constraints.create.join('\n');
 										return;
 									}
 
-									current_stubs = updated_stubs.concat(...new_stubs.values());
-									await load_files(current_stubs);
-
-									if (to_rename.type === 'file' && $selected?.name === to_rename.name) {
-										selected.set(
-											/** @type {any} */ ([...new_stubs.values()].find((s) => s.type === 'file'))
-										);
+									const can_remove = editing_constraints.remove.some((c) => to_rename.name === c);
+									if (!can_remove) {
+										modal_text =
+											'Only the following files and folders are allowed to be removed in this exercise:\n' +
+											editing_constraints.remove.join('\n');
+										return;
 									}
+
+									if (to_rename.type === 'directory') {
+										for (const stub of current_stubs) {
+											if (stub.name.startsWith(to_rename.name + '/')) {
+												stub.name = new_full_name + stub.name.slice(to_rename.name.length);
+											}
+										}
+									}
+
+									to_rename.basename = new_name.split('/').pop();
+									to_rename.name = new_full_name;
+
+									current_stubs = current_stubs;
+									await load_files(current_stubs);
 								}}
 								on:remove={async (e) => {
 									const illegal_delete = !editing_constraints.remove.some(
