@@ -4,7 +4,7 @@
 	import * as context from './context.js';
 	import Modal from '../Modal.svelte';
 
-	/** @type {import('$lib/types').Stub[]} */
+	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
 	export let files;
 
 	/** @type {{ prefix: string, depth: number, name: string }} */
@@ -43,20 +43,22 @@
 				return;
 			}
 
-			const new_stubs = add_stub(name, type, files);
+			const new_stubs = add_stub(name, type, $files);
 
 			if (type === 'file') {
 				const file = /** @type {import('$lib/types').FileStub} */ (new_stubs.at(-1));
 				selected.set(file);
 			}
 
-			dispatch('change', { stubs: [...files, ...new_stubs] });
+			$files = [...$files, ...new_stubs];
+
+			dispatch('change');
 		},
 
 		edit: async (to_rename, new_name) => {
 			const new_full_name = to_rename.name.slice(0, -to_rename.basename.length) + new_name;
 
-			if (files.some((s) => s.name === new_full_name)) {
+			if ($files.some((s) => s.name === new_full_name)) {
 				modal_text = `A file or folder named ${new_full_name} already exists`;
 				return;
 			}
@@ -78,7 +80,7 @@
 			}
 
 			if (to_rename.type === 'directory') {
-				for (const stub of files) {
+				for (const stub of $files) {
 					if (stub.name.startsWith(to_rename.name + '/')) {
 						stub.name = new_full_name + stub.name.slice(to_rename.name.length);
 					}
@@ -88,7 +90,9 @@
 			to_rename.basename = /** @type {string} */ (new_name.split('/').pop());
 			to_rename.name = new_full_name;
 
-			dispatch('change', { stubs: files });
+			$files = $files;
+
+			dispatch('change');
 		},
 
 		remove: async (stub) => {
@@ -103,13 +107,13 @@
 
 			selected.set(null);
 
-			dispatch('change', {
-				stubs: files.filter((s) => {
-					if (s === stub) return false;
-					if (s.name.startsWith(stub.name + '/')) return false;
-					return true;
-				})
+			$files = $files.filter((s) => {
+				if (s === stub) return false;
+				if (s.name.startsWith(stub.name + '/')) return false;
+				return true;
 			});
+
+			dispatch('change');
 		}
 	});
 
@@ -166,7 +170,7 @@
 		prefix={scope.prefix}
 		depth={scope.depth}
 		name={scope.name}
-		files={files.filter((stub) => !hidden.has(stub.basename))}
+		files={$files.filter((stub) => !hidden.has(stub.basename))}
 		{readonly}
 		expanded
 	/>

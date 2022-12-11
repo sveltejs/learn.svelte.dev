@@ -18,13 +18,14 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
-	const selected = writable(
-		/** @type {import('$lib/types').FileStub} */ (data.exercise.a[data.exercise.focus])
-	);
+	/** @type {import('svelte/store').Writable<import('$lib/types').Exercise>} */
+	const exercise = writable(data.exercise);
 
-	/** @type {import('$lib/types').Stub[]}*/
-	let current_stubs = [];
+	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
+	const files = writable([]);
+
+	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
+	const selected = writable(null);
 
 	/** @type {HTMLIFrameElement} */
 	let iframe;
@@ -155,10 +156,10 @@
 
 	async function load_exercise() {
 		try {
-			current_stubs = Object.values(data.exercise.a);
+			$files = Object.values(data.exercise.a);
 			selected.set(
 				/** @type {import('$lib/types').FileStub} */ (
-					current_stubs.find((stub) => stub.name === data.exercise.focus)
+					$files.find((stub) => stub.name === data.exercise.focus)
 				)
 			);
 
@@ -174,7 +175,7 @@
 				}
 			}
 
-			await load_files(current_stubs);
+			await load_files($files);
 
 			loading = false;
 			initial = false;
@@ -198,8 +199,8 @@
 	 */
 	function update_stub(event) {
 		const stub = event.detail;
-		const index = current_stubs.findIndex((s) => s.name === stub.name);
-		current_stubs[index] = stub;
+		const index = $files.findIndex((s) => s.name === stub.name);
+		$files[index] = stub;
 		adapter?.update([stub]).then((reload) => {
 			if (reload) {
 				schedule_iframe_reload();
@@ -328,13 +329,12 @@
 						<section class="navigator" slot="a">
 							<Filetree
 								scope={data.exercise.scope}
-								files={current_stubs}
+								{files}
 								readonly={mobile}
 								constraints={editing_constraints}
 								{selected}
-								on:change={async (e) => {
-									current_stubs = e.detail.stubs;
-									await load_files(current_stubs);
+								on:change={async () => {
+									await load_files($files); // TODO make this automatic?
 								}}
 							/>
 
@@ -342,8 +342,8 @@
 								class:completed
 								disabled={Object.keys(data.exercise.b).length === 0}
 								on:click={() => {
-									current_stubs = Object.values(completed ? data.exercise.a : b);
-									load_files(current_stubs);
+									$files = Object.values(completed ? data.exercise.a : b);
+									load_files($files);
 								}}
 							>
 								{#if completed && Object.keys(data.exercise.b).length > 0}
@@ -356,7 +356,7 @@
 
 						<section class="editor-container" slot="b">
 							<Editor
-								stubs={current_stubs}
+								stubs={$files}
 								selected={$selected}
 								read_only={mobile}
 								on:change={update_stub}
