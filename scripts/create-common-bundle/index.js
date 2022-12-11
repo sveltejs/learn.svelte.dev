@@ -20,9 +20,8 @@ const ignored_extensions = ['.d.ts', '.map'];
 const ignored_directories = ['.svelte-kit', 'node_modules/.bin', 'node_modules/rollup/dist/shared'];
 
 const ignored_files = new Set([
-	'node_modules/rollup/dist/es/rollup.browser.js',
-	'node_modules/rollup/dist/rollup.browser.js',
-	'node_modules/svelte/compiler.js'
+	'node_modules/svelte/compiler.js',
+	'node_modules/@esbuild/darwin-arm64/bin/esbuild'
 ]);
 
 for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
