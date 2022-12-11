@@ -6,6 +6,10 @@ specifiers:
   '@sveltejs/adapter-vercel': 1.0.0-next.85
   '@sveltejs/kit': next
   '@sveltejs/site-kit': ^2.1.2
+  '@types/diff': ^5.0.2
+  '@types/marked': ^4.0.8
+  '@types/prismjs': ^1.26.0
+  '@types/ws': ^8.5.3
   '@webcontainer/api': ^0.0.8
   adm-zip: ^0.5.9
   base64-js: ^1.5.1
@@ -42,6 +46,10 @@ devDependencies:
   '@sveltejs/adapter-vercel': 1.0.0-next.85
   '@sveltejs/kit': 1.0.0-next.582_svelte@3.54.0+vite@4.0.0
   '@sveltejs/site-kit': 2.1.4
+  '@types/diff': 5.0.2
+  '@types/marked': 4.0.8
+  '@types/prismjs': 1.26.0
+  '@types/ws': 8.5.3
   diff: 5.1.0
   esbuild: 0.14.54
   prettier: 2.8.1
@@ -405,8 +413,20 @@ packages:
     resolution: {integrity: sha512-COUnqfB2+ckwXXSFInsFdOAWQzCCx+a5hq2ruyj+Vjund94RJQd4LG2u9hnvJrTgunKAaax7ancBYlDrNYxA0g==}
     dev: true
 
+  /@types/diff/5.0.2:
+    resolution: {integrity: sha512-uw8eYMIReOwstQ0QKF0sICefSy8cNO/v7gOTiIy9SbwuHyEecJUm7qlgueOO5S1udZ5I/irVydHVwMchgzbKTg==}
+    dev: true
+
+  /@types/marked/4.0.8:
+    resolution: {integrity: sha512-HVNzMT5QlWCOdeuBsgXP8EZzKUf0+AXzN+sLmjvaB3ZlLqO+e4u0uXrdw9ub69wBKFs+c6/pA4r9sy6cCDvImw==}
+    dev: true
+
   /@types/node/18.11.13:
     resolution: {integrity: sha512-IASpMGVcWpUsx5xBOrxMj7Bl8lqfuTY7FKAnPmu5cHkfQVWF8GulWS1jbRqA934qZL35xh5xN/+Xe/i26Bod4w==}
+    dev: true
+
+  /@types/prismjs/1.26.0:
+    resolution: {integrity: sha512-ZTaqn/qSqUuAq1YwvOFQfVW1AR/oQJlLSZVustdjwI+GZ8kr0MSHBj0tsXPW1EqHubx50gtBEjbPGsdZwQwCjQ==}
     dev: true
 
   /@types/pug/2.0.6:
@@ -415,6 +435,12 @@ packages:
 
   /@types/sass/1.43.1:
     resolution: {integrity: sha512-BPdoIt1lfJ6B7rw35ncdwBZrAssjcwzI5LByIrYs+tpXlj/CAkuVdRsgZDdP4lq5EjyWzwxZCqAoFyHKFwp32g==}
+    dependencies:
+      '@types/node': 18.11.13
+    dev: true
+
+  /@types/ws/8.5.3:
+    resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
     dependencies:
       '@types/node': 18.11.13
     dev: true

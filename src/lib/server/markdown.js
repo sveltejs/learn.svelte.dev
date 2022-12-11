@@ -46,15 +46,16 @@ function highlight_spans(content, classname) {
 	// });
 }
 
+/** @type {Partial<import('marked').Renderer>} */
 const default_renderer = {
-	code: (source, language, current) => {
+	code: (source, language = '') => {
 		/** @type {Record<string, string>} */
 		const options = {};
 
 		let html = '';
 
 		source = source
-			.replace(/\/\/\/ (.+?): (.+)\n/gm, (match, key, value) => {
+			.replace(/\/\/\/ (.+?): (.+)\n/gm, (_, key, value) => {
 				options[key] = value;
 				return '';
 			})
@@ -68,7 +69,7 @@ const default_renderer = {
 				}
 				return prefix + tabs;
 			})
-			.replace(/(\+\+\+|---|:::)/g, (_, delimiter) => {
+			.replace(/(\+\+\+|---|:::)/g, (_, /** @type {keyof delimiter_substitutes} */ delimiter) => {
 				return delimiter_substitutes[delimiter];
 			})
 			.replace(/\*\\\//g, '*/');
@@ -94,7 +95,8 @@ const default_renderer = {
 				})
 				.join('')}</code></pre></div>`;
 		} else {
-			const plang = languages[language];
+			const lang = /** @type {keyof languages} */ (language);
+			const plang = languages[lang];
 			const highlighted = plang
 				? PrismJS.highlight(source, PrismJS.languages[plang], language)
 				: escape(source);
