@@ -36,6 +36,6 @@ As with private environment variables, it's preferable to use static values if p
 	style:background={+++env.+++PUBLIC_THEME_BACKGROUND}
 	style:color={+++env.+++PUBLIC_THEME_FOREGROUND}
 >
-	<span>{+++env.+++PUBLIC_THEME_FOREGROUND} on {+++env.+++PUBLIC_THEME_BACKGROUND}</span>
+	{+++env.+++PUBLIC_THEME_FOREGROUND} on {+++env.+++PUBLIC_THEME_BACKGROUND}
 </main>
 ```
