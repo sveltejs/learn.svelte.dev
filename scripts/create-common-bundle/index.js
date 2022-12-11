@@ -19,10 +19,7 @@ const ignored_basenames = ['.DS_Store', 'LICENSE'];
 const ignored_extensions = ['.d.ts', '.map'];
 const ignored_directories = ['.svelte-kit', 'node_modules/.bin', 'node_modules/rollup/dist/shared'];
 
-const ignored_files = new Set([
-	'node_modules/svelte/compiler.js',
-	'node_modules/@esbuild/darwin-arm64/bin/esbuild'
-]);
+const ignored_files = new Set(['node_modules/svelte/compiler.js']);
 
 for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
 	file.replaceAll('\\', '/')
@@ -43,7 +40,7 @@ for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
 			fs.readFileSync(`${cwd}/${file}`)
 		);
 		continue;
-	} else if (file.startsWith('node_modules/esbuild')) {
+	} else if (file.startsWith('node_modules/esbuild') || file.startsWith('node_modules/@esbuild')) {
 		continue;
 	}
 
