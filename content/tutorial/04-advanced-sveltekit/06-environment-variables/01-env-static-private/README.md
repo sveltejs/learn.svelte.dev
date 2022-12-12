@@ -34,8 +34,7 @@ export const actions = {
 
 		if (data.get('passphrase') === +++PASSPHRASE+++) {
 			cookies.set('allowed', 'true', {
-				path: '/',
-				maxAge: 60
+				path: '/'
 			});
 
 			throw redirect(303, '/welcome');
