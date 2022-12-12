@@ -1,7 +1,8 @@
 <nav>
-	<a href="/">Home</a>
-	<a href="/about">About</a>
-	<a href="/pricing">Pricing</a>
+	<a href="/">home</a>
+	<a href="/about">about</a>
+	<a href="/account">account</a>
+	<a href="/app">app</a>
 </nav>
 
 <slot />

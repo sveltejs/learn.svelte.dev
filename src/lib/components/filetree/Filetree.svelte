@@ -46,22 +46,32 @@
 				return;
 			}
 
-			const new_stubs = add_stub(name, type, $files);
+			const basename = /** @type {string} */ (name.split('/').pop());
+
+			/** @type {import('$lib/types').Stub} */
+			let stub;
 
 			if (type === 'file') {
-				const file = /** @type {import('$lib/types').FileStub} */ (new_stubs.at(-1));
-				selected.set(file);
+				stub = {
+					type: 'file',
+					name,
+					basename,
+					text: true,
+					contents: ''
+				};
+
+				selected.set(stub);
+			} else {
+				stub = { type: 'directory', name, basename };
 			}
 
-			$files = [...$files, ...new_stubs];
+			$files = [...$files, ...create_directories(name, $files), stub];
 
 			dispatch('change');
 		},
 
-		edit: async (to_rename, new_name) => {
+		rename: async (to_rename, new_name) => {
 			const new_full_name = to_rename.name.slice(0, -to_rename.basename.length) + new_name;
-
-			console.log({ to_rename, new_name, new_full_name });
 
 			if ($files.some((s) => s.name === new_full_name)) {
 				modal_text = `A file or folder named ${new_full_name} already exists`;
@@ -90,10 +100,10 @@
 				}
 			}
 
-			to_rename.basename = /** @type {string} */ (new_name.split('/').pop());
+			to_rename.basename = /** @type {string} */ (new_full_name.split('/').pop());
 			to_rename.name = new_full_name;
 
-			$files = $files;
+			$files = [...$files, ...create_directories(new_full_name, $files)];
 
 			dispatch('change');
 		},
@@ -120,49 +130,37 @@
 
 	/**
 	 * @param {string} name
-	 * @param {'file' | 'directory'} type
-	 * @param {import('$lib/types').Stub[]} current
+	 * @param {import('$lib/types').Stub[]} stubs
 	 */
-	function add_stub(name, type, current) {
-		// find directory which contains the new file
-		/** @type {import('$lib/types').DirectoryStub} */
-		let dir = /** @type {any} we know it will be assigned after the loop */ (null);
-		for (const stub of current) {
-			if (
-				stub.type === 'directory' &&
-				name.startsWith(stub.name) &&
-				(!dir || dir.name.length < stub.name.length)
-			) {
-				dir = stub;
+	function create_directories(name, stubs) {
+		const existing = new Set();
+
+		for (const stub of stubs) {
+			if (stub.type === 'directory') {
+				existing.add(stub.name);
 			}
 		}
 
-		const new_name = name.slice(dir.name.length + 1);
-		const prefix = dir.name + '/';
-		const parts = new_name.split('/');
-		/** @type {import('$lib/types').Stub[]} */
-		const stubs = [];
+		/** @type {import('$lib/types').DirectoryStub[]} */
+		const directories = [];
 
-		for (let i = 1; i <= parts.length; i++) {
-			const part = parts.slice(0, i).join('/');
-			const basename = /** @type{string} */ (part.split('/').pop());
-			const name = prefix + part;
-			if (!current.some((s) => s.name === name)) {
-				if (i < parts.length || type === 'directory') {
-					stubs.push({ type: 'directory', name, basename });
-				} else if (i === parts.length && type === 'file') {
-					stubs.push({
-						type: 'file',
-						name,
-						basename,
-						text: true,
-						contents: ''
-					});
-				}
+		const parts = name.split('/');
+		while (parts.length) {
+			parts.pop();
+
+			const dir = parts.join('/');
+			if (existing.has(dir)) {
+				break;
 			}
+
+			directories.push({
+				type: 'directory',
+				name: dir,
+				basename: /** @type {string} */ (parts.at(-1))
+			});
 		}
 
-		return stubs;
+		return directories;
 	}
 </script>
 

@@ -5,7 +5,7 @@
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
 
-	const { selected, endstate, select, edit, remove, readonly } = context.get();
+	const { selected, endstate, select, rename, remove, readonly } = context.get();
 
 	/** @type {'idle' | 'renaming'} */
 	let state = 'idle';
@@ -44,7 +44,7 @@
 			state = 'renaming';
 		}}
 		on:rename={(e) => {
-			edit(file, e.detail.basename);
+			rename(file, e.detail.basename);
 		}}
 		on:cancel={() => {
 			state = 'idle';

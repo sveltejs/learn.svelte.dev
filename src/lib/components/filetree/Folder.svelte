@@ -21,7 +21,7 @@
 	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
 	let state = 'idle';
 
-	const { endstate, files: all_files, edit, add, remove, readonly } = context.get();
+	const { endstate, files: all_files, rename, add, remove, readonly } = context.get();
 
 	$: hidden_children = files
 		.filter((file) =>
@@ -103,7 +103,6 @@
 			icon: 'rename',
 			label: 'Rename',
 			fn: () => {
-				console.log('?????');
 				state = 'renaming';
 			}
 		},
@@ -130,7 +129,7 @@
 			state = 'renaming';
 		}}
 		on:rename={(e) => {
-			edit(directory, e.detail.basename);
+			rename(directory, e.detail.basename);
 		}}
 		on:cancel={() => {
 			state = 'idle';

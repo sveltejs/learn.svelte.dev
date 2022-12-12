@@ -8,7 +8,7 @@ import { setContext, getContext } from 'svelte';
  *   readonly: import('svelte/store').Writable<boolean>;
  *   select: (file: import('$lib/types').FileStub) => void;
  *   add: (name: string, type: 'file' | 'directory') => Promise<void>;
- *   edit: (stub: import('$lib/types').Stub, name: string) => Promise<void>;
+ *   rename: (stub: import('$lib/types').Stub, name: string) => Promise<void>;
  *   remove: (stub: import('$lib/types').Stub) => Promise<void>;
  * }} FileTreeContext
  */

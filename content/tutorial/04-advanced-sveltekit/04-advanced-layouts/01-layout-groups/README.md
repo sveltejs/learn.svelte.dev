@@ -2,30 +2,34 @@
 title: Layout groups
 ---
 
-Layouts form a hierarchy. A page inherits all layouts above it. Sometimes it's necessary to create a layout hierarchy that doesn't strictly follow the page hierarchy.
+As we saw in the [routing introduction](/tutorial/layouts), layouts are a way to share UI and data loading logic between different routes.
 
-In this example we have three pages — the home page, the about page, and a pricing page. The home and pricing page should both have a marketing layout, the about page should not. All three pages are at the same level, so we can't just put a common layout for the home and pricing page in the route hierarchy. To achieve this, we add a group.
+Sometimes it's useful to use layouts without affecting the route — for example, you might need your `/app` and `/account` routes to be behind authentication, while your `/about` page is open to the world.
 
-A group is denoted by its surrounding parantheses. A group is ignored when creating the url: `(marketing)/price/+page.svelte` means that the URL to access this page is `/price`.
+We can do this with a _route group_, which is a directory in parentheses. To create an `(authed)` group, rename `app` to `(authed)/app` then rename `account` to `(authed)/account`.
 
-Create a `(marketing)` folder inside `routes` and move the home and pricing page inside (implementation hint: it's easiest if you use the rename feature). Last, create a new `+layout.svelte` inside `(marketing)`:
+Now we can control access to these routes by creating `src/routes/(authed)/+layout.server.js`:
 
-```diff
-src/routes/
-+├ (marketing)
-│ ├ pricing/
-│ │ └ +page.svelte
-+│ ├ +layout.svelte
-+│ └ +page.svelte
-├ about/
-│ └ +page.svelte
-├ +layout.svelte
--└ +page.svelte
+```js
+/// file: src/routes/(authed)/+layout.server.js
+import { redirect } from '@sveltejs/kit';
+
+export function load({ cookies, url }) {
+	if (!cookies.get('logged_in')) {
+		throw redirect(307, `/login?redirectTo=${url.pathname}`);
+	}
+}
 ```
 
+If you try to visit these pages, you'll be redirected to the `/login` route, which has a form action in `src/routes/login/+page.server.js` that sets the `logged_in` cookie.
+
+We can also add some UI to these two routes by adding a `src/routes/(authed)/+layout.svelte` file:
+
 ```svelte
-/// file: src/routes/(marketing)/+layout.svelte
-<div>Marketing Layout</div>
+/// file: src/routes/(authed)/+layout.svelte
+<form method="POST" action="/logout">
+	<button>Log out</button>
+</form>
 
 <slot />
 ```
