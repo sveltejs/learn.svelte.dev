@@ -6,6 +6,9 @@
 	export let file;
 	export let read_only = false;
 
+	/** @type {number} */
+	export let depth;
+
 	const { selected, endstate, select, edit, remove } = context.get();
 
 	/** @type {'idle' | 'renaming'} */
@@ -56,7 +59,7 @@
 	}
 </script>
 
-<div class="row">
+<div class="row" style="--depth: {depth};">
 	{#if state === 'renaming'}
 		<!-- svelte-ignore a11y-autofocus -->
 		<input

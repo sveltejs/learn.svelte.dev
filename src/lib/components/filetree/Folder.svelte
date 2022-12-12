@@ -159,12 +159,11 @@
 	}
 </script>
 
-<div class="row">
+<div class="row" class:expanded style="--depth: {depth};">
 	{#if state === 'renaming'}
 		<!-- svelte-ignore a11y-autofocus -->
 		<input
 			class="basename directory"
-			class:expanded
 			type="text"
 			autofocus
 			autocomplete="off"
@@ -176,7 +175,6 @@
 	{:else}
 		<button
 			class="directory basename"
-			class:expanded
 			on:click={() => {
 				expanded = !expanded;
 			}}
@@ -242,28 +240,38 @@
 
 		{#each child_files as file}
 			<li>
-				<File {file} {readonly} />
+				<File {file} {readonly} {depth} />
 			</li>
 		{/each}
 	</ul>
 {/if}
 
 <style>
-	.directory {
-		padding: 0 0 0 1.2em !important;
-		background-image: url(../../icons/folder.svg);
+	.row::before {
+		content: '';
+		position: absolute;
+		left: calc(var(--inset) - 1.5rem);
+		top: 0rem;
+		width: 1.2rem;
+		height: 100%;
+		background: url(../../icons/folder.svg) 0 45% no-repeat;
+		background-size: 100% auto;
 	}
 
-	.expanded {
+	.row.expanded::before {
 		background-image: url(../../icons/folder-open.svg);
 	}
 
 	ul {
 		padding: 0 0 0 0.3em;
 		margin: 0 0 0 0.5em;
+		padding: 0;
+		margin: 0;
 		list-style: none;
 		/* border-left: 1px solid #eee; */
 		line-height: 1.3;
+		max-width: 100%;
+		overflow: hidden;
 	}
 
 	li {

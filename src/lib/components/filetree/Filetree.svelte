@@ -212,20 +212,14 @@
 
 	.filetree :global(.row) {
 		--bg: white;
+		--inset: calc((var(--depth) * 1.2rem) + 1.5rem);
 		position: relative;
 		width: calc(100% - 1px);
+		padding: 0 0 0 var(--inset);
 		height: 1.4em;
 		z-index: 1;
-	}
-
-	.filetree :global(.row::before) {
-		content: '';
-		position: absolute;
-		right: 0;
-		left: -20rem;
-		height: 1.4em;
 		background: var(--bg);
-		z-index: -1;
+		overflow: hidden;
 	}
 
 	.filetree :global(.row:hover) {
@@ -235,17 +229,25 @@
 	.filetree :global(.actions) {
 		position: absolute;
 		display: flex;
-		right: -2rem;
+		right: -1px;
 		top: 0;
 		height: 100%;
 		background-color: var(--bg);
-		padding-right: 2rem;
 		white-space: pre;
+	}
+
+	.filetree :global(.actions)::before {
+		content: '';
+		position: absolute;
+		width: 1rem;
+		height: 100%;
+		left: -1rem;
+		top: 0;
+		background: linear-gradient(to right, transparent, var(--bg));
 	}
 
 	.filetree :global(.basename) {
 		position: relative;
-		padding: 0 0 0 0.2em;
 		margin: 0;
 		font-size: var(--font-size);
 		font-family: inherit;
@@ -264,9 +266,9 @@
 	}
 
 	.filetree :global(input.basename) {
-		position: absolute;
+		/* position: absolute;
 		left: 0;
-		top: 0;
+		top: 0; */
 		width: 100%;
 		height: 100%;
 	}
