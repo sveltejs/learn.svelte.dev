@@ -2,8 +2,6 @@
 title: Fallback errors
 ---
 
-> TODO figure out why this doesn't work
-
 If things go _really_ wrong — an error occurs while loading the root layout data, or while rendering the error page — SvelteKit will fall back to a static error page.
 
 Add a new `src/routes/+layout.server.js` file to see this in action:
