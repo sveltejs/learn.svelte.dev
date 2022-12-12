@@ -1,5 +1,5 @@
 export async function load() {
 	return {
-		time: new Date().toLocaleTimeString()
+		now: Date.now()
 	};
 }
