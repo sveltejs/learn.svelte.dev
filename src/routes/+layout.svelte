@@ -53,6 +53,11 @@
 		min-height: 100vh;
 	}
 
+	/* TODO when we remove the launch banner, we can remove this override */
+	:global(body > div > nav) {
+		top: 0 !important;
+	}
+
 	main {
 		width: 100%;
 		height: calc(100vh - var(--nav-h));
