@@ -302,10 +302,7 @@
 <svelte:head>
 	<title>{data.exercise.chapter.title} / {data.exercise.title} • Svelte Tutorial</title>
 
-	<meta
-		name="twitter:title"
-		content="{data.exercise.chapter.title} / {data.exercise.title} • Svelte Tutorial"
-	/>
+	<meta name="twitter:title" content="{data.exercise.title} • Svelte Tutorial" />
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:site" content="@sveltejs" />
 	<meta name="twitter:creator" content="@sveltejs" />
@@ -313,10 +310,7 @@
 	<meta property="twitter:domain" content="learn.svelte.dev" />
 	<meta property="twitter:url" content="https://learn.svelte.dev" />
 
-	<meta
-		property="og:title"
-		content="{data.exercise.chapter.title} / {data.exercise.title} • Svelte Tutorial"
-	/>
+	<meta property="og:title" content="{data.exercise.title} • Svelte Tutorial" />
 	<meta property="og:url" content="https://learn.svelte.dev" />
 	<meta property="og:type" content="website" />
 	<meta property="og:image" content="https://svelte.dev/images/twitter-thumbnail.jpg" />
