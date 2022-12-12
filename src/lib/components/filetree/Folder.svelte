@@ -122,6 +122,8 @@
 
 	/** @param {Event} e */
 	function done(e) {
+		if (state === 'idle') return;
+
 		if (/** @type {KeyboardEvent} */ (e).key === 'Escape') {
 			state = 'idle';
 			return;
