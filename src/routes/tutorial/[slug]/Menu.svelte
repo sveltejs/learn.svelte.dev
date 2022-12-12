@@ -3,7 +3,7 @@
 	import { slide } from 'svelte/transition';
 	import arrow from './arrow.svg';
 
-	import { Icon } from '@sveltejs/site-kit';
+	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
 	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
 

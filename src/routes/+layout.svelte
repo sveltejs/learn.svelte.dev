@@ -2,8 +2,12 @@
 	import '@sveltejs/site-kit/styles/index.css';
 	import '../app.css';
 	import { page, navigating } from '$app/stores';
-	import { Icon, Icons, Nav, NavItem, SkipLink } from '@sveltejs/site-kit';
-	import PreloadingIndicator from '$lib/components/PreloadingIndicator.svelte';
+	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
+	import Icons from '@sveltejs/site-kit/components/Icons.svelte';
+	import Nav from '@sveltejs/site-kit/components/Nav.svelte';
+	import NavItem from '@sveltejs/site-kit/components/NavItem.svelte';
+	import SkipLink from '@sveltejs/site-kit/components/SkipLink.svelte';
+	import PreloadingIndicator from '@sveltejs/site-kit/components/PreloadingIndicator.svelte';
 </script>
 
 <Icons />
