@@ -222,17 +222,18 @@
 
 {#if expanded}
 	<ul>
-		{#if state === 'add_file' || state === 'add_directory'}
+		{#if state === 'add_directory'}
 			<!-- svelte-ignore a11y-autofocus -->
 			<input
 				type="text"
-				class:directory={state === 'add_directory'}
+				class="directory"
 				autofocus
 				bind:value={new_name}
 				on:blur={done}
 				on:keyup={done}
 			/>
 		{/if}
+
 		{#each child_directories as directory}
 			<li>
 				<svelte:self
@@ -244,6 +245,11 @@
 				/>
 			</li>
 		{/each}
+
+		{#if state === 'add_file'}
+			<!-- svelte-ignore a11y-autofocus -->
+			<input type="text" autofocus bind:value={new_name} on:blur={done} on:keyup={done} />
+		{/if}
 
 		{#each child_files as file}
 			<li>
