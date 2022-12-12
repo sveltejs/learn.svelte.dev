@@ -2,8 +2,6 @@
 title: Error pages
 ---
 
-> TODO see if it's possible to hotlink external images, or of COEP/COOP makes that impossible
-
 When something goes wrong inside a `load` function, SvelteKit renders an error page.
 
 The default error page is somewhat bland. We can customize it by creating a `src/routes/+error.svelte` component:
@@ -12,12 +10,18 @@ The default error page is somewhat bland. We can customize it by creating a `src
 /// file: src/routes/+error.svelte
 <script>
 	import { page } from '$app/stores';
+
+	const emojis = {
+		// TODO add the rest!
+		420: '🫠',
+		500: '💥'
+	};
 </script>
 
-<img
-	src="https://httpstatusdogs.com/img/{$page.status}.jpg"
-	alt={$page.error.message}
-/>
+<h1>{$page.status} {$page.error.message}</h1>
+<span style="font-size: 10em">
+	{emojis[$page.status] ?? emojis[500]}
+</span>
 ```
 
 > We're using the `page` store, which we'll learn more about in a later chapter.
