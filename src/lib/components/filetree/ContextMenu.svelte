@@ -5,7 +5,7 @@
 	import { writable } from 'svelte/store';
 
 	/**
-	 * @typedef {Array<{ name: string, action: () => void }>} MenuItems
+	 * @typedef {Array<{ name: string; label: string; fn: () => void }>} MenuItems
 	 */
 
 	/**
@@ -19,7 +19,9 @@
 	 * @param {MenuItems} items
 	 */
 	export function open(x, y, items) {
-		menu_items.set({ x, y, items });
+		if (items.length > 0) {
+			menu_items.set({ x, y, items });
+		}
 	}
 </script>
 
@@ -29,7 +31,7 @@
 			<ul>
 				{#each $menu_items.items as item}
 					<li>
-						<button on:click={item.action}>{item.name}</button>
+						<button on:click={item.fn}>{item.name}</button>
 					</li>
 				{/each}
 			</ul>

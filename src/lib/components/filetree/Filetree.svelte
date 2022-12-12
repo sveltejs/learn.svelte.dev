@@ -283,6 +283,22 @@
 		width: 1.5rem;
 	}
 
+	.filetree :global(.icon.rename) {
+		background-image: url(../../icons/rename.svg);
+	}
+
+	.filetree :global(.icon.delete) {
+		background-image: url(../../icons/delete.svg);
+	}
+
+	.filetree :global(.icon.file-new) {
+		background-image: url(../../icons/file-new.svg);
+	}
+
+	.filetree :global(.icon.folder-new) {
+		background-image: url(../../icons/folder-new.svg);
+	}
+
 	.modal-contents p {
 		white-space: pre-line;
 	}

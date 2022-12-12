@@ -16,25 +16,25 @@
 
 	$: can_remove = !read_only && !$endstate[file.name];
 
-	/** @param {MouseEvent} e */
-	function open_menu(e) {
-		if (!can_remove) return;
-
-		open(e.clientX, e.clientY, [
-			{
-				name: 'Rename',
-				action: () => {
-					state = 'renaming';
+	/** @type {import('./ContextMenu.svelte').MenuItems} */
+	$: actions = can_remove
+		? [
+				{
+					name: 'rename',
+					label: 'Rename',
+					fn: () => {
+						state = 'renaming';
+					}
+				},
+				{
+					name: 'delete',
+					label: 'Delete',
+					fn: () => {
+						remove(file);
+					}
 				}
-			},
-			{
-				name: 'Delete',
-				action: () => {
-					remove(file);
-				}
-			}
-		]);
-	}
+		  ]
+		: [];
 
 	/** @param {Event} e */
 	function done(e) {
@@ -80,22 +80,17 @@
 			on:dblclick={() => {
 				if (can_remove) state = 'renaming';
 			}}
-			on:contextmenu|preventDefault={open_menu}
+			on:contextmenu|preventDefault={(e) => {
+				open(e.clientX, e.clientY, actions);
+			}}
 		>
 			{file.basename}
 		</button>
 
 		<div class="actions">
-			{#if can_remove}
-				<button
-					aria-label="Rename"
-					class="icon rename"
-					on:click={() => {
-						state = 'renaming';
-					}}
-				/>
-				<button aria-label="Delete" class="icon delete" on:click={() => remove(file)} />
-			{/if}
+			{#each actions as action}
+				<button aria-label={action.label} class="icon {action.name}" on:click={action.fn} />
+			{/each}
 		</div>
 	{/if}
 </div>
@@ -116,13 +111,5 @@
 		border: 1px solid var(--border-color);
 		transform: translate(0, 0.2rem) rotate(45deg);
 		z-index: 2;
-	}
-
-	.rename {
-		background-image: url(../../icons/rename.svg);
-	}
-
-	.delete {
-		background-image: url(../../icons/delete.svg);
 	}
 </style>

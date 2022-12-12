@@ -88,51 +88,37 @@
 	// fake root directory has no name
 	$: can_remove = !readonly && directory.name ? !$endstate[directory.name] : false;
 
-	/** @param {MouseEvent} e */
-	function open_menu(e) {
-		if (!can_create.file && !can_create.directory && !can_remove) {
-			return;
+	/** @type {import('./ContextMenu.svelte').MenuItems} */
+	$: actions = [
+		can_create.file && {
+			name: 'file-new',
+			label: 'New file',
+			fn: () => {
+				state = 'add_file';
+			}
+		},
+		can_create.directory && {
+			name: 'folder-new',
+			label: 'New folder',
+			fn: () => {
+				state = 'add_directory';
+			}
+		},
+		can_remove && {
+			name: 'rename',
+			label: 'Rename',
+			action: () => {
+				state = 'renaming';
+			}
+		},
+		can_remove && {
+			name: 'delete',
+			label: 'Delete',
+			action: () => {
+				remove(directory);
+			}
 		}
-
-		/** @type {import('./ContextMenu.svelte').MenuItems} */
-		const actions = [];
-		if (can_create.file) {
-			actions.push({
-				name: 'New file',
-				action: () => {
-					state = 'add_file';
-				}
-			});
-		}
-
-		if (can_create.directory) {
-			actions.push({
-				name: 'New folder',
-				action: () => {
-					state = 'add_directory';
-				}
-			});
-		}
-
-		if (can_remove) {
-			actions.push(
-				{
-					name: 'Rename',
-					action: () => {
-						state = 'renaming';
-					}
-				},
-				{
-					name: 'Delete',
-					action: () => {
-						remove(directory);
-					}
-				}
-			);
-		}
-
-		open(e.clientX, e.clientY, actions);
-	}
+	].filter(Boolean);
 
 	/** @param {Event} e */
 	function done(e) {
@@ -181,34 +167,17 @@
 			on:dblclick={() => {
 				if (can_remove) state = 'renaming';
 			}}
-			on:contextmenu|preventDefault={open_menu}
+			on:contextmenu|preventDefault={(e) => {
+				open(e.clientX, e.clientY, actions);
+			}}
 		>
 			{name}
 		</button>
 
 		<div class="actions">
-			{#if can_create.file}
-				<button aria-label="New file" class="icon file-new" on:click={() => (state = 'add_file')} />
-			{/if}
-
-			{#if can_create.directory}
-				<button
-					aria-label="New folder"
-					class="icon folder-new"
-					on:click={() => (state = 'add_directory')}
-				/>
-			{/if}
-
-			{#if can_remove}
-				<button
-					aria-label="Rename"
-					class="icon rename"
-					on:click={() => {
-						state = 'renaming';
-					}}
-				/>
-				<button aria-label="Delete" class="icon delete" on:click={() => remove(directory)} />
-			{/if}
+			{#each actions as action}
+				<button aria-label={action.label} class="icon {action.name}" on:click={action.fn} />
+			{/each}
 		</div>
 	{/if}
 </div>
@@ -276,21 +245,5 @@
 
 	li {
 		padding: 0;
-	}
-
-	.rename {
-		background-image: url(../../icons/rename.svg);
-	}
-
-	.file-new {
-		background-image: url(../../icons/file-new.svg);
-	}
-
-	.folder-new {
-		background-image: url(../../icons/folder-new.svg);
-	}
-
-	.delete {
-		background-image: url(../../icons/delete.svg);
 	}
 </style>
