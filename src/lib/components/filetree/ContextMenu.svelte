@@ -42,12 +42,12 @@
 <style>
 	.navbar {
 		display: inline-flex;
-		border: 1px var(--text) solid;
-		/* width: 170px; */
+		border: 1px solid rgba(0, 0, 0, 0.1);
 		background-color: var(--back);
 		border-radius: var(--border-r);
 		overflow: hidden;
 		flex-direction: column;
+		filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, 0.1));
 	}
 
 	ul {
@@ -66,7 +66,7 @@
 		width: 100%;
 		text-align: left;
 		border: 0px;
-		padding: 0.2rem 1rem;
+		padding: 0.4rem 1rem 0.2rem 1rem;
 		font-size: 1.4rem;
 	}
 

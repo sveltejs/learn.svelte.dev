@@ -17,8 +17,7 @@
 	function open_menu(e) {
 		if (!can_remove) return;
 
-		/** @type {import('./ContextMenu.svelte').MenuItems} */
-		const actions = [
+		open(e.clientX, e.clientY, [
 			{
 				name: 'Rename',
 				action: () => {
@@ -31,9 +30,7 @@
 					remove(file);
 				}
 			}
-		];
-
-		open(e.clientX, e.clientY, actions);
+		]);
 	}
 
 	/** @param {Event} e */
