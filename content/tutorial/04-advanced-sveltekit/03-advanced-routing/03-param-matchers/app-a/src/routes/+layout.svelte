@@ -11,19 +11,10 @@
 <slot />
 
 <style>
-	nav {
-		position: relative;
-		display: flex;
-		gap: 0.5em;
-		z-index: 2;
-	}
-
 	a {
 		display: flex;
 		align-items: center;
-		padding: 0.5rem;
 		gap: 0.5rem;
-		background-color: white;
 	}
 
 	a::before {

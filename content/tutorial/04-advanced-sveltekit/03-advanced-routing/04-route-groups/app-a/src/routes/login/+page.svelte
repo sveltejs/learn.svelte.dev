@@ -1,5 +1,5 @@
-<h1>Log in</h1>
+<h1>log in</h1>
 
 <form method="POST">
-	<button>Log in</button>
+	<button>log in</button>
 </form>
