@@ -145,11 +145,11 @@
 	}
 </script>
 
-<div class="row" class:expanded style="--depth: {depth};">
+<div class="directory row" class:expanded style="--depth: {depth};">
 	{#if state === 'renaming'}
 		<!-- svelte-ignore a11y-autofocus -->
 		<input
-			class="basename directory"
+			class="basename"
 			type="text"
 			autofocus
 			autocomplete="off"
@@ -160,7 +160,7 @@
 		/>
 	{:else}
 		<button
-			class="directory basename"
+			class="basename"
 			on:click={() => {
 				expanded = !expanded;
 			}}
@@ -183,10 +183,14 @@
 </div>
 
 {#if expanded}
-	<ul>
+	<ul style="--depth: {depth + 1}">
 		{#if state === 'add_directory'}
-			<!-- svelte-ignore a11y-autofocus -->
-			<input type="text" class="directory" autofocus on:blur={done} on:keyup={done} />
+			<li>
+				<div class="directory row">
+					<!-- svelte-ignore a11y-autofocus -->
+					<input class="basename" type="text" autofocus on:blur={done} on:keyup={done} />
+				</div>
+			</li>
 		{/if}
 
 		{#each child_directories as directory}
@@ -203,8 +207,12 @@
 		{/each}
 
 		{#if state === 'add_file'}
-			<!-- svelte-ignore a11y-autofocus -->
-			<input type="text" autofocus on:blur={done} on:keyup={done} />
+			<li>
+				<div class="row">
+					<!-- svelte-ignore a11y-autofocus -->
+					<input class="basename" type="text" autofocus on:blur={done} on:keyup={done} />
+				</div>
+			</li>
 		{/if}
 
 		{#each child_files as file}
@@ -216,7 +224,7 @@
 {/if}
 
 <style>
-	.row::before {
+	.directory::before {
 		content: '';
 		position: absolute;
 		left: calc(var(--inset) - 1.5rem);
@@ -227,7 +235,7 @@
 		background-size: 100% auto;
 	}
 
-	.row.expanded::before {
+	.directory.expanded::before {
 		background-image: url(../../icons/folder-open.svg);
 	}
 
@@ -245,5 +253,9 @@
 
 	li {
 		padding: 0;
+	}
+
+	.new {
+		padding-left: var(--inset);
 	}
 </style>
