@@ -2,8 +2,6 @@
 title: Optional parameters
 ---
 
-> TODO the filesystem constraints are broken here
-
 In the first chapter on [routing](/tutorial/pages), we learned how to create routes with [dynamic parameters](/tutorial/params).
 
 Sometimes it's helpful to make a parameter optional. A classic example is when you use the pathname to determine the locale — `/fr/...`, `/de/...` and so on — but you also want to have a default locale.
