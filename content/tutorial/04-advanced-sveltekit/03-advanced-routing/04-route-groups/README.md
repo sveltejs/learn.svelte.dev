@@ -1,12 +1,12 @@
 ---
-title: Layout groups
+title: Route groups
 ---
 
 As we saw in the [routing introduction](/tutorial/layouts), layouts are a way to share UI and data loading logic between different routes.
 
-Sometimes it's useful to use layouts without affecting the route — for example, you might need your `/app` and `/account` routes to be behind authentication, while your `/about` page is open to the world.
+Sometimes it's useful to use layouts without affecting the route — for example, you might need your `/app` and `/account` routes to be behind authentication, while your `/about` page is open to the world. We can do this with a _route group_, which is a directory in parentheses.
 
-We can do this with a _route group_, which is a directory in parentheses. To create an `(authed)` group, rename `app` to `(authed)/app` then rename `account` to `(authed)/account`.
+Create an `(authed)` group by renaming `app` to `(authed)/app` then renaming `account` to `(authed)/account`.
 
 Now we can control access to these routes by creating `src/routes/(authed)/+layout.server.js`:
 
