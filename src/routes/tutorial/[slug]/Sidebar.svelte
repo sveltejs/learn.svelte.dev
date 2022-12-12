@@ -51,6 +51,7 @@
 		}
 	}}
 >
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
 		on:click={(e) => {
 			const node = /** @type {HTMLElement} */ (e.target);
