@@ -2,4 +2,4 @@
 title: page
 ---
 
-> TODO
+> Coming soon
