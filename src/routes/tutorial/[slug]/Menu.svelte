@@ -10,14 +10,19 @@
 	/** @type {import('$lib/types').PartStub[]}*/
 	export let index;
 
-	/** @type {import('$lib/types').Section} */
+	/** @type {import('$lib/types').Exercise} */
 	export let current;
 
 	let is_open = false;
 	let search = '';
 
-	let expanded_part = current.part.slug;
-	let expanded_chapter = current.chapter.slug;
+	let expanded_part = '';
+	let expanded_chapter = '';
+
+	$: if (is_open) {
+		expanded_part = current.part.slug;
+		expanded_chapter = current.chapter.slug;
+	}
 
 	const duration = browser && matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
 
@@ -29,15 +34,15 @@
 				.map((chapter, i) => ({
 					...chapter,
 					label: String.fromCharCode(97 + i),
-					first: chapter.sections[0].slug,
-					sections: chapter.sections.filter((section) => regex.test(section.title))
+					first: chapter.exercises[0].slug,
+					exercises: chapter.exercises.filter((exercise) => regex.test(exercise.title))
 				}))
-				.filter((chapter) => chapter.sections.length > 0 || regex.test(chapter.title));
+				.filter((chapter) => chapter.exercises.length > 0 || regex.test(chapter.title));
 
 			return {
 				...part,
 				label: i + 1,
-				first: part.chapters[0].sections[0].slug,
+				first: part.chapters[0].exercises[0].slug,
 				chapters
 			};
 		})
@@ -78,7 +83,7 @@
 		</button>
 	</div>
 
-	<nav class:open={is_open} aria-label="tutorial sections">
+	<nav class:open={is_open} aria-label="tutorial exercises">
 		<div class="controls">
 			<input
 				type="search"
@@ -89,7 +94,7 @@
 			/>
 		</div>
 
-		<div class="sections">
+		<div class="exercises">
 			<ul>
 				{#each filtered as part (part.slug)}
 					<li
@@ -117,27 +122,27 @@
 										class:expanded={chapter.slug === expanded_chapter}
 										aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
 									>
-										<img src={arrow} alt="Arrow icon" />
 										<button on:click={() => (expanded_chapter = chapter.slug)}>
+											<img src={arrow} alt="Arrow icon" />
 											{chapter.title}
 										</button>
 
 										{#if search.length >= 2 || chapter.slug === expanded_chapter}
 											<ul transition:slide|local={{ duration }}>
-												{#each chapter.sections as section (section.slug)}
+												{#each chapter.exercises as exercise (exercise.slug)}
 													<li
 														transition:slide|local={{ duration }}
-														class="section"
-														aria-current={$page.url.pathname === `/tutorial/${section.slug}`
+														class="exercise"
+														aria-current={$page.url.pathname === `/tutorial/${exercise.slug}`
 															? 'page'
 															: undefined}
 													>
 														<a
-															data-sveltekit-prefetch
-															href="/tutorial/{section.slug}"
+															data-sveltekit-preload-data
+															href="/tutorial/{exercise.slug}"
 															on:click={() => (is_open = false)}
 														>
-															{section.title}
+															{exercise.title}
 														</a>
 													</li>
 												{/each}
@@ -159,6 +164,8 @@
 		<Icon name="arrow-left" size={16} />
 	</a>
 
+	<!-- we don't want this to be keyboard-navigable, because the menu button to the left does that job better -->
+	<!-- svelte-ignore a11y-click-events-have-key-events --->
 	<h1 on:click={() => (is_open = true)}>
 		Part {current.part.index + 1} <span class="separator">/</span>
 		{current.chapter.title} <span class="separator">/</span>
@@ -287,7 +294,7 @@
 		border: 2px solid var(--flash);
 	}
 
-	.sections {
+	.exercises {
 		padding: 2rem 0;
 		flex: 1;
 		overflow: auto;
@@ -326,7 +333,7 @@
 		font-weight: bold;
 	}
 
-	li.expanded > img {
+	li.expanded > button > img {
 		transform: rotate(90deg);
 	}
 
@@ -335,7 +342,7 @@
 		position: absolute;
 	}
 
-	.section {
+	.exercise {
 		--dot-size: 1.2rem;
 		--color: var(--second);
 	}
@@ -352,7 +359,7 @@
 	}
 
 	a:focus-visible,
-	.sections button:focus-visible {
+	.exercises button:focus-visible {
 		/* outline-color: var(--flash); */
 		outline: none;
 		border: 2px solid var(--flash);

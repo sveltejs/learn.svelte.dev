@@ -6,14 +6,12 @@ export interface FileStub {
 	basename: string;
 	contents: string;
 	text: boolean;
-	depth: number;
 }
 
 export interface DirectoryStub {
 	type: 'directory';
 	name: string;
 	basename: string;
-	depth: number;
 }
 
 export type Stub = FileStub | DirectoryStub;
@@ -26,7 +24,7 @@ export interface Adapter {
 	destroy(): Promise<void>;
 }
 
-export interface Section {
+export interface Exercise {
 	part: {
 		slug: string;
 		title: string;
@@ -44,34 +42,39 @@ export interface Section {
 	focus: string;
 	title: string;
 	slug: string;
-	prev: { slug: string; title: string } | null;
+	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;
 	html: string;
 	dir: string;
+	editing_constraints: {
+		create: string[];
+		remove: string[];
+	}
 	a: Record<string, Stub>;
 	b: Record<string, Stub>;
 }
 
-export interface SectionRaw {
+export interface ExerciseRaw {
 	title: string;
 	slug: string;
-	prev: { slug: string; title: string } | null;
+	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;
+	meta: any;
 	markdown: string;
 	dir: string;
 }
 
-export interface SectionStub {
+export interface ExerciseStub {
 	title: string;
 	slug: string;
-	prev: { slug: string; title: string } | null;
+	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;
 }
 
 export interface ChapterStub {
 	slug: string;
 	title: string;
-	sections: SectionStub[];
+	exercises: ExerciseStub[];
 }
 
 export interface PartStub {

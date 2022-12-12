@@ -7,8 +7,8 @@
 	/** @type {import('$lib/types').PartStub[]} */
 	export let index;
 
-	/** @type {import('$lib/types').Section} */
-	export let section;
+	/** @type {import('$lib/types').Exercise} */
+	export let exercise;
 
 	const dispatch = createEventDispatcher();
 
@@ -28,7 +28,7 @@
 	});
 </script>
 
-<Menu {index} current={section} />
+<Menu {index} current={exercise} />
 
 <div
 	bind:this={sidebar}
@@ -63,16 +63,16 @@
 			}
 		}}
 	>
-		{@html section.html}
+		{@html exercise.html}
 	</div>
 
-	{#if section.next}
-		<p><a href="/tutorial/{section.next.slug}">Next: {section.next.title}</a></p>
+	{#if exercise.next}
+		<p><a href="/tutorial/{exercise.next.slug}">Next: {exercise.next.title}</a></p>
 	{/if}
 </div>
 
 <footer>
-	<a class="edit" href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{section.dir}">
+	<a class="edit" href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{exercise.dir}">
 		Edit this page
 	</a>
 </footer>
@@ -146,7 +146,7 @@
 		height: 1em;
 		top: calc(50% - 0.55em);
 		right: 0.5em;
-		background: url(./file-edit.svg);
+		background: url($lib/icons/file-edit.svg);
 		background-size: 100% 100%;
 	}
 
@@ -248,7 +248,7 @@
 		color: var(--second);
 		font-size: 1.4rem;
 		padding: 0 0 0 1.4em;
-		background: url(./file-edit.svg) no-repeat 0 calc(50% - 0.1em);
+		background: url($lib/icons/file-edit.svg) no-repeat 0 calc(50% - 0.1em);
 		background-size: 1em 1em;
 	}
 
