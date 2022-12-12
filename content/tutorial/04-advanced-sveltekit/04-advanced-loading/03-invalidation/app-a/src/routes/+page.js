@@ -1,1 +1,5 @@
-export async function load({ fetch }) {}
+import { redirect } from '@sveltejs/kit';
+
+export async function load() {
+	throw redirect(307, '/Europe/London');
+}

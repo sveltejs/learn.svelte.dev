@@ -1,5 +1,5 @@
 ---
-title: Custom data dependencies
+title: Custom dependencies
 ---
 
 Sometimes you can't or don't want to get data using `fetch`, which means that there's no `url` registered automatically as a `load` dependency which you could `invalidate`. In this case, use `depends` to register a `url` manually.
