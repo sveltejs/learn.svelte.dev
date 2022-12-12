@@ -1,5 +1,13 @@
+---
+title: $env/dynamic/private
+---
+
+If you need to read the values of environment variables when the app runs, as opposed to when the app is built, you can use `$env/dynamic/private` instead of `$env/static/private`:
+
+```js
+/// file: src/routes/+page.server.js
 import { redirect, fail } from '@sveltejs/kit';
-import { PASSPHRASE } from '$env/static/private';
+import { +++env+++ } from '$env/+++dynamic+++/private';
 
 export function load({ cookies }) {
 	if (cookies.get('allowed')) {
@@ -11,7 +19,7 @@ export const actions = {
 	default: async ({ request, cookies }) => {
 		const data = await request.formData();
 
-		if (data.get('passphrase') === PASSPHRASE) {
+		if (data.get('passphrase') === +++env.+++PASSPHRASE) {
 			cookies.set('allowed', 'true', {
 				path: '/',
 				maxAge: 60
@@ -25,3 +33,5 @@ export const actions = {
 		});
 	}
 };
+
+```

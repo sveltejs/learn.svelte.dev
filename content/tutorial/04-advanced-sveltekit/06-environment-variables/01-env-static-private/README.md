@@ -1,5 +1,5 @@
 ---
-title: Private environment variables
+title: $env/static/private
 ---
 
 Environment variables — like API keys and database credentials — can be added to a `.env` file, and they will be made available to your application.
@@ -89,36 +89,4 @@ if (FEATURE_FLAG_X === 'enabled') {
 }
 ```
 
-In some cases you might need to refer to environment variables that are _dynamic_ — in other words, not known until we run the app. For these cases we can use `$env/dynamic/private`:
-
-```js
-/// file: src/routes/+page.server.js
-import { redirect, fail } from '@sveltejs/kit';
-import { +++env+++ } from '$env/+++dynamic+++/private';
-
-export function load({ cookies }) {
-	if (cookies.get('allowed')) {
-		throw redirect(307, '/welcome');
-	}
-}
-
-export const actions = {
-	default: async ({ request, cookies }) => {
-		const data = await request.formData();
-
-		if (data.get('passphrase') === +++env.+++PASSPHRASE) {
-			cookies.set('allowed', 'true', {
-				path: '/',
-				maxAge: 60
-			});
-
-			throw redirect(303, '/welcome');
-		}
-
-		return fail(403, {
-			incorrect: true
-		});
-	}
-};
-
-```
+In some cases you might need to refer to environment variables that are _dynamic_ — in other words, not known until we run the app. We'll cover this case in the next exercise.

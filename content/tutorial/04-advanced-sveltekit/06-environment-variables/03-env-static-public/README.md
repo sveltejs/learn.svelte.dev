@@ -1,5 +1,5 @@
 ---
-title: Public environment variables
+title: $env/static/public
 ---
 
 Some environment variables _can_ be safely exposed to the browser. These are distinguished from private environment variables with a `PUBLIC_` prefix.
@@ -23,19 +23,4 @@ Then, import them into `src/routes/+page.svelte`:
 		PUBLIC_THEME_FOREGROUND
 	} from '$env/static/public';+++
 </script>
-```
-
-As with private environment variables, it's preferable to use static values if possible, but if necessary we can use dynamic values instead:
-
-```svelte
-<script>
-	import { +++env+++ } from '$env/+++dynamic+++/public';
-</script>
-
-<main
-	style:background={+++env.+++PUBLIC_THEME_BACKGROUND}
-	style:color={+++env.+++PUBLIC_THEME_FOREGROUND}
->
-	{+++env.+++PUBLIC_THEME_FOREGROUND} on {+++env.+++PUBLIC_THEME_BACKGROUND}
-</main>
 ```

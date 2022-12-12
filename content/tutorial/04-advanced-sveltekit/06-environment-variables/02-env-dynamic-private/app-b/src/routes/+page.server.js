@@ -1,4 +1,5 @@
 import { redirect, fail } from '@sveltejs/kit';
+import { env } from '$env/dynamic/private';
 
 export function load({ cookies }) {
 	if (cookies.get('allowed')) {
@@ -10,10 +11,9 @@ export const actions = {
 	default: async ({ request, cookies }) => {
 		const data = await request.formData();
 
-		if (data.get('passphrase') === 'TODO') {
+		if (data.get('passphrase') === env.PASSPHRASE) {
 			cookies.set('allowed', 'true', {
-				path: '/',
-				maxAge: 60
+				path: '/'
 			});
 
 			throw redirect(303, '/welcome');
