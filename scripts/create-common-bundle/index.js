@@ -8,7 +8,7 @@ import { execSync } from 'child_process';
 const cwd = 'content/tutorial/common';
 
 if (!fs.existsSync(`${cwd}/node_modules`)) {
-	execSync('npm install', { cwd });
+	execSync('npm ci', { cwd });
 }
 
 const zip = new AdmZip();
