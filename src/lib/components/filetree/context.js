@@ -5,6 +5,7 @@ import { setContext, getContext } from 'svelte';
  *   endstate: import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>;
  *   files: import('svelte/store').Writable<import('$lib/types').Stub[]>;
  *   selected: import('svelte/store').Writable<import('$lib/types').FileStub | null>;
+ *   readonly: import('svelte/store').Writable<boolean>;
  *   select: (file: import('$lib/types').FileStub) => void;
  *   add: (name: string, type: 'file' | 'directory') => Promise<void>;
  *   edit: (stub: import('$lib/types').Stub, name: string) => Promise<void>;

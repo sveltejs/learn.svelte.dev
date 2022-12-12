@@ -5,18 +5,18 @@
 	import { writable } from 'svelte/store';
 
 	/**
-	 * @typedef {Array<{ name: string; label: string; fn: () => void }>} MenuItems
+	 * @typedef {{ icon: string; label: string; fn: () => void }} MenuItem
 	 */
 
 	/**
-	 * @type {import("svelte/store").Writable<{x: number; y: number; items: MenuItems} | null>}
+	 * @type {import("svelte/store").Writable<{x: number; y: number; items: MenuItem[]} | null>}
 	 */
 	let menu_items = writable(null);
 
 	/**
 	 * @param {number} x
 	 * @param {number} y
-	 * @param {MenuItems} items
+	 * @param {MenuItem[]} items
 	 */
 	export function open(x, y, items) {
 		if (items.length > 0) {
@@ -31,7 +31,7 @@
 			<ul>
 				{#each $menu_items.items as item}
 					<li>
-						<button on:click={item.fn}>{item.name}</button>
+						<button on:click={item.fn}>{item.label}</button>
 					</li>
 				{/each}
 			</ul>

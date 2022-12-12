@@ -46,7 +46,9 @@
 
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
-	$: mobile = width < 768;
+
+	$: mobile = writable(false);
+	$: $mobile = width < 768;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').EditingConstraints>} */
 	const editing_constraints = writable({ create: [], remove: [] });
@@ -294,12 +296,12 @@
 
 <ContextMenu />
 
-<div class="container" style="--toggle-height: {mobile ? '4.6rem' : '0px'}">
+<div class="container" style="--toggle-height: {$mobile ? '4.6rem' : '0px'}">
 	<SplitPane
 		type="horizontal"
-		min={mobile ? '0px' : '360px'}
-		max={mobile ? '100%' : '50%'}
-		pos={mobile ? (selected_view === 0 ? '100%' : '0%') : '33%'}
+		min={$mobile ? '0px' : '360px'}
+		max={$mobile ? '100%' : '50%'}
+		pos={$mobile ? (selected_view === 0 ? '100%' : '0%') : '33%'}
 	>
 		<section slot="a" class="content">
 			<Sidebar
@@ -313,12 +315,12 @@
 			/>
 		</section>
 
-		<section slot="b" class:hidden={mobile && selected_view === 0}>
+		<section slot="b" class:hidden={$mobile && selected_view === 0}>
 			<SplitPane
 				type="vertical"
-				min={mobile ? '0px' : '100px'}
-				max={mobile ? '100%' : '50%'}
-				pos={mobile ? (selected_view === 1 ? '100%' : '0%') : '50%'}
+				min={$mobile ? '0px' : '100px'}
+				max={$mobile ? '100%' : '50%'}
+				pos={$mobile ? (selected_view === 1 ? '100%' : '0%') : '50%'}
 			>
 				<section slot="a">
 					<SplitPane type="horizontal" min="80px" max="300px" pos="200px">
@@ -355,7 +357,7 @@
 							<Editor
 								stubs={$files}
 								selected={$selected}
-								read_only={mobile}
+								read_only={$mobile}
 								on:change={update_stub}
 							/>
 							<ImageViewer selected={$selected} />
@@ -399,7 +401,7 @@
 			</SplitPane>
 		</section>
 	</SplitPane>
-	{#if mobile}
+	{#if $mobile}
 		<ScreenToggle labels={['Tutorial', 'Input', 'Output']} bind:selected={selected_view} />
 	{/if}
 </div>

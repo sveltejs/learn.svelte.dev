@@ -13,7 +13,7 @@
 	/** @type {{ prefix: string, depth: number, name: string }} */
 	export let scope;
 
-	/** @type {boolean} */
+	/** @type {import('svelte/store').Writable<boolean>} */
 	export let readonly;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').EditingConstraints>} */
@@ -32,6 +32,7 @@
 		endstate,
 		files,
 		selected,
+		readonly,
 
 		select: async (file) => {
 			selected.set(file);
@@ -169,14 +170,12 @@
 	<Folder
 		prefix={scope.prefix}
 		depth={scope.depth}
-		name={scope.name}
 		directory={{
 			type: 'directory',
 			name: '',
 			basename: scope.name
 		}}
 		files={$files.filter((stub) => !hidden.has(stub.basename))}
-		{readonly}
 		expanded
 	/>
 </div>
@@ -220,30 +219,11 @@
 		z-index: 1;
 		background: var(--bg);
 		overflow: hidden;
+		color: var(--text);
 	}
 
 	.filetree :global(.row:hover) {
 		--bg: var(--back-light);
-	}
-
-	.filetree :global(.actions) {
-		position: absolute;
-		display: flex;
-		right: -1px;
-		top: 0;
-		height: 100%;
-		background-color: var(--bg);
-		white-space: pre;
-	}
-
-	.filetree :global(.actions)::before {
-		content: '';
-		position: absolute;
-		width: 1rem;
-		height: 100%;
-		left: -1rem;
-		top: 0;
-		background: linear-gradient(to right, transparent, var(--bg));
 	}
 
 	.filetree :global(.basename) {
@@ -251,7 +231,7 @@
 		margin: 0;
 		font-size: var(--font-size);
 		font-family: inherit;
-		color: var(--text);
+		color: inherit;
 		width: 100%;
 		text-align: left;
 		border: 2px solid transparent;

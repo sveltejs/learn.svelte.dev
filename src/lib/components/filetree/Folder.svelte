@@ -1,16 +1,13 @@
 <script>
-	import { open } from './ContextMenu.svelte';
 	import File from './File.svelte';
 	import * as context from './context.js';
 	import { get_depth } from '$lib/utils';
+	import Item from './Item.svelte';
 
 	export let expanded = true;
 
 	/** @type {import('$lib/types').DirectoryStub} */
 	export let directory;
-
-	/** @type {string} */
-	export let name;
 
 	/** @type {string} */
 	export let prefix;
@@ -21,12 +18,10 @@
 	/** @type {Array<import('$lib/types').Stub>} */
 	export let files;
 
-	export let readonly = false;
-
 	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
 	let state = 'idle';
 
-	const { endstate, files: all_files, edit, add, remove } = context.get();
+	const { endstate, files: all_files, edit, add, remove, readonly } = context.get();
 
 	$: hidden_children = files
 		.filter((file) =>
@@ -58,7 +53,7 @@
 		can_create.file = false;
 		can_create.directory = false;
 
-		if (!readonly) {
+		if (!$readonly) {
 			const child_prefixes = [];
 
 			for (const stub of $all_files) {
@@ -86,35 +81,36 @@
 	}
 
 	// fake root directory has no name
-	$: can_remove = !readonly && directory.name ? !$endstate[directory.name] : false;
+	$: can_remove = !$readonly && directory.name ? !$endstate[directory.name] : false;
 
 	/** @type {import('./ContextMenu.svelte').MenuItems} */
 	$: actions = [
 		can_create.file && {
-			name: 'file-new',
+			icon: 'file-new',
 			label: 'New file',
 			fn: () => {
 				state = 'add_file';
 			}
 		},
 		can_create.directory && {
-			name: 'folder-new',
+			icon: 'folder-new',
 			label: 'New folder',
 			fn: () => {
 				state = 'add_directory';
 			}
 		},
 		can_remove && {
-			name: 'rename',
+			icon: 'rename',
 			label: 'Rename',
-			action: () => {
+			fn: () => {
+				console.log('?????');
 				state = 'renaming';
 			}
 		},
 		can_remove && {
-			name: 'delete',
+			icon: 'delete',
 			label: 'Delete',
-			action: () => {
+			fn: () => {
 				remove(directory);
 			}
 		}
@@ -148,47 +144,32 @@
 </script>
 
 <div class="directory row" class:expanded style="--depth: {depth};">
-	{#if state === 'renaming'}
-		<!-- svelte-ignore a11y-autofocus -->
-		<input
-			class="basename"
-			type="text"
-			autofocus
-			autocomplete="off"
-			spellcheck="false"
-			value={directory.basename}
-			on:blur={done}
-			on:keyup={done}
-		/>
-	{:else}
-		<button
-			class="basename"
-			on:click={() => {
-				expanded = !expanded;
-			}}
-			on:dblclick={() => {
-				if (can_remove) state = 'renaming';
-			}}
-			on:contextmenu|preventDefault={(e) => {
-				open(e.clientX, e.clientY, actions);
-			}}
-		>
-			{name}
-		</button>
-
-		<div class="actions">
-			{#each actions as action}
-				<button aria-label={action.label} class="icon {action.name}" on:click={action.fn} />
-			{/each}
-		</div>
-	{/if}
+	<Item
+		can_rename={can_remove}
+		renaming={state === 'renaming'}
+		basename={directory.basename}
+		{actions}
+		on:click={() => {
+			expanded = !expanded;
+		}}
+		on:edit={() => {
+			state = 'renaming';
+		}}
+		on:rename={(e) => {
+			edit(directory, e.detail.basename);
+			state = 'idle';
+		}}
+		on:cancel={() => {
+			state = 'idle';
+		}}
+	/>
 </div>
 
 {#if expanded}
-	<ul style="--depth: {depth + 1}">
+	<ul style="--depth: {depth}">
 		{#if state === 'add_directory'}
 			<li>
-				<div class="directory row">
+				<div class="directory row" style="--depth: {depth + 1}">
 					<!-- svelte-ignore a11y-autofocus -->
 					<input class="basename" type="text" autofocus on:blur={done} on:keyup={done} />
 				</div>
@@ -197,14 +178,7 @@
 
 		{#each child_directories as directory}
 			<li>
-				<svelte:self
-					{directory}
-					name={directory.basename}
-					prefix={directory.name + '/'}
-					depth={depth + 1}
-					files={children}
-					{readonly}
-				/>
+				<svelte:self {directory} prefix={directory.name + '/'} depth={depth + 1} files={children} />
 			</li>
 		{/each}
 
@@ -218,9 +192,7 @@
 		{/if}
 
 		{#each child_files as file}
-			<li>
-				<File {file} {readonly} {depth} />
-			</li>
+			<li><File {file} /></li>
 		{/each}
 	</ul>
 {/if}
@@ -255,9 +227,5 @@
 
 	li {
 		padding: 0;
-	}
-
-	.new {
-		padding-left: var(--inset);
 	}
 </style>
