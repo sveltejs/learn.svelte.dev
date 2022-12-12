@@ -2,4 +2,4 @@
 	export let data;
 </script>
 
-<p>{data.greeting}</p>
+<svelte:component this={data.component} message={data.message} />

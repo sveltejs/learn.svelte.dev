@@ -2,13 +2,24 @@
 title: Using both load functions
 ---
 
-In rare cases, you might need to use both a `+page.server.js` and `+page.js` `load` function together — for example, you might need to return an instance of a custom class that was initialised with data from your server.
+Occasionally, you might need to use a server load function and a universal load function together. For example, you might need to return data from the server, but also return a value that can't be serialized as server data.
 
-The data returned from the `+page.server.js` `load` function can be accessed through the `data` property passed to the `+page.js` function. Use it to append the strings and return the result:
+In this example we want to return a different component from `load` depending on whether the data we got from `src/routes/+page.server.js` is `cool` or not.
+
+We can access server data in `src/routes/+page.js` via the `data` property:
 
 ```js
 /// file: src/routes/+page.js
-export async function load({ +++data+++ }) {
-	return { greeting: +++data.greeting + +++' and the shared load function' };
+export async function load(+++{ data }+++) {
+	const module = +++data.cool+++
+		? await import('./CoolComponent.svelte')
+		: await import('./BoringComponent.svelte');
+
+	return {
+		component: module.default,
+		message: +++data.message+++
+	};
 }
 ```
+
+> Note that the data isn't merged — we must explicitly return `message` from the universal `load` function.

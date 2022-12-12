@@ -1,3 +1,6 @@
 export async function load() {
-	return { greeting: 'Hello from the server load function' };
+	return {
+		message: 'this data came from the server',
+		cool: true
+	};
 }
