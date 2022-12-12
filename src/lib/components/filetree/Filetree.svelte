@@ -218,24 +218,11 @@
 		height: 1.4em;
 		z-index: 1;
 		background: var(--bg);
-		overflow: hidden;
 		color: var(--text);
 	}
 
 	.filetree :global(.row:hover) {
 		--bg: var(--back-light);
-	}
-
-	.filetree :global(.basename) {
-		position: relative;
-		margin: 0;
-		font-size: var(--font-size);
-		font-family: inherit;
-		color: inherit;
-		width: 100%;
-		text-align: left;
-		border: 2px solid transparent;
-		white-space: nowrap;
 	}
 
 	.filetree :global(button),
@@ -245,38 +232,9 @@
 		background-repeat: no-repeat;
 	}
 
-	.filetree :global(input.basename) {
-		/* position: absolute;
-		left: 0;
-		top: 0; */
-		width: 100%;
-		height: 100%;
-	}
-
 	.filetree :global(:focus-visible) {
 		outline: none;
 		border: 2px solid var(--flash) !important;
-	}
-
-	.filetree :global(.icon) {
-		height: 100%;
-		width: 1.5rem;
-	}
-
-	.filetree :global(.icon.rename) {
-		background-image: url(../../icons/rename.svg);
-	}
-
-	.filetree :global(.icon.delete) {
-		background-image: url(../../icons/delete.svg);
-	}
-
-	.filetree :global(.icon.file-new) {
-		background-image: url(../../icons/file-new.svg);
-	}
-
-	.filetree :global(.icon.folder-new) {
-		background-image: url(../../icons/folder-new.svg);
 	}
 
 	.modal-contents p {

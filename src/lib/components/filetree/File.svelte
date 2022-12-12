@@ -45,7 +45,6 @@
 		}}
 		on:rename={(e) => {
 			edit(file, e.detail.basename);
-			state = 'idle';
 		}}
 		on:cancel={() => {
 			state = 'idle';

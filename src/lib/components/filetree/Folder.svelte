@@ -115,32 +115,6 @@
 			}
 		}
 	].filter(Boolean);
-
-	/** @param {Event} e */
-	function done(e) {
-		if (state === 'idle') return;
-
-		if (/** @type {KeyboardEvent} */ (e).key === 'Escape') {
-			state = 'idle';
-			return;
-		}
-
-		if ('key' in e && /** @type {KeyboardEvent} */ (e).key !== 'Enter') {
-			return;
-		}
-
-		const input = /** @type {HTMLInputElement} */ (e.target);
-
-		if (input.value && input.value !== directory.basename) {
-			if (state === 'renaming') {
-				edit(directory, input.value);
-			} else {
-				add(prefix + input.value, state === 'add_directory' ? 'directory' : 'file');
-			}
-		}
-
-		state = 'idle';
-	}
 </script>
 
 <div class="directory row" class:expanded style="--depth: {depth};">
@@ -157,7 +131,6 @@
 		}}
 		on:rename={(e) => {
 			edit(directory, e.detail.basename);
-			state = 'idle';
 		}}
 		on:cancel={() => {
 			state = 'idle';
@@ -170,8 +143,15 @@
 		{#if state === 'add_directory'}
 			<li>
 				<div class="directory row" style="--depth: {depth + 1}">
-					<!-- svelte-ignore a11y-autofocus -->
-					<input class="basename" type="text" autofocus on:blur={done} on:keyup={done} />
+					<Item
+						renaming
+						on:rename={(e) => {
+							add(prefix + e.detail.basename, 'directory');
+						}}
+						on:cancel={() => {
+							state = 'idle';
+						}}
+					/>
 				</div>
 			</li>
 		{/if}
@@ -185,8 +165,15 @@
 		{#if state === 'add_file'}
 			<li>
 				<div class="row">
-					<!-- svelte-ignore a11y-autofocus -->
-					<input class="basename" type="text" autofocus on:blur={done} on:keyup={done} />
+					<Item
+						renaming
+						on:rename={(e) => {
+							add(prefix + e.detail.basename, 'file');
+						}}
+						on:cancel={() => {
+							state = 'idle';
+						}}
+					/>
 				</div>
 			</li>
 		{/if}
@@ -222,7 +209,7 @@
 		/* border-left: 1px solid #eee; */
 		line-height: 1.3;
 		max-width: 100%;
-		overflow: hidden;
+		/* overflow: hidden; */
 	}
 
 	li {

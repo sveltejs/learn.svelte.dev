@@ -2,32 +2,35 @@
 	import { createEventDispatcher } from 'svelte';
 	import { open } from './ContextMenu.svelte';
 
+	export let basename = '';
+
 	/** @type {boolean} */
-	export let can_rename;
+	export let can_rename = false;
 
 	/** @type {boolean} */
 	export let renaming;
 
-	/** @type {string} */
-	export let basename;
-
 	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
-	export let actions;
+	export let actions = [];
 
 	const dispatch = createEventDispatcher();
+
+	let cancelling = false;
 
 	/** @param {Event} e */
 	function commit(e) {
 		const input = /** @type {HTMLInputElement} */ (e.target);
 		if (input.value && input.value !== basename) {
 			dispatch('rename', { basename: input.value });
-		} else {
-			cancel();
 		}
+
+		cancel();
 	}
 
 	function cancel() {
+		cancelling = true;
 		dispatch('cancel');
+		cancelling = false;
 	}
 </script>
 
@@ -41,7 +44,7 @@
 		spellcheck="false"
 		value={basename}
 		on:blur={(e) => {
-			if (!renaming) return;
+			if (!cancelling) return;
 			commit(e);
 		}}
 		on:keyup={(e) => {
@@ -70,11 +73,13 @@
 		{basename}
 	</button>
 
-	<div class="actions">
-		{#each actions as action}
-			<button aria-label={action.label} class="icon {action.icon}" on:click={action.fn} />
-		{/each}
-	</div>
+	{#if actions.length > 0}
+		<div class="actions">
+			{#each actions as action}
+				<button aria-label={action.label} class="icon {action.icon}" on:click={action.fn} />
+			{/each}
+		</div>
+	{/if}
 {/if}
 
 <style>
@@ -82,10 +87,28 @@
 		color: var(--text) !important;
 	}
 
+	.basename {
+		position: relative;
+		margin: 0;
+		font-size: var(--font-size);
+		font-family: inherit;
+		color: inherit;
+		width: calc(100% + 2rem);
+		text-align: left;
+		border: 2px solid transparent;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	input {
+		width: 100%;
+		height: 100%;
+	}
+
 	.actions {
 		position: absolute;
 		display: flex;
-		right: -1px;
+		right: -1rem;
 		top: 0;
 		height: 100%;
 		background-color: var(--bg);
@@ -100,5 +123,36 @@
 		left: -1rem;
 		top: 0;
 		background: linear-gradient(to right, transparent, var(--bg));
+	}
+
+	.actions::after {
+		content: '';
+		position: absolute;
+		width: 1rem;
+		height: 100%;
+		right: calc(-1rem + 1px);
+		top: 0;
+		background: white;
+	}
+
+	.icon {
+		height: 100%;
+		width: 1.5rem;
+	}
+
+	.icon.rename {
+		background-image: url(../../icons/rename.svg);
+	}
+
+	.icon.delete {
+		background-image: url(../../icons/delete.svg);
+	}
+
+	.icon.file-new {
+		background-image: url(../../icons/file-new.svg);
+	}
+
+	.icon.folder-new {
+		background-image: url(../../icons/folder-new.svg);
 	}
 </style>
