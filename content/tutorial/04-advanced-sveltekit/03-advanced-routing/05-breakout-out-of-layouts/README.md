@@ -2,23 +2,17 @@
 title: Breaking out of layouts
 ---
 
-Layouts form a strict hierarchy. Every page inherits the layout above it, which itself inherits the layout above it and so on. Sometimes it's useful to break out of that hierarchy.
+> TODO relax the file tree constraints so that we can rename `src/routes/a/b/c/+page.svelte` to `+page@b.svelte` or `+page@a.svelte` or `+page@.svelte`
 
-Let's rewind the layout inside `business/pricing/+page.svelte` to the root `+layout.svelte`. To do that, we add an `@` sign behind `+page.svelte`:
+Ordinarily, a page inherits every layout above it, meaning that `src/routes/a/b/c/+page.svelte` inherits four layouts:
 
-```diff
-src/routes/
-├ business
-│ ├ pricing/
-│ │ └ +layout@.svelte
-+│ │ └ +page@.svelte
--│ │ └ +page.svelte
-│ ├ +layout.svelte
-│ └ +page.svelte
-├ +layout.svelte
-└ +page.svelte
-```
+- `src/routes/+layout.svelte`
+- `src/routes/a/+layout.svelte`
+- `src/routes/a/b/+layout.svelte`
+- `src/routes/a/b/c/+layout.svelte`
 
-In general we can reset to one of the upper layouts by appending `@` followed by the segment name. In this example, we could also rewind to `business/+layout.svelte` by writing `+page@business.svelte`
+Occasionally, it's useful to break out of the current layout hierarchy. We can do that by adding the `@` sign followed by the name of the parent segment to 'reset' to — for example `+page@b.svelte` would put `/a/b/c` inside `src/routes/a/b/+layout.svelte`, while `+page@a.svelte` would put it inside `src/routes/a/+layout.svelte`.
+
+Let's reset it all the way to the root layout, by renaming it to `+page@.svelte`.
 
 > The root layout applies to every page of your app, you cannot break out of it.
