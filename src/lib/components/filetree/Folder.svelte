@@ -5,7 +5,9 @@
 	import { get_depth } from '$lib/utils';
 
 	export let expanded = true;
-	export let toggleable = true;
+
+	/** @type {import('$lib/types').DirectoryStub} */
+	export let directory;
 
 	/** @type {string} */
 	export let name;
@@ -21,19 +23,18 @@
 
 	export let readonly = false;
 
-	/** @type {'idle' | 'add_file' | 'add_directory' | 'edit_folder'} */
+	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
 	let state = 'idle';
-	let new_name = '';
 
 	const { endstate, files: all_files, edit, add, remove } = context.get();
 
-	$: _files = files || []; // workaround for what seems to be a Svelte bug, where files is undefined on navigation
-	$: hidden_children = _files
+	$: hidden_children = files
 		.filter((file) =>
 			file.name.startsWith(prefix + file.name.slice(prefix.length).split('/').shift() + '/__hidden')
 		)
 		.map((file) => file.name.slice(0, -'/__hidden'.length));
-	$: children = _files
+
+	$: children = files
 		.filter(
 			(file) =>
 				file.name.startsWith(prefix) &&
@@ -42,19 +43,14 @@
 				)
 		)
 		.sort((a, b) => (a.name < b.name ? -1 : 1));
+
 	$: child_directories = children.filter(
 		(child) => get_depth(child.name) === depth + 1 && child.type === 'directory'
 	);
+
 	$: child_files = /** @type {import('$lib/types').FileStub[]} */ (
 		children.filter((child) => get_depth(child.name) === depth + 1 && child.type === 'file')
 	);
-
-	// TODO get rid of this
-	$: file = _files.find((file) => file.name === prefix.slice(0, -1));
-
-	function toggle() {
-		if (toggleable) expanded = !expanded;
-	}
 
 	const can_create = { file: false, directory: false };
 
@@ -89,11 +85,12 @@
 		}
 	}
 
-	$: can_rename_or_remove = file && !$endstate[file.name];
+	// fake root directory has no name
+	$: can_remove = !readonly && directory.name ? !$endstate[directory.name] : false;
 
 	/** @param {MouseEvent} e */
 	function open_menu(e) {
-		if (readonly || (!can_create.file && !can_create.directory && !can_rename_or_remove)) {
+		if (!can_create.file && !can_create.directory && !can_remove) {
 			return;
 		}
 
@@ -117,19 +114,18 @@
 			});
 		}
 
-		if (can_rename_or_remove) {
+		if (can_remove) {
 			actions.push(
 				{
 					name: 'Rename',
 					action: () => {
-						new_name = name;
-						state = 'edit_folder';
+						state = 'renaming';
 					}
 				},
 				{
 					name: 'Delete',
 					action: () => {
-						remove(/** @type {import('$lib/types').DirectoryStub} */ (file));
+						remove(directory);
 					}
 				}
 			);
@@ -142,7 +138,6 @@
 	function done(e) {
 		if (/** @type {KeyboardEvent} */ (e).key === 'Escape') {
 			state = 'idle';
-			new_name = '';
 			return;
 		}
 
@@ -150,29 +145,49 @@
 			return;
 		}
 
-		if (new_name) {
-			if (state === 'edit_folder') {
-				edit(/** @type {import('$lib/types').DirectoryStub} */ (file), new_name);
+		const input = /** @type {HTMLInputElement} */ (e.target);
+
+		if (input.value && input.value !== directory.basename) {
+			if (state === 'renaming') {
+				edit(directory, input.value);
 			} else {
-				add(prefix + new_name, state === 'add_directory' ? 'directory' : 'file');
+				add(prefix + input.value, state === 'add_directory' ? 'directory' : 'file');
 			}
 		}
 
-		new_name = '';
 		state = 'idle';
 	}
 </script>
 
-{#if state !== 'edit_folder'}
-	<div class="row">
-		<button
-			class="directory basename"
+<div class="row">
+	<button
+		class="directory basename"
+		class:expanded
+		on:click={() => {
+			expanded = !expanded;
+		}}
+		on:dblclick={() => {
+			if (can_remove) state = 'renaming';
+		}}
+		on:contextmenu|preventDefault={open_menu}
+	>
+		{name}
+	</button>
+
+	{#if state === 'renaming'}
+		<!-- svelte-ignore a11y-autofocus -->
+		<input
+			class="basename directory"
 			class:expanded
-			on:click={toggle}
-			on:contextmenu|preventDefault={open_menu}
-		>
-			{name}
-		</button>
+			type="text"
+			autofocus
+			autocomplete="off"
+			spellcheck="false"
+			value={directory.basename}
+			on:blur={done}
+			on:keyup={done}
+		/>
+	{:else}
 		<div class="actions">
 			{#if can_create.file}
 				<button aria-label="New file" class="icon file-new" on:click={() => (state = 'add_file')} />
@@ -186,57 +201,31 @@
 				/>
 			{/if}
 
-			{#if can_rename_or_remove}
+			{#if can_remove}
 				<button
 					aria-label="Rename"
 					class="icon rename"
 					on:click={() => {
-						new_name = name;
-						state = 'edit_folder';
+						state = 'renaming';
 					}}
 				/>
-				<button
-					aria-label="Delete"
-					class="icon delete"
-					on:click={() => remove(/** @type {import('$lib/types').DirectoryStub} */ (file))}
-				/>
+				<button aria-label="Delete" class="icon delete" on:click={() => remove(directory)} />
 			{/if}
 		</div>
-	</div>
-{/if}
-
-{#if state === 'edit_folder'}
-	<!-- svelte-ignore a11y-autofocus -->
-	<input
-		class="basename directory"
-		class:expanded
-		type="text"
-		autofocus
-		autocomplete="off"
-		spellcheck="false"
-		bind:value={new_name}
-		on:blur={done}
-		on:keyup={done}
-	/>
-{/if}
+	{/if}
+</div>
 
 {#if expanded}
 	<ul>
 		{#if state === 'add_directory'}
 			<!-- svelte-ignore a11y-autofocus -->
-			<input
-				type="text"
-				class="directory"
-				autofocus
-				bind:value={new_name}
-				on:blur={done}
-				on:keyup={done}
-			/>
+			<input type="text" class="directory" autofocus on:blur={done} on:keyup={done} />
 		{/if}
 
 		{#each child_directories as directory}
 			<li>
 				<svelte:self
+					{directory}
 					name={directory.basename}
 					prefix={directory.name + '/'}
 					depth={depth + 1}
@@ -248,7 +237,7 @@
 
 		{#if state === 'add_file'}
 			<!-- svelte-ignore a11y-autofocus -->
-			<input type="text" autofocus bind:value={new_name} on:blur={done} on:keyup={done} />
+			<input type="text" autofocus on:blur={done} on:keyup={done} />
 		{/if}
 
 		{#each child_files as file}

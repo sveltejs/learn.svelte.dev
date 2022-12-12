@@ -60,6 +60,8 @@
 		edit: async (to_rename, new_name) => {
 			const new_full_name = to_rename.name.slice(0, -to_rename.basename.length) + new_name;
 
+			console.log({ to_rename, new_name, new_full_name });
+
 			if ($files.some((s) => s.name === new_full_name)) {
 				modal_text = `A file or folder named ${new_full_name} already exists`;
 				return;
@@ -72,7 +74,7 @@
 				return;
 			}
 
-			if ($endstate[new_full_name]) {
+			if ($endstate[to_rename.name]) {
 				modal_text =
 					'Only the following files and folders are allowed to be removed in this exercise:\n' +
 					$constraints.remove.join('\n');
@@ -168,6 +170,11 @@
 		prefix={scope.prefix}
 		depth={scope.depth}
 		name={scope.name}
+		directory={{
+			type: 'directory',
+			name: '',
+			basename: scope.name
+		}}
 		files={$files.filter((stub) => !hidden.has(stub.basename))}
 		{readonly}
 		expanded
@@ -254,6 +261,14 @@
 		background-size: 1.2rem 1.2rem;
 		background-position: 0 45%;
 		background-repeat: no-repeat;
+	}
+
+	.filetree :global(input.basename) {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
 	}
 
 	.filetree :global(:focus-visible) {

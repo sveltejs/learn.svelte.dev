@@ -8,8 +8,8 @@
 
 	const { selected, endstate, select, edit, remove } = context.get();
 
-	let editing = false;
-	let new_name = '';
+	/** @type {'idle' | 'renaming'} */
+	let state = 'idle';
 
 	$: can_remove = !read_only && !$endstate[file.name];
 
@@ -22,8 +22,7 @@
 			{
 				name: 'Rename',
 				action: () => {
-					new_name = file.basename;
-					editing = true;
+					state = 'renaming';
 				}
 			},
 			{
@@ -39,9 +38,10 @@
 
 	/** @param {Event} e */
 	function done(e) {
+		if (state === 'idle') return;
+
 		if (/** @type {KeyboardEvent} */ (e).key === 'Escape') {
-			editing = false;
-			new_name = '';
+			state = 'idle';
 			return;
 		}
 
@@ -49,52 +49,56 @@
 			return;
 		}
 
-		if (new_name) {
-			edit(file, new_name);
+		const input = /** @type {HTMLInputElement} */ (e.target);
+
+		if (input.value && input.value !== file.basename) {
+			edit(file, input.value);
 		}
 
-		new_name = '';
-		editing = false;
+		state = 'idle';
 	}
 </script>
 
-{#if !editing}
-	<div class="row">
-		<button
+<div class="row">
+	<button
+		class="basename"
+		class:selected={file === $selected}
+		on:click={() => select(file)}
+		on:dblclick={() => {
+			if (can_remove) state = 'renaming';
+		}}
+		on:contextmenu|preventDefault={open_menu}
+	>
+		{file.basename}
+	</button>
+
+	{#if state === 'renaming'}
+		<!-- svelte-ignore a11y-autofocus -->
+		<input
 			class="basename"
-			class:selected={file === $selected}
-			on:click={() => select(file)}
-			on:contextmenu|preventDefault={open_menu}
-		>
-			{file.basename}
-		</button>
+			type="text"
+			autofocus
+			autocomplete="off"
+			spellcheck="false"
+			value={file.basename}
+			on:blur={done}
+			on:keyup={done}
+		/>
+	{:else}
 		<div class="actions">
 			{#if can_remove}
 				<button
 					aria-label="Rename"
 					class="icon rename"
 					on:click={() => {
-						new_name = file.basename;
-						editing = true;
+						state = 'renaming';
 					}}
 				/>
 				<button aria-label="Delete" class="icon delete" on:click={() => remove(file)} />
 			{/if}
 		</div>
-	</div>
-{:else}
-	<!-- svelte-ignore a11y-autofocus -->
-	<input
-		class="basename"
-		type="text"
-		autofocus
-		autocomplete="off"
-		spellcheck="false"
-		bind:value={new_name}
-		on:blur={done}
-		on:keyup={done}
-	/>
-{/if}
+	{/if}
+</div>
 
 <style>
 	button.selected {
@@ -112,12 +116,6 @@
 		border: 1px solid var(--border-color);
 		transform: translate(0, 0.2rem) rotate(45deg);
 		z-index: 2;
-	}
-
-	.icon {
-		/* margin-top: 0.2rem; */
-		height: 100%;
-		width: 1.5rem;
 	}
 
 	.rename {
