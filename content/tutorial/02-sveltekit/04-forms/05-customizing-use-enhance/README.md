@@ -51,7 +51,7 @@ When we create or delete items, it now takes a full second before the UI updates
 	}}+++
 >
 	<label>
-		+++{creating? 'Saving...' : 'Add a todo'}+++
+		+++{creating? 'saving...' : 'add a todo:'}+++
 		<input
 			+++disabled={creating}+++
 			name="description"
@@ -68,12 +68,10 @@ In the case of deletions, we don't really need to wait for the server to validat
 <ul>
 	{#each +++data.todos.filter((todo) => !deleting.includes(todo.id))+++ as todo (todo.id)}
 		<li class="todo" in:fly={{ y: 20 }} out:slide>
-			{todo.description}
-
 			<form
 				method="POST"
 				action="?/delete"
-+++				use:enhance={() => {
+				+++use:enhance={() => {
 					deleting = [...deleting, todo.id];
 					return async ({ update }) => {
 						await update();
@@ -82,7 +80,9 @@ In the case of deletions, we don't really need to wait for the server to validat
 				}}+++
 			>
 				<input type="hidden" name="id" value={todo.id} />
-				<button>Done!</button>
+				<button aria-label="Mark as complete">✔</button>
+
+				{todo.description}
 			</form>
 		</li>
 	{/each}

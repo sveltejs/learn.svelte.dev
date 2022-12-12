@@ -1,4 +1,4 @@
-import { invalid } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import * as db from '$lib/server/database.js';
 
 export function load({ cookies }) {
@@ -20,7 +20,7 @@ export const actions = {
 		try {
 			db.createTodo(cookies.get('userid'), data.get('description'));
 		} catch (error) {
-			return invalid(422, {
+			return fail(422, {
 				description: data.get('description'),
 				error: error.message
 			});

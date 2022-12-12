@@ -9,7 +9,7 @@
 	let deleting = [];
 </script>
 
-<h1>Todos</h1>
+<h1>todos</h1>
 
 {#if form?.error}
 	<p class="error">{form.error}</p>
@@ -28,7 +28,7 @@
 	}}
 >
 	<label>
-		{creating ? 'Saving...' : 'Add a todo'}
+		{creating ? 'saving...' : 'add a todo:'}
 		<input
 			disabled={creating}
 			name="description"
@@ -41,8 +41,6 @@
 <ul>
 	{#each data.todos.filter((todo) => !deleting.includes(todo.id)) as todo (todo.id)}
 		<li class="todo" in:fly={{ y: 20 }} out:slide>
-			{todo.description}
-
 			<form
 				method="POST"
 				action="?/delete"
@@ -55,7 +53,9 @@
 				}}
 			>
 				<input type="hidden" name="id" value={todo.id} />
-				<button>Done!</button>
+				<button aria-label="Mark as complete">✔</button>
+
+				{todo.description}
 			</form>
 		</li>
 	{/each}

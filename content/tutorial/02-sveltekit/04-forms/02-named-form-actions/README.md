@@ -29,7 +29,7 @@ The `<form>` element has an optional `action` attribute, which is similar to an 
 /// file: src/routes/+page.svelte
 <form method="POST" +++action="?/create"+++>
 	<label>
-		Add a todo
+		add a todo:
 		<input name="description" />
 	</label>
 </form>
@@ -44,12 +44,11 @@ Next, we want to create a form for each todo, complete with a hidden `<input>` t
 <ul>
 	{#each data.todos as todo (todo.id)}
 		<li class="todo">
-			{todo.description}
-
-+++			<form method="POST" method="?/delete">
++++			<form method="POST" action="?/delete">
 				<input type="hidden" name="id" value={todo.id} />
-				<button>Done!</button>
-			</form>+++
+				<button aria-label="Mark as complete">✔</button>+++
+				{todo.description}
++++			</form>+++
 		</li>
 	{/each}
 </ul>

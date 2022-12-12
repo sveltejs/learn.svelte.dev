@@ -6,7 +6,7 @@
 	export let form;
 </script>
 
-<h1>Todos</h1>
+<h1>todos</h1>
 
 {#if form?.error}
 	<p class="error">{form.error}</p>
@@ -14,7 +14,7 @@
 
 <form method="POST" action="?/create" use:enhance>
 	<label>
-		Add a todo
+		add a todo:
 		<input
 			name="description"
 			value={form?.description ?? ''}
@@ -26,11 +26,11 @@
 <ul>
 	{#each data.todos as todo (todo.id)}
 		<li class="todo" in:fly={{ y: 20 }} out:slide>
-			{todo.description}
-
 			<form method="POST" action="?/delete" use:enhance>
 				<input type="hidden" name="id" value={todo.id} />
-				<button>Done!</button>
+				<button aria-label="Mark as complete">✔</button>
+
+				{todo.description}
 			</form>
 		</li>
 	{/each}

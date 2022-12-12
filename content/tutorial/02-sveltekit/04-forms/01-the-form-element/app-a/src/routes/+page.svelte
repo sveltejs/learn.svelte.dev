@@ -2,7 +2,7 @@
 	export let data;
 </script>
 
-<h1>Todos</h1>
+<h1>todos</h1>
 
 <ul>
 	{#each data.todos as todo (todo.id)}

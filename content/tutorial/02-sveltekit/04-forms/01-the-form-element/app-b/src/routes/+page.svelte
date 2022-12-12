@@ -2,11 +2,11 @@
 	export let data;
 </script>
 
-<h1>Todos</h1>
+<h1>todos</h1>
 
 <form method="POST">
 	<label>
-		Add a todo
+		add a todo:
 		<input name="description" />
 	</label>
 </form>

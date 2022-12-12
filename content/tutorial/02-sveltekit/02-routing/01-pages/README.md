@@ -18,17 +18,7 @@ Let's add a second route, `src/routes/about/+page.svelte`, which maps to `/about
 </nav>
 
 <h1>About</h1>
-
 <p>This is the about page.</p>
-
-<style>
-	nav {
-		display: flex;
-		gap: 1em;
-		padding: 1em;
-		background-color: #eee;
-	}
-</style>
 ```
 
 We can now navigate between `/` and `/about`.

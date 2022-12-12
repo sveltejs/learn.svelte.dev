@@ -24,15 +24,6 @@ src/routes/
 </nav>
 
 <slot />
-
-<style>
-	nav {
-		display: flex;
-		gap: 1em;
-		padding: 1em;
-		background-color: #eee;
-	}
-</style>
 ```
 
 A `+layout.svelte` file applies to every child route, including the sibling `+page.svelte` (if it exists). You can nest layouts to arbitrary depth.

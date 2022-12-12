@@ -28,7 +28,7 @@ In `src/lib/server/database.js`, validate that the description exists and is uni
 /// file: src/lib/server/database.js
 export function createTodo(userid, description) {
 +++	if (description === '') {
-		throw new Error('Todo must have a description');
+		throw new Error('todo must have a description');
 	}+++
 
 	if (!db.has(userid)) {
@@ -38,7 +38,7 @@ export function createTodo(userid, description) {
 	const todos = db.get(userid);
 
 +++	if (todos.find((todo) => todo.description === description)) {
-		throw new Error('Todos must be unique');
+		throw new Error('todos must be unique');
 	}+++
 
 	todos.push({
@@ -49,7 +49,7 @@ export function createTodo(userid, description) {
 }
 ```
 
-Try submitting a duplicate todo. Yikes! SvelteKit takes us to an unfriendly-looking error page. On the server, we see a 'Todos must be unique' error, but SvelteKit hides unexpected error messages from users because they often contain sensitive data.
+Try submitting a duplicate todo. Yikes! SvelteKit takes us to an unfriendly-looking error page. On the server, we see a 'todos must be unique' error, but SvelteKit hides unexpected error messages from users because they often contain sensitive data.
 
 It would be much better to stay on the same page and provide an indication of what went wrong so that the user can fix it. To do this, we can use the `fail` function to return data from the action along with an appropriate HTTP status code:
 
@@ -83,7 +83,7 @@ In `src/routes/+page.svelte`, we can access the returned value via the `form` pr
 	+++export let form;+++
 </script>
 
-<h1>Todos</h1>
+<h1>todos</h1>
 
 +++{#if form?.error}
 	<p class="error">{form.error}</p>
@@ -91,7 +91,7 @@ In `src/routes/+page.svelte`, we can access the returned value via the `form` pr
 
 <form method="POST" action="?/create">
 	<label>
-		Add a todo
+		add a todo:
 		<input
 			name="description"
 			+++value={form?.description ?? ''}+++
@@ -101,4 +101,4 @@ In `src/routes/+page.svelte`, we can access the returned value via the `form` pr
 </form>
 ```
 
-> You can also return data from an action _without_ wrapping it in `fail` — for example to show a 'Success!' message when data was saved — and it will be available via the `form` prop.
+> You can also return data from an action _without_ wrapping it in `fail` — for example to show a 'success!' message when data was saved — and it will be available via the `form` prop.

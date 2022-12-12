@@ -3,7 +3,7 @@
 	export let form;
 </script>
 
-<h1>Todos</h1>
+<h1>todos</h1>
 
 {#if form?.error}
 	<p class="error">{form.error}</p>
@@ -11,7 +11,7 @@
 
 <form method="POST" action="?/create">
 	<label>
-		Add a todo
+		add a todo:
 		<input
 			name="description"
 			value={form?.description ?? ''}
@@ -23,11 +23,11 @@
 <ul>
 	{#each data.todos as todo (todo.id)}
 		<li class="todo">
-			{todo.description}
-
 			<form method="POST" action="?/delete">
 				<input type="hidden" name="id" value={todo.id} />
-				<button>Done!</button>
+				<button aria-label="Mark as complete">✔</button>
+
+				{todo.description}
 			</form>
 		</li>
 	{/each}
