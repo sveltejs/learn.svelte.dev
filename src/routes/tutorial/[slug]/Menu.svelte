@@ -122,8 +122,8 @@
 										class:expanded={chapter.slug === expanded_chapter}
 										aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
 									>
-										<img src={arrow} alt="Arrow icon" />
 										<button on:click={() => (expanded_chapter = chapter.slug)}>
+											<img src={arrow} alt="Arrow icon" />
 											{chapter.title}
 										</button>
 
@@ -333,7 +333,7 @@
 		font-weight: bold;
 	}
 
-	li.expanded > img {
+	li.expanded > button > img {
 		transform: rotate(90deg);
 	}
 
