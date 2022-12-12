@@ -168,14 +168,7 @@
 			clearTimeout(timeout);
 			loading = true;
 
-			expected = {};
-			complete_states = {};
-			for (const stub of Object.values($endstate)) {
-				if (stub.type === 'file') {
-					complete_states[stub.name] = false;
-					expected[stub.name] = normalise(stub.contents);
-				}
-			}
+			reset_complete_states();
 
 			await load_files($files);
 
@@ -220,6 +213,18 @@
 				set_iframe_src(adapter.base);
 			}
 		}, 1000);
+	}
+
+	/** Set `complete_states` and `expected` based on the end state */
+	function reset_complete_states() {
+		expected = {};
+		complete_states = {};
+		for (const stub of Object.values($endstate)) {
+			if (stub.type === 'file') {
+				complete_states[stub.name] = false;
+				expected[stub.name] = normalise(stub.contents);
+			}
+		}
 	}
 
 	/**
@@ -346,6 +351,9 @@
 								disabled={Object.keys(data.exercise.b).length === 0}
 								on:click={() => {
 									$files = Object.values(completed ? data.exercise.a : $endstate);
+									if (completed) {
+										reset_complete_states();
+									}
 									load_files($files);
 								}}
 							>
