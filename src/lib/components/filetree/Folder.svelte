@@ -23,20 +23,8 @@
 
 	const { endstate, files: all_files, rename, add, remove, readonly } = context.get();
 
-	$: hidden_children = files
-		.filter((file) =>
-			file.name.startsWith(prefix + file.name.slice(prefix.length).split('/').shift() + '/__hidden')
-		)
-		.map((file) => file.name.slice(0, -'/__hidden'.length));
-
 	$: children = files
-		.filter(
-			(file) =>
-				file.name.startsWith(prefix) &&
-				!hidden_children.some(
-					(hidden) => file.name.startsWith(hidden + '/') || file.name === hidden
-				)
-		)
+		.filter((file) => file.name.startsWith(prefix))
 		.sort((a, b) => (a.name < b.name ? -1 : 1));
 
 	$: child_directories = children.filter(

@@ -2,8 +2,9 @@
 title: Universal load functions
 ---
 
-> TODO use an external API instead of a hidden one. This doesn't currently work, because the body isn't completely buffered before `request.json()` fulfils. Bug in webcontainer?
+> Coming soon
 
+<!--
 In the previous two exercises we loaded data from the server using `+page.server.js` and `+layout.server.js` files. This is very convenient if you need to do things like getting data directly from a database, or reading cookies.
 
 Sometimes it doesn't make sense to load data from the server when doing a client-side navigation. For example:
@@ -18,3 +19,4 @@ In this example, we're loading data from an external API in `src/routes/+page.se
 Let's cut out the middleman: rename both `+page.server.js` files to `+page.js`.
 
 Now, the `load` functions will run on the server during server-side rendering, but will run in the browser for subsequent client-side navigations. The trade-off is that we no longer have access to things that need a server (databases, cookies, private environment variables and so on), but in this case we don't need those things. Read the [documentation](https://kit.svelte.dev/docs/load#shared-vs-server) to learn more about the distinction between server `load` functions and universal `load` functions.
+-->
