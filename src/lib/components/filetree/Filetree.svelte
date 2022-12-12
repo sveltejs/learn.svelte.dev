@@ -236,6 +236,36 @@
 		white-space: pre;
 	}
 
+	.filetree :global(.basename) {
+		position: relative;
+		padding: 0 0 0 0.2em;
+		margin: 0;
+		font-size: var(--font-size);
+		font-family: inherit;
+		color: var(--text);
+		width: 100%;
+		text-align: left;
+		border: 2px solid transparent;
+		white-space: nowrap;
+	}
+
+	.filetree :global(button),
+	.filetree :global(input) {
+		background-size: 1.2rem 1.2rem;
+		background-position: 0 45%;
+		background-repeat: no-repeat;
+	}
+
+	.filetree :global(:focus-visible) {
+		outline: none;
+		border: 2px solid var(--flash) !important;
+	}
+
+	.filetree :global(.icon) {
+		height: 100%;
+		width: 1.5rem;
+	}
+
 	.modal-contents p {
 		white-space: pre-line;
 	}

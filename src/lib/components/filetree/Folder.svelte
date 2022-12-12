@@ -21,7 +21,7 @@
 
 	export let readonly = false;
 
-	/** @type {'idle' | 'add_file' | 'add_folder' | 'edit_folder'} */
+	/** @type {'idle' | 'add_file' | 'add_directory' | 'edit_folder'} */
 	let state = 'idle';
 	let new_name = '';
 
@@ -112,7 +112,7 @@
 			actions.push({
 				name: 'New folder',
 				action: () => {
-					state = 'add_folder';
+					state = 'add_directory';
 				}
 			});
 		}
@@ -154,7 +154,7 @@
 			if (state === 'edit_folder') {
 				edit(/** @type {import('$lib/types').DirectoryStub} */ (file), new_name);
 			} else {
-				add(prefix + new_name, state === 'add_folder' ? 'directory' : 'file');
+				add(prefix + new_name, state === 'add_directory' ? 'directory' : 'file');
 			}
 		}
 
@@ -165,7 +165,12 @@
 
 {#if state !== 'edit_folder'}
 	<div class="row">
-		<button class:expanded on:click={toggle} on:contextmenu|preventDefault={open_menu}>
+		<button
+			class="directory basename"
+			class:expanded
+			on:click={toggle}
+			on:contextmenu|preventDefault={open_menu}
+		>
 			{name}
 		</button>
 		<div class="actions">
@@ -177,7 +182,7 @@
 				<button
 					aria-label="New folder"
 					class="icon folder-new"
-					on:click={() => (state = 'add_folder')}
+					on:click={() => (state = 'add_directory')}
 				/>
 			{/if}
 
@@ -202,16 +207,26 @@
 
 {#if state === 'edit_folder'}
 	<!-- svelte-ignore a11y-autofocus -->
-	<input type="text" autofocus bind:value={new_name} on:blur={done} on:keyup={done} />
+	<input
+		class="basename directory"
+		class:expanded
+		type="text"
+		autofocus
+		autocomplete="off"
+		spellcheck="false"
+		bind:value={new_name}
+		on:blur={done}
+		on:keyup={done}
+	/>
 {/if}
 
 {#if expanded}
 	<ul>
-		{#if state === 'add_file' || state === 'add_folder'}
+		{#if state === 'add_file' || state === 'add_directory'}
 			<!-- svelte-ignore a11y-autofocus -->
 			<input
 				type="text"
-				class:no-img={state === 'add_file'}
+				class:directory={state === 'add_directory'}
 				autofocus
 				bind:value={new_name}
 				on:blur={done}
@@ -239,32 +254,9 @@
 {/if}
 
 <style>
-	button,
-	input {
-		font-size: var(--font-size);
-		font-family: inherit;
-		color: var(--text);
-		padding: 0 0 0 1.2em;
-		width: 100%;
-		text-align: left;
-		background: url(../../icons/folder.svg) 0 45% no-repeat;
-		background-size: 1.2rem 1.2rem;
-		user-select: none;
-		cursor: pointer;
-		border: 2px solid transparent;
-		white-space: nowrap;
-	}
-
-	input {
-		border-color: var(--text);
-	}
-	input.no-img {
-		background: none;
-	}
-
-	button:focus-visible {
-		outline: none;
-		border: 2px solid var(--flash);
+	.directory {
+		padding: 0 0 0 1.2em !important;
+		background-image: url(../../icons/folder.svg);
 	}
 
 	.expanded {
@@ -280,12 +272,6 @@
 	}
 
 	li {
-		padding: 0;
-	}
-
-	.icon {
-		height: 100%;
-		width: 1.5rem;
 		padding: 0;
 	}
 

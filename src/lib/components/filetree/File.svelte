@@ -61,6 +61,7 @@
 {#if !editing}
 	<div class="row">
 		<button
+			class="basename"
 			class:selected={file === $selected}
 			on:click={() => select(file)}
 			on:contextmenu|preventDefault={open_menu}
@@ -83,24 +84,21 @@
 	</div>
 {:else}
 	<!-- svelte-ignore a11y-autofocus -->
-	<input type="text" autofocus bind:value={new_name} on:blur={done} on:keyup={done} />
+	<input
+		class="basename"
+		type="text"
+		autofocus
+		autocomplete="off"
+		spellcheck="false"
+		bind:value={new_name}
+		on:blur={done}
+		on:keyup={done}
+	/>
 {/if}
 
 <style>
-	button {
-		position: relative;
-		padding: 0 0 0 0.2em;
-		font-size: var(--font-size);
-		font-family: inherit;
-		color: var(--text);
-		width: 100%;
-		text-align: left;
-		border: 2px solid transparent;
-		white-space: nowrap;
-	}
-
 	button.selected {
-		color: var(--prime);
+		color: var(--prime) !important;
 	}
 
 	button.selected::after {
@@ -116,18 +114,10 @@
 		z-index: 2;
 	}
 
-	button:focus-visible {
-		outline: none;
-		border: 2px solid var(--flash);
-	}
-
 	.icon {
-		margin-top: 0.2rem;
+		/* margin-top: 0.2rem; */
 		height: 100%;
 		width: 1.5rem;
-		padding: 0;
-		background-size: 1.2rem 1.2rem;
-		background-repeat: no-repeat;
 	}
 
 	.rename {
