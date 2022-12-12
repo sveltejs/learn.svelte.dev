@@ -1,5 +1,5 @@
 ---
-title: Refreshing data
+title: Invalidation
 ---
 
 When SvelteKit navigates to a site, it runs the related `load` functions. After some time, that data might become stale, so we want to refresh it. This is possible using `invalidate` or `invalidateAll`.
