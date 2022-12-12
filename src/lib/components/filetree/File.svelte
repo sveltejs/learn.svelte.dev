@@ -4,7 +4,7 @@
 
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
-	export let read_only = false;
+	export let readonly = false;
 
 	/** @type {number} */
 	export let depth;
@@ -14,7 +14,7 @@
 	/** @type {'idle' | 'renaming'} */
 	let state = 'idle';
 
-	$: can_remove = !read_only && !$endstate[file.name];
+	$: can_remove = !readonly && !$endstate[file.name];
 
 	/** @type {import('./ContextMenu.svelte').MenuItems} */
 	$: actions = can_remove
