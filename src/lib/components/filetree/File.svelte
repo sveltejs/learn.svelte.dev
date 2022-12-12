@@ -60,18 +60,6 @@
 </script>
 
 <div class="row">
-	<button
-		class="basename"
-		class:selected={file === $selected}
-		on:click={() => select(file)}
-		on:dblclick={() => {
-			if (can_remove) state = 'renaming';
-		}}
-		on:contextmenu|preventDefault={open_menu}
-	>
-		{file.basename}
-	</button>
-
 	{#if state === 'renaming'}
 		<!-- svelte-ignore a11y-autofocus -->
 		<input
@@ -85,6 +73,18 @@
 			on:keyup={done}
 		/>
 	{:else}
+		<button
+			class="basename"
+			class:selected={file === $selected}
+			on:click={() => select(file)}
+			on:dblclick={() => {
+				if (can_remove) state = 'renaming';
+			}}
+			on:contextmenu|preventDefault={open_menu}
+		>
+			{file.basename}
+		</button>
+
 		<div class="actions">
 			{#if can_remove}
 				<button

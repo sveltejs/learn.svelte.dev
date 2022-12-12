@@ -160,20 +160,6 @@
 </script>
 
 <div class="row">
-	<button
-		class="directory basename"
-		class:expanded
-		on:click={() => {
-			expanded = !expanded;
-		}}
-		on:dblclick={() => {
-			if (can_remove) state = 'renaming';
-		}}
-		on:contextmenu|preventDefault={open_menu}
-	>
-		{name}
-	</button>
-
 	{#if state === 'renaming'}
 		<!-- svelte-ignore a11y-autofocus -->
 		<input
@@ -188,6 +174,20 @@
 			on:keyup={done}
 		/>
 	{:else}
+		<button
+			class="directory basename"
+			class:expanded
+			on:click={() => {
+				expanded = !expanded;
+			}}
+			on:dblclick={() => {
+				if (can_remove) state = 'renaming';
+			}}
+			on:contextmenu|preventDefault={open_menu}
+		>
+			{name}
+		</button>
+
 		<div class="actions">
 			{#if can_create.file}
 				<button aria-label="New file" class="icon file-new" on:click={() => (state = 'add_file')} />
