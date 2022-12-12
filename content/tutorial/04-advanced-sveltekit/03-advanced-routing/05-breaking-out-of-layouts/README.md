@@ -2,8 +2,6 @@
 title: Breaking out of layouts
 ---
 
-> TODO relax the file tree constraints so that we can rename `src/routes/a/b/c/+page.svelte` to `+page@b.svelte` or `+page@a.svelte` or `+page@.svelte`
-
 Ordinarily, a page inherits every layout above it, meaning that `src/routes/a/b/c/+page.svelte` inherits four layouts:
 
 - `src/routes/+layout.svelte`

@@ -39,7 +39,7 @@
 		},
 
 		add: async (name, type) => {
-			if (!$endstate[name]) {
+			if (!$endstate[name] && !$constraints.create.includes(name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
 					$constraints.create.join('\n');
@@ -78,14 +78,14 @@
 				return;
 			}
 
-			if (!$endstate[new_full_name]) {
+			if (!$endstate[new_full_name] && !$constraints.create.includes(new_full_name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
 					$constraints.create.join('\n');
 				return;
 			}
 
-			if ($endstate[to_rename.name]) {
+			if ($endstate[to_rename.name] && !$constraints.remove.includes(to_rename.name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be removed in this exercise:\n' +
 					$constraints.remove.join('\n');
@@ -109,7 +109,7 @@
 		},
 
 		remove: async (stub) => {
-			if ($endstate[stub.name]) {
+			if ($endstate[stub.name] && !$constraints.remove.includes(stub.name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
 					$constraints.remove.join('\n');

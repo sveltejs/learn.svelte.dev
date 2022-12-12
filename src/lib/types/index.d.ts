@@ -46,6 +46,10 @@ export interface Exercise {
 	next: { slug: string; title: string } | null;
 	html: string;
 	dir: string;
+	editing_constraints: {
+		create: string[];
+		remove: string[];
+	}
 	a: Record<string, Stub>;
 	b: Record<string, Stub>;
 }
@@ -55,6 +59,7 @@ export interface ExerciseRaw {
 	slug: string;
 	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;
+	meta: any;
 	markdown: string;
 	dir: string;
 }

@@ -56,19 +56,23 @@
 	$: {
 		$endstate = { ...data.exercise.a };
 
-		$editing_constraints.create = [];
-		$editing_constraints.remove = [];
+		$editing_constraints.create = data.exercise.editing_constraints.create;
+		$editing_constraints.remove = data.exercise.editing_constraints.remove;
 
 		// TODO should this be an array in the first place?
 		for (const stub of Object.values(data.exercise.b)) {
 			if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
 				// remove file
-				$editing_constraints.remove.push(stub.name);
+				if (!$editing_constraints.remove.includes(stub.name)) {
+					$editing_constraints.remove.push(stub.name);
+				}
 				delete $endstate[stub.name];
 			} else if (stub.name.endsWith('/__delete')) {
 				// remove directory
 				const parent = stub.name.slice(0, stub.name.lastIndexOf('/'));
-				$editing_constraints.remove.push(parent);
+				if (!$editing_constraints.remove.includes(parent)) {
+					$editing_constraints.remove.push(parent);
+				}
 				delete $endstate[parent];
 				for (const k in $endstate) {
 					if (k.startsWith(parent + '/')) {
@@ -76,7 +80,7 @@
 					}
 				}
 			} else {
-				if (!$endstate[stub.name]) {
+				if (!$endstate[stub.name] && !$editing_constraints.create.includes(stub.name)) {
 					$editing_constraints.create.push(stub.name);
 				}
 				$endstate[stub.name] = data.exercise.b[stub.name];

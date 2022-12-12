@@ -60,8 +60,8 @@ export function get_index() {
 				const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
 				const { frontmatter, markdown } = extract_frontmatter(text, dir);
 				const { title } = frontmatter;
-
 				const slug = exercise.slice(3);
+				const meta = fs.existsSync(`${dir}/meta.json`) ? json(`${dir}/meta.json`) : {};
 
 				if (last_exercise) {
 					last_exercise.next = {
@@ -71,7 +71,7 @@ export function get_index() {
 								? part_meta.title
 								: last_chapter_meta !== chapter_meta
 								? chapter_meta.title
-								: title
+								: title,
 					};
 				}
 
@@ -82,6 +82,7 @@ export function get_index() {
 						markdown,
 						dir,
 						prev: last_exercise ? { slug: last_exercise.slug } : null,
+						meta,
 						next: null
 					})
 				);
@@ -167,6 +168,10 @@ export function get_exercise(slug) {
 						prev: exercise.prev,
 						next: exercise.next,
 						dir: exercise.dir,
+						editing_constraints: {
+							create: exercise.meta.editing_constraints?.create ?? [],
+							remove: exercise.meta.editing_constraints?.remove ?? [],
+						},
 						html: transform(exercise.markdown, {
 							codespan: (text) =>
 								filenames.size > 1 && filenames.has(text)
