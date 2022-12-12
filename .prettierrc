@@ -7,8 +7,14 @@
 		{
 			"files": ["content/**/*.svelte"],
 			"options": {
-				"printWidth": 50,
+				"printWidth": 70,
 				"requirePragma": true
+			}
+		},
+		{
+			"files": ["content/**/*.js"],
+			"options": {
+				"printWidth": 70
 			}
 		}
 	]

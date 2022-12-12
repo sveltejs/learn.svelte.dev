@@ -8,7 +8,7 @@ import { execSync } from 'child_process';
 const cwd = 'content/tutorial/common';
 
 if (!fs.existsSync(`${cwd}/node_modules`)) {
-	execSync('npm install', { cwd });
+	execSync('npm ci', { cwd });
 }
 
 const zip = new AdmZip();
@@ -19,11 +19,7 @@ const ignored_basenames = ['.DS_Store', 'LICENSE'];
 const ignored_extensions = ['.d.ts', '.map'];
 const ignored_directories = ['.svelte-kit', 'node_modules/.bin', 'node_modules/rollup/dist/shared'];
 
-const ignored_files = new Set([
-	'node_modules/rollup/dist/es/rollup.browser.js',
-	'node_modules/rollup/dist/rollup.browser.js',
-	'node_modules/svelte/compiler.js'
-]);
+const ignored_files = new Set(['node_modules/svelte/compiler.js']);
 
 for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
 	file.replaceAll('\\', '/')
@@ -44,7 +40,7 @@ for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
 			fs.readFileSync(`${cwd}/${file}`)
 		);
 		continue;
-	} else if (file.startsWith('node_modules/esbuild')) {
+	} else if (file.startsWith('node_modules/esbuild') || file.startsWith('node_modules/@esbuild')) {
 		continue;
 	}
 

@@ -2,9 +2,8 @@
 import { WebSocketServer } from 'ws';
 
 // poor man's HMR, pending https://github.com/vitejs/vite/issues/7887
-if (globalThis.__wss) {
-	globalThis.__wss.close();
-}
+// @ts-expect-error
+if (globalThis.__wss) globalThis.__wss.close();
 
 const wss = new WebSocketServer({ port: 4567 });
 globalThis.__wss = wss;

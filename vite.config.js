@@ -7,6 +7,8 @@ export default {
 		target: 'esnext'
 	},
 
+	logLevel: 'info',
+
 	plugins: [sveltekit()],
 
 	server: {
@@ -17,9 +19,11 @@ export default {
 			ignored: ['**/.apps/**']
 		}
 	},
+
 	ssr: {
 		noExternal: ['@sveltejs/site-kit']
 	},
+
 	optimizeDeps: {
 		exclude: ['@sveltejs/site-kit']
 	}

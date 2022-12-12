@@ -4,8 +4,17 @@ import adapter from '@sveltejs/adapter-auto';
 const config = {
 	kit: {
 		adapter: adapter(),
+
 		alias: {
 			'@sveltejs/site-kit': './src/site-kit'
+		}
+	},
+
+	vitePlugin: {
+		experimental: {
+			inspector: {
+				holdMode: true
+			}
 		}
 	}
 };

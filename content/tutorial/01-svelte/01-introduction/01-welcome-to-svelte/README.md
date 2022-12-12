@@ -2,8 +2,6 @@
 title: Welcome to Svelte
 ---
 
-> WARNING: this content is a work in progress and may be out of date. If you are learning Svelte, please refer to the [tutorial on svelte.dev](https://svelte.dev/tutorial) for now. If you are learning SvelteKit, refer to the [SvelteKit docs](https://kit.svelte.dev/docs).
-
 Welcome to the Svelte tutorial! This will teach you everything you need to know to easily build fast, small web applications.
 
 You can also consult the [API docs](https://svelte.dev/docs) and the [examples](https://svelte.dev/examples), or — if you're impatient to start hacking on your machine locally — create a project with `npm init svelte`.
@@ -25,8 +23,8 @@ This tutorial is split into four main parts:
 - [Welcome to Svelte](/tutorial/welcome-to-svelte) (you are here)
 - [Introduction to SvelteKit](/tutorial/introducing-sveltekit)
 - [Advanced Svelte](/tutorial/tweens)
-- [Advanced SvelteKit](/tutorial/sandbox)
+- [Advanced SvelteKit](/tutorial/optional-params)
 
-Each section will present an exercise designed to illustrate a feature. Later sections build on the knowledge gained in earlier ones, so it's recommended that you go from start to finish. If necessary, you can navigate via the menu above.
+Each section will present an exercise designed to illustrate a feature. Later exercises build on the knowledge gained in earlier ones, so it's recommended that you go from start to finish. If necessary, you can navigate via the menu above.
 
 If you get stuck, you can click the `solve` button to the left of the editor. (It's disabled on sections like this one that don't include an exercise.) Try not to rely on it too much; you will learn faster by figuring out where to put each suggested code block and manually typing it in to the editor.

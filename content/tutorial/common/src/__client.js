@@ -15,7 +15,10 @@ window.addEventListener('message', async (e) => {
 		const css_files = [];
 
 		for (const { name, code } of transformed) {
-			if (name.endsWith('.svelte') && code.includes('svelte&type=style&lang.css')) {
+			if (
+				name.endsWith('.svelte') &&
+				code.includes('svelte&type=style&lang.css')
+			) {
 				css_files.push(name + '?svelte&type=style&lang.css');
 			}
 		}
@@ -56,7 +59,7 @@ function ping() {
 	);
 }
 
-setInterval(ping, 200);
+setInterval(ping, 50);
 ping();
 
 if (import.meta.hot) {

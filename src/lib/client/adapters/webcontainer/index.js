@@ -1,5 +1,6 @@
 import { load } from '@webcontainer/api';
 import base64 from 'base64-js';
+import { get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
 
 /** @type {import('@webcontainer/api').WebContainer} Web container singleton */
@@ -161,11 +162,7 @@ async function _create(stubs) {
 		// For some reason, server-ready is fired again when the vite dev server is restarted.
 		// We need to wait for it to finish before we can continue, else we might
 		// request files from Vite before it's ready, leading to a timeout.
-		const will_restart = new_stubs.some(
-			(stub) =>
-				stub.type === 'file' &&
-				(stub.name === '/vite.config.js' || stub.name === '/svelte.config.js')
-		);
+		const will_restart = will_restart_vite_dev_server(new_stubs);
 		const promise = will_restart
 			? new Promise((fulfil, reject) => {
 					const error_unsub = vm.on('error', (error) => {
@@ -200,7 +197,7 @@ async function _create(stubs) {
 
 		// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 		// because that can result in a broken UI state
-		return will_restart || vite_error || old.size || new_stubs.length;
+		return will_restart || vite_error || !!old.size || !!new_stubs.length;
 	}
 
 	/**
@@ -240,6 +237,8 @@ async function _create(stubs) {
 		stubs_to_map(stubs, current);
 
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
+
+		return will_restart_vite_dev_server(stubs);
 	}
 
 	async function destroy() {
@@ -258,6 +257,19 @@ async function _create(stubs) {
 
 /**
  * @param {import('$lib/types').Stub[]} stubs
+ */
+function will_restart_vite_dev_server(stubs) {
+	return stubs.some(
+		(stub) =>
+			stub.type === 'file' &&
+			(stub.name === '/vite.config.js' ||
+				stub.name === '/svelte.config.js' ||
+				stub.name === '/.env')
+	);
+}
+
+/**
+ * @param {import('$lib/types').Stub[]} stubs
  * @returns {import('@webcontainer/api').FileSystemTree}
  */
 function convert_stubs_to_tree(stubs, depth = 1) {
@@ -265,7 +277,7 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 	const tree = {};
 
 	for (const stub of stubs) {
-		if (stub.depth === depth) {
+		if (get_depth(stub.name) === depth) {
 			if (stub.type === 'directory') {
 				const children = stubs.filter((child) => child.name.startsWith(stub.name));
 

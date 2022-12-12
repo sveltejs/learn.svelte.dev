@@ -68,7 +68,7 @@
 	function drag(node, callback) {
 		/** @param {MouseEvent} event */
 		const mousedown = (event) => {
-			if (event.which !== 1) return;
+			if (event.button !== 0) return;
 
 			event.preventDefault();
 

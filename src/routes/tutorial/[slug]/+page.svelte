@@ -1,10 +1,10 @@
 <script>
 	import { afterNavigate } from '$app/navigation';
-	import { setContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Editor from './Editor.svelte';
-	import Folder from './Folder.svelte';
+	import ContextMenu from '$lib/components/filetree/ContextMenu.svelte';
 	import { browser, dev } from '$app/environment';
 	import ImageViewer from './ImageViewer.svelte';
 	import Sidebar from './Sidebar.svelte';
@@ -12,20 +12,20 @@
 	import { Icon } from '@sveltejs/site-kit';
 	import Loading from './Loading.svelte';
 	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
-	import ContextMenu from './ContextMenu.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
-	import Modal from '$lib/components/Modal.svelte';
+	import Filetree from '$lib/components/filetree/Filetree.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
-	const selected = writable(
-		/** @type {import('$lib/types').FileStub} */ (data.section.a[data.section.focus])
-	);
+	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
+	const files = writable([]);
 
-	/** @type {import('$lib/types').Stub[]}*/
-	let current_stubs = [];
+	/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
+	const endstate = writable({});
+
+	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
+	const selected = writable(null);
 
 	/** @type {HTMLIFrameElement} */
 	let iframe;
@@ -43,184 +43,49 @@
 		Object.keys(complete_states).length > 0 && Object.values(complete_states).every(Boolean);
 
 	let path = '/';
-	let modal_text = '';
 
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
-	$: mobile = width < 768;
 
-	/** @type {Record<string, import('$lib/types').Stub>} */
-	let b;
-	/** @type {import('$lib/types').EditingConstraints} list of files user is allowed to create/delete in the tutorial chapter */
-	let editing_constraints;
+	$: mobile = writable(false);
+	$: $mobile = width < 768;
+
+	/** @type {import('svelte/store').Writable<import('$lib/types').EditingConstraints>} */
+	const editing_constraints = writable({ create: [], remove: [] });
+
 	$: {
-		b = { ...data.section.a };
-		editing_constraints = {
-			create: [],
-			remove: []
-		};
-		for (const key in data.section.b) {
-			const stub = data.section.b[key];
+		$endstate = { ...data.exercise.a };
 
+		$editing_constraints.create = data.exercise.editing_constraints.create;
+		$editing_constraints.remove = data.exercise.editing_constraints.remove;
+
+		// TODO should this be an array in the first place?
+		for (const stub of Object.values(data.exercise.b)) {
 			if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
 				// remove file
-				editing_constraints.remove.push(key);
-				delete b[key];
-			} else if (key.endsWith('/__delete')) {
+				if (!$editing_constraints.remove.includes(stub.name)) {
+					$editing_constraints.remove.push(stub.name);
+				}
+				delete $endstate[stub.name];
+			} else if (stub.name.endsWith('/__delete')) {
 				// remove directory
-				const parent = key.slice(0, key.lastIndexOf('/'));
-				editing_constraints.remove.push(parent);
-				delete b[parent];
-				for (const k in b) {
+				const parent = stub.name.slice(0, stub.name.lastIndexOf('/'));
+				if (!$editing_constraints.remove.includes(parent)) {
+					$editing_constraints.remove.push(parent);
+				}
+				delete $endstate[parent];
+				for (const k in $endstate) {
 					if (k.startsWith(parent + '/')) {
-						delete b[k];
+						delete $endstate[k];
 					}
 				}
 			} else {
-				if (!b[key]) {
-					editing_constraints.create.push(key);
+				if (!$endstate[stub.name] && !$editing_constraints.create.includes(stub.name)) {
+					$editing_constraints.create.push(stub.name);
 				}
-				b[key] = data.section.b[key];
+				$endstate[stub.name] = data.exercise.b[stub.name];
 			}
 		}
-	}
-
-	/** @type {import('$lib/types').FileTreeContext} */
-	const { select } = setContext('filetree', {
-		select: async (file) => {
-			$selected = file;
-		},
-
-		add: async (name, type) => {
-			const new_stubs = add_stub(name, type, current_stubs);
-
-			const illegal_create = new_stubs.some(
-				(s) => !editing_constraints.create.some((c) => s.name === c)
-			);
-			if (illegal_create) {
-				modal_text =
-					'Only the following files and folders are allowed to be created in this tutorial chapter:\n' +
-					editing_constraints.create.join('\n');
-				return;
-			}
-
-			current_stubs = [...current_stubs, ...new_stubs];
-			await load_files(current_stubs);
-
-			if (new_stubs[0].type === 'file') {
-				select(new_stubs[0]);
-			}
-		},
-
-		edit: async (to_rename, new_name) => {
-			// treat edit as a remove followed by an add
-			const out = current_stubs.filter((s) => s.name.startsWith(to_rename.name));
-			const updated_stubs = current_stubs.filter((s) => !out.includes(s));
-			/** @type {Map<string, import('$lib/types').Stub>} */
-			const new_stubs = new Map();
-			for (const s of out) {
-				const name =
-					s.name.slice(0, to_rename.name.length - to_rename.basename.length) +
-					new_name +
-					s.name.slice(to_rename.name.length);
-				// deduplicate
-				for (const to_add of add_stub(name, s.type, updated_stubs)) {
-					if (s.type === 'file' && to_add.type === 'file') {
-						to_add.contents = s.contents;
-					}
-					new_stubs.set(to_add.name, to_add);
-				}
-			}
-
-			const illegal_rename =
-				!editing_constraints.remove.some((r) => to_rename.name === r) ||
-				[...new_stubs.keys()].some((name) => !editing_constraints.create.some((c) => name === c));
-			if (illegal_rename) {
-				modal_text =
-					'Only the following files and folders are allowed to be renamed in this tutorial chapter:\n' +
-					editing_constraints.remove.join('\n') +
-					'\n\nThey can only be renamed to the following:\n' +
-					editing_constraints.create.join('\n');
-				return;
-			}
-
-			current_stubs = updated_stubs.concat(...new_stubs.values());
-			await load_files(current_stubs);
-
-			if (to_rename.type === 'file' && $selected?.name === to_rename.name) {
-				select(/** @type {any} */ ([...new_stubs.values()].find((s) => s.type === 'file')));
-			}
-		},
-
-		remove: async (stub) => {
-			const illegal_delete = !editing_constraints.remove.some((r) => stub.name === r);
-			if (illegal_delete) {
-				modal_text =
-					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
-					editing_constraints.remove.join('\n');
-				return;
-			}
-
-			const out = current_stubs.filter((s) => s.name.startsWith(stub.name));
-			current_stubs = current_stubs.filter((s) => !out.includes(s));
-
-			if ($selected && out.includes($selected)) {
-				$selected = null;
-			}
-
-			await load_files(current_stubs);
-		},
-
-		selected
-	});
-
-	/**
-	 * @param {string} name
-	 * @param {'file' | 'directory'} type
-	 * @param {import('$lib/types').Stub[]} current
-	 */
-	function add_stub(name, type, current) {
-		// find directory which contains the new file
-		/** @type {import('$lib/types').DirectoryStub} */
-		let dir = /** @type {any} we know it will be assigned after the loop */ (null);
-		for (const stub of current) {
-			if (
-				stub.type === 'directory' &&
-				name.startsWith(stub.name) &&
-				(!dir || dir.name.length < stub.name.length)
-			) {
-				dir = stub;
-			}
-		}
-
-		const new_name = name.slice(dir.name.length + 1);
-		const prefix = dir.name + '/';
-		const depth = prefix.split('/').length - 2;
-		const parts = new_name.split('/');
-		/** @type {import('$lib/types').Stub[]} */
-		const stubs = [];
-
-		for (let i = 1; i <= parts.length; i++) {
-			const part = parts.slice(0, i).join('/');
-			const basename = /** @type{string} */ (part.split('/').pop());
-			const name = prefix + part;
-			if (!current.some((s) => s.name === name)) {
-				if (i < parts.length || type === 'directory') {
-					stubs.push({ type: 'directory', name, depth: depth + i, basename });
-				} else if (i === parts.length && type === 'file') {
-					stubs.push({
-						type: 'file',
-						name,
-						depth: depth + i,
-						basename,
-						text: true,
-						contents: ''
-					});
-				}
-			}
-		}
-
-		return stubs;
 	}
 
 	/** @type {import('$lib/types').Adapter | undefined} */
@@ -293,26 +158,19 @@
 
 	async function load_exercise() {
 		try {
-			current_stubs = Object.values(data.section.a);
-			select(
+			$files = Object.values(data.exercise.a);
+			selected.set(
 				/** @type {import('$lib/types').FileStub} */ (
-					current_stubs.find((stub) => stub.name === data.section.focus)
+					$files.find((stub) => stub.name === data.exercise.focus)
 				)
 			);
 
 			clearTimeout(timeout);
 			loading = true;
 
-			expected = {};
-			complete_states = {};
-			for (const stub of Object.values(b)) {
-				if (stub.type === 'file') {
-					complete_states[stub.name] = false;
-					expected[stub.name] = normalise(stub.contents);
-				}
-			}
+			reset_complete_states();
 
-			await load_files(current_stubs);
+			await load_files($files);
 
 			loading = false;
 			initial = false;
@@ -336,10 +194,37 @@
 	 */
 	function update_stub(event) {
 		const stub = event.detail;
-		const index = current_stubs.findIndex((s) => s.name === stub.name);
-		current_stubs[index] = stub;
-		adapter?.update([stub]);
+		const index = $files.findIndex((s) => s.name === stub.name);
+		$files[index] = stub;
+		adapter?.update([stub]).then((reload) => {
+			if (reload) {
+				schedule_iframe_reload();
+			}
+		});
 		update_complete_states([stub]);
+	}
+
+	/** @type {any} */
+	let reload_timeout;
+	function schedule_iframe_reload() {
+		clearTimeout(reload_timeout);
+		reload_timeout = setTimeout(() => {
+			if (adapter) {
+				set_iframe_src(adapter.base);
+			}
+		}, 1000);
+	}
+
+	/** Set `complete_states` and `expected` based on the end state */
+	function reset_complete_states() {
+		expected = {};
+		complete_states = {};
+		for (const stub of Object.values($endstate)) {
+			if (stub.type === 'file') {
+				complete_states[stub.name] = false;
+				expected[stub.name] = normalise(stub.contents);
+			}
+		}
 	}
 
 	/**
@@ -356,7 +241,7 @@
 		}
 	}
 
-	/** @type {NodeJS.Timeout} */
+	/** @type {any} */
 	let timeout;
 
 	/** @param {MessageEvent} e */
@@ -410,79 +295,69 @@
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
 	}
-
-	const hidden = new Set(['__client.js', 'node_modules']);
 </script>
 
 <svelte:window on:message={handle_message} bind:innerWidth={width} />
 
 <svelte:head>
-	<title>{data.section.chapter.title} / {data.section.title} • Svelte Tutorial</title>
+	<title>{data.exercise.chapter.title} / {data.exercise.title} • Svelte Tutorial</title>
 </svelte:head>
 
 <ContextMenu />
 
-{#if modal_text}
-	<Modal on:close={() => (modal_text = '')}>
-		<div class="modal-contents">
-			<h2>This action is not allowed</h2>
-
-			<p>
-				{modal_text}
-			</p>
-
-			<button on:click={() => (modal_text = '')}>OK</button>
-		</div>
-	</Modal>
-{/if}
-
-<div class="container" style="--toggle-height: {mobile ? '4.6rem' : '0px'}">
+<div class="container" style="--toggle-height: {$mobile ? '4.6rem' : '0px'}">
 	<SplitPane
 		type="horizontal"
-		min={mobile ? '0px' : '360px'}
-		max={mobile ? '100%' : '50%'}
-		pos={mobile ? (selected_view === 0 ? '100%' : '0%') : '33%'}
+		min={$mobile ? '0px' : '360px'}
+		max={$mobile ? '100%' : '50%'}
+		pos={$mobile ? (selected_view === 0 ? '100%' : '0%') : '33%'}
 	>
 		<section slot="a" class="content">
 			<Sidebar
 				index={data.index}
-				section={data.section}
+				exercise={data.exercise}
 				on:select={(e) => {
-					select(/** @type {import('$lib/types').FileStub} */ (data.section.a[e.detail.file]));
+					selected.set(
+						/** @type {import('$lib/types').FileStub} */ (data.exercise.a[e.detail.file])
+					);
 				}}
 			/>
 		</section>
 
-		<section slot="b" class:hidden={mobile && selected_view === 0}>
+		<section slot="b" class:hidden={$mobile && selected_view === 0}>
 			<SplitPane
 				type="vertical"
-				min={mobile ? '0px' : '100px'}
-				max={mobile ? '100%' : '50%'}
-				pos={mobile ? (selected_view === 1 ? '100%' : '0%') : '50%'}
+				min={$mobile ? '0px' : '100px'}
+				max={$mobile ? '100%' : '50%'}
+				pos={$mobile ? (selected_view === 1 ? '100%' : '0%') : '50%'}
 			>
 				<section slot="a">
 					<SplitPane type="horizontal" min="80px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
-							<div class="filetree">
-								<Folder
-									{...data.section.scope}
-									files={current_stubs.filter((stub) => !hidden.has(stub.basename))}
-									expanded
-									read_only={mobile}
-									can_create={!!editing_constraints.create.length}
-									can_remove={!!editing_constraints.remove.length}
-								/>
-							</div>
+							<Filetree
+								scope={data.exercise.scope}
+								{endstate}
+								{files}
+								readonly={mobile}
+								constraints={editing_constraints}
+								{selected}
+								on:change={async () => {
+									await load_files($files); // TODO make this automatic?
+								}}
+							/>
 
 							<button
 								class:completed
-								disabled={Object.keys(data.section.b).length === 0}
+								disabled={Object.keys(data.exercise.b).length === 0}
 								on:click={() => {
-									current_stubs = Object.values(completed ? data.section.a : b);
-									load_files(current_stubs);
+									$files = Object.values(completed ? data.exercise.a : $endstate);
+									if (completed) {
+										reset_complete_states();
+									}
+									load_files($files);
 								}}
 							>
-								{#if completed && Object.keys(data.section.b).length > 0}
+								{#if completed && Object.keys(data.exercise.b).length > 0}
 									reset
 								{:else}
 									solve <Icon name="arrow-right" />
@@ -492,9 +367,9 @@
 
 						<section class="editor-container" slot="b">
 							<Editor
-								stubs={current_stubs}
+								stubs={$files}
 								selected={$selected}
-								read_only={mobile}
+								read_only={$mobile}
 								on:change={update_stub}
 							/>
 							<ImageViewer selected={$selected} />
@@ -538,7 +413,7 @@
 			</SplitPane>
 		</section>
 	</SplitPane>
-	{#if mobile}
+	{#if $mobile}
 		<ScreenToggle labels={['Tutorial', 'Input', 'Output']} bind:selected={selected_view} />
 	{/if}
 </div>
@@ -589,23 +464,6 @@
 		background: var(--sk-theme-2);
 	}
 
-	.filetree {
-		flex: 1;
-		overflow-y: auto;
-		overflow-x: hidden;
-		padding: 2rem;
-	}
-
-	.filetree::before {
-		content: '';
-		position: absolute;
-		width: 0;
-		height: 100%;
-		top: 0;
-		right: 0;
-		border-right: 1px solid var(--sk-back-5);
-	}
-
 	.preview {
 		display: flex;
 		flex-direction: column;
@@ -632,20 +490,5 @@
 
 	.hidden {
 		display: none;
-	}
-
-	.modal-contents p {
-		white-space: pre-line;
-	}
-
-	.modal-contents button {
-		display: block;
-		background: var(--sk-theme-1);
-		color: white;
-		padding: 1rem;
-		width: 10em;
-		margin: 1em 0 0 0;
-		border-radius: var(--sk-border-radius);
-		line-height: 1;
 	}
 </style>

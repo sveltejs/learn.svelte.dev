@@ -11,7 +11,8 @@ const text_files = new Set([
 	'.css',
 	'.svg',
 	'.html',
-	'.md'
+	'.md',
+	'.env'
 ]);
 
 const excluded = new Set(['.DS_Store', '.gitkeep', '.svelte-kit', 'package-lock.json']);
@@ -24,8 +25,11 @@ function json(file) {
 export function get_index() {
 	const parts = [];
 
-	/** @type {import('$lib/types').SectionRaw | null} */
-	let last_section = null;
+	/** @type {import('$lib/types').ExerciseRaw | null} */
+	let last_exercise = null;
+
+	let last_part_meta = null;
+	let last_chapter_meta = null;
 
 	for (const part of fs.readdirSync('content/tutorial')) {
 		if (!/^\d{2}-/.test(part)) continue;
@@ -45,30 +49,46 @@ export function get_index() {
 				slug: chapter
 			};
 
-			const sections = [];
+			const exercises = [];
 
-			for (const section of fs.readdirSync(`content/tutorial/${part}/${chapter}`)) {
-				const dir = `content/tutorial/${part}/${chapter}/${section}`;
+			for (const exercise of fs.readdirSync(`content/tutorial/${part}/${chapter}`)) {
+				if (!/^\d{2}-/.test(exercise)) continue;
+
+				const dir = `content/tutorial/${part}/${chapter}/${exercise}`;
 				if (!fs.statSync(dir).isDirectory()) continue;
 
 				const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
 				const { frontmatter, markdown } = extract_frontmatter(text, dir);
 				const { title } = frontmatter;
+				const slug = exercise.slice(3);
+				const meta = fs.existsSync(`${dir}/meta.json`) ? json(`${dir}/meta.json`) : {};
 
-				const slug = section.slice(3);
+				if (last_exercise) {
+					last_exercise.next = {
+						slug,
+						title:
+							last_part_meta !== part_meta
+								? part_meta.title
+								: last_chapter_meta !== chapter_meta
+								? chapter_meta.title
+								: title,
+					};
+				}
 
-				if (last_section) last_section.next = { slug, title };
-
-				sections.push(
-					(last_section = {
-						slug: section.slice(3),
+				exercises.push(
+					(last_exercise = {
+						slug: exercise.slice(3),
 						title: frontmatter.title,
 						markdown,
 						dir,
-						prev: last_section ? { slug: last_section.slug, title: last_section.title } : null,
+						prev: last_exercise ? { slug: last_exercise.slug } : null,
+						meta,
 						next: null
 					})
 				);
+
+				last_chapter_meta = chapter_meta;
+				last_part_meta = part_meta;
 			}
 
 			chapters.push({
@@ -76,7 +96,7 @@ export function get_index() {
 					...part_meta,
 					...chapter_meta
 				},
-				sections
+				exercises
 			});
 		}
 
@@ -92,58 +112,78 @@ export function get_index() {
 
 /**
  * @param {string} slug
- * @returns {import('$lib/types').Section | undefined}
+ * @returns {import('$lib/types').Exercise | undefined}
  */
-export function get_section(slug) {
+export function get_exercise(slug) {
 	const index = get_index();
+
 	for (let i = 0; i < index.length; i += 1) {
 		const part = index[i];
 
+		/** @type {string[]} */
+		const chain = [];
+
 		for (const chapter of part.chapters) {
-			for (const section of chapter.sections) {
-				if (section.slug !== slug) continue;
+			for (const exercise of chapter.exercises) {
+				if (fs.existsSync(`${exercise.dir}/app-a`)) {
+					chain.length = 0;
+					chain.push(`${exercise.dir}/app-a`);
+				}
 
-				const a = {
-					...walk('content/tutorial/common', { exclude: ['node_modules'] }),
-					...walk(`content/tutorial/${part.slug}/common`),
-					...walk(`${section.dir}/app-a`)
-				};
+				if (exercise.slug === slug) {
+					const a = {
+						...walk('content/tutorial/common', { exclude: ['node_modules'] }),
+						...walk(`content/tutorial/${part.slug}/common`)
+					};
 
-				const b = walk(`${section.dir}/app-b`);
+					for (const dir of chain) {
+						Object.assign(a, walk(dir));
+					}
 
-				const scope = chapter.meta.scope ?? part.meta.scope;
-				const filenames = new Set(
-					Object.keys(a)
-						.filter((filename) => filename.startsWith(scope.prefix))
-						.map((filename) => filename.slice(scope.prefix.length))
-				);
+					const b = walk(`${exercise.dir}/app-b`);
 
-				return {
-					part: {
-						slug: part.meta.slug,
-						title: part.meta.title,
-						index: i
-					},
-					chapter: {
-						slug: chapter.meta.slug,
-						title: chapter.meta.title
-					},
-					scope,
-					focus: chapter.meta.focus ?? part.meta.focus,
-					title: section.title,
-					slug: section.slug,
-					prev: section.prev,
-					next: section.next,
-					dir: section.dir,
-					html: transform(section.markdown, {
-						codespan: (text) =>
-							filenames.size > 1 && filenames.has(text)
-								? `<code data-file="${scope.prefix + text}">${text}</code>`
-								: `<code>${text}</code>`
-					}),
-					a,
-					b
-				};
+					const scope = chapter.meta.scope ?? part.meta.scope;
+					const filenames = new Set(
+						Object.keys(a)
+							.filter(
+								(filename) => filename.startsWith(scope.prefix) && a[filename].type === 'file'
+							)
+							.map((filename) => filename.slice(scope.prefix.length))
+					);
+
+					return {
+						part: {
+							slug: part.meta.slug,
+							title: part.meta.title,
+							index: i
+						},
+						chapter: {
+							slug: chapter.meta.slug,
+							title: chapter.meta.title
+						},
+						scope,
+						focus: chapter.meta.focus ?? part.meta.focus,
+						title: exercise.title,
+						slug: exercise.slug,
+						prev: exercise.prev,
+						next: exercise.next,
+						dir: exercise.dir,
+						editing_constraints: {
+							create: exercise.meta.editing_constraints?.create ?? [],
+							remove: exercise.meta.editing_constraints?.remove ?? [],
+						},
+						html: transform(exercise.markdown, {
+							codespan: (text) =>
+								filenames.size > 1 && filenames.has(text)
+									? `<code data-file="${scope.prefix + text}">${text}</code>`
+									: `<code>${text}</code>`
+						}),
+						a,
+						b
+					};
+				}
+
+				chain.push(`${exercise.dir}/app-b`);
 			}
 		}
 	}
@@ -205,13 +245,12 @@ export function walk(cwd, options = {}) {
 				result[name] = {
 					type: 'directory',
 					name,
-					basename,
-					depth
+					basename
 				};
 
 				walk_dir(name + '/', depth + 1);
 			} else {
-				const text = text_files.has(path.extname(name));
+				const text = text_files.has(path.extname(name) || path.basename(name));
 				const contents = fs.readFileSync(resolved, text ? 'utf-8' : 'base64');
 
 				result[name] = {
@@ -219,8 +258,7 @@ export function walk(cwd, options = {}) {
 					name,
 					basename,
 					text,
-					contents,
-					depth
+					contents
 				};
 			}
 		}
