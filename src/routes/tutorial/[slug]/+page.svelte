@@ -447,7 +447,7 @@
 		padding: 0.5rem;
 		width: 100%;
 		height: 4rem;
-		border-right: 1px solid var(--sk-back-5);
+		border-right: 1px solid var(--sk-back-4);
 		color: white;
 		opacity: 1;
 	}

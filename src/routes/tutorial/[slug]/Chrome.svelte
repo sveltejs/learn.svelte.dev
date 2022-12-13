@@ -31,7 +31,7 @@
 		width: 100%;
 		height: 4rem;
 		display: flex;
-		border-top: 1px solid var(--sk-back-5);
+		border-top: 1px solid var(--sk-back-4);
 	}
 
 	.chrome button {

@@ -107,12 +107,8 @@
 		flex: 1 1;
 		overflow-y: auto;
 		padding: 2.2rem 3rem;
-		border-right: 1px solid var(--sk-back-5);
-	}
-
-	.text :global(ul),
-	.text :global(ol) {
-		list-style: initial;
+		border-right: 1px solid var(--sk-back-4);
+		background: var(--sk-back-3);
 	}
 
 	.text :global(pre) :global(.highlight) {
@@ -134,8 +130,9 @@
 		padding: 1rem 3rem;
 		display: flex;
 		justify-content: space-between;
-		border-top: 1px solid var(--sk-back-5);
-		border-right: 1px solid var(--sk-back-5);
+		background: var(--sk-back-3);
+		border-top: 1px solid var(--sk-back-4);
+		border-right: 1px solid var(--sk-back-4);
 	}
 
 	footer .edit {

@@ -204,7 +204,7 @@
 		height: 100%;
 		top: 0;
 		right: 0;
-		border-right: 1px solid var(--border-color);
+		border-right: 1px solid var(--sk-back-4);
 	}
 
 	.filetree :global(.row) {
