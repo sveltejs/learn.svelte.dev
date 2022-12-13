@@ -64,7 +64,7 @@
 	}
 
 	button {
-		color: var(--text);
+		color: var(--sk-text-2);
 		width: 100%;
 		text-align: left;
 		border: 0px;

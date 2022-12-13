@@ -84,7 +84,7 @@
 
 <style>
 	input {
-		color: var(--text) !important;
+		color: var(--sk-text-1) !important;
 	}
 
 	.basename {
@@ -132,7 +132,7 @@
 		height: 100%;
 		right: calc(-1rem + 1px);
 		top: 0;
-		background: white;
+		background: var(--sk-back-1);
 	}
 
 	.icon {

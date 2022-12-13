@@ -111,6 +111,12 @@
 		background: var(--sk-back-3);
 	}
 
+	.text :global(pre) {
+		background: var(--sk-back-1);
+		box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+		border-radius: var(--sk-border-radius);
+	}
+
 	.text :global(pre) :global(.highlight) {
 		--color: rgba(220, 220, 0, 0.2);
 		background: var(--color);

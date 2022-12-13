@@ -116,7 +116,7 @@
 				{ token: 'boolean', foreground: '499cd3' }
 			],
 			colors: {
-				'editor.background': '#2e2e2e',
+				'editor.background': '#1a1a1a',
 				'token.keyword': '#ff0000'
 			}
 		});

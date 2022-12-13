@@ -480,7 +480,7 @@
 		resize: none;
 		box-sizing: border-box;
 		border: none;
-		background: white;
+		background: var(--sk-back-2);
 	}
 
 	.editor-container {
