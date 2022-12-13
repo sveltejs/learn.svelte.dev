@@ -21,7 +21,7 @@
 	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
 	let state = 'idle';
 
-	const { endstate, files: all_files, rename, add, remove, readonly } = context.get();
+	const { endstate, files: all_files, rename, add, remove, readonly, scope } = context.get();
 
 	$: children = files
 		.filter((file) => file.name.startsWith(prefix))
@@ -104,7 +104,7 @@
 	].filter(Boolean);
 </script>
 
-<div class="directory row" class:expanded style="--depth: {depth};">
+<div class="directory row" class:expanded style="--depth: {depth - $scope.depth};">
 	<Item
 		can_rename={can_remove}
 		renaming={state === 'renaming'}
@@ -126,10 +126,10 @@
 </div>
 
 {#if expanded}
-	<ul style="--depth: {depth}">
+	<ul style="--depth: {depth - $scope.depth}">
 		{#if state === 'add_directory'}
 			<li>
-				<div class="directory row" style="--depth: {depth + 1}">
+				<div class="directory row" style="--depth: {depth - $scope.depth + 1}">
 					<Item
 						renaming
 						on:rename={(e) => {

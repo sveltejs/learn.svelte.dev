@@ -24,6 +24,12 @@ export interface Adapter {
 	destroy(): Promise<void>;
 }
 
+export interface Scope {
+	prefix: string;
+	depth: number;
+	name: string;
+}
+
 export interface Exercise {
 	part: {
 		slug: string;
@@ -34,11 +40,7 @@ export interface Exercise {
 		slug: string;
 		title: string;
 	};
-	scope: {
-		prefix: string;
-		depth: number;
-		name: string;
-	};
+	scope: Scope;
 	focus: string;
 	title: string;
 	slug: string;
@@ -49,7 +51,7 @@ export interface Exercise {
 	editing_constraints: {
 		create: string[];
 		remove: string[];
-	}
+	};
 	a: Record<string, Stub>;
 	b: Record<string, Stub>;
 }
@@ -81,14 +83,6 @@ export interface PartStub {
 	slug: string;
 	title: string;
 	chapters: ChapterStub[];
-}
-
-export interface FileTreeContext {
-	select: (file: FileStub) => void;
-	add: (name: string, type: 'file' | 'directory') => Promise<void>;
-	edit: (stub: Stub, name: string) => Promise<void>;
-	remove: (stub: Stub) => Promise<void>;
-	selected: Writable<FileStub | null>;
 }
 
 export interface EditingConstraints {

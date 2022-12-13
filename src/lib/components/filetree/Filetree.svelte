@@ -10,7 +10,7 @@
 	/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
 	export let endstate;
 
-	/** @type {{ prefix: string, depth: number, name: string }} */
+	/** @type {import('svelte/store').Writable<import('$lib/types').Scope>} */
 	export let scope;
 
 	/** @type {import('svelte/store').Writable<boolean>} */
@@ -33,6 +33,7 @@
 		files,
 		selected,
 		readonly,
+		scope,
 
 		select: async (file) => {
 			selected.set(file);
@@ -166,12 +167,12 @@
 
 <div class="filetree">
 	<Folder
-		prefix={scope.prefix}
-		depth={scope.depth}
+		prefix={$scope.prefix}
+		depth={$scope.depth}
 		directory={{
 			type: 'directory',
 			name: '',
-			basename: scope.name
+			basename: $scope.name
 		}}
 		files={$files.filter((stub) => !hidden.has(stub.basename))}
 		expanded

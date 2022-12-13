@@ -27,6 +27,9 @@
 	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null>} */
 	const selected = writable(null);
 
+	/** @type {import('svelte/store').Writable<import('$lib/types').Scope>} */
+	const scope = writable({ depth: 0, name: '', prefix: '' });
+
 	/** @type {HTMLIFrameElement} */
 	let iframe;
 	let loading = true;
@@ -159,6 +162,7 @@
 	async function load_exercise() {
 		try {
 			$files = Object.values(data.exercise.a);
+			$scope = data.exercise.scope;
 			selected.set(
 				/** @type {import('$lib/types').FileStub} */ (
 					$files.find((stub) => stub.name === data.exercise.focus)
@@ -348,7 +352,7 @@
 					<SplitPane type="horizontal" min="80px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
 							<Filetree
-								scope={data.exercise.scope}
+								{scope}
 								{endstate}
 								{files}
 								readonly={mobile}

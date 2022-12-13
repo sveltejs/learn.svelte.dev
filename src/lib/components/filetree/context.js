@@ -6,6 +6,7 @@ import { setContext, getContext } from 'svelte';
  *   files: import('svelte/store').Writable<import('$lib/types').Stub[]>;
  *   selected: import('svelte/store').Writable<import('$lib/types').FileStub | null>;
  *   readonly: import('svelte/store').Writable<boolean>;
+ * 	 scope: import('svelte/store').Writable<import('$lib/types').Scope>;
  *   select: (file: import('$lib/types').FileStub) => void;
  *   add: (name: string, type: 'file' | 'directory') => Promise<void>;
  *   rename: (stub: import('$lib/types').Stub, name: string) => Promise<void>;
