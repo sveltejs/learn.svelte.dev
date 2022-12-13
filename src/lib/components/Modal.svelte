@@ -66,7 +66,8 @@
 		transform: translate(-50%, -50%);
 		width: calc(100vw - 2rem);
 		max-width: 56rem;
-		background: white;
+		background: var(--sk-back-2);
+		color: var(--sk-text-2);
 		padding: 2rem;
 		border: none;
 		border-radius: 0.5rem;

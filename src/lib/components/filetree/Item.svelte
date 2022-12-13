@@ -84,6 +84,7 @@
 
 <style>
 	input {
+		background: var(--sk-back-1);
 		color: var(--sk-text-1) !important;
 	}
 

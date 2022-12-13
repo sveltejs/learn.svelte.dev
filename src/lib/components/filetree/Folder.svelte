@@ -71,7 +71,7 @@
 	// fake root directory has no name
 	$: can_remove = !$readonly && directory.name ? !$endstate[directory.name] : false;
 
-	/** @type {import('./ContextMenu.svelte').MenuItems} */
+	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
 	$: actions = [
 		can_create.file && {
 			icon: 'file-new',

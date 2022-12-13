@@ -102,7 +102,7 @@ const default_renderer = {
 				: escape(source);
 
 			html = `<div class="code-block">${
-				options.file ? `<h5>${options.file}</h5>` : ''
+				options.file ? `<span class="filename">${options.file}</span>` : ''
 			}<pre class='language-${plang}'><code>${highlighted}</code></pre></div>`;
 		}
 

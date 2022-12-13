@@ -33,7 +33,7 @@
 		line-height: 1em;
 		box-sizing: content-box;
 		color: #888;
-		border: 1px solid var(--back-light);
+		border: 1px solid var(--sk-back-3);
 	}
 	.selected {
 		background-color: var(--prime);

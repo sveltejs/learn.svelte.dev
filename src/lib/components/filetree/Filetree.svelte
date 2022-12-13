@@ -221,7 +221,7 @@
 	}
 
 	.filetree :global(.row:hover) {
-		--bg: var(--back-light);
+		--bg: var(--sk-back-3);
 	}
 
 	.filetree :global(button),
