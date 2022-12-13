@@ -413,7 +413,9 @@
 					/>
 
 					<div class="content">
-						<iframe bind:this={iframe} title="Output" />
+						{#if browser}
+							<iframe bind:this={iframe} title="Output" />
+						{/if}
 
 						{#if loading || error}
 							<Loading
