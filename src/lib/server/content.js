@@ -71,7 +71,7 @@ export function get_index() {
 								? part_meta.title
 								: last_chapter_meta !== chapter_meta
 								? chapter_meta.title
-								: title,
+								: title
 					};
 				}
 
@@ -132,7 +132,9 @@ export function get_exercise(slug) {
 
 				if (exercise.slug === slug) {
 					const a = {
-						...walk('content/tutorial/common', { exclude: ['node_modules'] }),
+						...walk('content/tutorial/common', {
+							exclude: ['node_modules', 'static/tutorial', 'static/svelte-logo-mask.svg']
+						}),
 						...walk(`content/tutorial/${part.slug}/common`)
 					};
 
@@ -170,7 +172,7 @@ export function get_exercise(slug) {
 						dir: exercise.dir,
 						editing_constraints: {
 							create: exercise.meta.editing_constraints?.create ?? [],
-							remove: exercise.meta.editing_constraints?.remove ?? [],
+							remove: exercise.meta.editing_constraints?.remove ?? []
 						},
 						html: transform(exercise.markdown, {
 							codespan: (text) =>
@@ -234,11 +236,12 @@ export function walk(cwd, options = {}) {
 
 		for (const basename of files) {
 			if (excluded.has(basename)) continue;
-			if (options.exclude?.includes(basename)) continue;
 
 			const name = dir + basename;
-			const resolved = path.join(cwd, name);
 
+			if (options.exclude?.some((exclude) => name.replace(/\\/g, '/').endsWith(exclude))) continue;
+
+			const resolved = path.join(cwd, name);
 			const stats = fs.statSync(resolved);
 
 			if (stats.isDirectory()) {

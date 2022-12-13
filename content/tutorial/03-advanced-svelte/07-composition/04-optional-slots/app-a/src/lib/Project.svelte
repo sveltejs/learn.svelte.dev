@@ -53,12 +53,12 @@
 	}
 
 	p {
-		color: #777;
+		opacity: 0.9;
 		margin: 0;
 	}
 
 	.discussion {
-		background-color: #eee;
+		background-color: rgba(82, 81, 75, 0.1);
 		border-top: 1px #ccc solid;
 	}
 </style>

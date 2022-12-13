@@ -52,17 +52,29 @@
 			.error {
 				color: red;
 			}
+
+			code {
+				background: hsl(206, 20%, 80%);
+			}
+
+			@media (prefers-color-scheme: dark) {
+				body {
+					background: hsl(0, 0%, 18%);
+					color: hsl(0, 0%, 90%);
+				}
+				code {
+					background: hsl(0, 0%, 40%);
+				}
+				a {
+					color: hsl(204, 100%, 63%);
+				}
+				nav {
+					background-color: #1a0d01;
+				}
+			}
 		</style>
 	</head>
 	<body>
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
-	<style>
-		@media (prefers-color-scheme: dark) {
-			body {
-				background: hsl(0, 0%, 18%);
-				color: hsl(0, 0%, 90%);
-			}
-		}
-	</style>
 </html>

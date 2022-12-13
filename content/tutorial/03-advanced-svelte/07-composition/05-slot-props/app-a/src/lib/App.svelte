@@ -16,7 +16,7 @@
 	div {
 		padding: 1em;
 		margin: 0 0 1em 0;
-		background-color: #eee;
+		border: 1px solid #ff3e00;
 	}
 
 	.active {

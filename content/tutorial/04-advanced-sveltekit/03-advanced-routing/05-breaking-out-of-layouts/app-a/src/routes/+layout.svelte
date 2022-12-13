@@ -23,7 +23,8 @@
 		content: attr(data-name) ' layout';
 		left: 1em;
 		top: -1em;
-		background-color: white;
+		background-color: #ff531a;
+		color: white;
 		padding: 0.5em;
 		line-height: 1;
 	}
