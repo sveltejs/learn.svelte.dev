@@ -22,7 +22,7 @@
 		justify-content: center;
 		align-items: center;
 		border-top: 1px solid var(--sk-text-2);
-		background-color: white;
+		background-color: var(--sk-back-1);
 	}
 	button {
 		margin: 0 0.15em;
@@ -32,11 +32,11 @@
 		border-radius: var(--sk-border-radius);
 		line-height: 1em;
 		box-sizing: content-box;
-		color: #888;
+		color: var(--sk-text-2);
 		border: 1px solid var(--sk-back-3);
 	}
 	.selected {
-		background-color: var(--prime);
+		background-color: var(--sk-theme-1);
 		color: white;
 	}
 </style>
