@@ -100,12 +100,12 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		background: #f9f9f9;
+		background: var(--sk-back-2);
 		user-select: none;
 	}
 
 	p {
-		color: #999;
+		color: var(--sk-text-2);
 	}
 
 	ul {

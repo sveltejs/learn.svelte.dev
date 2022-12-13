@@ -195,6 +195,7 @@
 		overflow-y: auto;
 		overflow-x: hidden;
 		padding: 2rem;
+		background: var(--sk-back-1);
 	}
 
 	.filetree::before {
@@ -204,11 +205,11 @@
 		height: 100%;
 		top: 0;
 		right: 0;
-		border-right: 1px solid var(--border-color);
+		border-right: 1px solid var(--sk-back-4);
 	}
 
 	.filetree :global(.row) {
-		--bg: white;
+		--bg: var(--sk-back-1);
 		--inset: calc((var(--depth) * 1.2rem) + 1.5rem);
 		position: relative;
 		width: calc(100% - 1px);
@@ -216,11 +217,11 @@
 		height: 1.4em;
 		z-index: 1;
 		background: var(--bg);
-		color: var(--text);
+		color: var(--sk-text-2);
 	}
 
 	.filetree :global(.row:hover) {
-		--bg: var(--back-light);
+		--bg: var(--sk-back-3);
 	}
 
 	.filetree :global(button),
@@ -232,7 +233,7 @@
 
 	.filetree :global(:focus-visible) {
 		outline: none;
-		border: 2px solid var(--flash) !important;
+		border: 2px solid var(--sk-theme-3) !important;
 	}
 
 	.modal-contents p {
@@ -241,12 +242,12 @@
 
 	.modal-contents button {
 		display: block;
-		background: var(--prime);
+		background: var(--sk-theme-1);
 		color: white;
 		padding: 1rem;
 		width: 10em;
 		margin: 1em 0 0 0;
-		border-radius: var(--border-r);
+		border-radius: var(--sk-border-radius);
 		line-height: 1;
 	}
 </style>

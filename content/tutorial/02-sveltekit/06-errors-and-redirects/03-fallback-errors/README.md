@@ -22,6 +22,11 @@ You can customise the fallback error page. Create a `src/error.html` file:
 	<head>
 		<meta charset="utf-8" />
 		<title>%sveltekit.error.message%</title>
+		<style>
+			body {
+				color: #ff531a;
+			}
+		</style>
 	</head>
 	<body>
 		<h1>Game over</h1>

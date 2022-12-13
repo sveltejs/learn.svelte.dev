@@ -31,14 +31,13 @@
 		width: 100%;
 		height: 4rem;
 		display: flex;
-		background: #f9f9f9;
-		border-top: 1px solid var(--border-color);
+		border-top: 1px solid var(--sk-back-4);
 	}
 
 	.chrome button {
 		padding: 0.8rem;
 		box-sizing: border-box;
-		background: #f3f3f3;
+		background: var(--sk-back-4);
 	}
 
 	.chrome button img {
@@ -56,7 +55,8 @@
 	.chrome input {
 		flex: 1;
 		padding: 0.5rem 1rem 0.4rem 1rem;
-		background-color: #fbfbfb;
+		background-color: var(--sk-back-3);
+		color: var(--sk-text-1);
 		font-family: inherit;
 		font-size: 1.6rem;
 	}
@@ -69,6 +69,6 @@
 	.chrome button:focus-visible,
 	.chrome input:focus-visible {
 		outline: none;
-		border: 2px solid var(--flash);
+		border: 2px solid var(--sk-theme-3);
 	}
 </style>

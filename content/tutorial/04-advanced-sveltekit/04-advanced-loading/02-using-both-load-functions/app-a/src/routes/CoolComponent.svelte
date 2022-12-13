@@ -9,6 +9,6 @@
 <style>
 	marquee {
 		font-family: 'Comic Sans MS';
-		color: purple;
+		color: #e60073;
 	}
 </style>

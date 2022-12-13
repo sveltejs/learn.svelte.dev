@@ -1,10 +1,13 @@
 <script>
-	import '@sveltejs/site-kit/base.css';
-	import '@sveltejs/site-kit/code.css';
+	import '@sveltejs/site-kit/styles/index.css';
 	import '../app.css';
 	import { page, navigating } from '$app/stores';
-	import { Icon, Icons, Nav, NavItem, SkipLink } from '@sveltejs/site-kit';
-	import PreloadingIndicator from '$lib/components/PreloadingIndicator.svelte';
+	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
+	import Icons from '@sveltejs/site-kit/components/Icons.svelte';
+	import Nav from '@sveltejs/site-kit/components/Nav.svelte';
+	import NavItem from '@sveltejs/site-kit/components/NavItem.svelte';
+	import SkipLink from '@sveltejs/site-kit/components/SkipLink.svelte';
+	import PreloadingIndicator from '@sveltejs/site-kit/components/PreloadingIndicator.svelte';
 </script>
 
 <Icons />
@@ -50,6 +53,11 @@
 		min-height: 100vh;
 	}
 
+	/* TODO when we remove the launch banner, we can remove this override */
+	:global(body > div > nav) {
+		top: 0 !important;
+	}
+
 	main {
 		width: 100%;
 		height: calc(100vh - var(--nav-h));
@@ -74,7 +82,7 @@
 			height: 100%;
 			display: flex;
 			align-items: center;
-			color: var(--second);
+			color: var(--sk-text-2);
 			text-transform: uppercase;
 			font-size: 1.2rem;
 			opacity: 1;

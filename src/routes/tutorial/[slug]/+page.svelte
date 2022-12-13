@@ -9,7 +9,7 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import Sidebar from './Sidebar.svelte';
 	import Chrome from './Chrome.svelte';
-	import { Icon } from '@sveltejs/site-kit';
+	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
 	import Loading from './Loading.svelte';
 	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 	import ScreenToggle from './ScreenToggle.svelte';
@@ -433,7 +433,6 @@
 
 <style>
 	.container {
-		--border-color: hsl(206, 44%, 90%);
 		height: calc(100% - var(--toggle-height));
 		max-height: 100%;
 	}
@@ -444,39 +443,38 @@
 		min-height: 0;
 		height: 100%;
 		max-height: 100%;
-		background: var(--light-blue);
+		background: var(--sk-back-2);
 		--menu-width: 5.4rem;
 	}
 
 	.navigator {
 		position: relative;
-		background: white;
+		background: var(--sk-back-2);
 		display: flex;
 		flex-direction: column;
 	}
 
 	.navigator button {
 		position: relative;
-		background: #ddd;
+		background: var(--sk-theme-2);
 		padding: 0.5rem;
 		width: 100%;
 		height: 4rem;
-		border-right: 1px solid var(--border-color);
+		border-right: 1px solid var(--sk-back-4);
+		color: white;
 		opacity: 1;
 	}
 
 	.navigator button:disabled {
-		background: #f9f9f9; /* TODO consistent grays */
-		color: #ddd;
+		opacity: 0.5;
 	}
 
 	.navigator button:not(:disabled) {
-		background: var(--prime);
-		color: white;
+		background: var(--sk-theme-1);
 	}
 
-	.navigator button:not(:disabled).completed {
-		background: var(--second);
+	.navigator button.completed {
+		background: var(--sk-theme-2);
 	}
 
 	.preview {
@@ -495,12 +493,12 @@
 		resize: none;
 		box-sizing: border-box;
 		border: none;
-		background: white;
+		background: var(--sk-back-2);
 	}
 
 	.editor-container {
 		position: relative;
-		background-color: var(--light-blue);
+		background-color: var(--sk-back-3);
 	}
 
 	.hidden {

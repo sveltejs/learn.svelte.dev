@@ -30,4 +30,10 @@
 		border-radius: 0.2em;
 		background-color: #ffdfd3;
 	}
+
+	@media (prefers-color-scheme: dark) {
+		span {
+			background-color: #4f352b;
+		}
+	}
 </style>

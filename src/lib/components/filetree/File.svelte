@@ -64,8 +64,8 @@
 		height: 1rem;
 		top: 0.1rem;
 		right: calc(-2.6rem - 2px);
-		background-color: var(--light-blue);
-		border: 1px solid var(--border-color);
+		background-color: var(--sk-back-1);
+		border: 1px solid var(--sk-back-4);
 		transform: translate(0, 0.2rem) rotate(45deg);
 		z-index: 2;
 	}

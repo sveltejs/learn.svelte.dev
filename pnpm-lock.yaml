@@ -5,7 +5,7 @@ specifiers:
   '@sveltejs/adapter-auto': 1.0.0-next.90
   '@sveltejs/adapter-vercel': 1.0.0-next.85
   '@sveltejs/kit': next
-  '@sveltejs/site-kit': ^2.1.2
+  '@sveltejs/site-kit': ^3.0.2
   '@types/diff': ^5.0.2
   '@types/marked': ^4.0.8
   '@types/prismjs': ^1.26.0
@@ -44,8 +44,8 @@ dependencies:
 devDependencies:
   '@sveltejs/adapter-auto': 1.0.0-next.90
   '@sveltejs/adapter-vercel': 1.0.0-next.85
-  '@sveltejs/kit': 1.0.0-next.583_svelte@3.54.0+vite@4.0.0
-  '@sveltejs/site-kit': 2.1.4
+  '@sveltejs/kit': 1.0.0-next.584_svelte@3.54.0+vite@4.0.0
+  '@sveltejs/site-kit': 3.0.2
   '@types/diff': 5.0.2
   '@types/marked': 4.0.8
   '@types/prismjs': 1.26.0
@@ -356,8 +356,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.583_svelte@3.54.0+vite@4.0.0:
-    resolution: {integrity: sha512-LrVhaJ161VVa4YANvTBlS8NICvIipp5w/PtS5f+XuGv4y1nltY5FnN+PUCG3qlySNC8BQDTqR0xDp7gDVFL7qw==}
+  /@sveltejs/kit/1.0.0-next.584_svelte@3.54.0+vite@4.0.0:
+    resolution: {integrity: sha512-iBfrrwkza1szR1GVMorTjj1Yw3SXhDVB5MMdDzCMKqKcCwxCehQ3K6QnlmyXHtHg2qX5rfvz0cpkp0uGGmcxQw==}
     engines: {node: '>=16.14'}
     hasBin: true
     requiresBuild: true
@@ -384,10 +384,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/site-kit/2.1.4:
-    resolution: {integrity: sha512-PxpbiCWYXJ320abc6ucp3AXhh6YCggf6ea+EVA6W+wCBe45UFoChfoeQYeD6sQxPZN25XntoS4clZeYnt9H93Q==}
-    dependencies:
-      golden-fleece: 1.0.9
+  /@sveltejs/site-kit/3.0.2:
+    resolution: {integrity: sha512-I+26WrVfMGwOsFrKXNuVWICINYsiXELnJuRh+mwayD51NnGOFASzWI20t9hSrzjVe/KQyIr5VWOpJ8tUR2M61w==}
     dev: true
 
   /@sveltejs/vite-plugin-svelte/2.0.2_svelte@3.54.0+vite@4.0.0:
@@ -995,10 +993,6 @@ packages:
 
   /globrex/0.1.2:
     resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
-    dev: true
-
-  /golden-fleece/1.0.9:
-    resolution: {integrity: sha512-YSwLaGMOgSBx9roJlNLL12c+FRiw7VECphinc6mGucphc/ZxTHgdEz6gmJqH6NOzYEd/yr64hwjom5pZ+tJVpg==}
     dev: true
 
   /graceful-fs/4.2.10:
