@@ -1,3 +1,19 @@
+// Hack into the alert that's used in some tutorials and send a message prior to the alert,
+// else the parent thinks we lost contact and wrongfully reloads the page.
+// The drawback is that alert is no longer blocking, but no tutorial relies on this.
+const alert = window.alert;
+window.alert = (message) => {
+	parent.postMessage(
+		{
+			type: 'ping-pause'
+		},
+		'*'
+	);
+	setTimeout(() => {
+		alert(message);
+	});
+};
+
 window.addEventListener('message', async (e) => {
 	if (e.data.type === 'fetch') {
 		const names = e.data.names;
@@ -59,7 +75,7 @@ function ping() {
 	);
 }
 
-setInterval(ping, 50);
+setInterval(ping, 100);
 ping();
 
 if (import.meta.hot) {

@@ -254,7 +254,7 @@
 		if (e.origin !== adapter.base) return;
 
 		if (e.data.type === 'ping') {
-			path = e.data.data.path;
+			path = e.data.data.path ?? path;
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
@@ -264,7 +264,9 @@
 				loading = true;
 				set_iframe_src(adapter.base + path);
 				loading = false;
-			}, 500);
+			}, 1000);
+		} else if (e.data.type === 'ping-pause') {
+			clearTimeout(timeout);
 		}
 	}
 
