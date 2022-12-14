@@ -187,7 +187,6 @@
 	 */
 	async function load_files(stubs) {
 		adapter = await reset_adapter(stubs);
-		update_complete_states(stubs);
 	}
 
 	/**
@@ -369,6 +368,8 @@
 									$files = Object.values(completed ? data.exercise.a : $endstate);
 									if (completed) {
 										reset_complete_states();
+									} else {
+										update_complete_states($files);
 									}
 									load_files($files);
 								}}
