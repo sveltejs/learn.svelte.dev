@@ -50,16 +50,6 @@ async function _create(stubs, callback) {
 	/** @type {boolean} Track whether there was an error from vite dev server */
 	let vite_error = false;
 
-	const tree = convert_stubs_to_tree(stubs);
-
-	const common = await ready;
-	tree['common.zip'] = {
-		file: { contents: new Uint8Array(common.zipped) }
-	};
-	tree['unzip.cjs'] = {
-		file: { contents: common.unzip }
-	};
-
 	callback(1 / 6, 'loading webcontainer');
 	const WebContainer = await load();
 
@@ -67,7 +57,16 @@ async function _create(stubs, callback) {
 	vm = await WebContainer.boot();
 
 	callback(3 / 6, 'writing virtual files');
-	await vm.loadFiles(tree);
+	const common = await ready;
+	await vm.loadFiles({
+		'common.zip': {
+			file: { contents: new Uint8Array(common.zipped) }
+		},
+		'unzip.cjs': {
+			file: { contents: common.unzip }
+		},
+		...convert_stubs_to_tree(stubs)
+	});
 
 	callback(4 / 6, 'unzipping files');
 	const unzip = await vm.run(
