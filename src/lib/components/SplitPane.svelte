@@ -118,11 +118,17 @@
 			window.addEventListener('touchend', ontouchend, false);
 		};
 
-		node.addEventListener('touchstart', touchdown, false);
+		node.addEventListener('touchstart', touchdown, {
+			capture: true,
+			passive: false
+		});
 
 		return {
 			destroy() {
-				node.removeEventListener('touchstart', touchdown, false);
+				node.removeEventListener('touchstart', touchdown, {
+					capture: true,
+					passive: false
+				});
 			}
 		};
 	}
