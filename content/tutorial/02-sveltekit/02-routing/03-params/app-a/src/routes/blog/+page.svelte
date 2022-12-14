@@ -1,4 +1,4 @@
-<h1>Blog</h1>
+<h1>blog</h1>
 
 <ul>
 	<li><a href="/blog/one">one</a></li>

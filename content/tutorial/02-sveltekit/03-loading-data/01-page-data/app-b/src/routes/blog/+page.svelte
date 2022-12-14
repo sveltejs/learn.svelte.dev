@@ -2,7 +2,7 @@
 	export let data;
 </script>
 
-<h1>Blog</h1>
+<h1>blog</h1>
 
 <ul>
 	{#each data.summaries as { slug, title }}

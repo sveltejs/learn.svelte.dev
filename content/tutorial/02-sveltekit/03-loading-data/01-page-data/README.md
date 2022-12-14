@@ -36,7 +36,7 @@ We can access this data in `src/routes/blog/+page.svelte` via the `data` prop:
 	export let data;
 </script>+++
 
-<h1>Blog</h1>
+<h1>blog</h1>
 
 <ul>
 ---	<li><a href="/blog/one">one</a></li>
@@ -69,7 +69,7 @@ export function load({ params }) {
 	export let data;
 </script>+++
 
----<h1>Blog post</h1>---
+---<h1>blog post</h1>---
 +++<h1>{data.post.title}</h1>
 <div>{@html data.post.content}</div>+++
 ```
