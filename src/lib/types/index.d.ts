@@ -43,6 +43,8 @@ export interface Exercise {
 	scope: Scope;
 	focus: string;
 	title: string;
+	/** the initial path to navigate to */
+	path: string;
 	slug: string;
 	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;
@@ -58,6 +60,8 @@ export interface Exercise {
 
 export interface ExerciseRaw {
 	title: string;
+	path: string;
+	focus: string;
 	slug: string;
 	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;

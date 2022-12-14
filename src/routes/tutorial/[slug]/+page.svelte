@@ -11,7 +11,6 @@
 	import Chrome from './Chrome.svelte';
 	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
 	import Loading from './Loading.svelte';
-	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Filetree from '$lib/components/filetree/Filetree.svelte';
 
@@ -45,7 +44,7 @@
 	$: completed =
 		Object.keys(complete_states).length > 0 && Object.values(complete_states).every(Boolean);
 
-	let path = '/';
+	let path = data.exercise.path;
 
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
@@ -116,12 +115,10 @@
 		if (adapter) {
 			reload_iframe = await adapter.reset(stubs);
 		} else {
-			const module = PUBLIC_USE_FILESYSTEM
-				? await import('$lib/client/adapters/filesystem/index.js')
-				: await import('$lib/client/adapters/webcontainer/index.js');
+			const module = await import('$lib/client/adapters/webcontainer/index.js');
 
 			adapter = await module.create(stubs);
-			set_iframe_src(adapter.base);
+			set_iframe_src(adapter.base + path);
 		}
 
 		await new Promise((fulfil, reject) => {
@@ -140,7 +137,7 @@
 				if (!called && adapter) {
 					// Updating the iframe too soon sometimes results in a blank screen,
 					// so we try again after a short delay if we haven't heard back
-					set_iframe_src(adapter.base);
+					set_iframe_src(adapter.base + path);
 				}
 			}, 5000);
 
@@ -151,9 +148,9 @@
 			}, 10000);
 		});
 
-		if (reload_iframe) {
+		if (reload_iframe || iframe.src !== adapter.base + data.exercise.path) {
 			await new Promise((fulfil) => setTimeout(fulfil, 200));
-			set_iframe_src(adapter.base);
+			set_iframe_src(adapter.base + data.exercise.path);
 		}
 
 		return adapter;
@@ -214,7 +211,7 @@
 		clearTimeout(reload_timeout);
 		reload_timeout = setTimeout(() => {
 			if (adapter) {
-				set_iframe_src(adapter.base);
+				set_iframe_src(adapter.base + path);
 			}
 		}, 1000);
 	}

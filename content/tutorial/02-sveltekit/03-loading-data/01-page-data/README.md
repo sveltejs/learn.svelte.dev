@@ -1,5 +1,6 @@
 ---
 title: Page data
+path: /blog
 ---
 
 At its core, SvelteKit's job boils down to three things:
