@@ -111,7 +111,6 @@
 		try {
 			$files = Object.values(data.exercise.a);
 			$scope = data.exercise.scope;
-			path = data.exercise.path;
 
 			selected.set(
 				/** @type {import('$lib/types').FileStub} */ (
@@ -125,6 +124,11 @@
 			reset_complete_states();
 
 			await reset_adapter($files);
+
+			if (adapter && path !== data.exercise.path) {
+				path = data.exercise.path;
+				set_iframe_src(adapter.base + path);
+			}
 
 			loading = false;
 			initial = false;
@@ -181,7 +185,7 @@
 			}, 10000);
 		});
 
-		if (reload_iframe || iframe.src !== adapter.base + path) {
+		if (reload_iframe) {
 			await new Promise((fulfil) => setTimeout(fulfil, 200));
 			set_iframe_src(adapter.base + path);
 		}
