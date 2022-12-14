@@ -1,5 +1,6 @@
 ---
 title: Invalidation
+path: /Europe/London
 ---
 
 When the user navigates from one page to another, SvelteKit calls your `load` functions, but only if it thinks something has changed.

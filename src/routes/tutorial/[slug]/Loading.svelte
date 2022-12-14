@@ -2,7 +2,6 @@
 	import { createEventDispatcher } from 'svelte';
 	import { tweened } from 'svelte/motion';
 	import { quadInOut } from 'svelte/easing';
-	import { PUBLIC_USE_FILESYSTEM } from '$env/static/public';
 
 	/** @type {boolean} */
 	export let initial;
@@ -58,7 +57,7 @@
 		{/if}
 
 		<div style="display: flex; align-items: center;">
-			{#if !PUBLIC_USE_FILESYSTEM && initial}
+			{#if initial}
 				<ul>
 					<li>Booting WebContainer</li>
 					{#if $grayscale < 0.65}

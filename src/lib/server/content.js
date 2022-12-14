@@ -59,7 +59,7 @@ export function get_index() {
 
 				const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
 				const { frontmatter, markdown } = extract_frontmatter(text, dir);
-				const { title } = frontmatter;
+				const { title, path = '/', focus } = frontmatter;
 				const slug = exercise.slice(3);
 				const meta = fs.existsSync(`${dir}/meta.json`) ? json(`${dir}/meta.json`) : {};
 
@@ -78,7 +78,9 @@ export function get_index() {
 				exercises.push(
 					(last_exercise = {
 						slug: exercise.slice(3),
-						title: frontmatter.title,
+						title,
+						path,
+						focus,
 						markdown,
 						dir,
 						prev: last_exercise ? { slug: last_exercise.slug } : null,
@@ -164,8 +166,9 @@ export function get_exercise(slug) {
 							title: chapter.meta.title
 						},
 						scope,
-						focus: chapter.meta.focus ?? part.meta.focus,
+						focus: exercise.focus ?? chapter.meta.focus ?? part.meta.focus,
 						title: exercise.title,
+						path: exercise.path,
 						slug: exercise.slug,
 						prev: exercise.prev,
 						next: exercise.next,

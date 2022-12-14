@@ -1,5 +1,6 @@
 ---
 title: Param matchers
+path: /colors/ff3e00
 ---
 
 To prevent the router from matching on invalid input, you can specify a _matcher_. For example, you might want a route like `/colors/[value]` to match hex values like `/colors/ff3e00` but not named colors like `/colors/octarine` or any other arbitrary input.
