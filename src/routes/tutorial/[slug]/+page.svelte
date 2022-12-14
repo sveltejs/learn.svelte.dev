@@ -37,6 +37,9 @@
 	/** @type {Error | null} */
 	let error = null;
 
+	let progress = 0;
+	let status = 'initialising';
+
 	/** @type {Record<string, string>} */
 	let expected = {};
 	/** @type {Record<string, boolean>}*/
@@ -117,7 +120,11 @@
 		} else {
 			const module = await import('$lib/client/adapters/webcontainer/index.js');
 
-			adapter = await module.create(stubs);
+			adapter = await module.create(stubs, (p, s) => {
+				progress = p;
+				status = s;
+			});
+
 			set_iframe_src(adapter.base + path);
 		}
 
@@ -414,6 +421,8 @@
 							<Loading
 								{initial}
 								{error}
+								{progress}
+								{status}
 								on:reload={async () => {
 									error = null;
 									load_exercise();
