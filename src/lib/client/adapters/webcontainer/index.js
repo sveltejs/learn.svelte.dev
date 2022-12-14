@@ -33,8 +33,10 @@ async function _create(stubs) {
 	 * @type {Promise<any> | undefined}
 	 */
 	let running;
-	/** @type {Map<string, string>} Paths and contents of the currently loaded file stubs */
-	let current = stubs_to_map(stubs);
+
+	/** Paths and contents of the currently loaded file stubs */
+	let current_stubs = stubs_to_map(stubs);
+
 	/** @type {boolean} Track whether there was an error from vite dev server */
 	let vite_error = false;
 
@@ -150,22 +152,35 @@ async function _create(stubs) {
 		running = new Promise((fulfil) => (resolve = fulfil));
 		vite_error = false;
 
-		const old = current;
-		const new_stubs = stubs.filter(
-			(stub) => stub.type !== 'file' || old.get(stub.name) !== stub.contents
-		);
-		current = stubs_to_map(stubs);
+		let added_new_file = false;
+
+		/** @type {import('$lib/types').Stub[]} */
+		const to_write = [];
 
 		for (const stub of stubs) {
 			if (stub.type === 'file') {
-				old.delete(stub.name);
+				const current = /** @type {import('$lib/types').FileStub} */ (current_stubs.get(stub.name));
+
+				if (current?.contents !== stub.contents) {
+					to_write.push(stub);
+				}
+
+				if (!current) added_new_file = true;
+			} else {
+				// always add directories, otherwise convert_stubs_to_tree will fail
+				to_write.push(stub);
 			}
+
+			current_stubs.delete(stub.name);
 		}
+
+		const to_delete = Array.from(current_stubs.keys());
+		current_stubs = stubs_to_map(stubs);
 
 		// For some reason, server-ready is fired again when the vite dev server is restarted.
 		// We need to wait for it to finish before we can continue, else we might
 		// request files from Vite before it's ready, leading to a timeout.
-		const will_restart = will_restart_vite_dev_server(new_stubs);
+		const will_restart = will_restart_vite_dev_server(to_write);
 		const promise = will_restart
 			? new Promise((fulfil, reject) => {
 					const error_unsub = vm.on('error', (error) => {
@@ -188,11 +203,11 @@ async function _create(stubs) {
 			  })
 			: Promise.resolve();
 
-		for (const file of old.keys()) {
+		for (const file of to_delete) {
 			await vm.fs.rm(file, { force: true, recursive: true });
 		}
 
-		await vm.loadFiles(convert_stubs_to_tree(new_stubs));
+		await vm.loadFiles(convert_stubs_to_tree(to_write));
 		await promise;
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
@@ -200,7 +215,7 @@ async function _create(stubs) {
 
 		// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 		// because that can result in a broken UI state
-		return will_restart || vite_error || !!old.size || !!new_stubs.length;
+		return will_restart || vite_error || to_delete.length > 0 || added_new_file;
 	}
 
 	/**
@@ -237,7 +252,7 @@ async function _create(stubs) {
 
 		await vm.loadFiles(root);
 
-		stubs_to_map(stubs, current);
+		stubs_to_map(stubs, current_stubs);
 
 		await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
@@ -319,13 +334,11 @@ function to_file(stub) {
 
 /**
  * @param {import('$lib/types').Stub[]} stubs
- * @returns {Map<string, string>}
+ * @returns {Map<string, import('$lib/types').Stub>}
  */
 function stubs_to_map(stubs, map = new Map()) {
 	for (const stub of stubs) {
-		if (stub.type === 'file') {
-			map.set(stub.name, stub.contents);
-		}
+		map.set(stub.name, stub);
 	}
 	return map;
 }
