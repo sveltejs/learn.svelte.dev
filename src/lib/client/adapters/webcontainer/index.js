@@ -308,10 +308,6 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 		}
 	}
 
-	if (depth === 1) {
-		console.log('tree', tree);
-	}
-
 	return tree;
 }
 
