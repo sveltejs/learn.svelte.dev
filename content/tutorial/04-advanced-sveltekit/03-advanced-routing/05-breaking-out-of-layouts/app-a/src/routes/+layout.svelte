@@ -15,7 +15,7 @@
 		border: 1px solid #999;
 		padding: 1em;
 		margin: 1em 0 0 0;
-		border-radius: 5px;
+		border-radius: 2px;
 	}
 
 	:global(.layout::before) {
@@ -23,9 +23,16 @@
 		content: attr(data-name) ' layout';
 		left: 1em;
 		top: -1em;
-		background-color: #ff531a;
-		color: white;
+		background-color: white;
+		color: #222;
 		padding: 0.5em;
 		line-height: 1;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:global(.layout::before) {
+			background: #2e2e2e;
+			color: #e6e6e6;
+		}
 	}
 </style>
