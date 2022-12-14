@@ -5,28 +5,34 @@ import { ready } from '../common/index.js';
 
 /** @type {import('@webcontainer/api').WebContainer} Web container singleton */
 let vm;
-/** @type {Promise<import('$lib/types').Adapter> | undefined} */
-let instance;
+
+/** @type {Promise<import('$lib/types').Adapter>} */
+let promise;
 
 /**
  * @param {import('$lib/types').Stub[]} stubs
+ * @param {(progress: number, status: string) => void} callback
  * @returns {Promise<import('$lib/types').Adapter>}
  */
-export async function create(stubs) {
-	if (!instance) {
-		instance = _create(stubs);
+export async function create(stubs, callback) {
+	callback(0, 'loading files');
+
+	if (!promise) {
+		promise = _create(stubs, callback);
 	} else {
-		const adapter = await instance;
+		const adapter = await promise;
 		await adapter.reset(stubs);
 	}
-	return instance;
+
+	return promise;
 }
 
 /**
  * @param {import('$lib/types').Stub[]} stubs
+ * @param {(progress: number, status: string) => void} callback
  * @returns {Promise<import('$lib/types').Adapter>}
  */
-async function _create(stubs) {
+async function _create(stubs, callback) {
 	/**
 	 * Keeps track of the latest create/reset to ensure things are not processed in parallel.
 	 * (if this turns out to be insufficient, we can use a queue)
@@ -69,13 +75,13 @@ async function _create(stubs) {
 
 		reset_timeout();
 
-		// There can only be one instance, else it throws an error - guard against this case
+		// There can only be one promise, else it throws an error - guard against this case
 		// if there was an error later on or a timeout and the user tries again
 		if (!vm) {
-			console.log('loading webcontainer');
+			callback(1 / 6, 'loading webcontainer');
 			const WebContainer = await load();
 
-			console.log('booting webcontainer');
+			callback(2 / 6, 'booting webcontainer');
 			vm = await WebContainer.boot();
 		}
 
@@ -86,16 +92,17 @@ async function _create(stubs) {
 
 		const ready_unsub = vm.on('server-ready', (port, base) => {
 			ready_unsub();
+			callback(6 / 6, 'ready');
 			console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
 			fulfil(base); // this will be the last thing that happens if everything goes well
 		});
 
 		reset_timeout();
-		console.log('loading files');
+		callback(3 / 6, 'writing virtual files');
 		await vm.loadFiles(tree);
 
 		reset_timeout();
-		console.log('unpacking modules');
+		callback(4 / 6, 'unzipping files');
 		const unzip = await vm.run(
 			{
 				command: 'node',
@@ -111,7 +118,7 @@ async function _create(stubs) {
 		}
 
 		reset_timeout();
-		console.log('starting dev server');
+		callback(5 / 6, 'starting dev server');
 		await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
 		await run_dev();
 
