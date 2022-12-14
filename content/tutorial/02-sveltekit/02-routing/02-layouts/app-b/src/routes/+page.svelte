@@ -1,2 +1,2 @@
-<h1>Home</h1>
-<p>This is the home page.</p>
+<h1>home</h1>
+<p>this is the home page.</p>
