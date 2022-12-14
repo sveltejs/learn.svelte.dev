@@ -52,7 +52,10 @@ async function _create(stubs) {
 		throw new Error('WebContainers are not supported by Safari');
 	}
 
-	const base = await new Promise(async (fulfil, reject) => {
+	/** @type {string} */
+	let base;
+
+	base = await new Promise(async (fulfil, reject) => {
 		/** @type {any} */
 		let timeout;
 		function reset_timeout() {
