@@ -171,7 +171,7 @@
 
 			reset_complete_states();
 
-			await load_files($files);
+			await reset_adapter($files);
 
 			loading = false;
 			initial = false;
@@ -180,13 +180,6 @@
 			error = /** @type {Error} */ (e);
 			console.error(e);
 		}
-	}
-
-	/**
-	 * @param {import('$lib/types').Stub[]} stubs
-	 */
-	async function load_files(stubs) {
-		adapter = await reset_adapter(stubs);
 	}
 
 	/**
@@ -356,8 +349,8 @@
 								readonly={mobile}
 								constraints={editing_constraints}
 								{selected}
-								on:change={async () => {
-									await load_files($files); // TODO make this automatic?
+								on:change={() => {
+									reset_adapter($files);
 								}}
 							/>
 
@@ -371,7 +364,7 @@
 									} else {
 										update_complete_states($files);
 									}
-									load_files($files);
+									reset_adapter($files);
 								}}
 							>
 								{#if completed && Object.keys(data.exercise.b).length > 0}
