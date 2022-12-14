@@ -13,12 +13,12 @@ Let's add a second route, `src/routes/about/+page.svelte`, which maps to `/about
 ```svelte
 /// file: src/routes/about/+page.svelte
 <nav>
-	<a href="/">Home</a>
-	<a href="/about">About</a>
+	<a href="/">home</a>
+	<a href="/about">about</a>
 </nav>
 
-<h1>About</h1>
-<p>This is the about page.</p>
+<h1>about</h1>
+<p>this is the about page.</p>
 ```
 
 We can now navigate between `/` and `/about`.

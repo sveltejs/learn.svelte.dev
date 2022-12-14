@@ -19,8 +19,8 @@ src/routes/
 ```svelte
 /// file: src/routes/about/+page.svelte
 <nav>
-	<a href="/">Home</a>
-	<a href="/about">About</a>
+	<a href="/">home</a>
+	<a href="/about">about</a>
 </nav>
 
 <slot />
