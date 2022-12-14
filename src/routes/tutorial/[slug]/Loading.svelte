@@ -1,6 +1,4 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
-
 	/** @type {boolean} */
 	export let initial;
 
@@ -12,35 +10,43 @@
 
 	/** @type {string} */
 	export let status;
-
-	/** @param {Error} error */
-	function get_error_message(error) {
-		if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
-			return '<p>This app requires modern web platform features. Please use a browser other than Safari.</p>';
-		}
-
-		if (/firefox/i.test(navigator.userAgent)) {
-			return `<p>Failed to start WebContainer. You may need to enable third party cookies and disable Enhanced Tracking Protection.</p><small>Error message: ${error.message}</small>`;
-		}
-
-		return `<p>Failed to start WebContainer. You may need to enable third party cookies.</p><small>Error message: ${error.message}</small>`;
-	}
-
-	const dispatch = createEventDispatcher();
 </script>
 
 <div class="loading" class:error>
 	{#if error}
-		{@html get_error_message(error)}
-		<button
-			on:click={() => {
-				if (initial) {
-					location.reload();
-				} else {
-					dispatch('reload');
-				}
-			}}>Reload</button
-		>
+		{#if /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)}
+			<p>This app requires modern web platform features. Please use a browser other than Safari.</p>
+		{:else}
+			<small>{error.message}</small>
+			<h2>Yikes!</h2>
+			{#if /firefox/i.test(navigator.userAgent)}
+				<p>
+					We couldn't start the app. Please ensure
+					<a
+						target="_blank"
+						rel="noreferrer"
+						href="https://support.mozilla.org/en-US/kb/third-party-cookies-firefox-tracking-protection"
+					>
+						third party cookies
+					</a> are enabled for this site, and disable Enhanced Tracking Protection.
+				</p>
+			{:else if /chrome/i.test(navigator.userAgent) && !/edg/i.test(navigator.userAgent)}
+				<p>
+					We couldn't start the app. Please ensure
+					<a
+						target="_blank"
+						rel="noreferrer"
+						href="https://support.mozilla.org/en-US/kb/third-party-cookies-firefox-tracking-protection"
+					>
+						third party cookies
+					</a> are enabled for this site.
+				</p>
+			{:else}
+				<p>
+					We couldn't start the app. Please ensure third party cookies are enabled for this site.
+				</p>
+			{/if}
+		{/if}
 	{:else}
 		<svg width="107" height="128" viewBox="0 0 107 128">
 			<path
@@ -101,12 +107,34 @@
 		justify-content: start;
 	}
 
-	.error :global(p) {
-		color: #f00;
+	h2 {
+		font-size: var(--sk-text-xl);
+	}
+
+	p {
+		margin: 0 0 1em 0;
+	}
+
+	small {
+		font-size: var(--sk-text-xs);
+		color: var(--sk-text-3);
+		text-transform: uppercase;
+	}
+
+	span {
+		color: var(--sk-text-3);
 	}
 
 	svg {
 		width: 10rem;
 		height: 10rem;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.loading {
+			--faded: #444;
+			--progress: #555;
+			--cutout: var(--sk-back-2);
+		}
 	}
 </style>

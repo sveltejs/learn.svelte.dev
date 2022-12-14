@@ -83,6 +83,8 @@ async function _create(stubs, callback) {
 		throw new Error('Failed to initialize WebContainer');
 	}
 
+	await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
+
 	callback(5 / 6, 'starting dev server');
 	const base = await new Promise(async (fulfil, reject) => {
 		const error_unsub = vm.on('error', (error) => {
@@ -93,11 +95,9 @@ async function _create(stubs, callback) {
 		const ready_unsub = vm.on('server-ready', (port, base) => {
 			ready_unsub();
 			callback(6 / 6, 'ready');
-			console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
 			fulfil(base); // this will be the last thing that happens if everything goes well
 		});
 
-		await vm.run({ command: 'chmod', args: ['a+x', 'node_modules/vite/bin/vite.js'] });
 		await run_dev();
 
 		async function run_dev() {
