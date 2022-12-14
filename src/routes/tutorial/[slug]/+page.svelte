@@ -107,7 +107,37 @@
 		return destroy;
 	});
 
-	afterNavigate(load_exercise);
+	afterNavigate(async () => {
+		try {
+			$files = Object.values(data.exercise.a);
+			$scope = data.exercise.scope;
+
+			selected.set(
+				/** @type {import('$lib/types').FileStub} */ (
+					$files.find((stub) => stub.name === data.exercise.focus)
+				)
+			);
+
+			clearTimeout(timeout);
+			loading = true;
+
+			reset_complete_states();
+
+			await reset_adapter($files);
+
+			if (adapter && path !== data.exercise.path) {
+				path = data.exercise.path;
+				set_iframe_src(adapter.base + path);
+			}
+
+			loading = false;
+			initial = false;
+		} catch (e) {
+			loading = false;
+			error = /** @type {Error} */ (e);
+			console.error(e);
+		}
+	});
 
 	/**
 	 * Loads the adapter initially or resets it. This method can throw.
@@ -155,38 +185,12 @@
 			}, 10000);
 		});
 
-		if (reload_iframe || iframe.src !== adapter.base + data.exercise.path) {
+		if (reload_iframe) {
 			await new Promise((fulfil) => setTimeout(fulfil, 200));
-			set_iframe_src(adapter.base + data.exercise.path);
+			set_iframe_src(adapter.base + path);
 		}
 
 		return adapter;
-	}
-
-	async function load_exercise() {
-		try {
-			$files = Object.values(data.exercise.a);
-			$scope = data.exercise.scope;
-			selected.set(
-				/** @type {import('$lib/types').FileStub} */ (
-					$files.find((stub) => stub.name === data.exercise.focus)
-				)
-			);
-
-			clearTimeout(timeout);
-			loading = true;
-
-			reset_complete_states();
-
-			await reset_adapter($files);
-
-			loading = false;
-			initial = false;
-		} catch (e) {
-			loading = false;
-			error = /** @type {Error} */ (e);
-			console.error(e);
-		}
 	}
 
 	/**
@@ -418,16 +422,7 @@
 						{/if}
 
 						{#if loading || error}
-							<Loading
-								{initial}
-								{error}
-								{progress}
-								{status}
-								on:reload={async () => {
-									error = null;
-									load_exercise();
-								}}
-							/>
+							<Loading {initial} {error} {progress} {status} />
 						{/if}
 					</div>
 				</section>
