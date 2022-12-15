@@ -2,6 +2,8 @@
 title: Media elements
 ---
 
+> This exercise doesn't currently work. You can switch to the old tutorial instead: https://svelte.dev/tutorial/media-elements
+
 The `<audio>` and `<video>` elements have several properties that you can bind to. This example demonstrates a few of them.
 
 On line 62, add `currentTime={time}`, `duration` and `paused` bindings:

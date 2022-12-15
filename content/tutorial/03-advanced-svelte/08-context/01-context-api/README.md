@@ -2,6 +2,8 @@
 title: setContext and getContext
 ---
 
+> This exercise doesn't currently work. You can switch to the old tutorial instead: https://svelte.dev/tutorial/context-api
+
 The context API provides a mechanism for components to 'talk' to each other without passing around data and functions as props, or dispatching lots of events. It's an advanced feature, but a useful one.
 
 Take this example app using a [Mapbox GL](https://docs.mapbox.com/mapbox-gl-js/overview/) map. We'd like to display the markers, using the `<MapMarker>` component, but we don't want to have to pass around a reference to the underlying Mapbox instance as a prop on each component.
