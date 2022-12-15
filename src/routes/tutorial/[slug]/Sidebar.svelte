@@ -73,7 +73,12 @@
 </div>
 
 <footer>
-	<a class="edit" href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{exercise.dir}">
+	<a
+		target="_blank"
+		rel="noreferrer"
+		class="edit"
+		href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{exercise.dir}"
+	>
 		Edit this page
 	</a>
 </footer>
