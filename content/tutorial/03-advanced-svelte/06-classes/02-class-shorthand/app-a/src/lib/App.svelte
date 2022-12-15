@@ -7,7 +7,7 @@
 	big
 </label>
 
-<div class:big>
+<div class:big={big}>
 	some {big ? 'big' : 'small'} text
 </div>
 
