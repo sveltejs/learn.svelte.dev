@@ -14,4 +14,4 @@ Let's create that file:
 
 We can now navigate from the `/blog` page to individual blog posts. In the next chapter, we'll see how to load their content.
 
-> Multiple route parameters can appear _within_ one URL segment, as long as they are separated by at least one static character: `foo/[bar]x[baz]` is a valid route where `[bar]` and `[bar]` are dynamic parameters.
+> Multiple route parameters can appear _within_ one URL segment, as long as they are separated by at least one static character: `foo/[bar]x[baz]` is a valid route where `[bar]` and `[baz]` are dynamic parameters.
