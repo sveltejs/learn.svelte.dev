@@ -35,6 +35,11 @@
 	let w = 0;
 	let h = 0;
 
+	/** 
+	 * The iframe sometimes takes focus control in ways we can't prevent
+	 * while the editor is focussed. Refocus the editor in these cases.
+	 * This boolean tracks whether or not the editor should be refocused.
+	 */
 	let preserve_focus = true;
 
 	onMount(() => {
