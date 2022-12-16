@@ -17,7 +17,7 @@ src/routes/
 ...and move the duplicated content from the `+page.svelte` files into the new `+layout.svelte` file. The `<slot />` element is where the page content will be rendered:
 
 ```svelte
-/// file: src/routes/about/+layout.svelte
+/// file: src/routes/+layout.svelte
 <nav>
 	<a href="/">home</a>
 	<a href="/about">about</a>
