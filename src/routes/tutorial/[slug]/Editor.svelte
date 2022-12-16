@@ -252,7 +252,7 @@
 
 				setTimeout(() => {
 					preserve_focus = true;
-				});
+				}, 0);
 			}
 		}}
 		on:focusin={() => {
