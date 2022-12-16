@@ -1,6 +1,5 @@
 <script>
 	import { dev } from '$app/environment';
-	import { monaco } from '$lib/client/monaco/monaco.js';
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	/**
@@ -35,6 +34,8 @@
 
 	let w = 0;
 	let h = 0;
+
+	let preserve_focus = true;
 
 	onMount(() => {
 		let destroyed = false;
@@ -234,8 +235,37 @@
 	}
 </script>
 
+<svelte:window
+	on:pointerdown={(e) => {
+		if (!container.contains(/** @type {HTMLElement} */ (e.target))) {
+			preserve_focus = false;
+		}
+	}}
+/>
+
 <div bind:clientWidth={w} bind:clientHeight={h}>
-	<div bind:this={container} />
+	<div
+		bind:this={container}
+		on:keydown={(e) => {
+			if (e.key === 'Tab') {
+				preserve_focus = false;
+
+				setTimeout(() => {
+					preserve_focus = true;
+				});
+			}
+		}}
+		on:focusin={() => {
+			preserve_focus = true;
+		}}
+		on:focusout={() => {
+			if (preserve_focus) {
+				setTimeout(() => {
+					instance?.editor.focus();
+				}, 0);
+			}
+		}}
+	/>
 </div>
 
 <style>
