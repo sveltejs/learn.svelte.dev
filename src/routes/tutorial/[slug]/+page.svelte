@@ -51,6 +51,8 @@
 
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
+	/** @type {import('monaco-editor').editor.IStandaloneCodeEditor | undefined} */
+	let editor_instance;
 
 	$: mobile = writable(false);
 	$: $mobile = width < 768;
@@ -293,13 +295,30 @@
 
 	/** @param {string} src */
 	function set_iframe_src(src) {
-		// removing the iframe from the document allows us to
+		// Removing the iframe from the document allows us to
 		// change the src without adding a history entry, which
-		// would make back/forward traversal very annoying
+		// would make back/forward traversal very annoying.
 		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
+		// We need to reset focus because it's lost on reload when the
+		// inner app has `export const ssr = false`, which results in
+		// a initial navigation with a focus reset at the end.
+		const editor_has_focus = editor_instance?.hasTextFocus();
+		const active_element = document.activeElement;
+		const on_blur = () => {
+			// Timeout so that following focus event happens first
+			setTimeout(() => {
+				if (editor_has_focus) {
+					editor_instance?.focus();
+				} else {
+					active_element?.focus();
+				}
+			});
+		};
+		document.addEventListener('focusout', on_blur, { once: true });
+		setTimeout(() => document.removeEventListener('focusout', on_blur), 2000);
 	}
 </script>
 
@@ -391,6 +410,7 @@
 								stubs={$files}
 								selected={$selected}
 								read_only={$mobile}
+								bind:editor_instance
 								on:change={update_stub}
 							/>
 							<ImageViewer selected={$selected} />

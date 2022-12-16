@@ -24,17 +24,19 @@
 	/** @type {import('$lib/types').Stub | null} */
 	export let selected = null;
 	export let read_only = false;
+	/** @type {import('monaco-editor').editor.IStandaloneCodeEditor | undefined} */
+	export let editor_instance;
 
 	const dispatch = createEventDispatcher();
 
 	/** @type {HTMLDivElement} */
 	let container;
 
-	/** @type {ReturnType<typeof init> | undefined}*/
-	let instance;
-
 	let w = 0;
 	let h = 0;
+
+	/** @type {ReturnType<typeof init> | undefined}*/
+	let instance;
 
 	onMount(() => {
 		let destroyed = false;
@@ -50,6 +52,7 @@
 		import('$lib/client/monaco/monaco.js').then(({ monaco }) => {
 			if (destroyed) return;
 			instance = init(monaco, dark_mode);
+			editor_instance = instance.editor;
 		});
 
 		/** @param {MediaQueryListEvent} event */
