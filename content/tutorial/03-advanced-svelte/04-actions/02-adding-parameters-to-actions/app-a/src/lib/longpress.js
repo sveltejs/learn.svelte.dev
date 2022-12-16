@@ -1,4 +1,4 @@
-export function longpress(node, duration) {
+export function longpress(node) {
 	let timer;
 
 	const handleMousedown = () => {
