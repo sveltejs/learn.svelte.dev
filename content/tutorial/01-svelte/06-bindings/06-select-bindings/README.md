@@ -2,7 +2,7 @@
 title: Select bindings
 ---
 
-We can also use `bind:value` with `<select>` elements. Update line 20:
+We can also use `bind:value` with `<select>` elements. Update line 32:
 
 ```svelte
 <select bind:value={selected} on:change="{() => answer = ''}">
