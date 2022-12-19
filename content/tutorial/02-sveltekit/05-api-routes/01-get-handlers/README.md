@@ -12,7 +12,9 @@ export function GET() {
 	const number = Math.ceil(Math.random() * 6);
 
 	return new Response(number, {
-		'Content-Type': 'application/json'
+		headers: {
+			'Content-Type': 'application/json'
+		}
 	});
 }
 ```
@@ -29,7 +31,9 @@ export function GET() {
 	const number = Math.ceil(Math.random() * 6);
 
 ---	return new Response(number, {
-		'Content-Type': 'application/json'
+		headers: {
+			'Content-Type': 'application/json'
+		}
 	});---
 +++	return json(number);+++
 }
