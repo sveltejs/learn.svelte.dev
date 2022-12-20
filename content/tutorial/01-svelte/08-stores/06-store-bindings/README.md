@@ -15,7 +15,7 @@ Changing the input value will now update `name` and all its dependents.
 We can also assign directly to store values inside a component. Add a `<button>` element:
 
 ```svelte
-<button on:click="{() => $name += '!'}">
+<button on:click={() => $name += '!'}>
 	Add exclamation mark!
 </button>
 ```
