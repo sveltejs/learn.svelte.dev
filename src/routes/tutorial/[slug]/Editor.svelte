@@ -35,6 +35,13 @@
 	let w = 0;
 	let h = 0;
 
+	/** 
+	 * The iframe sometimes takes focus control in ways we can't prevent
+	 * while the editor is focussed. Refocus the editor in these cases.
+	 * This boolean tracks whether or not the editor should be refocused.
+	 */
+	let preserve_focus = true;
+
 	onMount(() => {
 		let destroyed = false;
 
@@ -235,14 +242,27 @@
 
 <svelte:window
 	on:message={(e) => {
-		if (e.data.type === 'focus_on_editor') {
+		if (preserve_focus && e.data.type === 'focus_on_editor') {
 			instance?.editor.focus();
 		}
 	}}
 />
 
 <div bind:clientWidth={w} bind:clientHeight={h}>
-	<div bind:this={container} />
+	<div
+		bind:this={container}
+		on:focusin={() => {
+			preserve_focus = true;
+		}}
+		on:focusout={() => {
+			// Heuristic: user did refocus themmselves if focus_on_editor
+			// doesn't happen in the next few miliseconds. Needed
+			// because else navigations inside the iframe refocus the editor.
+			setTimeout(() => {
+				preserve_focus = false;
+			}, 500);
+		}}
+	/>
 </div>
 
 <style>
