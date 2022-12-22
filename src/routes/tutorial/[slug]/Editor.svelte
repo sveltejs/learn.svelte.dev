@@ -242,6 +242,7 @@
 
 <svelte:window
 	on:message={(e) => {
+		e.data.type === 'focus_on_editor' && console.log('received message', preserve_focus);
 		if (preserve_focus && e.data.type === 'focus_on_editor') {
 			instance?.editor.focus();
 		}
@@ -259,6 +260,7 @@
 			// doesn't happen in the next few miliseconds. Needed
 			// because else navigations inside the iframe refocus the editor.
 			setTimeout(() => {
+			console.log('focus fasle');
 				preserve_focus = false;
 			}, 500);
 		}}
