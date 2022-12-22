@@ -89,3 +89,18 @@ if (import.meta.hot) {
 		);
 	});
 }
+
+/** 
+ * The iframe sometimes takes focus control in ways we can't prevent
+ * while the editor is focussed. Refocus the editor in these cases.
+ */
+window.addEventListener('focusin', (e) => {
+	if (e.target.tagName === 'BODY') {
+		parent.postMessage(
+			{
+				type: 'focus_on_editor'
+			},
+			'*'
+		);
+	}
+});

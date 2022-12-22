@@ -41,6 +41,8 @@
 	 * This boolean tracks whether or not the editor should be refocused.
 	 */
 	let preserve_focus = true;
+	/** @type {any} */
+	let remove_focus_timeout;
 
 	onMount(() => {
 		let destroyed = false;
@@ -241,9 +243,9 @@
 </script>
 
 <svelte:window
-	on:pointerdown={(e) => {
-		if (!container.contains(/** @type {HTMLElement} */ (e.target))) {
-			preserve_focus = false;
+	on:message={(e) => {
+		if (preserve_focus && e.data.type === 'focus_on_editor') {
+			instance?.editor.focus();
 		}
 	}}
 />
@@ -251,24 +253,17 @@
 <div bind:clientWidth={w} bind:clientHeight={h}>
 	<div
 		bind:this={container}
-		on:keydown={(e) => {
-			if (e.key === 'Tab') {
-				preserve_focus = false;
-
-				setTimeout(() => {
-					preserve_focus = true;
-				}, 0);
-			}
-		}}
 		on:focusin={() => {
+			clearTimeout(remove_focus_timeout);
 			preserve_focus = true;
 		}}
 		on:focusout={() => {
-			if (preserve_focus) {
-				setTimeout(() => {
-					instance?.editor.focus();
-				}, 0);
-			}
+			// Heuristic: user did refocus themmselves if focus_on_editor
+			// doesn't happen in the next few miliseconds. Needed
+			// because else navigations inside the iframe refocus the editor.
+			remove_focus_timeout = setTimeout(() => {
+				preserve_focus = false;
+			}, 500)
 		}}
 	/>
 </div>
