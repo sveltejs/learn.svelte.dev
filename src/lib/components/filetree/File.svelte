@@ -33,7 +33,7 @@
 		: [];
 </script>
 
-<div class="row" class:selected={file === $selected}>
+<div class="row" class:selected={file.name === $selected?.name}>
 	<Item
 		can_rename={can_remove}
 		renaming={state === 'renaming'}
