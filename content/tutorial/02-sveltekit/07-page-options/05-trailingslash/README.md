@@ -13,7 +13,7 @@ If you instead want to ensure that a trailing slash is always present, you can s
 export const trailingSlash = 'always';
 ```
 
-To accommodate both cases (this is not recommended!), use `'ignore`':
+To accommodate both cases (this is not recommended!), use `'ignore'`:
 
 ```js
 /// file: src/routes/ignore/+page.server.js
