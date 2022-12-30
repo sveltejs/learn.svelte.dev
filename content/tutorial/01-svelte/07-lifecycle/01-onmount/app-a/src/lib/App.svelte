@@ -8,6 +8,7 @@
 	{#each photos as photo}
 		<figure>
 			<img
+				crossorigin="anonymous"
 				src={photo.thumbnailUrl}
 				alt={photo.title}
 			/>
