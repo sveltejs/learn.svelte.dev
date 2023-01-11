@@ -95,6 +95,11 @@
 
 	/** @type {import('$lib/types').Adapter | undefined} */
 	let adapter;
+	/** @type {string[]} */
+	let history_bwd = [];
+	/** @type {string[]} */
+	let history_fwd = [];
+	let ignore_path_change = false;
 
 	onMount(() => {
 		function destroy() {
@@ -254,7 +259,16 @@
 		if (e.origin !== adapter.base) return;
 
 		if (e.data.type === 'ping') {
-			path = e.data.data.path ?? path;
+			const new_path = e.data.data.path ?? path;
+			if (path !== new_path) {
+				// skip `nav_to` step if triggered by bwd/fwd action
+				if (ignore_path_change) {
+					ignore_path_change = false;
+				} else {
+					nav_to();
+				}
+				path = new_path;
+			}
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
@@ -300,6 +314,42 @@
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
+	}
+
+	/** @param {string} path */
+	function route_to(path) {
+		if (adapter) {
+			const url = new URL(path, adapter.base);
+			path = url.pathname + url.search + url.hash;
+			set_iframe_src(adapter.base + path);
+		}
+	}
+
+	/** @param {string | null} new_path */
+	function nav_to(new_path = null) {
+		if (path !== history_bwd[history_bwd.length - 1]) {
+			history_bwd = [...history_bwd, path];
+		}
+		history_fwd = [];
+		if (new_path) route_to(new_path);
+	}
+
+	function go_bwd() {
+		const new_path = history_bwd[history_bwd.length - 1];
+		if (new_path) {
+			ignore_path_change = true;
+			[history_bwd, history_fwd] = [history_bwd.slice(0, -1), [path, ...history_fwd]];
+			route_to(new_path);
+		}
+	}
+
+	function go_fwd() {
+		const new_path = history_fwd[0];
+		if (new_path) {
+			ignore_path_change = true;
+			[history_bwd, history_fwd] = [[...history_bwd, path], history_fwd.slice(1)];
+			route_to(new_path);
+		}
 	}
 </script>
 
@@ -400,6 +450,8 @@
 
 				<section slot="b" class="preview">
 					<Chrome
+						{history_bwd}
+						{history_fwd}
 						{path}
 						{loading}
 						on:refresh={() => {
@@ -407,13 +459,9 @@
 								set_iframe_src(adapter.base + path);
 							}
 						}}
-						on:change={(e) => {
-							if (adapter) {
-								const url = new URL(e.detail.value, adapter.base);
-								path = url.pathname + url.search + url.hash;
-								set_iframe_src(adapter.base + path);
-							}
-						}}
+						on:change={(e) => nav_to(e.detail.value)}
+						on:back={go_bwd}
+						on:forward={go_fwd}
 					/>
 
 					<div class="content">
