@@ -107,13 +107,18 @@
 	}
 
 	onMount(() => {
+		function on_iframe_load() {
+			iframe.classList.add('loaded');
+		}
 		function destroy() {
+			iframe.removeEventListener('load', on_iframe_load);
 			if (adapter) {
 				adapter.destroy();
 			}
 		}
 
 		document.addEventListener('pagehide', destroy);
+		iframe.addEventListener('load', on_iframe_load);
 		return destroy;
 	});
 
@@ -317,6 +322,7 @@
 		// change the src without adding a history entry, which
 		// would make back/forward traversal very annoying
 		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
+		iframe.classList.remove('loaded');
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
@@ -497,6 +503,7 @@
 	.content {
 		display: flex;
 		flex-direction: column;
+		position: relative;
 		min-height: 0;
 		height: 100%;
 		max-height: 100%;
@@ -539,10 +546,6 @@
 		flex-direction: column;
 	}
 
-	.content {
-		position: relative;
-	}
-
 	iframe {
 		width: 100%;
 		height: 100%;
@@ -551,6 +554,10 @@
 		box-sizing: border-box;
 		border: none;
 		background: var(--sk-back-2);
+	}
+
+	iframe:not(.loaded) {
+		display: none;
 	}
 
 	.editor-container {
