@@ -101,6 +101,11 @@
 	let history_fwd = [];
 	let ignore_path_change = false;
 
+	function reset_history() {
+		history_bwd = [];
+		history_fwd = [];
+	}
+
 	onMount(() => {
 		function destroy() {
 			if (adapter) {
@@ -127,6 +132,7 @@
 			loading = true;
 
 			reset_complete_states();
+			reset_history();
 
 			await reset_adapter($files);
 
