@@ -2,7 +2,7 @@
 title: Welcome to Svelte
 ---
 
-Welcome to the Svelte tutorial! This will teach you everything you need to know to easily build fast, small web applications.
+Welcome to the Svelte tutorial! This will teach you everything you need to know to easily build web applications of all sizes, with high performance and a small footprint.
 
 You can also consult the [API docs](https://svelte.dev/docs) and the [examples](https://svelte.dev/examples), or — if you're impatient to start hacking on your machine locally — create a project with `npm init svelte`.
 
