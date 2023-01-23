@@ -36,14 +36,14 @@
 
 	onMount(() => {
 		const unsub = state.subscribe(async (state) => {
-			if (state.status === 'resetting' || state.status === 'switching') {
+			if (state.status === 'set' || state.status === 'switch') {
 				loading = true;
 
 				try {
 					clearTimeout(timeout);
 					await reset_adapter(state.stubs);
 
-					if (state.status === 'switching') {
+					if (state.status === 'switch') {
 						set_iframe_src(adapter.base + path);
 					}
 
@@ -54,7 +54,7 @@
 				}
 
 				loading = false;
-			} else if (state.status === 'updating' && state.last_updated) {
+			} else if (state.status === 'update' && state.last_updated) {
 				const reload = await adapter.update([state.last_updated]);
 				if (reload) {
 					schedule_iframe_reload();

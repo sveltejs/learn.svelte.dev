@@ -11,7 +11,7 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import { state, selected, files, editing_constraints, solution, completed } from './state';
+	import { state, selected, stubs, editing_constraints, solution, completed } from './state';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -26,7 +26,7 @@
 	$: $mobile = width < 768;
 
 	afterNavigate(() => {
-		state.switch(data.exercise);
+		state.switch_exercise(data.exercise);
 		$scope = data.exercise.scope;
 	});
 
@@ -35,7 +35,7 @@
 	 */
 	function update_stub(event) {
 		const stub = event.detail;
-		state.update(stub);
+		state.update_file(stub);
 	}
 </script>
 
@@ -70,7 +70,7 @@
 				index={data.index}
 				exercise={data.exercise}
 				on:select={(e) => {
-					state.select(e.detail.file);
+					state.select_file(e.detail.file);
 				}}
 			/>
 		</section>
@@ -88,7 +88,7 @@
 							<Filetree
 								{scope}
 								endstate={solution}
-								{files}
+								files={stubs}
 								readonly={mobile}
 								constraints={editing_constraints}
 								{selected}
@@ -111,7 +111,7 @@
 
 						<section class="editor-container" slot="b">
 							<Editor
-								stubs={$files}
+								stubs={$stubs}
 								selected={$selected}
 								read_only={$mobile}
 								on:change={update_stub}

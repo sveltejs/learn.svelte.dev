@@ -34,7 +34,7 @@
 		scope,
 
 		select: async (file) => {
-			state.select(file.name);
+			state.select_file(file.name);
 		},
 
 		add: async (name, type) => {
@@ -59,12 +59,12 @@
 					contents: ''
 				};
 
-				state.select(stub.name);
+				state.select_file(stub.name);
 			} else {
 				stub = { type: 'directory', name, basename };
 			}
 
-			state.reset([...$files, ...create_directories(name, $files), stub]);
+			state.set_stubs([...$files, ...create_directories(name, $files), stub]);
 		},
 
 		rename: async (to_rename, new_name) => {
@@ -100,7 +100,7 @@
 			to_rename.basename = /** @type {string} */ (new_full_name.split('/').pop());
 			to_rename.name = new_full_name;
 
-			state.reset([...$files, ...create_directories(new_full_name, $files)]);
+			state.set_stubs([...$files, ...create_directories(new_full_name, $files)]);
 		},
 
 		remove: async (stub) => {
@@ -111,8 +111,8 @@
 				return;
 			}
 
-			state.select(null);
-			state.reset(
+			state.select_file(null);
+			state.set_stubs(
 				$files.filter((s) => {
 					if (s === stub) return false;
 					if (s.name.startsWith(stub.name + '/')) return false;

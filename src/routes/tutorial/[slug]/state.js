@@ -2,7 +2,7 @@ import { derived, writable } from 'svelte/store';
 
 /**
  * @typedef {{
- *  status: 'initial' | 'selecting' | 'resetting' | 'updating' | 'switching';
+ *  status: 'initial' | 'select' | 'set' | 'update' | 'switch';
  *  stubs: import("$lib/types").Stub[];
  *  last_updated?: import("$lib/types").FileStub;
  *  selected: string | null;
@@ -34,9 +34,9 @@ const _state = writable({
 export const state = {
 	subscribe: _state.subscribe,
 	/** @param {import('$lib/types').FileStub} file */
-	update: (file) =>
+	update_file: (file) =>
 		_state.update((state) => {
-			state.status = 'updating';
+			state.status = 'update';
 			state.stubs = state.stubs.map((stub) => {
 				if (stub.name === file.name) {
 					return file;
@@ -47,15 +47,15 @@ export const state = {
 			return state;
 		}),
 	/** @param {import('$lib/types').Stub[]} [stubs] */
-	reset: (stubs) =>
+	set_stubs: (stubs) =>
 		_state.update((state) => {
-			state.status = 'resetting';
+			state.status = 'set';
 			state.stubs = stubs || state.stubs;
 			state.last_updated = undefined;
 			return state;
 		}),
 	/** @param {import('$lib/types').Exercise} exercise */
-	switch: (exercise) =>
+	switch_exercise: (exercise) =>
 		_state.update((state) => {
 			const solution = { ...exercise.a };
 			const editing_constraints = {
@@ -91,7 +91,7 @@ export const state = {
 				}
 			}
 
-			state.status = 'switching';
+			state.status = 'switch';
 			state.stubs = Object.values(exercise.a);
 			state.exercise = {
 				initial: Object.values(exercise.a),
@@ -109,21 +109,21 @@ export const state = {
 			} else {
 				state.stubs = Object.values(state.exercise.solution);
 			}
-			state.status = 'resetting';
+			state.status = 'set';
 			state.last_updated = undefined;
 			return state;
 		}),
 	/** @param {string | null} name */
-	select: (name) =>
+	select_file: (name) =>
 		_state.update((state) => {
-			state.status = 'selecting';
+			state.status = 'select';
 			state.selected = name;
 			state.last_updated = undefined;
 			return state;
 		})
 };
 
-export const files = derived(state, ($state) => $state.stubs);
+export const stubs = derived(state, ($state) => $state.stubs);
 
 export const selected = derived(
 	state,
@@ -158,7 +158,6 @@ function is_completed($state) {
 	const stubs_complete = Object.keys($state.exercise.solution).every((name) =>
 		stub_names.has(name)
 	);
-	console.log(all_stubs_correct, stubs_complete);
 
 	return all_stubs_correct && stubs_complete;
 }
