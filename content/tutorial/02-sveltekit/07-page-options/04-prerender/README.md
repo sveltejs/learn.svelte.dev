@@ -11,6 +11,7 @@ The tradeoff is that the build process takes longer, and prerendered content can
 To prerender a page, set `prerender` to `true`:
 
 ```js
+/// file: src/routes/+page.server.js
 export const prerender = true;
 ```
 
