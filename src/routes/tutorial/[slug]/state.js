@@ -2,7 +2,7 @@ import { derived, writable } from 'svelte/store';
 
 /**
  * @typedef {{
- *  status: 'initial' | 'resetting' | 'updating' | 'switching';
+ *  status: 'initial' | 'selecting' | 'resetting' | 'updating' | 'switching';
  *  stubs: import("$lib/types").Stub[];
  *  last_updated?: import("$lib/types").FileStub;
  *  selected: string | null;
@@ -109,12 +109,16 @@ export const state = {
 			} else {
 				state.stubs = Object.values(state.exercise.solution);
 			}
+			state.status = 'resetting';
+			state.last_updated = undefined;
 			return state;
 		}),
 	/** @param {string | null} name */
 	select: (name) =>
 		_state.update((state) => {
+			state.status = 'selecting';
 			state.selected = name;
+			state.last_updated = undefined;
 			return state;
 		})
 };
