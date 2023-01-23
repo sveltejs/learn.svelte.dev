@@ -95,15 +95,30 @@
 
 	/** @type {import('$lib/types').Adapter | undefined} */
 	let adapter;
+	/** @type {string[]} */
+	let history_bwd = [];
+	/** @type {string[]} */
+	let history_fwd = [];
+	let ignore_path_change = false;
+
+	function reset_history() {
+		history_bwd = [];
+		history_fwd = [];
+	}
 
 	onMount(() => {
+		function on_iframe_load() {
+			iframe.classList.add('loaded');
+		}
 		function destroy() {
+			iframe.removeEventListener('load', on_iframe_load);
 			if (adapter) {
 				adapter.destroy();
 			}
 		}
 
 		document.addEventListener('pagehide', destroy);
+		iframe.addEventListener('load', on_iframe_load);
 		return destroy;
 	});
 
@@ -122,6 +137,7 @@
 			loading = true;
 
 			reset_complete_states();
+			reset_history();
 
 			await reset_adapter($files);
 
@@ -254,7 +270,16 @@
 		if (e.origin !== adapter.base) return;
 
 		if (e.data.type === 'ping') {
-			path = e.data.data.path ?? path;
+			const new_path = e.data.data.path ?? path;
+			if (path !== new_path) {
+				// skip `nav_to` step if triggered by bwd/fwd action
+				if (ignore_path_change) {
+					ignore_path_change = false;
+				} else {
+					nav_to();
+				}
+				path = new_path;
+			}
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
@@ -297,9 +322,46 @@
 		// change the src without adding a history entry, which
 		// would make back/forward traversal very annoying
 		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
+		iframe.classList.remove('loaded');
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
+	}
+
+	/** @param {string} path */
+	function route_to(path) {
+		if (adapter) {
+			const url = new URL(path, adapter.base);
+			path = url.pathname + url.search + url.hash;
+			set_iframe_src(adapter.base + path);
+		}
+	}
+
+	/** @param {string | null} new_path */
+	function nav_to(new_path = null) {
+		if (path !== history_bwd[history_bwd.length - 1]) {
+			history_bwd = [...history_bwd, path];
+		}
+		history_fwd = [];
+		if (new_path) route_to(new_path);
+	}
+
+	function go_bwd() {
+		const new_path = history_bwd[history_bwd.length - 1];
+		if (new_path) {
+			ignore_path_change = true;
+			[history_bwd, history_fwd] = [history_bwd.slice(0, -1), [path, ...history_fwd]];
+			route_to(new_path);
+		}
+	}
+
+	function go_fwd() {
+		const new_path = history_fwd[0];
+		if (new_path) {
+			ignore_path_change = true;
+			[history_bwd, history_fwd] = [[...history_bwd, path], history_fwd.slice(1)];
+			route_to(new_path);
+		}
 	}
 </script>
 
@@ -400,6 +462,8 @@
 
 				<section slot="b" class="preview">
 					<Chrome
+						{history_bwd}
+						{history_fwd}
 						{path}
 						{loading}
 						on:refresh={() => {
@@ -407,13 +471,9 @@
 								set_iframe_src(adapter.base + path);
 							}
 						}}
-						on:change={(e) => {
-							if (adapter) {
-								const url = new URL(e.detail.value, adapter.base);
-								path = url.pathname + url.search + url.hash;
-								set_iframe_src(adapter.base + path);
-							}
-						}}
+						on:change={(e) => nav_to(e.detail.value)}
+						on:back={go_bwd}
+						on:forward={go_fwd}
 					/>
 
 					<div class="content">
@@ -443,6 +503,7 @@
 	.content {
 		display: flex;
 		flex-direction: column;
+		position: relative;
 		min-height: 0;
 		height: 100%;
 		max-height: 100%;
@@ -485,10 +546,6 @@
 		flex-direction: column;
 	}
 
-	.content {
-		position: relative;
-	}
-
 	iframe {
 		width: 100%;
 		height: 100%;
@@ -497,6 +554,10 @@
 		box-sizing: border-box;
 		border: none;
 		background: var(--sk-back-2);
+	}
+
+	iframe:not(.loaded) {
+		display: none;
 	}
 
 	.editor-container {
