@@ -57,9 +57,6 @@ export const state = {
 	/** @param {import('$lib/types').Exercise} exercise */
 	switch: (exercise) =>
 		_state.update((state) => {
-			state.status = 'switching';
-			state.stubs = Object.values(exercise.a);
-
 			const solution = { ...exercise.a };
 			const editing_constraints = {
 				create: exercise.editing_constraints.create,
@@ -94,12 +91,24 @@ export const state = {
 				}
 			}
 
+			state.status = 'switching';
+			state.stubs = Object.values(exercise.a);
 			state.exercise = {
 				initial: Object.values(exercise.a),
 				solution,
 				editing_constraints
 			};
 			state.last_updated = undefined;
+			state.selected = exercise.focus;
+			return state;
+		}),
+	toggle_completion: () =>
+		_state.update((state) => {
+			if (is_completed(state)) {
+				state.stubs = state.exercise.initial;
+			} else {
+				state.stubs = Object.values(state.exercise.solution);
+			}
 			return state;
 		}),
 	/** @param {string | null} name */
@@ -111,6 +120,7 @@ export const state = {
 };
 
 export const files = derived(state, ($state) => $state.stubs);
+
 export const selected = derived(
 	state,
 	($state) =>
@@ -118,5 +128,39 @@ export const selected = derived(
 			$state.stubs.find((stub) => stub.name === $state.selected)
 		) ?? null
 );
+
 export const solution = derived(state, ($state) => $state.exercise.solution);
+
 export const editing_constraints = derived(state, ($state) => $state.exercise.editing_constraints);
+
+export const completed = derived(state, is_completed);
+
+/**
+ * @param {State} $state
+ */
+function is_completed($state) {
+	const all_stubs_correct = $state.stubs.every((stub) => {
+		if (stub.type === 'directory') {
+			return true;
+		} else if (stub.type === 'file' && stub.name in $state.exercise.solution) {
+			const expected = $state.exercise.solution[stub.name];
+			return expected.type === 'file' && normalise(stub.contents) === normalise(expected.contents);
+		} else {
+			return false;
+		}
+	});
+
+	const stub_names = new Set($state.stubs.map((stub) => stub.name));
+	const stubs_complete = Object.keys($state.exercise.solution).every((name) =>
+		stub_names.has(name)
+	);
+	console.log(all_stubs_correct, stubs_complete);
+
+	return all_stubs_correct && stubs_complete;
+}
+
+/** @param {string} code */
+function normalise(code) {
+	// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
+	return code.replace(/\s+/g, ' ').trim();
+}

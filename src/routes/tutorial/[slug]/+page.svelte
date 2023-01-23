@@ -11,20 +11,13 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import { state, selected, files, editing_constraints, solution } from './state';
+	import { state, selected, files, editing_constraints, solution, completed } from './state';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').Scope>} */
 	const scope = writable({ depth: 0, name: '', prefix: '' });
-
-	/** @type {Record<string, string>} */
-	let expected = {};
-	/** @type {Record<string, boolean>}*/
-	let complete_states = {};
-	$: completed =
-		Object.keys(complete_states).length > 0 && Object.values(complete_states).every(Boolean);
 
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
@@ -35,10 +28,6 @@
 	afterNavigate(() => {
 		state.switch(data.exercise);
 		$scope = data.exercise.scope;
-
-		state.select(data.exercise.focus);
-
-		reset_complete_states();
 	});
 
 	/**
@@ -47,54 +36,6 @@
 	function update_stub(event) {
 		const stub = event.detail;
 		state.update(stub);
-		update_complete_states([stub]);
-	}
-
-	/** Set `complete_states` and `expected` based on the end state */
-	function reset_complete_states() {
-		expected = {};
-		complete_states = {};
-		for (const stub of Object.values($solution)) {
-			if (stub.type === 'file') {
-				complete_states[stub.name] = false;
-				expected[stub.name] = normalise(stub.contents);
-			}
-		}
-	}
-
-	/**
-	 * @param {import('$lib/types').Stub[]} stubs
-	 */
-	function update_complete_states(stubs) {
-		for (const stub of stubs) {
-			if (stub.type === 'file' && stub.name in complete_states) {
-				complete_states[stub.name] = expected[stub.name] === normalise(stub.contents);
-				if (dev) {
-					compare(stub.name, normalise(stub.contents), expected[stub.name]);
-				}
-			}
-		}
-	}
-
-	/**
-	 * @param {string} name
-	 * @param {string} actual
-	 * @param {string} expected
-	 */
-	async function compare(name, actual, expected) {
-		if (actual === expected) return;
-
-		const Diff = await import('diff');
-		console.groupCollapsed(`diff: ${name}`);
-		console.log(actual);
-		console.log(Diff.diffLines(actual, expected));
-		console.groupEnd();
-	}
-
-	/** @param {string} code */
-	function normalise(code) {
-		// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
-		return code.replace(/\s+/g, ' ').trim();
 	}
 </script>
 
@@ -154,19 +95,13 @@
 							/>
 
 							<button
-								class:completed
+								class:completed={$completed}
 								disabled={Object.keys(data.exercise.b).length === 0}
 								on:click={() => {
-									const files = Object.values(completed ? data.exercise.a : $solution);
-									if (completed) {
-										reset_complete_states();
-									} else {
-										update_complete_states(files);
-									}
-									state.reset(files);
+									state.toggle_completion();
 								}}
 							>
-								{#if completed && Object.keys(data.exercise.b).length > 0}
+								{#if $completed && Object.keys(data.exercise.b).length > 0}
 									reset
 								{:else}
 									solve <Icon name="arrow-right" />
