@@ -1,7 +1,7 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import chevron from './chevron.svg';
-	import refresh from './refresh.svg';
+	import chevron from '$lib/icons/chevron.svg';
+	import refresh from '$lib/icons/refresh.svg';
 
 	/** @type {string} */
 	export let path;
