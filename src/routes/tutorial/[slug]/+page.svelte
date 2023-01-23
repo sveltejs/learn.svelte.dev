@@ -11,13 +11,10 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import { state, selected, files } from './state';
+	import { state, selected, files, editing_constraints, solution } from './state';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
-
-	/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
-	const endstate = writable({});
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').Scope>} */
 	const scope = writable({ depth: 0, name: '', prefix: '' });
@@ -29,63 +26,19 @@
 	$: completed =
 		Object.keys(complete_states).length > 0 && Object.values(complete_states).every(Boolean);
 
-	let path = data.exercise.path;
-
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
 
 	$: mobile = writable(false);
 	$: $mobile = width < 768;
 
-	/** @type {import('svelte/store').Writable<import('$lib/types').EditingConstraints>} */
-	const editing_constraints = writable({ create: [], remove: [] });
-
-	$: {
-		$endstate = { ...data.exercise.a };
-
-		$editing_constraints.create = data.exercise.editing_constraints.create;
-		$editing_constraints.remove = data.exercise.editing_constraints.remove;
-
-		// TODO should this be an array in the first place?
-		for (const stub of Object.values(data.exercise.b)) {
-			if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
-				// remove file
-				if (!$editing_constraints.remove.includes(stub.name)) {
-					$editing_constraints.remove.push(stub.name);
-				}
-				delete $endstate[stub.name];
-			} else if (stub.name.endsWith('/__delete')) {
-				// remove directory
-				const parent = stub.name.slice(0, stub.name.lastIndexOf('/'));
-				if (!$editing_constraints.remove.includes(parent)) {
-					$editing_constraints.remove.push(parent);
-				}
-				delete $endstate[parent];
-				for (const k in $endstate) {
-					if (k.startsWith(parent + '/')) {
-						delete $endstate[k];
-					}
-				}
-			} else {
-				if (!$endstate[stub.name] && !$editing_constraints.create.includes(stub.name)) {
-					$editing_constraints.create.push(stub.name);
-				}
-				$endstate[stub.name] = data.exercise.b[stub.name];
-			}
-		}
-	}
-
 	afterNavigate(() => {
-		state.switch(Object.values(data.exercise.a));
+		state.switch(data.exercise);
 		$scope = data.exercise.scope;
 
 		state.select(data.exercise.focus);
 
 		reset_complete_states();
-
-		if (path !== data.exercise.path) {
-			path = data.exercise.path;
-		}
 	});
 
 	/**
@@ -101,7 +54,7 @@
 	function reset_complete_states() {
 		expected = {};
 		complete_states = {};
-		for (const stub of Object.values($endstate)) {
+		for (const stub of Object.values($solution)) {
 			if (stub.type === 'file') {
 				complete_states[stub.name] = false;
 				expected[stub.name] = normalise(stub.contents);
@@ -193,7 +146,7 @@
 						<section class="navigator" slot="a">
 							<Filetree
 								{scope}
-								{endstate}
+								endstate={solution}
 								{files}
 								readonly={mobile}
 								constraints={editing_constraints}
@@ -204,7 +157,7 @@
 								class:completed
 								disabled={Object.keys(data.exercise.b).length === 0}
 								on:click={() => {
-									const files = Object.values(completed ? data.exercise.a : $endstate);
+									const files = Object.values(completed ? data.exercise.a : $solution);
 									if (completed) {
 										reset_complete_states();
 									} else {

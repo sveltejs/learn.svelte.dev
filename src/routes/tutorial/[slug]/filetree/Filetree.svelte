@@ -7,7 +7,7 @@
 	/** @type {import('svelte/store').Readable<import('$lib/types').Stub[]>} */
 	export let files;
 
-	/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
+	/** @type {import('svelte/store').Readable<Record<string, import('$lib/types').Stub>>} */
 	export let endstate;
 
 	/** @type {import('svelte/store').Writable<import('$lib/types').Scope>} */
@@ -16,7 +16,7 @@
 	/** @type {import('svelte/store').Writable<boolean>} */
 	export let readonly;
 
-	/** @type {import('svelte/store').Writable<import('$lib/types').EditingConstraints>} */
+	/** @type {import('svelte/store').Readable<import('$lib/types').EditingConstraints>} */
 	export let constraints;
 
 	/** @type {import('svelte/store').Readable<import('$lib/types').FileStub | null> }*/

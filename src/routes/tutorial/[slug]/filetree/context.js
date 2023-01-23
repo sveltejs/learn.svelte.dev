@@ -2,7 +2,7 @@ import { setContext, getContext } from 'svelte';
 
 /**
  * @typedef {{
- *   endstate: import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>;
+ *   endstate: import('svelte/store').Readable<Record<string, import('$lib/types').Stub>>;
  *   files: import('svelte/store').Readable<import('$lib/types').Stub[]>;
  *   selected: import('svelte/store').Readable<import('$lib/types').FileStub | null>;
  *   readonly: import('svelte/store').Writable<boolean>;
