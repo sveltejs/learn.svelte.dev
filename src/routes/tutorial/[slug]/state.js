@@ -10,6 +10,7 @@ import { derived, writable } from 'svelte/store';
  *    initial: import("$lib/types").Stub[];
  *    solution: Record<string, import("$lib/types").Stub>;
  *    editing_constraints: import("$lib/types").EditingConstraints;
+ *    scope: import('$lib/types').Scope;
  *  };
  * }} State
  */
@@ -27,7 +28,8 @@ const _state = writable({
 		editing_constraints: {
 			create: [],
 			remove: []
-		}
+		},
+		scope: { depth: 0, name: '', prefix: '' }
 	}
 });
 
@@ -96,7 +98,8 @@ export const state = {
 			state.exercise = {
 				initial: Object.values(exercise.a),
 				solution,
-				editing_constraints
+				editing_constraints,
+				scope: exercise.scope
 			};
 			state.last_updated = undefined;
 			state.selected = exercise.focus;
@@ -136,6 +139,8 @@ export const selected = derived(
 export const solution = derived(state, ($state) => $state.exercise.solution);
 
 export const editing_constraints = derived(state, ($state) => $state.exercise.editing_constraints);
+
+export const scope = derived(state, ($state) => $state.exercise.scope);
 
 export const completed = derived(state, is_completed);
 

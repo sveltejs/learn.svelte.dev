@@ -1,16 +1,17 @@
 <script>
 	import * as context from './context.js';
 	import Item from './Item.svelte';
+	import { selected, solution, state } from '../state.js';
 
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
 
-	const { selected, endstate, select, rename, remove, readonly } = context.get();
+	const { rename, remove, readonly } = context.get();
 
 	/** @type {'idle' | 'renaming'} */
-	let state = 'idle';
+	let editing_state = 'idle';
 
-	$: can_remove = !$readonly && !$endstate[file.name];
+	$: can_remove = !$readonly && !$solution[file.name];
 
 	/** @type {import('./ContextMenu.svelte').MenuItems} */
 	$: actions = can_remove
@@ -19,7 +20,7 @@
 					icon: 'rename',
 					label: 'Rename',
 					fn: () => {
-						state = 'renaming';
+						editing_state = 'renaming';
 					}
 				},
 				{
@@ -36,18 +37,18 @@
 <div class="row" class:selected={file.name === $selected?.name}>
 	<Item
 		can_rename={can_remove}
-		renaming={state === 'renaming'}
+		renaming={editing_state === 'renaming'}
 		basename={file.basename}
 		{actions}
-		on:click={() => select(file)}
+		on:click={() => state.select_file(file.name)}
 		on:edit={() => {
-			state = 'renaming';
+			editing_state = 'renaming';
 		}}
 		on:rename={(e) => {
 			rename(file, e.detail.basename);
 		}}
 		on:cancel={() => {
-			state = 'idle';
+			editing_state = 'idle';
 		}}
 	/>
 </div>

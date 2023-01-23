@@ -1,6 +1,6 @@
 <script>
 	import Output from './Output.svelte';
-	import { browser, dev } from '$app/environment';
+	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
 	import ContextMenu from './filetree/ContextMenu.svelte';
 	import Filetree from './filetree/Filetree.svelte';
@@ -11,13 +11,10 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import { state, selected, stubs, editing_constraints, solution, completed } from './state';
+	import { state, selected, completed } from './state';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
-
-	/** @type {import('svelte/store').Writable<import('$lib/types').Scope>} */
-	const scope = writable({ depth: 0, name: '', prefix: '' });
 
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
@@ -27,16 +24,7 @@
 
 	afterNavigate(() => {
 		state.switch_exercise(data.exercise);
-		$scope = data.exercise.scope;
 	});
-
-	/**
-	 * @param {CustomEvent<import('$lib/types').FileStub>} event
-	 */
-	function update_stub(event) {
-		const stub = event.detail;
-		state.update_file(stub);
-	}
 </script>
 
 <svelte:head>
@@ -85,14 +73,7 @@
 				<section slot="a">
 					<SplitPane type="horizontal" min="80px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
-							<Filetree
-								{scope}
-								endstate={solution}
-								files={stubs}
-								readonly={mobile}
-								constraints={editing_constraints}
-								{selected}
-							/>
+							<Filetree readonly={mobile} />
 
 							<button
 								class:completed={$completed}
@@ -110,12 +91,7 @@
 						</section>
 
 						<section class="editor-container" slot="b">
-							<Editor
-								stubs={$stubs}
-								selected={$selected}
-								read_only={$mobile}
-								on:change={update_stub}
-							/>
+							<Editor read_only={$mobile} />
 							<ImageViewer selected={$selected} />
 						</section>
 					</SplitPane>
