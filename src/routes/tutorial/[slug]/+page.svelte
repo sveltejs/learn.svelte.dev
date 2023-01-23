@@ -14,6 +14,7 @@
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Filetree from '$lib/components/filetree/Filetree.svelte';
 	import { set_preserve_editor_focus } from './state';
+	import { create_adapter } from './adapter';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -94,7 +95,7 @@
 		}
 	}
 
-	/** @type {import('$lib/types').Adapter | undefined} */
+	/** @type {import('$lib/types').Adapter} Will be defined after first afterNavigate */
 	let adapter;
 	/** @type {string[]} */
 	let history_bwd = [];
@@ -142,7 +143,7 @@
 
 			await reset_adapter($files);
 
-			if (adapter && path !== data.exercise.path) {
+			if (path !== data.exercise.path) {
 				path = data.exercise.path;
 				set_iframe_src(adapter.base + path);
 			}
@@ -163,14 +164,19 @@
 	async function reset_adapter(stubs) {
 		let reload_iframe = true;
 		if (adapter) {
-			reload_iframe = await adapter.reset(stubs);
+			const result = await adapter.reset(stubs);
+			if (result === 'cancelled') {
+				return;
+			} else {
+				reload_iframe = result;
+			}
 		} else {
-			const module = await import('$lib/client/adapters/webcontainer/index.js');
-
-			adapter = await module.create(stubs, (p, s) => {
+			const _adapter = create_adapter(stubs, (p, s) => {
 				progress = p;
 				status = s;
 			});
+			adapter = _adapter;
+			await _adapter.init;
 
 			set_iframe_src(adapter.base + path);
 		}
@@ -179,7 +185,7 @@
 			let called = false;
 
 			window.addEventListener('message', function handler(e) {
-				if (e.origin !== adapter?.base) return;
+				if (e.origin !== adapter.base) return;
 				if (e.data.type === 'ping') {
 					window.removeEventListener('message', handler);
 					called = true;
@@ -188,7 +194,7 @@
 			});
 
 			setTimeout(() => {
-				if (!called && adapter) {
+				if (!called) {
 					// Updating the iframe too soon sometimes results in a blank screen,
 					// so we try again after a short delay if we haven't heard back
 					set_iframe_src(adapter.base + path);
@@ -217,7 +223,7 @@
 		const stub = event.detail;
 		const index = $files.findIndex((s) => s.name === stub.name);
 		$files[index] = stub;
-		adapter?.update([stub]).then((reload) => {
+		adapter.update([stub]).then((reload) => {
 			if (reload) {
 				schedule_iframe_reload();
 			}
@@ -230,9 +236,7 @@
 	function schedule_iframe_reload() {
 		clearTimeout(reload_timeout);
 		reload_timeout = setTimeout(() => {
-			if (adapter) {
-				set_iframe_src(adapter.base + path);
-			}
+			set_iframe_src(adapter.base + path);
 		}, 1000);
 	}
 
@@ -284,7 +288,7 @@
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
-				if ((dev && !iframe) || !adapter) return;
+				if (dev && !iframe) return;
 
 				// we lost contact, refresh the page
 				loading = true;
@@ -333,11 +337,9 @@
 
 	/** @param {string} path */
 	function route_to(path) {
-		if (adapter) {
-			const url = new URL(path, adapter.base);
-			path = url.pathname + url.search + url.hash;
-			set_iframe_src(adapter.base + path);
-		}
+		const url = new URL(path, adapter.base);
+		path = url.pathname + url.search + url.hash;
+		set_iframe_src(adapter.base + path);
 	}
 
 	/** @param {string | null} new_path */
@@ -470,9 +472,7 @@
 						{path}
 						{loading}
 						on:refresh={() => {
-							if (adapter) {
-								set_iframe_src(adapter.base + path);
-							}
+							set_iframe_src(adapter.base + path);
 						}}
 						on:change={(e) => nav_to(e.detail.value)}
 						on:back={go_bwd}

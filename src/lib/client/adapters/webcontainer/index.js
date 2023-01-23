@@ -6,13 +6,10 @@ import { ready } from '../common/index.js';
 /** @type {import('@webcontainer/api').WebContainer} Web container singleton */
 let vm;
 
-/** @type {Promise<import('$lib/types').Adapter>} */
-let promise;
-
 /**
  * @param {import('$lib/types').Stub[]} stubs
  * @param {(progress: number, status: string) => void} callback
- * @returns {Promise<import('$lib/types').Adapter>}
+ * @returns {Promise<import('$lib/types').AdapterInternal>}
  */
 export async function create(stubs, callback) {
 	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
@@ -21,22 +18,6 @@ export async function create(stubs, callback) {
 
 	callback(0, 'loading files');
 
-	if (!promise) {
-		promise = _create(stubs, callback);
-	} else {
-		const adapter = await promise;
-		await adapter.reset(stubs);
-	}
-
-	return promise;
-}
-
-/**
- * @param {import('$lib/types').Stub[]} stubs
- * @param {(progress: number, status: string) => void} callback
- * @returns {Promise<import('$lib/types').Adapter>}
- */
-async function _create(stubs, callback) {
 	/**
 	 * Keeps track of the latest create/reset to ensure things are not processed in parallel.
 	 * (if this turns out to be insufficient, we can use a queue)
