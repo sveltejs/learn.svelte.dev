@@ -1,8 +1,8 @@
 <script>
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
-	import Modal from '../Modal.svelte';
-	import { state } from '../../../routes/tutorial/[slug]/state.js';
+	import Modal from '$lib/components/Modal.svelte';
+	import { state } from '../state.js';
 
 	/** @type {import('svelte/store').Readable<import('$lib/types').Stub[]>} */
 	export let files;

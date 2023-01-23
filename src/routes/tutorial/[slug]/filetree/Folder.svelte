@@ -179,12 +179,12 @@
 		top: 0rem;
 		width: 1.2rem;
 		height: 100%;
-		background: url(../../icons/folder.svg) 0 45% no-repeat;
+		background: url(../../../../lib/icons/folder.svg) 0 45% no-repeat;
 		background-size: 100% auto;
 	}
 
 	.directory.expanded::before {
-		background-image: url(../../icons/folder-open.svg);
+		background-image: url(../../../../lib/icons/folder-open.svg);
 	}
 
 	ul {

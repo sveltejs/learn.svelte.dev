@@ -142,18 +142,18 @@
 	}
 
 	.icon.rename {
-		background-image: url(../../icons/rename.svg);
+		background-image: url(../../../../lib/icons/rename.svg);
 	}
 
 	.icon.delete {
-		background-image: url(../../icons/delete.svg);
+		background-image: url(../../../../lib/icons/delete.svg);
 	}
 
 	.icon.file-new {
-		background-image: url(../../icons/file-new.svg);
+		background-image: url(../../../../lib/icons/file-new.svg);
 	}
 
 	.icon.folder-new {
-		background-image: url(../../icons/folder-new.svg);
+		background-image: url(../../../../lib/icons/folder-new.svg);
 	}
 </style>

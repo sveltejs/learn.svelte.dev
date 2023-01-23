@@ -2,8 +2,8 @@
 	import Output from './Output.svelte';
 	import { browser, dev } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
-	import ContextMenu from '$lib/components/filetree/ContextMenu.svelte';
-	import Filetree from '$lib/components/filetree/Filetree.svelte';
+	import ContextMenu from './filetree/ContextMenu.svelte';
+	import Filetree from './filetree/Filetree.svelte';
 	import SplitPane from '$lib/components/SplitPane.svelte';
 	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
 	import { writable } from 'svelte/store';
