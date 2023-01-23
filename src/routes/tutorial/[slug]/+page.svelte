@@ -13,6 +13,7 @@
 	import Loading from './Loading.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Filetree from '$lib/components/filetree/Filetree.svelte';
+	import { set_preserve_editor_focus } from './state';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -292,6 +293,8 @@
 			}, 1000);
 		} else if (e.data.type === 'ping-pause') {
 			clearTimeout(timeout);
+		} else if (e.data.type === 'pointerdown') {
+			set_preserve_editor_focus(false);
 		}
 	}
 
