@@ -8,8 +8,7 @@
 
 	const { rename, remove, readonly } = context.get();
 
-	/** @type {'idle' | 'renaming'} */
-	let editing_state = 'idle';
+	let renaming = false;
 
 	$: can_remove = !$readonly && !$solution[file.name];
 
@@ -20,7 +19,7 @@
 					icon: 'rename',
 					label: 'Rename',
 					fn: () => {
-						editing_state = 'renaming';
+						renaming = true;
 					}
 				},
 				{
@@ -37,18 +36,18 @@
 <div class="row" class:selected={file.name === $selected?.name}>
 	<Item
 		can_rename={can_remove}
-		renaming={editing_state === 'renaming'}
+		{renaming}
 		basename={file.basename}
 		{actions}
 		on:click={() => state.select_file(file.name)}
 		on:edit={() => {
-			editing_state = 'renaming';
+			renaming = true;
 		}}
 		on:rename={(e) => {
 			rename(file, e.detail.basename);
 		}}
 		on:cancel={() => {
-			editing_state = 'idle';
+			renaming = false;
 		}}
 	/>
 </div>

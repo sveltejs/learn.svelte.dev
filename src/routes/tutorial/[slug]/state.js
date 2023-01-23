@@ -18,7 +18,7 @@ import { derived, writable } from 'svelte/store';
 /**
  * @type {import('svelte/store').Writable<State>}
  */
-const _state = writable({
+const { subscribe, set, update } = writable({
 	status: 'initial',
 	stubs: [],
 	selected: null,
@@ -34,100 +34,100 @@ const _state = writable({
 });
 
 export const state = {
-	subscribe: _state.subscribe,
+	subscribe,
+
 	/** @param {import('$lib/types').FileStub} file */
 	update_file: (file) => {
-		_state.update((state) => {
-			state.status = 'update';
-			state.stubs = state.stubs.map((stub) => {
+		update((state) => ({
+			...state,
+			status: 'update',
+			stubs: state.stubs.map((stub) => {
 				if (stub.name === file.name) {
 					return file;
 				}
 				return stub;
-			});
-			state.last_updated = file;
-			return state;
-		});
+			}),
+			last_updated: file
+		}));
 	},
+
 	/** @param {import('$lib/types').Stub[]} [stubs] */
 	set_stubs: (stubs) => {
-		_state.update((state) => {
-			state.status = 'set';
-			state.stubs = stubs || state.stubs;
-			state.last_updated = undefined;
-			return state;
-		});
+		update((state) => ({
+			...state,
+			status: 'set',
+			stubs: stubs ?? state.stubs,
+			last_updated: undefined
+		}));
 	},
+
 	/** @param {import('$lib/types').Exercise} exercise */
 	switch_exercise: (exercise) => {
-		_state.update((state) => {
-			const solution = { ...exercise.a };
-			const editing_constraints = {
-				create: exercise.editing_constraints.create,
-				remove: exercise.editing_constraints.remove
-			};
+		const solution = { ...exercise.a };
+		const editing_constraints = {
+			create: exercise.editing_constraints.create,
+			remove: exercise.editing_constraints.remove
+		};
 
-			// TODO should exercise.a/b be an array in the first place?
-			for (const stub of Object.values(exercise.b)) {
-				if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
-					// remove file
-					if (!editing_constraints.remove.includes(stub.name)) {
-						editing_constraints.remove.push(stub.name);
-					}
-					delete solution[stub.name];
-				} else if (stub.name.endsWith('/__delete')) {
-					// remove directory
-					const parent = stub.name.slice(0, stub.name.lastIndexOf('/'));
-					if (!editing_constraints.remove.includes(parent)) {
-						editing_constraints.remove.push(parent);
-					}
-					delete solution[parent];
-					for (const k in solution) {
-						if (k.startsWith(parent + '/')) {
-							delete solution[k];
-						}
-					}
-				} else {
-					if (!solution[stub.name] && !editing_constraints.create.includes(stub.name)) {
-						editing_constraints.create.push(stub.name);
-					}
-					solution[stub.name] = exercise.b[stub.name];
+		// TODO should exercise.a/b be an array in the first place?
+		for (const stub of Object.values(exercise.b)) {
+			if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
+				// remove file
+				if (!editing_constraints.remove.includes(stub.name)) {
+					editing_constraints.remove.push(stub.name);
 				}
+				delete solution[stub.name];
+			} else if (stub.name.endsWith('/__delete')) {
+				// remove directory
+				const parent = stub.name.slice(0, stub.name.lastIndexOf('/'));
+				if (!editing_constraints.remove.includes(parent)) {
+					editing_constraints.remove.push(parent);
+				}
+				delete solution[parent];
+				for (const k in solution) {
+					if (k.startsWith(parent + '/')) {
+						delete solution[k];
+					}
+				}
+			} else {
+				if (!solution[stub.name] && !editing_constraints.create.includes(stub.name)) {
+					editing_constraints.create.push(stub.name);
+				}
+				solution[stub.name] = exercise.b[stub.name];
 			}
+		}
 
-			state.status = 'switch';
-			state.stubs = Object.values(exercise.a);
-			state.exercise = {
+		set({
+			status: 'switch',
+			stubs: Object.values(exercise.a),
+			exercise: {
 				initial: Object.values(exercise.a),
 				solution,
 				editing_constraints,
 				scope: exercise.scope
-			};
-			state.last_updated = undefined;
-			state.selected = exercise.focus;
-			return state;
+			},
+			last_updated: undefined,
+			selected: exercise.focus
 		});
 	},
+
 	toggle_completion: () => {
-		_state.update((state) => {
-			if (is_completed(state)) {
-				state.stubs = state.exercise.initial;
-			} else {
-				state.stubs = Object.values(state.exercise.solution);
-			}
-			state.status = 'set';
-			state.last_updated = undefined;
-			return state;
-		});
+		update((state) => ({
+			...state,
+			status: 'set',
+			stubs: is_completed(state) ? state.exercise.initial : Object.values(state.exercise.solution),
+			last_updated: undefined
+		}));
 	},
+
 	/** @param {string | null} name */
 	select_file: (name) => {
-		_state.update((state) => {
-			state.status = 'select';
-			state.selected = name;
-			state.last_updated = undefined;
-			return state;
-		});
+		update((state) => ({
+			...state,
+			status: 'select',
+			selected: name,
+			last_updated: undefined
+		}));
 	}
 };
 
