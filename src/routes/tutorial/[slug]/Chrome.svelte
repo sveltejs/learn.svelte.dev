@@ -1,7 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import back from './back.svg';
-	import forward from './forward.svg';
+	import chevron from './chevron.svg';
 	import refresh from './refresh.svg';
 
 	/** @type {string} */
@@ -23,12 +22,17 @@
 
 <div class="chrome">
 	<button disabled={disabledBwd} on:click={() => dispatch('back')} aria-label="go back">
-		<img src={back} alt="Back icon" />
+		<img src={chevron} alt="Back icon" />
 	</button>
 	<button disabled={disabledFwd} on:click={() => dispatch('forward')} aria-label="go forward">
-		<img src={forward} alt="Forward icon" />
+		<img src={chevron} style="transform: rotate(180deg)" alt="Forward icon" />
 	</button>
-	<button class="refresh" disabled={loading} on:click={() => dispatch('refresh')} aria-label="reload">
+	<button
+		class="refresh"
+		disabled={loading}
+		on:click={() => dispatch('refresh')}
+		aria-label="reload"
+	>
 		<img src={refresh} alt="Reload icon" />
 	</button>
 
@@ -97,11 +101,11 @@
 	}
 
 	.chrome button[disabled] img {
-		opacity: .2;
+		opacity: 0.5;
 	}
 
 	.chrome button img {
-		opacity: .6;
+		opacity: 0.8;
 	}
 
 	.chrome button:hover img,
