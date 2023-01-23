@@ -9,7 +9,7 @@ This app fetches data from a `/roll` API route when you click the button. Create
 ```js
 /// file: src/routes/roll/+server.js
 export function GET() {
-	const number = Math.ceil(Math.random() * 6);
+	const number = Math.floor(Math.random() * 6) + 1;
 
 	return new Response(number, {
 		headers: {
@@ -28,7 +28,7 @@ Request handlers must return a [Response](https://developer.mozilla.org/en-US/do
 +++import { json } from '@sveltejs/kit';+++
 
 export function GET() {
-	const number = Math.ceil(Math.random() * 6);
+	const number = Math.floor(Math.random() * 6) + 1;
 
 ---	return new Response(number, {
 		headers: {
