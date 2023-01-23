@@ -2,8 +2,6 @@
 title: Textarea inputs
 ---
 
-> This exercise doesn't currently work. You can switch to the old tutorial instead: https://svelte.dev/tutorial/textarea-inputs
-
 The `<textarea>` element behaves similarly to a text input in Svelte — use `bind:value`:
 
 ```svelte
