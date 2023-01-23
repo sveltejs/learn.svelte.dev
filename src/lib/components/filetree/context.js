@@ -3,8 +3,8 @@ import { setContext, getContext } from 'svelte';
 /**
  * @typedef {{
  *   endstate: import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>;
- *   files: import('svelte/store').Writable<import('$lib/types').Stub[]>;
- *   selected: import('svelte/store').Writable<import('$lib/types').FileStub | null>;
+ *   files: import('svelte/store').Readable<import('$lib/types').Stub[]>;
+ *   selected: import('svelte/store').Readable<import('$lib/types').FileStub | null>;
  *   readonly: import('svelte/store').Writable<boolean>;
  * 	 scope: import('svelte/store').Writable<import('$lib/types').Scope>;
  *   select: (file: import('$lib/types').FileStub) => void;

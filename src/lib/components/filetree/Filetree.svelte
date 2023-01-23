@@ -1,10 +1,10 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '../Modal.svelte';
+	import { state } from '../../../routes/tutorial/[slug]/state.js';
 
-	/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
+	/** @type {import('svelte/store').Readable<import('$lib/types').Stub[]>} */
 	export let files;
 
 	/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
@@ -19,12 +19,10 @@
 	/** @type {import('svelte/store').Writable<import('$lib/types').EditingConstraints>} */
 	export let constraints;
 
-	/** @type {import('svelte/store').Writable<import('$lib/types').FileStub | null> }*/
+	/** @type {import('svelte/store').Readable<import('$lib/types').FileStub | null> }*/
 	export let selected;
 
 	let modal_text = '';
-
-	const dispatch = createEventDispatcher();
 
 	const hidden = new Set(['__client.js', 'node_modules']);
 
@@ -36,7 +34,7 @@
 		scope,
 
 		select: async (file) => {
-			selected.set(file);
+			state.select(file.name);
 		},
 
 		add: async (name, type) => {
@@ -61,14 +59,12 @@
 					contents: ''
 				};
 
-				selected.set(stub);
+				state.select(stub.name);
 			} else {
 				stub = { type: 'directory', name, basename };
 			}
 
-			$files = [...$files, ...create_directories(name, $files), stub];
-
-			dispatch('change');
+			state.reset([...$files, ...create_directories(name, $files), stub]);
 		},
 
 		rename: async (to_rename, new_name) => {
@@ -104,9 +100,7 @@
 			to_rename.basename = /** @type {string} */ (new_full_name.split('/').pop());
 			to_rename.name = new_full_name;
 
-			$files = [...$files, ...create_directories(new_full_name, $files)];
-
-			dispatch('change');
+			state.reset([...$files, ...create_directories(new_full_name, $files)]);
 		},
 
 		remove: async (stub) => {
@@ -117,15 +111,14 @@
 				return;
 			}
 
-			selected.set(null);
-
-			$files = $files.filter((s) => {
-				if (s === stub) return false;
-				if (s.name.startsWith(stub.name + '/')) return false;
-				return true;
-			});
-
-			dispatch('change');
+			state.select(null);
+			state.reset(
+				$files.filter((s) => {
+					if (s === stub) return false;
+					if (s.name.startsWith(stub.name + '/')) return false;
+					return true;
+				})
+			);
 		}
 	});
 
