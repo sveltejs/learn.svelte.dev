@@ -36,7 +36,7 @@ const _state = writable({
 export const state = {
 	subscribe: _state.subscribe,
 	/** @param {import('$lib/types').FileStub} file */
-	update_file: (file) =>
+	update_file: (file) => {
 		_state.update((state) => {
 			state.status = 'update';
 			state.stubs = state.stubs.map((stub) => {
@@ -47,17 +47,19 @@ export const state = {
 			});
 			state.last_updated = file;
 			return state;
-		}),
+		});
+	},
 	/** @param {import('$lib/types').Stub[]} [stubs] */
-	set_stubs: (stubs) =>
+	set_stubs: (stubs) => {
 		_state.update((state) => {
 			state.status = 'set';
 			state.stubs = stubs || state.stubs;
 			state.last_updated = undefined;
 			return state;
-		}),
+		});
+	},
 	/** @param {import('$lib/types').Exercise} exercise */
-	switch_exercise: (exercise) =>
+	switch_exercise: (exercise) => {
 		_state.update((state) => {
 			const solution = { ...exercise.a };
 			const editing_constraints = {
@@ -104,8 +106,9 @@ export const state = {
 			state.last_updated = undefined;
 			state.selected = exercise.focus;
 			return state;
-		}),
-	toggle_completion: () =>
+		});
+	},
+	toggle_completion: () => {
 		_state.update((state) => {
 			if (is_completed(state)) {
 				state.stubs = state.exercise.initial;
@@ -115,15 +118,17 @@ export const state = {
 			state.status = 'set';
 			state.last_updated = undefined;
 			return state;
-		}),
+		});
+	},
 	/** @param {string | null} name */
-	select_file: (name) =>
+	select_file: (name) => {
 		_state.update((state) => {
 			state.status = 'select';
 			state.selected = name;
 			state.last_updated = undefined;
 			return state;
-		})
+		});
+	}
 };
 
 export const stubs = derived(state, ($state) => $state.stubs);
