@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/stores';
 	import { slide } from 'svelte/transition';
-	import arrow from './arrow.svg';
+	import arrow from '$lib/icons/arrow.svg';
 
 	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
 	import { browser } from '$app/environment';

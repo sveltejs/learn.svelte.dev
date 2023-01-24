@@ -1,6 +1,7 @@
 <script>
 	import { dev } from '$app/environment';
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
+	import { stubs, selected, state } from './state.js';
 
 	/**
 	 * file extension -> monaco language
@@ -18,13 +19,7 @@
 	 * */
 	const models = new Map();
 
-	/** @type {import('$lib/types').Stub[]} */
-	export let stubs;
-	/** @type {import('$lib/types').Stub | null} */
-	export let selected = null;
 	export let read_only = false;
-
-	const dispatch = createEventDispatcher();
 
 	/** @type {HTMLDivElement} */
 	let container;
@@ -35,7 +30,7 @@
 	let w = 0;
 	let h = 0;
 
-	/** 
+	/**
 	 * The iframe sometimes takes focus control in ways we can't prevent
 	 * while the editor is focussed. Refocus the editor in these cases.
 	 * This boolean tracks whether or not the editor should be refocused.
@@ -209,7 +204,7 @@
 
 				if (notify) {
 					stub.contents = contents;
-					dispatch('change', stub);
+					state.update_file(stub);
 				}
 			});
 
@@ -225,15 +220,15 @@
 	}
 
 	$: if (instance) {
-		instance.update_files(stubs);
+		instance.update_files($stubs);
 	}
 
 	$: if (instance) {
 		instance.editor.updateOptions({ readOnly: read_only });
 	}
 
-	$: if (instance && stubs /* to retrigger on stubs change */) {
-		const model = selected && models.get(selected.name);
+	$: if (instance && $stubs /* to retrigger on stubs change */) {
+		const model = $selected && models.get($selected.name);
 		instance.editor.setModel(model ?? null);
 	}
 
@@ -263,7 +258,7 @@
 			// because else navigations inside the iframe refocus the editor.
 			remove_focus_timeout = setTimeout(() => {
 				preserve_focus = false;
-			}, 500)
+			}, 500);
 		}}
 	/>
 </div>
