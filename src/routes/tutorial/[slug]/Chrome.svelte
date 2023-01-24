@@ -1,6 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import refresh from './refresh.svg';
+	import refresh from '$lib/icons/refresh.svg';
 
 	/** @type {string} */
 	export let path;
