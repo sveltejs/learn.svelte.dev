@@ -213,7 +213,7 @@
 		if (new_path) {
 			ignore_path_change = true;
 			[history_bwd, history_fwd] = [history_bwd.slice(0, -1), [path, ...history_fwd]];
-			route_to(new_path);
+			iframe.contentWindow?.postMessage({ type: 'goto', path: new_path }, '*');
 		}
 	}
 
@@ -222,7 +222,7 @@
 		if (new_path) {
 			ignore_path_change = true;
 			[history_bwd, history_fwd] = [[...history_bwd, path], history_fwd.slice(1)];
-			route_to(new_path);
+			iframe.contentWindow?.postMessage({ type: 'goto', path: new_path }, '*');
 		}
 	}
 </script>

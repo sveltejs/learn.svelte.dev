@@ -15,53 +15,21 @@ window.alert = (message) => {
 };
 
 window.addEventListener('message', async (e) => {
-	if (e.data.type === 'fetch') {
-		const names = e.data.names;
-
-		const transformed = await Promise.all(
-			names.map(async (name) => {
-				const res = await fetch(name);
-				return {
-					name,
-					code: await res.text()
-				};
-			})
-		);
-
-		const css_files = [];
-
-		for (const { name, code } of transformed) {
-			if (
-				name.endsWith('.svelte') &&
-				code.includes('svelte&type=style&lang.css')
-			) {
-				css_files.push(name + '?svelte&type=style&lang.css');
-			}
-		}
-
-		if (css_files.length > 0) {
-			const css_transformed = await Promise.all(
-				css_files.map(async (name) => {
-					const res = await fetch(name);
-					return {
-						name,
-						code: await res.text()
-					};
-				})
-			);
-
-			transformed.push(...css_transformed);
-		}
-
-		parent.postMessage(
-			{
-				type: 'fetch-result',
-				data: transformed
-			},
-			'*'
-		);
+	// Belts and braces against malicious messages
+	if (e.data.type === 'goto' && e.data.path?.startsWith('/')) {
+		// SvelteKit's client.js will pick this up
+		const a = document.createElement('a');
+		a.href = e.data.path;
+		document.firstElementChild.append(a);
+		a.click();
+		a.remove();
 	}
 });
+
+history.pushState = function (state, title, url) {
+	// Don't create a new history entry for better back/forward navigation in the parent window
+	history.replaceState(state, title, url);
+};
 
 function ping() {
 	parent.postMessage(
@@ -90,7 +58,7 @@ if (import.meta.hot) {
 	});
 }
 
-/** 
+/**
  * The iframe sometimes takes focus control in ways we can't prevent
  * while the editor is focussed. Refocus the editor in these cases.
  */
