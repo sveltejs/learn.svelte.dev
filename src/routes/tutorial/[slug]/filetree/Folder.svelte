@@ -3,6 +3,7 @@
 	import * as context from './context.js';
 	import { get_depth } from '$lib/utils';
 	import Item from './Item.svelte';
+	import { stubs, solution, scope } from '../state.js';
 
 	export let expanded = true;
 
@@ -21,7 +22,7 @@
 	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
 	let state = 'idle';
 
-	const { endstate, files: all_files, rename, add, remove, readonly, scope } = context.get();
+	const { rename, add, remove, readonly } = context.get();
 
 	$: children = files
 		.filter((file) => file.name.startsWith(prefix))
@@ -44,7 +45,7 @@
 		if (!$readonly) {
 			const child_prefixes = [];
 
-			for (const stub of $all_files) {
+			for (const stub of $stubs) {
 				if (
 					stub.type === 'directory' &&
 					stub.name.startsWith(prefix) &&
@@ -54,11 +55,11 @@
 				}
 			}
 
-			for (const stub of Object.values($endstate)) {
+			for (const stub of Object.values($solution)) {
 				if (!stub.name.startsWith(prefix)) continue;
 
-				// if already exists in $files, bail
-				if ($all_files.find((s) => s.name === stub.name)) continue;
+				// if already exists in $stubs, bail
+				if ($stubs.find((s) => s.name === stub.name)) continue;
 
 				// if intermediate directory exists, bail
 				if (child_prefixes.some((prefix) => stub.name.startsWith(prefix))) continue;
@@ -69,7 +70,7 @@
 	}
 
 	// fake root directory has no name
-	$: can_remove = !$readonly && directory.name ? !$endstate[directory.name] : false;
+	$: can_remove = !$readonly && directory.name ? !$solution[directory.name] : false;
 
 	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
 	$: actions = [
@@ -179,12 +180,12 @@
 		top: 0rem;
 		width: 1.2rem;
 		height: 100%;
-		background: url(../../icons/folder.svg) 0 45% no-repeat;
+		background: url(../../../../lib/icons/folder.svg) 0 45% no-repeat;
 		background-size: 100% auto;
 	}
 
 	.directory.expanded::before {
-		background-image: url(../../icons/folder-open.svg);
+		background-image: url(../../../../lib/icons/folder-open.svg);
 	}
 
 	ul {
