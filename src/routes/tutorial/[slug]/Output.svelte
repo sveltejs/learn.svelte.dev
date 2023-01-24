@@ -57,11 +57,7 @@
 			}
 		});
 
-		function on_iframe_load() {
-			iframe.classList.add('loaded');
-		}
 		function destroy() {
-			iframe.removeEventListener('load', on_iframe_load);
 			unsub();
 			if (adapter) {
 				adapter.destroy();
@@ -69,7 +65,6 @@
 		}
 
 		document.addEventListener('pagehide', destroy);
-		iframe.addEventListener('load', on_iframe_load);
 		return destroy;
 	});
 
@@ -99,7 +94,7 @@
 			adapter = _adapter;
 			await _adapter.init;
 
-			set_iframe_src(adapter.base + path);
+			iframe.src = adapter.base + path;
 		}
 
 		await new Promise((fulfil, reject) => {
@@ -118,7 +113,7 @@
 				if (!called) {
 					// Updating the iframe too soon sometimes results in a blank screen,
 					// so we try again after a short delay if we haven't heard back
-					set_iframe_src(adapter.base + path);
+					iframe.src = adapter.base + path;
 				}
 			}, 5000);
 
@@ -131,7 +126,7 @@
 
 		if (reload_iframe) {
 			await new Promise((fulfil) => setTimeout(fulfil, 200));
-			set_iframe_src(adapter.base + path);
+			iframe.src = adapter.base + path;
 		}
 
 		return adapter;
@@ -142,7 +137,7 @@
 	function schedule_iframe_reload() {
 		clearTimeout(reload_timeout);
 		reload_timeout = setTimeout(() => {
-			set_iframe_src(adapter.base + path);
+			iframe.src = adapter.base + path;
 		}, 1000);
 	}
 
@@ -172,7 +167,7 @@
 
 				// we lost contact, refresh the page
 				loading = true;
-				set_iframe_src(adapter.base + path);
+				iframe.src = adapter.base + path;
 				loading = false;
 			}, 1000);
 		} else if (e.data.type === 'ping-pause') {
@@ -180,23 +175,11 @@
 		}
 	}
 
-	/** @param {string} src */
-	function set_iframe_src(src) {
-		// removing the iframe from the document allows us to
-		// change the src without adding a history entry, which
-		// would make back/forward traversal very annoying
-		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
-		iframe.classList.remove('loaded');
-		parentNode?.removeChild(iframe);
-		iframe.src = src;
-		parentNode?.appendChild(iframe);
-	}
-
 	/** @param {string} path */
 	function route_to(path) {
 		const url = new URL(path, adapter.base);
 		path = url.pathname + url.search + url.hash;
-		set_iframe_src(adapter.base + path);
+		iframe.src = adapter.base + path;
 	}
 
 	/** @param {string | null} new_path */
@@ -234,7 +217,7 @@
 	{path}
 	{loading}
 	on:refresh={() => {
-		set_iframe_src(adapter.base + path);
+		iframe.src = adapter.base + path;
 	}}
 	on:change={(e) => nav_to(e.detail.value)}
 	on:back={go_bwd}
@@ -271,9 +254,5 @@
 		box-sizing: border-box;
 		border: none;
 		background: var(--sk-back-2);
-	}
-
-	iframe:not(.loaded) {
-		display: none;
 	}
 </style>
