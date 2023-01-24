@@ -41,12 +41,7 @@
 
 				try {
 					clearTimeout(timeout);
-					await reset_adapter(state.stubs);
-
-					if (state.status === 'switch') {
-						set_iframe_src(adapter.base + path);
-					}
-
+					await reset_adapter(state);
 					initial = false;
 				} catch (e) {
 					error = /** @type {Error} */ (e);
@@ -56,7 +51,7 @@
 				loading = false;
 			} else if (state.status === 'update' && state.last_updated) {
 				const reload = await adapter.update([state.last_updated]);
-				if (reload) {
+				if (reload === true) {
 					schedule_iframe_reload();
 				}
 			}
@@ -85,19 +80,19 @@
 
 	/**
 	 * Loads the adapter initially or resets it. This method can throw.
-	 * @param {import('$lib/types').Stub[]} stubs
+	 * @param {import('./state').State} state
 	 */
-	async function reset_adapter(stubs) {
+	async function reset_adapter(state) {
 		let reload_iframe = true;
 		if (adapter) {
-			const result = await adapter.reset(stubs);
+			const result = await adapter.reset(state.stubs);
 			if (result === 'cancelled') {
 				return;
 			} else {
-				reload_iframe = result;
+				reload_iframe = result || state.status === 'switch';
 			}
 		} else {
-			const _adapter = create_adapter(stubs, (p, s) => {
+			const _adapter = create_adapter(state.stubs, (p, s) => {
 				progress = p;
 				status = s;
 			});
