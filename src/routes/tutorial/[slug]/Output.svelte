@@ -161,7 +161,6 @@
 		// change the src without adding a history entry, which
 		// would make back/forward traversal very annoying
 		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
-		iframe.classList.remove('loaded');
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
