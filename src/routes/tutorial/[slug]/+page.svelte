@@ -11,7 +11,7 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import { state, selected, completed, set_preserve_editor_focus } from './state.js';
+	import { state, selected, completed } from './state.js';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
