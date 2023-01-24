@@ -117,6 +117,7 @@
 	.content {
 		display: flex;
 		flex-direction: column;
+		position: relative;
 		min-height: 0;
 		height: 100%;
 		max-height: 100%;
@@ -157,20 +158,6 @@
 	.preview {
 		display: flex;
 		flex-direction: column;
-	}
-
-	.content {
-		position: relative;
-	}
-
-	iframe {
-		width: 100%;
-		height: 100%;
-		flex: 1;
-		resize: none;
-		box-sizing: border-box;
-		border: none;
-		background: var(--sk-back-2);
 	}
 
 	.editor-container {
