@@ -98,36 +98,7 @@
 				</section>
 
 				<section slot="b" class="preview">
-<<<<<<< HEAD
-					<Chrome
-						{path}
-						{loading}
-						on:refresh={() => {
-							if (adapter) {
-								set_iframe_src(adapter.base + path);
-							}
-						}}
-						on:change={(e) => {
-							if (adapter) {
-								const url = new URL(e.detail.value, adapter.base);
-								path = url.pathname + url.search + url.hash;
-								set_iframe_src(adapter.base + path);
-							}
-						}}
-					/>
-
-					<div class="content">
-						{#if browser}
-							<iframe bind:this={iframe} title="Output" />
-						{/if}
-
-						{#if loading || error}
-							<Loading {initial} {error} {progress} {status} />
-						{/if}
-					</div>
-=======
 					<Output path={data.exercise.path} />
->>>>>>> main
 				</section>
 			</SplitPane>
 		</section>
