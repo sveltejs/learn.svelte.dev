@@ -5,7 +5,7 @@
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
 	import { create_adapter } from './adapter';
-	import { state } from './state';
+	import { state } from './state.js';
 
 	/** @type {string} */
 	export let path;

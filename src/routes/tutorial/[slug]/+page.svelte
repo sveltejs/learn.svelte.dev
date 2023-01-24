@@ -11,7 +11,7 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import { state, selected, completed } from './state';
+	import { state, selected, completed } from './state.js';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -158,20 +158,6 @@
 	.preview {
 		display: flex;
 		flex-direction: column;
-	}
-
-	iframe {
-		width: 100%;
-		height: 100%;
-		flex: 1;
-		resize: none;
-		box-sizing: border-box;
-		border: none;
-		background: var(--sk-back-2);
-	}
-
-	iframe:not(.loaded) {
-		display: none;
 	}
 
 	.editor-container {
