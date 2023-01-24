@@ -214,8 +214,4 @@
 		border: none;
 		background: var(--sk-back-2);
 	}
-
-	iframe:not(.loaded) {
-		display: none;
-	}
 </style>
