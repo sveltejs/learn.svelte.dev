@@ -1,8 +1,9 @@
 /**
  * @param {import('$lib/types').Stub[]} stubs
- * @returns {Promise<import('$lib/types').Adapter>}
+ * @param {(progress: number, status: string) => void} cb
+ * @returns {Promise<import('$lib/types').AdapterInternal>}
  */
-export async function create(stubs) {
+export async function create(stubs, cb) {
 	const res = await fetch('/backend', {
 		method: 'post',
 		headers: {
@@ -21,6 +22,8 @@ export async function create(stubs) {
 			console[payload.type === 'stdout' ? 'log' : 'error'](payload.data);
 		}
 	});
+
+	cb(100, 'Ready');
 
 	return {
 		base: `http://localhost:${port}`,
