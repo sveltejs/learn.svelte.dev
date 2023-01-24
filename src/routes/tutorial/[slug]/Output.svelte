@@ -5,7 +5,7 @@
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
 	import { create_adapter } from './adapter';
-	import { set_preserve_editor_focus, state } from './state.js';
+	import { state } from './state.js';
 
 	/** @type {string} */
 	export let path;
@@ -177,8 +177,6 @@
 			}, 1000);
 		} else if (e.data.type === 'ping-pause') {
 			clearTimeout(timeout);
-		} else if (e.data.type === 'pointerdown') {
-			set_preserve_editor_focus(false);
 		}
 	}
 

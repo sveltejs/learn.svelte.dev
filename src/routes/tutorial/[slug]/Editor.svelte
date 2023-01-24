@@ -1,13 +1,7 @@
 <script>
 	import { dev } from '$app/environment';
 	import { onMount } from 'svelte';
-	import {
-		stubs,
-		selected,
-		state,
-		set_preserve_editor_focus,
-		preserve_editor_focus
-	} from './state.js';
+	import { stubs, selected, state } from './state.js';
 
 	/**
 	 * file extension -> monaco language
@@ -35,6 +29,8 @@
 
 	let w = 0;
 	let h = 0;
+
+	let preserve_editor_focus = false;
 
 	onMount(() => {
 		let destroyed = false;
@@ -238,7 +234,12 @@
 	on:pointerdown={(e) => {
 		console.log(`pointerdown ${container.contains(e.target)}`);
 		if (!container.contains(/** @type {HTMLElement} */ (e.target))) {
-			set_preserve_editor_focus(false);
+			preserve_editor_focus = false;
+		}
+	}}
+	on:message={(e) => {
+		if (e.data.type === 'pointerdown') {
+			preserve_editor_focus = false;
 		}
 	}}
 />
@@ -248,15 +249,15 @@
 		bind:this={container}
 		on:keydown={(e) => {
 			if (e.key === 'Tab') {
-				set_preserve_editor_focus(false);
+				preserve_editor_focus = false;
 
 				setTimeout(() => {
-					set_preserve_editor_focus(true);
+					preserve_editor_focus = true;
 				}, 100);
 			}
 		}}
 		on:focusin={() => {
-			set_preserve_editor_focus(true);
+			preserve_editor_focus = true;
 		}}
 		on:focusout={() => {
 			if (preserve_editor_focus) {
