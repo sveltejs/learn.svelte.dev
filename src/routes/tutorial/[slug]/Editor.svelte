@@ -232,7 +232,6 @@
 
 <svelte:window
 	on:pointerdown={(e) => {
-		console.log(`pointerdown ${container.contains(e.target)}`);
 		if (!container.contains(/** @type {HTMLElement} */ (e.target))) {
 			preserve_editor_focus = false;
 		}
@@ -253,18 +252,19 @@
 
 				setTimeout(() => {
 					preserve_editor_focus = true;
-				}, 100);
+				}, 200);
 			}
 		}}
 		on:focusin={() => {
 			preserve_editor_focus = true;
 		}}
 		on:focusout={() => {
-			if (preserve_editor_focus) {
-				setTimeout(() => {
+			// Little timeout, because inner postMessage event might take a little
+			setTimeout(() => {
+				if (preserve_editor_focus) {
 					instance?.editor.focus();
-				}, 0);
-			}
+				}
+			}, 100);
 		}}
 	/>
 </div>
