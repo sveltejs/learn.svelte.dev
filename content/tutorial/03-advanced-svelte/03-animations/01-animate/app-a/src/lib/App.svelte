@@ -50,6 +50,7 @@
 		background: #f4f4f4;
 		padding: 0.5em;
 		border: none;
+		color: black;
 	}
 
 	h2 {
