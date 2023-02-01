@@ -8,12 +8,13 @@ const iframe_selector = 'iframe[src*="webcontainer.io/"]';
 
 test('focus management: the editor keeps focus when iframe is loaded', async () => {
 	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = await context.newPage();
+	const page = context.pages()[0];
+	await page.bringToFront();
 
 	await page.goto('/tutorial/your-first-component');
 
 	// first, focus the editor before the iframe is loaded
-	await page.locator(editor_selector).click({ delay: 500 });
+	await page.locator(editor_selector).click({ delay: 1000 });
 
 	// at this time, expect focus to be on the editor
 	await expect(page.locator(editor_focus_selector)).toBeFocused();
@@ -32,7 +33,8 @@ test('focus management: the editor keeps focus when iframe is loaded', async () 
 
 test('focus management: input inside the iframe gets focus when clicking it', async () => {
 	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = await context.newPage();
+	const page = context.pages()[0];
+	await page.bringToFront();
 
 	await page.goto('/tutorial/named-form-actions');
 
@@ -42,7 +44,7 @@ test('focus management: input inside the iframe gets focus when clicking it', as
 	await iframe.getByText('todos').waitFor();
 
 	// first, focus the editor
-	await page.locator(editor_selector).click({ delay: 500 });
+	await page.locator(editor_selector).click({ delay: 1000 });
 	await expect(page.locator(editor_focus_selector)).toBeFocused();
 
 	// then, click a input in the iframe
@@ -61,7 +63,8 @@ test('focus management: input inside the iframe gets focus when clicking it', as
 
 test('focus management: body inside the iframe gets focus when clicking a link inside the iframe', async () => {
 	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = await context.newPage();
+	const page = context.pages()[0];
+	await page.bringToFront();
 
 	await page.goto('/tutorial/layouts');
 
@@ -71,7 +74,7 @@ test('focus management: body inside the iframe gets focus when clicking a link i
 	await iframe.getByText('this is the home page.').waitFor();
 
 	// first, focus the editor
-	await page.locator(editor_selector).click({ delay: 500 });
+	await page.locator(editor_selector).click({ delay: 1000 });
 	await expect(page.locator(editor_focus_selector)).toBeFocused();
 
 	// then, click a link in the iframe
@@ -91,7 +94,8 @@ test('focus management: body inside the iframe gets focus when clicking a link i
 
 test('focus management: the editor keeps focus while typing', async () => {
 	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = await context.newPage();
+	const page = context.pages()[0];
+	await page.bringToFront();
 
 	await page.goto('/tutorial/your-first-component');
 
