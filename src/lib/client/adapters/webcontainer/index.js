@@ -138,6 +138,9 @@ export async function create(stubs, callback) {
 				current_stubs.delete(stub.name);
 			}
 
+			const common_hidden_stubs = ['/node_modules', '/node_modules/.bin'];
+			common_hidden_stubs.forEach((name) => current_stubs.delete(name));
+
 			const to_delete = Array.from(current_stubs.keys());
 			current_stubs = stubs_to_map(stubs);
 
