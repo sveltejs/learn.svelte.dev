@@ -4,7 +4,9 @@ import AdmZip from 'adm-zip';
 const zip = new AdmZip('common.zip');
 zip.extractAllTo('.');
 
-fs.mkdirSync('node_modules/.bin');
+if (!fs.existsSync('node_modules/.bin')) {
+	fs.mkdirSync('node_modules/.bin');
+}
 
 fs.symlinkSync('../@sveltejs/kit/svelte-kit.js', 'node_modules/.bin/svelte-kit');
 fs.chmodSync('node_modules/.bin/svelte-kit', 0o777);
