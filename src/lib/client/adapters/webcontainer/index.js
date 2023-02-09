@@ -119,11 +119,6 @@ export async function create(stubs, callback) {
 			/** @type {import('$lib/types').Stub[]} */
 			const to_write = [];
 
-			/** @type {import('$lib/types').FileStub=} */
-			let previous_env;
-			/** @type {import('$lib/types').FileStub=} */
-			let new_env;
-
 			for (const stub of stubs) {
 				if (stub.type === 'file') {
 					const current = /** @type {import('$lib/types').FileStub} */ (
@@ -132,11 +127,6 @@ export async function create(stubs, callback) {
 
 					if (current?.contents !== stub.contents) {
 						to_write.push(stub);
-					}
-
-					if (stub.name === '/.env') {
-						previous_env = current;
-						new_env = stub;
 					}
 
 					if (!current) added_new_file = true;
@@ -158,7 +148,7 @@ export async function create(stubs, callback) {
 			// For some reason, server-ready is fired again when the vite dev server is restarted.
 			// We need to wait for it to finish before we can continue, else we might
 			// request files from Vite before it's ready, leading to a timeout.
-			const will_restart = will_restart_vite_dev_server(to_write, previous_env, new_env);
+			const will_restart = will_restart_vite_dev_server(to_write);
 			const promise = will_restart
 				? new Promise((fulfil, reject) => {
 						const error_unsub = vm.on('error', (error) => {
@@ -201,20 +191,7 @@ export async function create(stubs, callback) {
 			/** @type {import('@webcontainer/api').FileSystemTree} */
 			const root = {};
 
-			/** @type {import('$lib/types').FileStub=} */
-			let previous_env;
-			/** @type {import('$lib/types').FileStub=} */
-			let new_env;
-
 			for (const stub of stubs) {
-
-				if (stub.name === '/.env') {
-					previous_env = /** @type {import('$lib/types').FileStub=} */ (
-						current_stubs.get('/.env')
-					);
-					new_env = stub;
-				}
-
 				let tree = root;
 
 				const path = stub.name.split('/').slice(1);
@@ -242,7 +219,7 @@ export async function create(stubs, callback) {
 
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
-			return will_restart_vite_dev_server(stubs, previous_env, new_env);
+			return will_restart_vite_dev_server(stubs);
 		},
 		destroy: async () => {
 			vm.teardown();
@@ -254,20 +231,14 @@ export async function create(stubs, callback) {
 
 /**
  * @param {import('$lib/types').Stub[]} stubs
- * @param {import('$lib/types').FileStub=} previous_env
- * @param {import('$lib/types').FileStub=} new_env
  */
-function will_restart_vite_dev_server(stubs, previous_env, new_env) {
-
-	if (previous_env && new_env && previous_env.contents !== new_env.contents) {
-		return true;
-	}
-
+function will_restart_vite_dev_server(stubs) {
 	return stubs.some(
 		(stub) =>
 			stub.type === 'file' &&
 			(stub.name === '/vite.config.js' ||
-				stub.name === '/svelte.config.js')
+				stub.name === '/svelte.config.js' ||
+				stub.name === '/.env')
 	);
 }
 
