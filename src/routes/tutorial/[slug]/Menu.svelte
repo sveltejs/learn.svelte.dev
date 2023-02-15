@@ -178,7 +178,7 @@
 		<strong>{current.title}</strong>
 	</h1>
 
-	<a href={current.next ? `/tutorial/${current.next.slug}` : undefined} aria-label="Previous">
+	<a href={current.next ? `/tutorial/${current.next.slug}` : undefined} aria-label="Next">
 		<Icon name="arrow-right" size={16} />
 	</a>
 </header>
