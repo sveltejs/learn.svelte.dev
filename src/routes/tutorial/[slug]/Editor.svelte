@@ -48,6 +48,10 @@
 		import('$lib/client/monaco/monaco.js').then(({ monaco }) => {
 			if (destroyed) return;
 			instance = init(monaco, dark_mode);
+	
+			document.fonts.ready.then(() => {
+				monaco.editor.remeasureFonts();
+			});
 		});
 
 		/** @param {MediaQueryListEvent} event */
