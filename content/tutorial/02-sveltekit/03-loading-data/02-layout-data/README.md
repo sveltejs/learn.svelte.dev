@@ -5,9 +5,9 @@ path: /blog
 
 Just as `+layout.svelte` files create UI for every child route, `+layout.server.js` files load data for every child route.
 
-Suppose we'd like to add a 'more posts' sidebar to our blog post page. We _could_ return `summaries` from the `load` function in `src/blog/[slug]/+page.server.js`, like we do in `src/blog/+page.server.js`, but that would be repetitive.
+Suppose we'd like to add a 'more posts' sidebar to our blog post page. We _could_ return `summaries` from the `load` function in `src/routes/blog/[slug]/+page.server.js`, like we do in `src/routes/blog/+page.server.js`, but that would be repetitive.
 
-Instead, let's rename `src/blog/+page.server.js` to `src/blog/+layout.server.js`. Notice that the `/blog` route continues to work — `data.summaries` is still available to the page.
+Instead, let's rename `src/routes/blog/+page.server.js` to `src/routes/blog/+layout.server.js`. Notice that the `/blog` route continues to work — `data.summaries` is still available to the page.
 
 Now, create a layout for the post page:
 
