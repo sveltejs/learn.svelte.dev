@@ -19,4 +19,4 @@
 	</p>
 {/if}
 
-<button disabled={!yes}> Subscribe </button>
+<button disabled={!yes}>Subscribe</button>

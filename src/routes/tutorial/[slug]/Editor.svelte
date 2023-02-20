@@ -31,6 +31,8 @@
 	let h = 0;
 
 	let preserve_editor_focus = false;
+	/** @type {any} */
+	let remove_focus_timeout;
 
 	onMount(() => {
 		let destroyed = false;
@@ -46,6 +48,10 @@
 		import('$lib/client/monaco/monaco.js').then(({ monaco }) => {
 			if (destroyed) return;
 			instance = init(monaco, dark_mode);
+	
+			document.fonts.ready.then(() => {
+				monaco.editor.remeasureFonts();
+			});
 		});
 
 		/** @param {MediaQueryListEvent} event */
@@ -237,8 +243,8 @@
 		}
 	}}
 	on:message={(e) => {
-		if (e.data.type === 'pointerdown') {
-			preserve_editor_focus = false;
+		if (preserve_editor_focus && e.data.type === 'iframe_took_focus') {
+			instance?.editor.focus();
 		}
 	}}
 />
@@ -256,15 +262,16 @@
 			}
 		}}
 		on:focusin={() => {
+			clearTimeout(remove_focus_timeout);
 			preserve_editor_focus = true;
 		}}
-		on:focusout={() => {
-			// Little timeout, because inner postMessage event might take a little
-			setTimeout(() => {
-				if (preserve_editor_focus) {
-					instance?.editor.focus();
-				}
-			}, 100);
+		on:focusout={(e) => {
+			// Heuristic: user did refocus themmselves if iframe_took_focus
+			// doesn't happen in the next few miliseconds. Needed
+			// because else navigations inside the iframe refocus the editor.
+			remove_focus_timeout = setTimeout(() => {
+				preserve_editor_focus = false;
+			}, 200);
 		}}
 	/>
 </div>

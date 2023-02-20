@@ -138,6 +138,10 @@ export async function create(stubs, callback) {
 				current_stubs.delete(stub.name);
 			}
 
+			// Don't delete the node_modules folder when switching from one exercise to another
+			// where, as this crashes the dev server.
+			['/node_modules', '/node_modules/.bin'].forEach((name) => current_stubs.delete(name));
+
 			const to_delete = Array.from(current_stubs.keys());
 			current_stubs = stubs_to_map(stubs);
 
