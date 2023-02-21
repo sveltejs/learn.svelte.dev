@@ -30,6 +30,11 @@
 						third party cookies
 					</a> are enabled for this site, and disable Enhanced Tracking Protection.
 				</p>
+				<p>
+					If you have 'Delete cookies and site data when Firefox is closed' enabled in
+					<code>about:preferences#privacy</code>, make sure <code>learn.svelte.dev</code> is included
+					as an exception.
+				</p>
 			{:else if /chrome/i.test(navigator.userAgent) && !/edg/i.test(navigator.userAgent)}
 				<p>
 					We couldn't start the app. Please ensure third party cookies are enabled for this site —
@@ -46,8 +51,8 @@
 						/>
 					</svg>
 					icon in the URL bar or go to
-					<code>chrome://settings/cookies</code> and add learn.svelte.dev to 'Sites that can always use
-					cookies'.
+					<code>chrome://settings/cookies</code> and add <code>learn.svelte.dev</code> to 'Sites that
+					can always use cookies'.
 				</p>
 			{:else}
 				<p>
