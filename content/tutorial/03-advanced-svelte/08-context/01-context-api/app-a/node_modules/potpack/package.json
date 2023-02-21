@@ -1,0 +1,44 @@
+{
+  "name": "potpack",
+  "version": "2.0.0",
+  "description": "A tiny library for packing 2D rectangles (for sprite layouts)",
+  "main": "index.js",
+  "type": "module",
+  "exports": "./index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "pretest": "eslint *.js",
+    "test": "node test.js"
+  },
+  "eslintConfig": {
+    "extends": "mourner"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/potpack.git"
+  },
+  "keywords": [
+    "algorithms",
+    "sprites",
+    "bin packing",
+    "geometry",
+    "rectangles"
+  ],
+  "author": "Vladimir Agafonkin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mapbox/potpack/issues"
+  },
+  "homepage": "https://mapbox.github.io/potpack/",
+  "devDependencies": {
+    "@mapbox/shelf-pack": "^3.2.0",
+    "bin-pack": "^1.0.2",
+    "eslint": "^8.25.0",
+    "eslint-config-mourner": "^3.0.0",
+    "tape": "^5.6.1"
+  }
+}

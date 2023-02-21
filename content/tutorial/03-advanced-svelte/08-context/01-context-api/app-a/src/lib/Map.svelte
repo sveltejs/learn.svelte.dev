@@ -27,11 +27,7 @@
 
 <!-- this special element will be explained in a later chapter -->
 <svelte:head>
-	<link
-		rel="stylesheet"
-		href="https://unpkg.com/mapbox-gl/dist/mapbox-gl.css"
-		on:load={load}
-	/>
+	<link rel="stylesheet" href="/mapbox-gl.css" on:load={load} />
 </svelte:head>
 
 <div bind:this={container}>

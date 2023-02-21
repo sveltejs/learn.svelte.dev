@@ -1,0 +1,13 @@
+{
+	"name": "~TODO~",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "./node_modules/vite/bin/vite.js dev",
+		"build": "./node_modules/vite/bin/vite.js build",
+		"preview": "./node_modules/vite/bin/vite.js preview"
+	},
+	"dependencies": {
+		"mapbox-gl": "^2.13.0"
+	},
+	"type": "module"
+}

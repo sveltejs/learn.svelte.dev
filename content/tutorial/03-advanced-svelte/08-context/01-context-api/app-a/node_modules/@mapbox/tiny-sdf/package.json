@@ -1,0 +1,54 @@
+{
+  "name": "@mapbox/tiny-sdf",
+  "version": "2.0.6",
+  "description": "Browser-side SDF font generator",
+  "type": "module",
+  "main": "index.js",
+  "exports": "./index.js",
+  "typings": "./index.d.ts",
+  "scripts": {
+    "pretest": "eslint index.js index.html test",
+    "test": "node test/test.js",
+    "start": "st --no-cache --localhost --index index.html ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/tiny-sdf.git"
+  },
+  "keywords": [
+    "sdf",
+    "signed distance fields",
+    "font",
+    "canvas",
+    "text",
+    "distance transform"
+  ],
+  "author": "Vladimir Agafonkin",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/mapbox/tiny-sdf/issues"
+  },
+  "homepage": "https://github.com/mapbox/tiny-sdf#readme",
+  "files": [
+    "index.d.ts"
+  ],
+  "devDependencies": {
+    "canvas": "2.9.3",
+    "eslint": "^8.23.0",
+    "eslint-config-mourner": "^3.0.0",
+    "eslint-plugin-html": "^7.1.0",
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^6.0.0",
+    "st": "^3.0.0",
+    "tape": "^5.6.0"
+  },
+  "eslintConfig": {
+    "extends": "mourner",
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
+    "plugins": [
+      "html"
+    ]
+  }
+}
