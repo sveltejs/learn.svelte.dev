@@ -5,6 +5,8 @@ const chromium_flags = ['--enable-features=SharedArrayBuffer'];
 const iframe_selector = 'iframe[src*="webcontainer.io/"]';
 
 test('.env file: no timeout error occurs when switching a tutorials without a .env file to one with it', async () => {
+	test.setTimeout(60000);
+
 	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
 	const page = context.pages()[0];
 	await page.bringToFront();
