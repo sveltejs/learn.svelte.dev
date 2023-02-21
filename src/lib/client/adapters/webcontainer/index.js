@@ -183,6 +183,7 @@ export async function create(stubs, callback) {
 			// are not available until Vite is restarted. By creating a dummy `.env` file, it will
 			// be recognized as changed when the real `.env` file is loaded into the Webcontainer.
 			// This will invoke a restart of Vite. Hacky but it works.
+			// TODO: remove when https://github.com/vitejs/vite/issues/12127 is closed
 			if (!previous_env && current_stubs.has('/.env')) {
 				await vm.run({ command: 'touch', args: ['.env']});
 			}
