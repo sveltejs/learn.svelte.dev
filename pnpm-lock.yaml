@@ -11,7 +11,7 @@ specifiers:
   '@types/marked': ^4.0.8
   '@types/prismjs': ^1.26.0
   '@types/ws': ^8.5.4
-  '@webcontainer/api': ^0.0.8
+  '@webcontainer/api': ^1.0.2
   adm-zip: ^0.5.10
   base64-js: ^1.5.1
   diff: ^5.1.0
@@ -32,7 +32,7 @@ specifiers:
 
 dependencies:
   '@fontsource/roboto-mono': 4.5.10
-  '@webcontainer/api': 0.0.8
+  '@webcontainer/api': 1.0.2
   adm-zip: 0.5.10
   base64-js: 1.5.1
   marked: 4.2.12
@@ -667,8 +667,8 @@ packages:
       - supports-color
     dev: true
 
-  /@webcontainer/api/0.0.8:
-    resolution: {integrity: sha512-t285UFNMzz8mmJlfAP/mloJlN+rHuu5jmFCNW05WGT3FzJ0sNseU6WN5+TiTtWIfjiUfLPtJI6ndsgiTujkXAw==}
+  /@webcontainer/api/1.0.2:
+    resolution: {integrity: sha512-JyJSE/EuNmbv2l9M+GE254Z/s0A9Hma8gtc71co6ZznpCr1UyB70556xZapbd8fWcjOTb1sLGb0GnRx9Ofp9sA==}
     dev: false
 
   /abbrev/1.1.1:
