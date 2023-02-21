@@ -116,6 +116,10 @@ export async function create(stubs, callback) {
 
 			let added_new_file = false;
 
+			const previous_env = /** @type {import('$lib/types').FileStub=} */ (
+				current_stubs.get('/.env')
+			);
+
 			/** @type {import('$lib/types').Stub[]} */
 			const to_write = [];
 
@@ -173,6 +177,15 @@ export async function create(stubs, callback) {
 
 			for (const file of to_delete) {
 				await vm.fs.rm(file, { force: true, recursive: true });
+			}
+
+			// Adding a `.env` file does not restart Vite, but environment variables from `.env`
+			// are not available until Vite is restarted. By creating a dummy `.env` file, it will
+			// be recognized as changed when the real `.env` file is loaded into the Webcontainer.
+			// This will invoke a restart of Vite. Hacky but it works.
+			// TODO: remove when https://github.com/vitejs/vite/issues/12127 is closed
+			if (!previous_env && current_stubs.has('/.env')) {
+				await vm.run({ command: 'touch', args: ['.env']});
 			}
 
 			await vm.loadFiles(convert_stubs_to_tree(to_write));
