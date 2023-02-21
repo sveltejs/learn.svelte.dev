@@ -10,3 +10,12 @@ With `bind:value`, Svelte takes care of it for you:
 <input type=number bind:value={a} min=0 max=10>
 <input type=range bind:value={a} min=0 max=10>
 ```
+Note that you can write
+```svelte
+<input type=number>
+```
+or
+```svelte
+<input type="number">
+```
+Both ways will work!
