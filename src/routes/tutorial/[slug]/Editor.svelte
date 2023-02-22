@@ -48,7 +48,7 @@
 		import('$lib/client/monaco/monaco.js').then(({ monaco }) => {
 			if (destroyed) return;
 			instance = init(monaco, dark_mode);
-	
+
 			document.fonts.ready.then(() => {
 				monaco.editor.remeasureFonts();
 			});
@@ -265,7 +265,7 @@
 			clearTimeout(remove_focus_timeout);
 			preserve_editor_focus = true;
 		}}
-		on:focusout={(e) => {
+		on:focusout={() => {
 			// Heuristic: user did refocus themmselves if iframe_took_focus
 			// doesn't happen in the next few miliseconds. Needed
 			// because else navigations inside the iframe refocus the editor.
