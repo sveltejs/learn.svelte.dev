@@ -53,9 +53,8 @@ test.describe('.env file', () => {
 
 		// wait for the iframe to load
 		await iframe_locator.getByText('enter the passphrase').waitFor();
-		await iframe_locator.locator('input[name="passphrase"]').waitFor();
 
-		await page.waitForTimeout(1000);
+		await page.waitForTimeout(3000);
 
 		// login
 		// 'open sesame' is the environment variables loaded from `.env` file
