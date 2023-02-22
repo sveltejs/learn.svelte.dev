@@ -13,7 +13,6 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.30.0",
-		"@sveltejs/adapter-auto": "1.0.0-next.90",
 		"@sveltejs/adapter-vercel": "2.0.4",
 		"@sveltejs/kit": "^1.7.2",
 		"@sveltejs/site-kit": "^3.2.2",
