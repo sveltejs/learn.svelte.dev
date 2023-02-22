@@ -1,13 +1,12 @@
+/** @type {import('./$types').RequestHandler} */
 export async function GET({ request, params, fetch }) {
 	const request_headers = new Headers();
 
-	if (request.headers.has('range')) {
-		request_headers.set('range', request.headers.get('range'));
-	}
+	const range = request.headers.get('range');
+	const if_range = request.headers.get('if-range');
 
-	if (request.headers.has('if-range')) {
-		request_headers.set('if-range', request.headers.get('if-range'));
-	}
+	if (range) request_headers.set('range', range);
+	if (if_range) request_headers.set('if-range', if_range);
 
 	const response = await fetch(`https://sveltejs.github.io/assets/${params.path}`, {
 		headers: request_headers

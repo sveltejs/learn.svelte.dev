@@ -73,7 +73,7 @@ export async function create(stubs, callback) {
 			reject(new Error(error.message));
 		});
 
-		const ready_unsub = vm.on('server-ready', (port, base) => {
+		const ready_unsub = vm.on('server-ready', (_port, base) => {
 			ready_unsub();
 			callback(5 / 5, 'ready');
 			fulfil(base); // this will be the last thing that happens if everything goes well
