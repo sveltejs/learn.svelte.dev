@@ -1,14 +1,10 @@
-import { expect, test, chromium } from '@playwright/test';
-
-const chromium_flags = ['--enable-features=SharedArrayBuffer'];
+import { expect, test } from '@playwright/test';
 
 const iframe_selector = 'iframe[src*="webcontainer.io/"]';
 
-test('.env file: no timeout error occurs when switching a tutorials without a .env file to one with it', async () => {
-	test.setTimeout(60000);
-
-	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = context.pages()[0];
+test('.env file: no timeout error occurs when switching a tutorials without a .env file to one with it', async ({
+	page
+}) => {
 	await page.bringToFront();
 
 	await page.goto('/tutorial/welcome-to-svelte');
@@ -20,9 +16,9 @@ test('.env file: no timeout error occurs when switching a tutorials without a .e
 
 	// switch to another tutorial with a .env file
 	await page.click('header > h1', { delay: 200 });
-	await page.locator('button', { hasText: 'Part 4: Advanced SvelteKit' }).click({ delay: 200});
-	await page.locator('button', { hasText: 'Environment variables' }).click({ delay: 200});
-	await page.locator('a', { hasText: '$env/static/private' }).click({ delay: 200});
+	await page.locator('button', { hasText: 'Part 4: Advanced SvelteKit' }).click({ delay: 200 });
+	await page.locator('button', { hasText: 'Environment variables' }).click({ delay: 200 });
+	await page.locator('a', { hasText: '$env/static/private' }).click({ delay: 200 });
 
 	// wait for the iframe to load
 	await iframe_locator.getByText('enter the passphrase').waitFor();
@@ -34,13 +30,11 @@ test('.env file: no timeout error occurs when switching a tutorials without a .e
 	// expect no timeout error
 	await expect(page.getByText('Yikes!')).toBeHidden();
 	await expect(iframe_locator.getByText('enter the passphrase')).toBeVisible();
-
-	await context.close();
 });
 
-test('.env file: environment variables are available when switching a tutorial without a .env file to one with it', async () => {
-	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = context.pages()[0];
+test('.env file: environment variables are available when switching a tutorial without a .env file to one with it', async ({
+	page
+}) => {
 	await page.bringToFront();
 
 	await page.goto('/tutorial/welcome-to-svelte');
@@ -52,25 +46,22 @@ test('.env file: environment variables are available when switching a tutorial w
 
 	// switch to another tutorial with a .env file
 	await page.click('header > h1', { delay: 200 });
-	await page.locator('button', { hasText: 'Part 4: Advanced SvelteKit' }).click({ delay: 200});
-	await page.locator('button', { hasText: 'Environment variables' }).click({ delay: 200});
-	await page.locator('a', { hasText: '$env/dynamic/private' }).click({ delay: 200});
+	await page.locator('button', { hasText: 'Part 4: Advanced SvelteKit' }).click({ delay: 200 });
+	await page.locator('button', { hasText: 'Environment variables' }).click({ delay: 200 });
+	await page.locator('a', { hasText: '$env/dynamic/private' }).click({ delay: 200 });
 
 	// wait for the iframe to load
 	await iframe_locator.getByText('enter the passphrase').waitFor();
-	await iframe_locator.locator('input[name="passphrase"]').waitFor();
 
-	await page.waitForTimeout(500);
+	await page.waitForTimeout(3000);
 
 	// login
 	// 'open sesame' is the environment variables loaded from `.env` file
 	await iframe_locator.locator('input[name="passphrase"]').fill('open sesame');
-	await page.keyboard.press('Enter', { delay: 200 });
+	await page.keyboard.press('Enter', { delay: 1000 });
 
 	// expect to be able to login.
 	// Being able to log in means that environment variables are loaded.
 	await expect(iframe_locator.getByText('wrong passphrase!')).toBeHidden();
-	await expect(iframe_locator.locator('button', { hasText: 'log out'})).toBeEnabled();
-
-	await context.close();
+	await expect(iframe_locator.locator('button', { hasText: 'log out' })).toBeEnabled();
 });

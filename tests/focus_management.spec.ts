@@ -1,14 +1,10 @@
-import { expect, test, chromium } from '@playwright/test';
-
-const chromium_flags = ['--enable-features=SharedArrayBuffer'];
+import { expect, test } from '@playwright/test';
 
 const editor_selector = 'div.monaco-scrollable-element.editor-scrollable';
 const editor_focus_selector = 'textarea.inputarea.monaco-mouse-cursor-text';
 const iframe_selector = 'iframe[src*="webcontainer.io/"]';
 
-test('focus management: the editor keeps focus when iframe is loaded', async () => {
-	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = context.pages()[0];
+test('focus management: the editor keeps focus when iframe is loaded', async ({ page }) => {
 	await page.bringToFront();
 
 	await page.goto('/tutorial/your-first-component');
@@ -27,13 +23,9 @@ test('focus management: the editor keeps focus when iframe is loaded', async () 
 
 	// expect focus to be on the editor
 	await expect(page.locator(editor_focus_selector)).toBeFocused();
-
-	await context.close();
 });
 
-test('focus management: input inside the iframe gets focus when clicking it', async () => {
-	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = context.pages()[0];
+test('focus management: input inside the iframe gets focus when clicking it', async ({ page }) => {
 	await page.bringToFront();
 
 	await page.goto('/tutorial/named-form-actions');
@@ -49,7 +41,7 @@ test('focus management: input inside the iframe gets focus when clicking it', as
 
 	// then, click a input in the iframe
 	const input = iframe.locator('input[name="description"]');
-	await input.click({ delay: 500 });
+	await input.click({ delay: 1000 });
 
 	// wait a little, because there may be a script that manipulates focus
 	await page.waitForTimeout(1000);
@@ -57,13 +49,11 @@ test('focus management: input inside the iframe gets focus when clicking it', as
 	// expect focus to be on the input in the iframe, not the editor.
 	await expect(input).toBeFocused();
 	await expect(page.locator(editor_focus_selector)).not.toBeFocused();
-
-	await context.close();
 });
 
-test('focus management: body inside the iframe gets focus when clicking a link inside the iframe', async () => {
-	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = context.pages()[0];
+test('focus management: body inside the iframe gets focus when clicking a link inside the iframe', async ({
+	page
+}) => {
 	await page.bringToFront();
 
 	await page.goto('/tutorial/layouts');
@@ -88,13 +78,9 @@ test('focus management: body inside the iframe gets focus when clicking a link i
 
 	// expect focus to be on body in the iframe, not the editor.
 	await expect(iframe.locator('body')).toBeFocused();
-
-	await context.close();
 });
 
-test('focus management: the editor keeps focus while typing', async () => {
-	const context = await chromium.launchPersistentContext('', { args: chromium_flags });
-	const page = context.pages()[0];
+test('focus management: The editor keeps focus while typing', async ({ page }) => {
 	await page.bringToFront();
 
 	await page.goto('/tutorial/your-first-component');
@@ -114,7 +100,7 @@ test('focus management: the editor keeps focus while typing', async () => {
 	await page.waitForTimeout(500);
 
 	// type the code as a person would do it manually
-	await page.keyboard.type(`	export let data;`, { delay: 100 });
+	await page.keyboard.type(`	export let data;`, { delay: 150 });
 
 	// wait a little, because there may be a script that manipulates focus
 	await page.waitForTimeout(1000);
@@ -125,6 +111,4 @@ test('focus management: the editor keeps focus while typing', async () => {
 	const expected = '<script>\n  export let data;\n</script>\n<h1>Hello world!</h1>';
 
 	expect(received).toBe(expected);
-
-	await context.close();
 });
