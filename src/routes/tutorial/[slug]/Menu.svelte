@@ -36,20 +36,18 @@
 
 	$: filtered = index
 		.map((part, i) => {
-			const chapters = part.chapters
-				.map((chapter, i) => ({
-					...chapter,
-					label: String.fromCharCode(97 + i),
-					first: chapter.exercises[0].slug,
-					exercises: chapter.exercises.filter((exercise) => regex.test(exercise.title))
-				}))
-				.filter((chapter) => chapter.exercises.length > 0 || regex.test(chapter.title));
-
 			return {
-				...part,
-				label: i + 1,
-				first: part.chapters[0].exercises[0].slug,
-				chapters
+				slug: part.slug,
+				title: part.title,
+				chapters: part.chapters
+					.map((chapter) => ({
+						slug: chapter.slug,
+						title: chapter.title,
+						exercises: regex.test(chapter.title)
+							? chapter.exercises
+							: chapter.exercises.filter((exercise) => regex.test(exercise.title))
+					}))
+					.filter((chapter) => chapter.exercises.length > 0)
 			};
 		})
 		.filter((part) => part.chapters.length > 0 || regex.test(part.title));
@@ -102,7 +100,7 @@
 
 		<div class="exercises">
 			<ul>
-				{#each filtered as part (part.slug)}
+				{#each filtered as part, i (part.slug)}
 					<li
 						class="part"
 						class:expanded={part.slug === expanded_part}
@@ -117,7 +115,7 @@
 								}
 							}}
 						>
-							Part {part.label}: {part.title}
+							Part {i + 1}: {part.title}
 						</button>
 
 						{#if search.length >= 2 || part.slug === expanded_part}
