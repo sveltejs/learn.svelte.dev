@@ -6,6 +6,7 @@
 	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
 	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
+	import { tick } from 'svelte';
 
 	/** @type {import('$lib/types').PartStub[]}*/
 	export let index;
@@ -18,13 +19,16 @@
 	let is_open = false;
 	let search = '';
 
+	/** @type {HTMLInputElement} */
+	let search_input;
+
 	$: expanded_part = current.part.slug;
 	$: expanded_chapter = current.chapter.slug;
 
 	$: regex = new RegExp(`\\b${search.length >= 2 ? search : ''}`, 'i');
 
 	$: filtered = index
-		.map((part, i) => {
+		.map((part) => {
 			return {
 				slug: part.slug,
 				title: part.title,
@@ -81,6 +85,7 @@
 			<input
 				type="search"
 				placeholder="Search"
+				bind:this={search_input}
 				bind:value={search}
 				aria-hidden={!is_open ? 'true' : null}
 				tabindex={!is_open ? -1 : null}
@@ -159,7 +164,13 @@
 
 	<!-- we don't want this to be keyboard-navigable, because the menu button to the left does that job better -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<h1 on:click={() => (is_open = true)}>
+	<h1
+		on:click={async () => {
+			is_open = true;
+			await tick();
+			search_input.focus();
+		}}
+	>
 		{current.part.title} <span class="separator">/</span>
 		{current.chapter.title} <span class="separator">/</span>
 		<strong>{current.title}</strong>
