@@ -173,7 +173,7 @@
 	<!-- we don't want this to be keyboard-navigable, because the menu button to the left does that job better -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<h1 on:click={() => (is_open = true)}>
-		Part {current.part.index + 1} <span class="separator">/</span>
+		{current.part.title} <span class="separator">/</span>
 		{current.chapter.title} <span class="separator">/</span>
 		<strong>{current.title}</strong>
 	</h1>

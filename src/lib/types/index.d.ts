@@ -79,8 +79,6 @@ export interface ExerciseRaw {
 export interface ExerciseStub {
 	title: string;
 	slug: string;
-	prev: { slug: string } | null;
-	next: { slug: string; title: string } | null;
 }
 
 export interface ChapterStub {
