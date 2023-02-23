@@ -69,7 +69,9 @@ export function get_index() {
  * @returns {import('$lib/types').Exercise | undefined}
  */
 export function get_exercise(slug) {
-	const exercises = glob('*/*/*/README.md', { cwd: 'content/tutorial' });
+	const exercises = glob('[0-9][0-9]-*/[0-9][0-9]-*/[0-9][0-9]-*/README.md', {
+		cwd: 'content/tutorial'
+	});
 
 	/** @type {string[]} */
 	const chain = [];
@@ -117,9 +119,12 @@ export function get_exercise(slug) {
 			const { frontmatter, markdown } = extract_frontmatter(text, dir);
 			const { title, path = '/', focus } = frontmatter;
 
-			const prev = {
-				slug: exercises[i - 1]?.split('/')[2].slice(3)
-			};
+			const prev_slug = exercises[i - 1]?.split('/')[2].slice(3);
+			const prev = prev_slug
+				? {
+						slug: prev_slug
+				  }
+				: null;
 
 			let next = null;
 
@@ -131,6 +136,7 @@ export function get_exercise(slug) {
 
 				const dirs = next_exercise.split('/');
 				if (dirs[0] !== part_dir) {
+					console.log({ dirs, part_dir, next_exercise });
 					title = json(`content/tutorial/${dirs[0]}/meta.json`).title;
 				} else if (dirs[1] !== chapter_dir) {
 					title = json(`content/tutorial/${dirs[0]}/${dirs[1]}/meta.json`).title;
