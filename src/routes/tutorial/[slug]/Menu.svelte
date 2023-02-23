@@ -13,24 +13,13 @@
 	/** @type {import('$lib/types').Exercise} */
 	export let current;
 
+	const duration = browser && matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
+
 	let is_open = false;
 	let search = '';
 
-	let expanded_part = '';
-	let expanded_chapter = '';
-	let duration = 0;
-
-	// The following statements ensure that the select animation is not run during opening the menu
-	$: if (is_open || !is_open) {
-		expanded_part = current.part.slug;
-		expanded_chapter = current.chapter.slug;
-	}
-	$: if (is_open) {
-		duration = 0;
-		setTimeout(() => {
-			duration = browser && matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
-		}, 210);
-	}
+	$: expanded_part = current.part.slug;
+	$: expanded_chapter = current.chapter.slug;
 
 	$: regex = new RegExp(`\\b${search.length >= 2 ? search : ''}`, 'i');
 
