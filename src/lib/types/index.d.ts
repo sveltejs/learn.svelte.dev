@@ -40,7 +40,6 @@ export interface Exercise {
 	part: {
 		slug: string;
 		title: string;
-		index: number;
 	};
 	chapter: {
 		slug: string;
