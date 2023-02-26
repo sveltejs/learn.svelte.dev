@@ -12,7 +12,7 @@ Svelte is a tool for building web applications. Like other user interface framew
 
 These components are _compiled_ into small, efficient JavaScript modules that eliminate overhead traditionally associated with UI frameworks.
 
-You can build your entire app with Svelte (for example, using an application framework like [SvelteKit](https://kit.svelte.dev)), or you can add it incrementally to an existing codebase. You can also ship components as standalone packages that work anywhere.
+You can build your entire app with Svelte (for example, using an application framework like [SvelteKit](https://kit.svelte.dev), which this tutorial will cover), or you can add it incrementally to an existing codebase. You can also ship components as standalone packages that work anywhere.
 
 ## How to use this tutorial
 
