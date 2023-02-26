@@ -4,6 +4,8 @@ title: Universal load functions
 
 > Coming soon
 
+In the meantime, read the [documentation](https://kit.svelte.dev/docs/load#shared-vs-server) to learn more about the distinction between server `load` functions and universal `load` functions.
+
 <!--
 In the previous two exercises we loaded data from the server using `+page.server.js` and `+layout.server.js` files. This is very convenient if you need to do things like getting data directly from a database, or reading cookies.
 
