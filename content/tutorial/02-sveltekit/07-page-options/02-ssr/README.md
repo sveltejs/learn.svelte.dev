@@ -11,4 +11,4 @@ That said, some components _can't_ be rendered on the server, perhaps because th
 export const ssr = false;
 ```
 
-> Setting `ssr` to `false` inside your root `+layout.server.js` effectively turns your entire app into an SPA.
+> Setting `ssr` to `false` inside your root `+page.server.js` effectively turns your entire app into an SPA.
