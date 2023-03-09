@@ -33,6 +33,7 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/roboto-mono": "^4.5.10",
+		"@rich_harris/svelte-split-pane": "^1.0.0",
 		"@webcontainer/api": "^1.0.2",
 		"adm-zip": "^0.5.10",
 		"base64-js": "^1.5.1",
