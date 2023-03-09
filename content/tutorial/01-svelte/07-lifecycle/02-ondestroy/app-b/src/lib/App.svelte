@@ -1,7 +1,7 @@
 <script>
 	import Timer from './Timer.svelte';
 
-	let open = true;
+	let open = false;
 	let seconds = 0;
 
 	const toggle = () => (open = !open);
