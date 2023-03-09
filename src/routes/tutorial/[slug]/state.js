@@ -29,7 +29,7 @@ const { subscribe, set, update } = writable({
 			create: [],
 			remove: []
 		},
-		scope: { depth: 0, name: '', prefix: '' }
+		scope: { name: '', prefix: '' }
 	}
 });
 

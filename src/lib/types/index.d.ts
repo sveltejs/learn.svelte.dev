@@ -32,7 +32,6 @@ export interface Adapter extends AdapterInternal {
 
 export interface Scope {
 	prefix: string;
-	depth: number;
 	name: string;
 }
 
