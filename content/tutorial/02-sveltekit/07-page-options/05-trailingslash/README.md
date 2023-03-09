@@ -2,7 +2,7 @@
 title: trailingSlash
 ---
 
-Two URLs like `/foo` and `/foo/` might look the same, but they're actually different. A relative URL like `bar` will resolve to `/bar` in the first case and `/foo/bar` in the second, and search engines will treat them as separate entries, harming your SEO.
+Two URLs like `/foo` and `/foo/` might look the same, but they're actually different. A relative URL like `./bar` will resolve to `/bar` in the first case and `/foo/bar` in the second, and search engines will treat them as separate entries, harming your SEO.
 
 In short, being loosey-goosey about trailing slashes is a bad idea. By default, SvelteKit strips trailing slashes, meaning that a request for `/foo/` will result in a redirect to `/foo`.
 
