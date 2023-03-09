@@ -1,5 +1,5 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import { open } from './ContextMenu.svelte';
 
 	export let basename = '';
@@ -27,9 +27,10 @@
 		cancel();
 	}
 
-	function cancel() {
+	async function cancel() {
 		cancelling = true;
 		dispatch('cancel');
+		await tick();
 		cancelling = false;
 	}
 </script>
@@ -44,8 +45,9 @@
 			spellcheck="false"
 			value={basename}
 			on:blur={(e) => {
-				if (!cancelling) return;
-				commit(e);
+				if (!cancelling) {
+					commit(e);
+				}
 			}}
 			on:keyup={(e) => {
 				if (e.key === 'Enter') {
