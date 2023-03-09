@@ -136,7 +136,6 @@ export function get_exercise(slug) {
 
 				const dirs = next_exercise.split('/');
 				if (dirs[0] !== part_dir) {
-					console.log({ dirs, part_dir, next_exercise });
 					title = json(`content/tutorial/${dirs[0]}/meta.json`).title;
 				} else if (dirs[1] !== chapter_dir) {
 					title = json(`content/tutorial/${dirs[0]}/${dirs[1]}/meta.json`).title;
