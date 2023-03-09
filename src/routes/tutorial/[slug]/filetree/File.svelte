@@ -6,6 +6,9 @@
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
 
+	/** @type {number} */
+	export let depth;
+
 	const { rename, remove, readonly } = context.get();
 
 	let renaming = false;
@@ -33,23 +36,24 @@
 		: [];
 </script>
 
-<!-- <div class="row" class:selected={file.name === $selected?.name}> -->
-<Item
-	can_rename={can_remove}
-	{renaming}
-	basename={file.basename}
-	{actions}
-	on:click={() => state.select_file(file.name)}
-	on:edit={() => {
-		renaming = true;
-	}}
-	on:rename={(e) => {
-		rename(file, e.detail.basename);
-	}}
-	on:cancel={() => {
-		renaming = false;
-	}}
-/>
+<li class:selected={file.name === $selected?.name} style="--depth: {depth}">
+	<Item
+		can_rename={can_remove}
+		{renaming}
+		basename={file.basename}
+		{actions}
+		on:click={() => state.select_file(file.name)}
+		on:edit={() => {
+			renaming = true;
+		}}
+		on:rename={(e) => {
+			rename(file, e.detail.basename);
+		}}
+		on:cancel={() => {
+			renaming = false;
+		}}
+	/>
+</li>
 
 <style>
 	.selected {

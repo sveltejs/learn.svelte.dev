@@ -168,6 +168,7 @@
 		padding: 1rem;
 		margin: 0;
 		background: var(--sk-back-1);
+		list-style: none;
 	}
 
 	.filetree::before {

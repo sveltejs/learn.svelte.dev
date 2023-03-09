@@ -160,7 +160,7 @@
 	{/if}
 
 	{#each child_files as file}
-		<li style="--depth: {depth + 1}"><File {file} /></li>
+		<File {file} depth={depth + 1} />
 	{/each}
 {/if}
 
@@ -172,28 +172,11 @@
 		top: 0rem;
 		width: 1.2rem;
 		height: 100%;
-		background: url(../../../../lib/icons/folder.svg) 0 45% no-repeat;
+		background: url($lib/icons/folder.svg) 0 45% no-repeat;
 		background-size: 100% auto;
 	}
 
 	.directory.expanded::before {
-		background-image: url(../../../../lib/icons/folder-open.svg);
-	}
-
-	ul {
-		padding: 0 0 0 0.3em;
-		margin: 0 0 0 0.5em;
-		padding: 0;
-		margin: 0;
-		list-style: none;
-		/* border-left: 1px solid #eee; */
-		line-height: 1.3;
-		max-width: 100%;
-		/* overflow: hidden; */
-	}
-
-	li {
-		padding: 0;
-		list-style: none;
+		background-image: url($lib/icons/folder-open.svg);
 	}
 </style>
