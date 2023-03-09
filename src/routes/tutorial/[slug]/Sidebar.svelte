@@ -137,6 +137,12 @@
 		--color: rgba(255, 0, 0, 0.1);
 	}
 
+	/** this probably belongs in site-kit */
+	.text :global(p) :global(a) :global(code) {
+		color: var(--sk-theme-1);
+		background: rgba(255, 62, 0, 0.1);
+	}
+
 	footer {
 		padding: 1rem 3rem;
 		display: flex;
