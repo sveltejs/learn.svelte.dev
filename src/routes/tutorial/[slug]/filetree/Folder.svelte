@@ -105,7 +105,7 @@
 	].filter(Boolean);
 </script>
 
-<div class="directory row" class:expanded style="--depth: {depth - $scope.depth};">
+<li class="directory row" class:expanded style="--depth: {depth};">
 	<Item
 		can_rename={can_remove}
 		renaming={state === 'renaming'}
@@ -124,52 +124,44 @@
 			state = 'idle';
 		}}
 	/>
-</div>
+</li>
 
 {#if expanded}
-	<ul style="--depth: {depth - $scope.depth}">
-		{#if state === 'add_directory'}
-			<li>
-				<div class="directory row" style="--depth: {depth - $scope.depth + 1}">
-					<Item
-						renaming
-						on:rename={(e) => {
-							add(prefix + e.detail.basename, 'directory');
-						}}
-						on:cancel={() => {
-							state = 'idle';
-						}}
-					/>
-				</div>
-			</li>
-		{/if}
+	{#if state === 'add_directory'}
+		<li style="--depth: {depth + 1};">
+			<Item
+				renaming
+				on:rename={(e) => {
+					add(prefix + e.detail.basename, 'directory');
+				}}
+				on:cancel={() => {
+					state = 'idle';
+				}}
+			/>
+		</li>
+	{/if}
 
-		{#each child_directories as directory}
-			<li>
-				<svelte:self {directory} prefix={directory.name + '/'} depth={depth + 1} files={children} />
-			</li>
-		{/each}
+	{#each child_directories as directory}
+		<svelte:self {directory} prefix={directory.name + '/'} depth={depth + 1} files={children} />
+	{/each}
 
-		{#if state === 'add_file'}
-			<li>
-				<div class="row">
-					<Item
-						renaming
-						on:rename={(e) => {
-							add(prefix + e.detail.basename, 'file');
-						}}
-						on:cancel={() => {
-							state = 'idle';
-						}}
-					/>
-				</div>
-			</li>
-		{/if}
+	{#if state === 'add_file'}
+		<li style="--depth: {depth + 1};">
+			<Item
+				renaming
+				on:rename={(e) => {
+					add(prefix + e.detail.basename, 'file');
+				}}
+				on:cancel={() => {
+					state = 'idle';
+				}}
+			/>
+		</li>
+	{/if}
 
-		{#each child_files as file}
-			<li><File {file} /></li>
-		{/each}
-	</ul>
+	{#each child_files as file}
+		<li style="--depth: {depth + 1}"><File {file} /></li>
+	{/each}
 {/if}
 
 <style>
@@ -202,5 +194,6 @@
 
 	li {
 		padding: 0;
+		list-style: none;
 	}
 </style>

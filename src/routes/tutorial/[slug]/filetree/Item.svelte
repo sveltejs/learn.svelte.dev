@@ -36,27 +36,28 @@
 
 {#if renaming}
 	<!-- svelte-ignore a11y-autofocus -->
-	<input
-		class="basename"
-		type="text"
-		autofocus
-		autocomplete="off"
-		spellcheck="false"
-		value={basename}
-		on:blur={(e) => {
-			if (!cancelling) return;
-			commit(e);
-		}}
-		on:keyup={(e) => {
-			if (e.key === 'Enter') {
+	<div class="basename">
+		<input
+			type="text"
+			autofocus
+			autocomplete="off"
+			spellcheck="false"
+			value={basename}
+			on:blur={(e) => {
+				if (!cancelling) return;
 				commit(e);
-			}
+			}}
+			on:keyup={(e) => {
+				if (e.key === 'Enter') {
+					commit(e);
+				}
 
-			if (e.key === 'Escape') {
-				cancel();
-			}
-		}}
-	/>
+				if (e.key === 'Escape') {
+					cancel();
+				}
+			}}
+		/>
+	</div>
 {:else}
 	<button
 		class="basename"
@@ -91,14 +92,16 @@
 	.basename {
 		position: relative;
 		margin: 0;
+		padding: 0 0 0 var(--inset);
 		font-size: var(--font-size);
 		font-family: inherit;
 		color: inherit;
-		width: calc(100% + 2rem);
+		width: 100%;
 		text-align: left;
 		border: 2px solid transparent;
 		white-space: nowrap;
 		overflow: hidden;
+		line-height: 1;
 	}
 
 	input {
@@ -109,7 +112,7 @@
 	.actions {
 		position: absolute;
 		display: flex;
-		right: -1rem;
+		right: 0;
 		top: 0;
 		height: 100%;
 		background-color: var(--bg);

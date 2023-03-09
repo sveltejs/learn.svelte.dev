@@ -135,10 +135,10 @@
 	}
 </script>
 
-<div class="filetree">
+<ul class="filetree">
 	<Folder
 		prefix={$scope.prefix}
-		depth={$scope.depth}
+		depth={0}
 		directory={{
 			type: 'directory',
 			name: '',
@@ -147,7 +147,7 @@
 		files={$stubs.filter((stub) => !hidden.has(stub.basename))}
 		expanded
 	/>
-</div>
+</ul>
 
 {#if modal_text}
 	<Modal on:close={() => (modal_text = '')}>
@@ -165,7 +165,8 @@
 		flex: 1;
 		overflow-y: auto;
 		overflow-x: hidden;
-		padding: 2rem;
+		padding: 1rem;
+		margin: 0;
 		background: var(--sk-back-1);
 	}
 
@@ -179,19 +180,17 @@
 		border-right: 1px solid var(--sk-back-4);
 	}
 
-	.filetree :global(.row) {
+	.filetree :global(li) {
 		--bg: var(--sk-back-1);
 		--inset: calc((var(--depth) * 1.2rem) + 1.5rem);
 		position: relative;
 		width: calc(100% - 1px);
-		padding: 0 0 0 var(--inset);
-		height: 1.4em;
 		z-index: 1;
 		background: var(--bg);
 		color: var(--sk-text-2);
 	}
 
-	.filetree :global(.row:hover) {
+	.filetree :global(li:hover) {
 		--bg: var(--sk-back-3);
 	}
 

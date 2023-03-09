@@ -33,24 +33,23 @@
 		: [];
 </script>
 
-<div class="row" class:selected={file.name === $selected?.name}>
-	<Item
-		can_rename={can_remove}
-		{renaming}
-		basename={file.basename}
-		{actions}
-		on:click={() => state.select_file(file.name)}
-		on:edit={() => {
-			renaming = true;
-		}}
-		on:rename={(e) => {
-			rename(file, e.detail.basename);
-		}}
-		on:cancel={() => {
-			renaming = false;
-		}}
-	/>
-</div>
+<!-- <div class="row" class:selected={file.name === $selected?.name}> -->
+<Item
+	can_rename={can_remove}
+	{renaming}
+	basename={file.basename}
+	{actions}
+	on:click={() => state.select_file(file.name)}
+	on:edit={() => {
+		renaming = true;
+	}}
+	on:rename={(e) => {
+		rename(file, e.detail.basename);
+	}}
+	on:cancel={() => {
+		renaming = false;
+	}}
+/>
 
 <style>
 	.selected {
