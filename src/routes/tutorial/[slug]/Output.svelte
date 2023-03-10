@@ -4,7 +4,7 @@
 	import { browser, dev } from '$app/environment';
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
-	import { adapter, progress } from './adapter';
+	import { base, reset, update, progress } from './adapter';
 	import { state } from './state.js';
 
 	/** @type {string} */
@@ -34,7 +34,7 @@
 
 				loading = false;
 			} else if (state.status === 'update' && state.last_updated) {
-				const reload = await adapter.update([state.last_updated]);
+				const reload = await update([state.last_updated]);
 				if (reload === true) {
 					schedule_iframe_reload();
 				}
@@ -60,7 +60,7 @@
 	async function reset_adapter(state) {
 		let reload_iframe = true;
 
-		const result = await adapter.reset(state.stubs);
+		const result = await reset(state.stubs);
 		if (result === 'cancelled') {
 			return;
 		} else {
@@ -71,7 +71,7 @@
 			let called = false;
 
 			window.addEventListener('message', function handler(e) {
-				if (e.origin !== adapter.base) return;
+				if (e.origin !== $base) return;
 				if (e.data.type === 'ping') {
 					window.removeEventListener('message', handler);
 					called = true;
@@ -83,7 +83,7 @@
 				if (!called) {
 					// Updating the iframe too soon sometimes results in a blank screen,
 					// so we try again after a short delay if we haven't heard back
-					set_iframe_src(adapter.base + path);
+					set_iframe_src($base + path);
 				}
 			}, 5000);
 
@@ -96,10 +96,8 @@
 
 		if (reload_iframe) {
 			await new Promise((fulfil) => setTimeout(fulfil, 200));
-			set_iframe_src(adapter.base + path);
+			set_iframe_src($base + path);
 		}
-
-		return adapter;
 	}
 
 	/** @type {any} */
@@ -107,7 +105,7 @@
 	function schedule_iframe_reload() {
 		clearTimeout(reload_timeout);
 		reload_timeout = setTimeout(() => {
-			set_iframe_src(adapter.base + path);
+			set_iframe_src($base + path);
 		}, 1000);
 	}
 
@@ -116,8 +114,7 @@
 
 	/** @param {MessageEvent} e */
 	async function handle_message(e) {
-		if (!adapter) return;
-		if (e.origin !== adapter.base) return;
+		if (e.origin !== $base) return;
 
 		if (e.data.type === 'ping') {
 			path = e.data.data.path ?? path;
@@ -128,7 +125,7 @@
 
 				// we lost contact, refresh the page
 				loading = true;
-				set_iframe_src(adapter.base + path);
+				set_iframe_src($base + path);
 				loading = false;
 			}, 1000);
 		} else if (e.data.type === 'ping-pause') {
@@ -153,13 +150,13 @@
 	{path}
 	{loading}
 	on:refresh={() => {
-		set_iframe_src(adapter.base + path);
+		set_iframe_src($base + path);
 	}}
 	on:change={(e) => {
-		if (adapter) {
-			const url = new URL(e.detail.value, adapter.base);
+		if ($base) {
+			const url = new URL(e.detail.value, $base);
 			path = url.pathname + url.search + url.hash;
-			set_iframe_src(adapter.base + path);
+			set_iframe_src($base + path);
 		}
 	}}
 />
