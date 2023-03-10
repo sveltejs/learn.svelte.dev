@@ -76,12 +76,11 @@
 				reload_iframe = result || state.status === 'switch';
 			}
 		} else {
-			const _adapter = create_adapter(state.stubs, (p, s) => {
+			adapter = create_adapter(state.stubs, (p, s) => {
 				progress = p;
 				status = s;
 			});
-			adapter = _adapter;
-			await _adapter.init;
+			await adapter.init;
 
 			set_iframe_src(adapter.base + path);
 		}
