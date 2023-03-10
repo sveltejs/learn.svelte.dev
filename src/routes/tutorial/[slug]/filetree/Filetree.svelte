@@ -181,23 +181,6 @@
 		border-right: 1px solid var(--sk-back-4);
 	}
 
-	.filetree :global(li) {
-		--bg: var(--sk-back-1);
-		--inset: calc((var(--depth) * 1.2rem) + 1.5rem);
-		display: flex;
-		position: relative;
-		width: calc(100% - 1px);
-		height: 2.4rem;
-		/* padding: 0 1rem; */
-		z-index: 1;
-		background: var(--bg);
-		color: var(--sk-text-2);
-	}
-
-	.filetree :global(li:hover) {
-		--bg: var(--sk-back-3);
-	}
-
 	.filetree :global(button),
 	.filetree :global(input) {
 		background-size: 1.2rem 1.2rem;

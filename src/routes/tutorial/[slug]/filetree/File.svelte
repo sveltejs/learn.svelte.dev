@@ -36,40 +36,21 @@
 		: [];
 </script>
 
-<li class:selected={file.name === $selected?.name} style="--depth: {depth}">
-	<Item
-		can_rename={can_remove}
-		{renaming}
-		basename={file.basename}
-		{actions}
-		on:click={() => state.select_file(file.name)}
-		on:edit={() => {
-			renaming = true;
-		}}
-		on:rename={(e) => {
-			rename(file, e.detail.basename);
-		}}
-		on:cancel={() => {
-			renaming = false;
-		}}
-	/>
-</li>
-
-<style>
-	.selected {
-		color: var(--prime) !important;
-	}
-
-	.selected::after {
-		content: '';
-		position: absolute;
-		width: 1rem;
-		height: 1rem;
-		top: 0.3rem;
-		right: calc(-0.6rem - 2px);
-		background-color: var(--sk-back-3);
-		border: 1px solid var(--sk-back-4);
-		transform: translate(0, 0.2rem) rotate(45deg);
-		z-index: 2;
-	}
-</style>
+<Item
+	{depth}
+	can_rename={can_remove}
+	{renaming}
+	basename={file.basename}
+	selected={file.name === $selected?.name}
+	{actions}
+	on:click={() => state.select_file(file.name)}
+	on:edit={() => {
+		renaming = true;
+	}}
+	on:rename={(e) => {
+		rename(file, e.detail.basename);
+	}}
+	on:cancel={() => {
+		renaming = false;
+	}}
+/>

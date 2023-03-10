@@ -3,6 +3,10 @@
 	import { open } from './ContextMenu.svelte';
 
 	export let basename = '';
+	export let icon = '';
+	export let depth = 0;
+
+	export let selected = false;
 
 	/** @type {boolean} */
 	export let can_rename = false;
@@ -35,57 +39,77 @@
 	}
 </script>
 
-{#if renaming}
-	<!-- svelte-ignore a11y-autofocus -->
-	<div class="basename">
-		<input
-			type="text"
-			autofocus
-			autocomplete="off"
-			spellcheck="false"
-			value={basename}
-			on:blur={(e) => {
-				if (!cancelling) {
-					commit(e);
-				}
-			}}
-			on:keyup={(e) => {
-				if (e.key === 'Enter') {
-					commit(e);
-				}
+<li class:selected style="--depth: {depth}; --icon: url('{icon}');">
+	{#if renaming}
+		<!-- svelte-ignore a11y-autofocus -->
+		<div class="basename">
+			<input
+				type="text"
+				autofocus
+				autocomplete="off"
+				spellcheck="false"
+				value={basename}
+				on:blur={(e) => {
+					if (!cancelling) {
+						commit(e);
+					}
+				}}
+				on:keyup={(e) => {
+					if (e.key === 'Enter') {
+						commit(e);
+					}
 
-				if (e.key === 'Escape') {
-					cancel();
-				}
-			}}
-		/>
-	</div>
-{:else}
-	<button
-		class="basename"
-		on:click
-		on:dblclick={() => {
-			if (can_rename) {
-				dispatch('edit');
-			}
-		}}
-		on:contextmenu|preventDefault={(e) => {
-			open(e.clientX, e.clientY, actions);
-		}}
-	>
-		{basename}
-	</button>
-
-	{#if actions.length > 0}
-		<div class="actions">
-			{#each actions as action}
-				<button aria-label={action.label} class="icon {action.icon}" on:click={action.fn} />
-			{/each}
+					if (e.key === 'Escape') {
+						cancel();
+					}
+				}}
+			/>
 		</div>
+	{:else}
+		<button
+			class="basename"
+			on:click
+			on:dblclick={() => {
+				if (can_rename) {
+					dispatch('edit');
+				}
+			}}
+			on:contextmenu|preventDefault={(e) => {
+				open(e.clientX, e.clientY, actions);
+			}}
+		>
+			{basename}
+		</button>
+
+		{#if actions.length > 0}
+			<div class="actions">
+				{#each actions as action}
+					<button aria-label={action.label} class="icon {action.icon}" on:click={action.fn} />
+				{/each}
+			</div>
+		{/if}
 	{/if}
-{/if}
+</li>
 
 <style>
+	li {
+		--bg: var(--sk-back-1);
+		--inset: calc((var(--depth) * 1.2rem) + 1.5rem);
+		display: flex;
+		position: relative;
+		width: calc(100% - 1px);
+		height: 2.4rem;
+		z-index: 1;
+		background: var(--bg) var(--icon) no-repeat;
+		background-position: calc(var(--inset) - 0.5rem) 50%;
+		background-size: 1.2rem;
+		color: var(--sk-text-2);
+	}
+
+	li:hover {
+		--bg: var(--sk-back-3);
+	}
+
 	input {
 		background: var(--sk-back-1);
 		color: var(--sk-text-1) !important;
@@ -129,18 +153,35 @@
 	}
 
 	.icon.rename {
-		background-image: url(../../../../lib/icons/rename.svg);
+		background-image: url($lib/icons/rename.svg);
 	}
 
 	.icon.delete {
-		background-image: url(../../../../lib/icons/delete.svg);
+		background-image: url($lib/icons/delete.svg);
 	}
 
 	.icon.file-new {
-		background-image: url(../../../../lib/icons/file-new.svg);
+		background-image: url($lib/icons/file-new.svg);
 	}
 
 	.icon.folder-new {
-		background-image: url(../../../../lib/icons/folder-new.svg);
+		background-image: url($lib/icons/folder-new.svg);
+	}
+
+	.selected {
+		color: var(--prime);
+	}
+
+	.selected::after {
+		content: '';
+		position: absolute;
+		width: 1rem;
+		height: 1rem;
+		top: 0.3rem;
+		right: calc(-0.6rem - 2px);
+		background-color: var(--sk-back-3);
+		border: 1px solid var(--sk-back-4);
+		transform: translate(0, 0.2rem) rotate(45deg);
+		z-index: 2;
 	}
 </style>

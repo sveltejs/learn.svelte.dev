@@ -3,6 +3,8 @@
 	import * as context from './context.js';
 	import { get_depth } from '$lib/utils';
 	import Item from './Item.svelte';
+	import folder_closed from '$lib/icons/folder.svg';
+	import folder_open from '$lib/icons/folder-open.svg';
 	import { stubs, solution, scope } from '../state.js';
 
 	export let expanded = true;
@@ -105,40 +107,39 @@
 	].filter(Boolean);
 </script>
 
-<li class="directory row" class:expanded style="--depth: {depth};">
-	<Item
-		can_rename={can_remove}
-		renaming={state === 'renaming'}
-		basename={directory.basename}
-		{actions}
-		on:click={() => {
-			expanded = !expanded;
-		}}
-		on:edit={() => {
-			state = 'renaming';
-		}}
-		on:rename={(e) => {
-			rename(directory, e.detail.basename);
-		}}
-		on:cancel={() => {
-			state = 'idle';
-		}}
-	/>
-</li>
+<Item
+	{depth}
+	basename={directory.basename}
+	icon={expanded ? folder_open : folder_closed}
+	can_rename={can_remove}
+	renaming={state === 'renaming'}
+	{actions}
+	on:click={() => {
+		expanded = !expanded;
+	}}
+	on:edit={() => {
+		state = 'renaming';
+	}}
+	on:rename={(e) => {
+		rename(directory, e.detail.basename);
+	}}
+	on:cancel={() => {
+		state = 'idle';
+	}}
+/>
 
 {#if expanded}
 	{#if state === 'add_directory'}
-		<li style="--depth: {depth + 1};">
-			<Item
-				renaming
-				on:rename={(e) => {
-					add(prefix + e.detail.basename, 'directory');
-				}}
-				on:cancel={() => {
-					state = 'idle';
-				}}
-			/>
-		</li>
+		<Item
+			depth={depth + 1}
+			renaming
+			on:rename={(e) => {
+				add(prefix + e.detail.basename, 'directory');
+			}}
+			on:cancel={() => {
+				state = 'idle';
+			}}
+		/>
 	{/if}
 
 	{#each child_directories as directory}
@@ -146,37 +147,19 @@
 	{/each}
 
 	{#if state === 'add_file'}
-		<li style="--depth: {depth + 1};">
-			<Item
-				renaming
-				on:rename={(e) => {
-					add(prefix + e.detail.basename, 'file');
-				}}
-				on:cancel={() => {
-					state = 'idle';
-				}}
-			/>
-		</li>
+		<Item
+			depth={depth + 1}
+			renaming
+			on:rename={(e) => {
+				add(prefix + e.detail.basename, 'file');
+			}}
+			on:cancel={() => {
+				state = 'idle';
+			}}
+		/>
 	{/if}
 
 	{#each child_files as file}
 		<File {file} depth={depth + 1} />
 	{/each}
 {/if}
-
-<style>
-	.directory::before {
-		content: '';
-		position: absolute;
-		left: calc(var(--inset) - 0.5rem);
-		top: 0rem;
-		width: 1.2rem;
-		height: 100%;
-		background: url($lib/icons/folder.svg) 0 45% no-repeat;
-		background-size: 100% auto;
-	}
-
-	.directory.expanded::before {
-		background-image: url($lib/icons/folder-open.svg);
-	}
-</style>
