@@ -53,11 +53,7 @@ export const state = {
 
 	/** @param {import('$lib/types').Stub[]} stubs */
 	set_stubs: (stubs) => {
-		update((state) => ({
-			...state,
-			stubs
-		}));
-
+		update((state) => ({ ...state, stubs }));
 		adapter.reset(stubs);
 	},
 

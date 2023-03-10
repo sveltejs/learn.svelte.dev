@@ -19,6 +19,9 @@
 			set_iframe_src($base + path);
 		});
 
+		// this is for HMR purposes
+		if ($base) set_iframe_src($base + path);
+
 		function destroy() {
 			unsubscribe();
 		}
