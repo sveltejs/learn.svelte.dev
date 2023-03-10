@@ -89,13 +89,7 @@ export async function create(stubs, callback) {
 			process.output.pipeTo(console_stream('dev'));
 
 			// keep restarting dev server (can crash in case of illegal +files for example)
-			process.exit.then((code) => {
-				if (code !== 0) {
-					setTimeout(() => {
-						run_dev();
-					}, 2000);
-				}
-			});
+			process.exit.then(run_dev);
 		}
 	});
 
