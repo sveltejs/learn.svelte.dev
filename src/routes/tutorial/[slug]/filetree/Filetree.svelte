@@ -199,18 +199,6 @@
 		border-right: 1px solid var(--sk-back-4);
 	}
 
-	.filetree :global(button),
-	.filetree :global(input) {
-		background-size: 1.2rem 1.2rem;
-		background-position: 0 45%;
-		background-repeat: no-repeat;
-	}
-
-	.filetree :global(:focus-visible) {
-		outline: none;
-		border: 2px solid var(--sk-theme-3) !important;
-	}
-
 	.modal-contents p {
 		white-space: pre-line;
 	}

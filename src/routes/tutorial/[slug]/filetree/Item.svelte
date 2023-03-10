@@ -42,7 +42,6 @@
 <li class:selected style="--depth: {depth}; --icon: url('{icon}');" on:keydown>
 	{#if renaming}
 		<!-- svelte-ignore a11y-autofocus -->
-		<!-- <div class="basename"> -->
 		<input
 			type="text"
 			autofocus
@@ -64,7 +63,6 @@
 				}
 			}}
 		/>
-		<!-- </div> -->
 	{:else}
 		<button
 			class="basename"
@@ -108,6 +106,19 @@
 
 	li:hover {
 		--bg: var(--sk-back-3);
+	}
+
+	button,
+	input {
+		background-size: 1.2rem 1.2rem;
+		background-position: 0 45%;
+		background-repeat: no-repeat;
+	}
+
+	:focus-visible {
+		outline: none;
+		border: 2px solid var(--sk-theme-3) !important;
+		border-radius: 2px;
 	}
 
 	input {
@@ -187,5 +198,9 @@
 		border: 1px solid var(--sk-back-4);
 		transform: translate(0, 0.2rem) rotate(45deg);
 		z-index: 2;
+	}
+
+	.selected:focus-within::after {
+		display: none;
 	}
 </style>
