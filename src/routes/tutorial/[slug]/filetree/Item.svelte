@@ -39,7 +39,11 @@
 	}
 </script>
 
-<li class:selected style="--depth: {depth}; --icon: url('{icon}');" on:keydown>
+<li
+	aria-current={selected ? 'true' : undefined}
+	style="--depth: {depth}; --icon: url('{icon}');"
+	on:keydown
+>
 	{#if renaming}
 		<!-- svelte-ignore a11y-autofocus -->
 		<input
@@ -183,11 +187,11 @@
 		background-image: url($lib/icons/folder-new.svg);
 	}
 
-	.selected {
+	[aria-current='true'] {
 		color: var(--prime);
 	}
 
-	.selected::after {
+	[aria-current='true']::after {
 		content: '';
 		position: absolute;
 		width: 1rem;
@@ -200,7 +204,7 @@
 		z-index: 2;
 	}
 
-	.selected:focus-within::after {
+	[aria-current='true']:has(:focus-visible)::after {
 		display: none;
 	}
 </style>
