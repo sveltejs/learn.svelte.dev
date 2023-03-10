@@ -13,7 +13,6 @@
 	import Sidebar from './Sidebar.svelte';
 	import { state, selected, completed } from './state.js';
 
-	/** @type {import('./$types').PageData} */
 	export let data;
 
 	let width = browser ? window.innerWidth : 1000;

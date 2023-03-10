@@ -1,4 +1,3 @@
-/** @type {import('./$types').RequestHandler} */
 export async function GET({ request, params, fetch }) {
 	const request_headers = new Headers();
 

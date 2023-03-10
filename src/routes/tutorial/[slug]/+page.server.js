@@ -1,7 +1,6 @@
 import { get_exercise } from '$lib/server/content';
 import { error } from '@sveltejs/kit';
 
-/** @type {import('./$types').PageServerLoad} */
 export function load({ params }) {
 	const exercise = get_exercise(params.slug);
 
