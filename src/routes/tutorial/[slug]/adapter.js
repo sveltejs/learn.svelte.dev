@@ -9,13 +9,18 @@ export const progress = writable({
 /** @type {import('svelte/store').Writable<string | null>} */
 export const base = writable(null);
 
+/** @type {import('svelte/store').Writable<Error | null>} */
+export const error = writable(null);
+
 let ready = new Promise(() => {});
 
 if (browser) {
 	ready = new Promise(async (fulfil, reject) => {
 		try {
 			const module = await import('$lib/client/adapters/webcontainer/index.js');
-			const adapter = await module.create((value, text) => { progress.set({ value, text }); });
+			const adapter = await module.create((value, text) => {
+				progress.set({ value, text });
+			});
 
 			base.set(adapter.base);
 			publish('reload');
@@ -56,11 +61,17 @@ function publish(event) {
  * @param {import('$lib/types').Stub[]} files 
  */
 export async function reset(files) {
-	const adapter = await ready;
-	const should_reload = await adapter.reset(files);
+	try {
+		const adapter = await ready;
+		const should_reload = await adapter.reset(files);
 
-	if (should_reload) {
-		publish('reload');
+		if (should_reload) {
+			publish('reload');
+		}
+
+		error.set(null);
+	} catch (e) {
+		error.set(/** @type {Error} */ (e));
 	}
 }
 

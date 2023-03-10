@@ -1,4 +1,5 @@
 import { derived, writable } from 'svelte/store';
+import * as adapter from './adapter.js';
 
 /**
  * @typedef {{
@@ -51,9 +52,11 @@ export const state = {
 			}),
 			last_updated: file
 		}));
+
+		adapter.update([file]);
 	},
 
-	/** @param {import('$lib/types').Stub[]} [stubs] */
+	/** @param {import('$lib/types').Stub[]} stubs */
 	set_stubs: (stubs) => {
 		update((state) => ({
 			...state,
@@ -61,6 +64,8 @@ export const state = {
 			stubs: stubs ?? state.stubs,
 			last_updated: undefined
 		}));
+
+		adapter.reset(stubs);
 	},
 
 	/** @param {import('$lib/types').Exercise} exercise */
@@ -110,11 +115,13 @@ export const state = {
 			}
 		}
 
+		const stubs = Object.values(exercise.a)
+
 		set({
 			status: 'switch',
-			stubs: Object.values(exercise.a),
+			stubs,
 			exercise: {
-				initial: Object.values(exercise.a),
+				initial: [...stubs],
 				solution,
 				editing_constraints,
 				scope: exercise.scope
@@ -123,6 +130,8 @@ export const state = {
 			selected: exercise.focus,
 			expanded
 		});
+
+		adapter.reset(stubs);
 	},
 
 	toggle_completion: () => {

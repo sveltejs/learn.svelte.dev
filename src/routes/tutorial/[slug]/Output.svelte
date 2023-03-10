@@ -4,8 +4,7 @@
 	import { browser, dev } from '$app/environment';
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
-	import { base, reset, update, progress } from './adapter';
-	import { state } from './state.js';
+	import { base, error, progress, subscribe } from './adapter';
 
 	/** @type {string} */
 	export let path;
@@ -15,34 +14,13 @@
 	let loading = true;
 	let initial = true;
 
-	/** @type {Error | null} */
-	let error = null;
-
 	onMount(() => {
-		const unsub = state.subscribe(async (state) => {
-			if (state.status === 'set' || state.status === 'switch') {
-				loading = true;
-
-				try {
-					clearTimeout(timeout);
-					await reset_adapter(state);
-					initial = false;
-				} catch (e) {
-					error = /** @type {Error} */ (e);
-					console.error(e);
-				}
-
-				loading = false;
-			} else if (state.status === 'update' && state.last_updated) {
-				const reload = await update([state.last_updated]);
-				if (reload === true) {
-					schedule_iframe_reload();
-				}
-			}
+		const unsubscribe = subscribe('reload', () => {
+			set_iframe_src($base + path);
 		});
 
 		function destroy() {
-			unsub();
+			unsubscribe();
 		}
 
 		document.addEventListener('pagehide', destroy);
@@ -52,62 +30,6 @@
 	afterNavigate(() => {
 		clearTimeout(timeout);
 	});
-
-	/**
-	 * Loads the adapter initially or resets it. This method can throw.
-	 * @param {import('./state').State} state
-	 */
-	async function reset_adapter(state) {
-		let reload_iframe = true;
-
-		const result = await reset(state.stubs);
-		if (result === 'cancelled') {
-			return;
-		} else {
-			reload_iframe = result || state.status === 'switch';
-		}
-
-		await new Promise((fulfil, reject) => {
-			let called = false;
-
-			window.addEventListener('message', function handler(e) {
-				if (e.origin !== $base) return;
-				if (e.data.type === 'ping') {
-					window.removeEventListener('message', handler);
-					called = true;
-					fulfil(undefined);
-				}
-			});
-
-			setTimeout(() => {
-				if (!called) {
-					// Updating the iframe too soon sometimes results in a blank screen,
-					// so we try again after a short delay if we haven't heard back
-					set_iframe_src($base + path);
-				}
-			}, 5000);
-
-			setTimeout(() => {
-				if (!called) {
-					reject(new Error('Timed out (re)setting adapter'));
-				}
-			}, 10000);
-		});
-
-		if (reload_iframe) {
-			await new Promise((fulfil) => setTimeout(fulfil, 200));
-			set_iframe_src($base + path);
-		}
-	}
-
-	/** @type {any} */
-	let reload_timeout;
-	function schedule_iframe_reload() {
-		clearTimeout(reload_timeout);
-		reload_timeout = setTimeout(() => {
-			set_iframe_src($base + path);
-		}, 1000);
-	}
 
 	/** @type {any} */
 	let timeout;
@@ -148,7 +70,7 @@
 <svelte:window on:message={handle_message} />
 <Chrome
 	{path}
-	{loading}
+	loading={$progress.value < 1}
 	on:refresh={() => {
 		set_iframe_src($base + path);
 	}}
@@ -166,8 +88,8 @@
 		<iframe bind:this={iframe} title="Output" />
 	{/if}
 
-	{#if loading || error}
-		<Loading {initial} {error} progress={$progress.value} status={$progress.text} />
+	{#if $progress.value < 1 || $error}
+		<Loading {initial} error={$error} progress={$progress.value} status={$progress.text} />
 	{/if}
 </div>
 
