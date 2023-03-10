@@ -22,6 +22,12 @@
 				return;
 			}
 
+			const existing = $state.stubs.find((stub) => stub.name === name);
+			if (existing) {
+				modal_text = `A ${existing.type} already exists with this name`;
+				return;
+			}
+
 			const basename = /** @type {string} */ (name.split('/').pop());
 
 			/** @type {import('$lib/types').Stub} */
