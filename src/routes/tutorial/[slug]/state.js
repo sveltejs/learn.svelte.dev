@@ -3,9 +3,7 @@ import * as adapter from './adapter.js';
 
 /**
  * @typedef {{
- *  status: 'initial' | 'select' | 'set' | 'update' | 'switch' | 'expand';
  *  stubs: import("$lib/types").Stub[];
- *  last_updated?: import("$lib/types").FileStub;
  *  selected: string | null;
  *  exercise: {
  *    initial: import("$lib/types").Stub[];
@@ -21,7 +19,6 @@ import * as adapter from './adapter.js';
  * @type {import('svelte/store').Writable<State>}
  */
 const { subscribe, set, update } = writable({
-	status: 'initial',
 	stubs: [],
 	selected: null,
 	exercise: {
@@ -43,14 +40,12 @@ export const state = {
 	update_file: (file) => {
 		update((state) => ({
 			...state,
-			status: 'update',
 			stubs: state.stubs.map((stub) => {
 				if (stub.name === file.name) {
 					return file;
 				}
 				return stub;
 			}),
-			last_updated: file
 		}));
 
 		adapter.update([file]);
@@ -60,9 +55,7 @@ export const state = {
 	set_stubs: (stubs) => {
 		update((state) => ({
 			...state,
-			status: 'set',
-			stubs: stubs ?? state.stubs,
-			last_updated: undefined
+			stubs
 		}));
 
 		adapter.reset(stubs);
@@ -118,7 +111,6 @@ export const state = {
 		const stubs = Object.values(exercise.a)
 
 		set({
-			status: 'switch',
 			stubs,
 			exercise: {
 				initial: [...stubs],
@@ -126,7 +118,6 @@ export const state = {
 				editing_constraints,
 				scope: exercise.scope
 			},
-			last_updated: undefined,
 			selected: exercise.focus,
 			expanded
 		});
@@ -137,9 +128,7 @@ export const state = {
 	toggle_completion: () => {
 		update((state) => ({
 			...state,
-			status: 'set',
 			stubs: is_completed(state) ? state.exercise.initial : Object.values(state.exercise.solution),
-			last_updated: undefined
 		}));
 	},
 
@@ -150,7 +139,6 @@ export const state = {
 	toggle_expanded: (name, expanded) => {
 		update((state) => ({
 			...state,
-			status: 'expand',
 			expanded: {
 				...state.expanded,
 				[name]: expanded ?? !state.expanded[name]
@@ -162,9 +150,7 @@ export const state = {
 	select_file: (name) => {
 		update((state) => ({
 			...state,
-			status: 'select',
 			selected: name,
-			last_updated: undefined
 		}));
 	}
 };
