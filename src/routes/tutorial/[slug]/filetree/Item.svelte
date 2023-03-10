@@ -42,29 +42,29 @@
 <li class:selected style="--depth: {depth}; --icon: url('{icon}');" on:keydown>
 	{#if renaming}
 		<!-- svelte-ignore a11y-autofocus -->
-		<div class="basename">
-			<input
-				type="text"
-				autofocus
-				autocomplete="off"
-				spellcheck="false"
-				value={basename}
-				on:blur={(e) => {
-					if (!cancelling) {
-						commit(e);
-					}
-				}}
-				on:keyup={(e) => {
-					if (e.key === 'Enter') {
-						commit(e);
-					}
+		<!-- <div class="basename"> -->
+		<input
+			type="text"
+			autofocus
+			autocomplete="off"
+			spellcheck="false"
+			value={basename}
+			on:blur={(e) => {
+				if (!cancelling) {
+					commit(e);
+				}
+			}}
+			on:keyup={(e) => {
+				if (e.key === 'Enter') {
+					commit(e);
+				}
 
-					if (e.key === 'Escape') {
-						cancel();
-					}
-				}}
-			/>
-		</div>
+				if (e.key === 'Escape') {
+					cancel();
+				}
+			}}
+		/>
+		<!-- </div> -->
 	{:else}
 		<button
 			class="basename"
@@ -113,13 +113,17 @@
 	input {
 		background: var(--sk-back-1);
 		color: var(--sk-text-1) !important;
+		margin: 0 0.5rem 0 calc(0.5rem + var(--inset));
+		padding: 0 0.5rem;
+		font-size: var(--font-size);
+		font-family: inherit;
 	}
 
 	.basename {
 		display: block;
 		position: relative;
 		margin: 0;
-		padding: 0.2rem 1rem 0.2rem calc(1rem + var(--inset));
+		padding: 0 1rem 0 calc(1rem + var(--inset));
 		font-size: var(--font-size);
 		font-family: inherit;
 		color: inherit;
