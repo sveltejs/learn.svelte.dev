@@ -11,7 +11,7 @@ import * as adapter from './adapter.js';
  *    editing_constraints: import("$lib/types").EditingConstraints;
  *    scope: import('$lib/types').Scope;
  *  };
- *  expanded: Record<string, boolean>;
+ *  collapsed: Record<string, boolean>;
  * }} State
  */
 
@@ -30,7 +30,7 @@ const { subscribe, set, update } = writable({
 		},
 		scope: { name: '', prefix: '' }
 	},
-	expanded: {}
+	collapsed: {}
 });
 
 export const state = {
@@ -66,13 +66,13 @@ export const state = {
 		};
 
 		/** @type {Record<string, boolean>} */
-		const expanded = {
-			'': true
+		const collapsed = {
+			'': false
 		};
 
 		for (const stub of Object.values(exercise.a)) {
 			if (stub.type === 'directory') {
-				expanded[stub.name] = true;
+				collapsed[stub.name] = false;
 			}
 		}
 
@@ -115,29 +115,36 @@ export const state = {
 				scope: exercise.scope
 			},
 			selected: exercise.focus,
-			expanded
+			collapsed
 		});
 
 		adapter.reset(stubs);
 	},
 
 	toggle_completion: () => {
-		update((state) => ({
-			...state,
-			stubs: is_completed(state) ? state.exercise.initial : Object.values(state.exercise.solution),
-		}));
+		update((state) => {
+			const stubs = is_completed(state) ? state.exercise.initial : Object.values(state.exercise.solution);
+
+			// TODO bit naughty, putting this side-effect here
+			adapter.reset(stubs);
+
+			return {
+				...state,
+				stubs,
+			};
+		});
 	},
 
 	/**
 	 * @param {string} name
-	 * @param {boolean} [expanded]
+	 * @param {boolean} [collapsed]
 	 */
-	toggle_expanded: (name, expanded) => {
+	toggle_collapsed: (name, collapsed) => {
 		update((state) => ({
 			...state,
-			expanded: {
-				...state.expanded,
-				[name]: expanded ?? !state.expanded[name]
+			collapsed: {
+				...state.collapsed,
+				[name]: collapsed ?? !state.collapsed[name]
 			}
 		}));
 	},

@@ -110,12 +110,12 @@
 <Item
 	{depth}
 	basename={directory.basename}
-	icon={$state.expanded[directory.name] ? folder_open : folder_closed}
+	icon={$state.collapsed[directory.name] ? folder_closed : folder_open}
 	can_rename={can_remove}
 	renaming={mode === 'renaming'}
 	{actions}
 	on:click={() => {
-		state.toggle_expanded(directory.name);
+		state.toggle_collapsed(directory.name);
 	}}
 	on:edit={() => {
 		mode = 'renaming';
@@ -128,12 +128,12 @@
 	}}
 	on:keydown={(e) => {
 		if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-			state.toggle_expanded(directory.name, e.key === 'ArrowRight');
+			state.toggle_collapsed(directory.name, e.key === 'ArrowLeft');
 		}
 	}}
 />
 
-{#if $state.expanded[directory.name]}
+{#if !$state.collapsed[directory.name]}
 	{#if mode === 'add_directory'}
 		<Item
 			depth={depth + 1}

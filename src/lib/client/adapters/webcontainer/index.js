@@ -182,7 +182,14 @@ export async function create(callback) {
 
 			// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 			// because that can result in a broken UI state
-			return will_restart || vite_error || to_delete.length > 0 || added_new_file;
+			const should_reload = (
+				will_restart || 
+				vite_error ||
+				to_delete.length > 0
+				// `|| added_new_file`, but I don't actually think that's necessary?
+			);
+
+			return should_reload;
 		},
 		update: async (stubs) => {
 			await running;
