@@ -24,16 +24,18 @@
 
 	const { rename, add, remove, readonly } = context.get();
 
+	$: segments = get_depth(prefix);
+
 	$: children = files
 		.filter((file) => file.name.startsWith(prefix))
 		.sort((a, b) => (a.name < b.name ? -1 : 1));
 
 	$: child_directories = children.filter(
-		(child) => get_depth(child.name) === depth + 1 && child.type === 'directory'
+		(child) => get_depth(child.name) === segments && child.type === 'directory'
 	);
 
 	$: child_files = /** @type {import('$lib/types').FileStub[]} */ (
-		children.filter((child) => get_depth(child.name) === depth + 1 && child.type === 'file')
+		children.filter((child) => get_depth(child.name) === segments && child.type === 'file')
 	);
 
 	const can_create = { file: false, directory: false };
