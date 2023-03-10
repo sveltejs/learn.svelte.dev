@@ -1,7 +1,7 @@
 /**
  * @param {import('$lib/types').Stub[]} stubs
  * @param {(progress: number, status: string) => void} cb
- * @returns {Promise<import('$lib/types').AdapterInternal>}
+ * @returns {Promise<import('$lib/types').Adapter>}
  */
 export async function create(stubs, cb) {
 	const res = await fetch('/backend', {
@@ -56,10 +56,6 @@ export async function create(stubs, cb) {
 			await new Promise((f) => setTimeout(f, 100)); // wait for chokidar
 
 			return will_restart_vite_dev_server(stubs);
-		},
-
-		async destroy() {
-			navigator.sendBeacon(`/backend/destroy?id=${id}`);
 		}
 	};
 }

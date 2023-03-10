@@ -17,7 +17,7 @@ function console_stream(label) {
 
 /**
  * @param {(progress: number, status: string) => void} callback
- * @returns {Promise<import('$lib/types').AdapterInternal>}
+ * @returns {Promise<import('$lib/types').Adapter>}
  */
 export async function create(callback) {
 	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
@@ -219,9 +219,6 @@ export async function create(callback) {
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
 			return will_restart_vite_dev_server(stubs);
-		},
-		destroy: async () => {
-			vm.teardown();
 		}
 	};
 }
