@@ -1,6 +1,7 @@
 <script>
 	import * as context from './context.js';
 	import Item from './Item.svelte';
+	import file_icon from '$lib/icons/file.svg';
 	import { selected, solution, state } from '../state.js';
 
 	/** @type {import('$lib/types').FileStub} */
@@ -41,6 +42,7 @@
 	can_rename={can_remove}
 	{renaming}
 	basename={file.basename}
+	icon={file_icon}
 	selected={file.name === $selected?.name}
 	{actions}
 	on:click={() => state.select_file(file.name)}

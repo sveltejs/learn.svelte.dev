@@ -5,7 +5,7 @@
 	import Item from './Item.svelte';
 	import folder_closed from '$lib/icons/folder.svg';
 	import folder_open from '$lib/icons/folder-open.svg';
-	import { stubs, solution, scope } from '../state.js';
+	import { stubs, solution } from '../state.js';
 
 	export let expanded = true;
 
