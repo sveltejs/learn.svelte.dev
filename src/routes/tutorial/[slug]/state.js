@@ -2,7 +2,7 @@ import { derived, writable } from 'svelte/store';
 
 /**
  * @typedef {{
- *  status: 'initial' | 'select' | 'set' | 'update' | 'switch';
+ *  status: 'initial' | 'select' | 'set' | 'update' | 'switch' | 'expand';
  *  stubs: import("$lib/types").Stub[];
  *  last_updated?: import("$lib/types").FileStub;
  *  selected: string | null;
@@ -141,6 +141,7 @@ export const state = {
 	toggle_expanded: (name, expanded) => {
 		update((state) => ({
 			...state,
+			status: 'expand',
 			expanded: {
 				...state.expanded,
 				[name]: expanded ?? !state.expanded[name]
