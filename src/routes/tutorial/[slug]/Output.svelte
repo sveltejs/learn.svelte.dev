@@ -43,6 +43,7 @@
 
 		if (e.data.type === 'ping') {
 			path = e.data.data.path ?? path;
+			loading = false;
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
@@ -73,7 +74,7 @@
 <svelte:window on:message={handle_message} />
 <Chrome
 	{path}
-	loading={$progress.value < 1}
+	{loading}
 	on:refresh={() => {
 		set_iframe_src($base + path);
 	}}
@@ -91,7 +92,7 @@
 		<iframe bind:this={iframe} title="Output" />
 	{/if}
 
-	{#if $progress.value < 1 || $error}
+	{#if loading || $error}
 		<Loading {initial} error={$error} progress={$progress.value} status={$progress.text} />
 	{/if}
 </div>
