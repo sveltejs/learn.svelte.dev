@@ -22,6 +22,12 @@
 				return;
 			}
 
+			const existing = $state.stubs.find((stub) => stub.name === name);
+			if (existing) {
+				modal_text = `A ${existing.type} already exists with this name`;
+				return;
+			}
+
 			const basename = /** @type {string} */ (name.split('/').pop());
 
 			/** @type {import('$lib/types').Stub} */
@@ -135,19 +141,31 @@
 	}
 </script>
 
-<div class="filetree">
+<ul
+	class="filetree"
+	on:keydown={(e) => {
+		if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+			e.preventDefault();
+			const lis = Array.from(e.currentTarget.querySelectorAll('li'));
+			const focused = lis.findIndex((li) => li.contains(e.target));
+
+			const d = e.key === 'ArrowUp' ? -1 : +1;
+
+			lis[focused + d]?.querySelector('button')?.focus();
+		}
+	}}
+>
 	<Folder
 		prefix={$scope.prefix}
-		depth={$scope.depth}
+		depth={0}
 		directory={{
 			type: 'directory',
 			name: '',
 			basename: $scope.name
 		}}
 		files={$stubs.filter((stub) => !hidden.has(stub.basename))}
-		expanded
 	/>
-</div>
+</ul>
 
 {#if modal_text}
 	<Modal on:close={() => (modal_text = '')}>
@@ -165,8 +183,10 @@
 		flex: 1;
 		overflow-y: auto;
 		overflow-x: hidden;
-		padding: 2rem;
+		padding: 1rem 0rem;
+		margin: 0;
 		background: var(--sk-back-1);
+		list-style: none;
 	}
 
 	.filetree::before {
@@ -177,34 +197,6 @@
 		top: 0;
 		right: 0;
 		border-right: 1px solid var(--sk-back-4);
-	}
-
-	.filetree :global(.row) {
-		--bg: var(--sk-back-1);
-		--inset: calc((var(--depth) * 1.2rem) + 1.5rem);
-		position: relative;
-		width: calc(100% - 1px);
-		padding: 0 0 0 var(--inset);
-		height: 1.4em;
-		z-index: 1;
-		background: var(--bg);
-		color: var(--sk-text-2);
-	}
-
-	.filetree :global(.row:hover) {
-		--bg: var(--sk-back-3);
-	}
-
-	.filetree :global(button),
-	.filetree :global(input) {
-		background-size: 1.2rem 1.2rem;
-		background-position: 0 45%;
-		background-repeat: no-repeat;
-	}
-
-	.filetree :global(:focus-visible) {
-		outline: none;
-		border: 2px solid var(--sk-theme-3) !important;
 	}
 
 	.modal-contents p {

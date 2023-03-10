@@ -2,7 +2,6 @@
 	"title": "Advanced SvelteKit",
 	"scope": {
 		"prefix": "/",
-		"depth": 0,
 		"name": "project"
 	},
 	"focus": "/src/routes/+page.svelte"

@@ -1,10 +1,14 @@
 <script>
 	import * as context from './context.js';
 	import Item from './Item.svelte';
+	import file_icon from '$lib/icons/file.svg';
 	import { selected, solution, state } from '../state.js';
 
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
+
+	/** @type {number} */
+	export let depth;
 
 	const { rename, remove, readonly } = context.get();
 
@@ -33,40 +37,22 @@
 		: [];
 </script>
 
-<div class="row" class:selected={file.name === $selected?.name}>
-	<Item
-		can_rename={can_remove}
-		{renaming}
-		basename={file.basename}
-		{actions}
-		on:click={() => state.select_file(file.name)}
-		on:edit={() => {
-			renaming = true;
-		}}
-		on:rename={(e) => {
-			rename(file, e.detail.basename);
-		}}
-		on:cancel={() => {
-			renaming = false;
-		}}
-	/>
-</div>
-
-<style>
-	.selected {
-		color: var(--prime) !important;
-	}
-
-	.selected::after {
-		content: '';
-		position: absolute;
-		width: 1rem;
-		height: 1rem;
-		top: 0.1rem;
-		right: calc(-2.6rem - 2px);
-		background-color: var(--sk-back-3);
-		border: 1px solid var(--sk-back-4);
-		transform: translate(0, 0.2rem) rotate(45deg);
-		z-index: 2;
-	}
-</style>
+<Item
+	{depth}
+	can_rename={can_remove}
+	{renaming}
+	basename={file.basename}
+	icon={file_icon}
+	selected={file.name === $selected?.name}
+	{actions}
+	on:click={() => state.select_file(file.name)}
+	on:edit={() => {
+		renaming = true;
+	}}
+	on:rename={(e) => {
+		rename(file, e.detail.basename);
+	}}
+	on:cancel={() => {
+		renaming = false;
+	}}
+/>
