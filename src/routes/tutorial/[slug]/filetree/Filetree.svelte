@@ -165,7 +165,7 @@
 		flex: 1;
 		overflow-y: auto;
 		overflow-x: hidden;
-		padding: 1rem;
+		padding: 1rem 0rem;
 		margin: 0;
 		background: var(--sk-back-1);
 		list-style: none;
@@ -184,8 +184,11 @@
 	.filetree :global(li) {
 		--bg: var(--sk-back-1);
 		--inset: calc((var(--depth) * 1.2rem) + 1.5rem);
+		display: flex;
 		position: relative;
 		width: calc(100% - 1px);
+		height: 2.4rem;
+		/* padding: 0 1rem; */
 		z-index: 1;
 		background: var(--bg);
 		color: var(--sk-text-2);

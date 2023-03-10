@@ -65,8 +65,8 @@
 		position: absolute;
 		width: 1rem;
 		height: 1rem;
-		top: 0.1rem;
-		right: calc(-1.6rem - 2px);
+		top: 0.3rem;
+		right: calc(-0.6rem - 2px);
 		background-color: var(--sk-back-3);
 		border: 1px solid var(--sk-back-4);
 		transform: translate(0, 0.2rem) rotate(45deg);

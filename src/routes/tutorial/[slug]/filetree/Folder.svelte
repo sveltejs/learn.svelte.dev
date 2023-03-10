@@ -168,7 +168,7 @@
 	.directory::before {
 		content: '';
 		position: absolute;
-		left: calc(var(--inset) - 1.5rem);
+		left: calc(var(--inset) - 0.5rem);
 		top: 0rem;
 		width: 1.2rem;
 		height: 100%;

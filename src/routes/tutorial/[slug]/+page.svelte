@@ -71,7 +71,7 @@
 				pos={$mobile ? (selected_view === 1 ? '100%' : '0%') : '50%'}
 			>
 				<section slot="a">
-					<SplitPane type="horizontal" min="80px" max="300px" pos="200px">
+					<SplitPane type="horizontal" min="120px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
 							<Filetree readonly={mobile} />
 

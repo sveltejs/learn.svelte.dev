@@ -92,13 +92,15 @@
 	}
 
 	.basename {
+		display: block;
 		position: relative;
 		margin: 0;
-		padding: 0 0 0 var(--inset);
+		padding: 0.2rem 1rem 0.2rem calc(1rem + var(--inset));
 		font-size: var(--font-size);
 		font-family: inherit;
 		color: inherit;
-		width: 100%;
+		flex: 1;
+		height: 100%;
 		text-align: left;
 		border: 2px solid transparent;
 		white-space: nowrap;
@@ -112,33 +114,13 @@
 	}
 
 	.actions {
-		position: absolute;
 		display: flex;
 		right: 0;
 		top: 0;
 		height: 100%;
+		padding-right: 1rem;
 		background-color: var(--bg);
 		white-space: pre;
-	}
-
-	.actions::before {
-		content: '';
-		position: absolute;
-		width: 1rem;
-		height: 100%;
-		left: -1rem;
-		top: 0;
-		background: linear-gradient(to right, transparent, var(--bg));
-	}
-
-	.actions::after {
-		content: '';
-		position: absolute;
-		width: 1rem;
-		height: 100%;
-		right: calc(-1rem + 1px);
-		top: 0;
-		background: var(--sk-back-1);
 	}
 
 	.icon {
