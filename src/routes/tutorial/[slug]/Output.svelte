@@ -25,6 +25,11 @@
 	let adapter;
 
 	onMount(() => {
+		adapter = create_adapter((p, s) => {
+			progress = p;
+			status = s;
+		});
+
 		const unsub = state.subscribe(async (state) => {
 			if (state.status === 'set' || state.status === 'switch') {
 				loading = true;
@@ -68,21 +73,12 @@
 	 */
 	async function reset_adapter(state) {
 		let reload_iframe = true;
-		if (adapter) {
-			const result = await adapter.reset(state.stubs);
-			if (result === 'cancelled') {
-				return;
-			} else {
-				reload_iframe = result || state.status === 'switch';
-			}
-		} else {
-			adapter = create_adapter(state.stubs, (p, s) => {
-				progress = p;
-				status = s;
-			});
-			await adapter.init;
 
-			set_iframe_src(adapter.base + path);
+		const result = await adapter.reset(state.stubs);
+		if (result === 'cancelled') {
+			return;
+		} else {
+			reload_iframe = result || state.status === 'switch';
 		}
 
 		await new Promise((fulfil, reject) => {

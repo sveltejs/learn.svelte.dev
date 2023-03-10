@@ -16,11 +16,10 @@ function console_stream(label) {
 }
 
 /**
- * @param {import('$lib/types').Stub[]} stubs
  * @param {(progress: number, status: string) => void} callback
  * @returns {Promise<import('$lib/types').AdapterInternal>}
  */
-export async function create(stubs, callback) {
+export async function create(callback) {
 	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
 		throw new Error('WebContainers are not supported by Safari');
 	}
@@ -35,7 +34,7 @@ export async function create(stubs, callback) {
 	let running;
 
 	/** Paths and contents of the currently loaded file stubs */
-	let current_stubs = stubs_to_map(stubs);
+	let current_stubs = stubs_to_map([]);
 
 	/** @type {boolean} Track whether there was an error from vite dev server */
 	let vite_error = false;
@@ -51,8 +50,7 @@ export async function create(stubs, callback) {
 		},
 		'unzip.cjs': {
 			file: { contents: common.unzip }
-		},
-		...convert_stubs_to_tree(stubs)
+		}
 	});
 
 	callback(3 / 5, 'unzipping files');

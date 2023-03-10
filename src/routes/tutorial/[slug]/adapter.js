@@ -1,9 +1,8 @@
 /**
- * @param {import('$lib/types').Stub[]} initial_stubs
  * @param {(progress: number, status: string) => void} callback
  * @returns {import('$lib/types').Adapter}
  */
-export function create_adapter(initial_stubs, callback) {
+export function create_adapter(callback) {
 	/**
 	 * @typedef {{ type: 'reset'; stubs: import('$lib/types').Stub[]; } | { type: 'update'; stubs: import('$lib/types').FileStub[]; }} State
 	 */
@@ -16,7 +15,7 @@ export function create_adapter(initial_stubs, callback) {
 
 	async function init() {
 		const module = await import('$lib/client/adapters/webcontainer/index.js');
-		adapter_promise = module.create(initial_stubs, callback);
+		adapter_promise = module.create(callback);
 		adapter_base = (await adapter_promise).base;
 	}
 
