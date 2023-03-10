@@ -4,7 +4,7 @@
 	import { browser, dev } from '$app/environment';
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
-	import { create_adapter } from './adapter';
+	import { adapter, progress } from './adapter';
 	import { state } from './state.js';
 
 	/** @type {string} */
@@ -18,18 +18,7 @@
 	/** @type {Error | null} */
 	let error = null;
 
-	let progress = 0;
-	let status = 'initialising';
-
-	/** @type {import('$lib/types').Adapter} Will be defined after first afterNavigate */
-	let adapter;
-
 	onMount(() => {
-		adapter = create_adapter((p, s) => {
-			progress = p;
-			status = s;
-		});
-
 		const unsub = state.subscribe(async (state) => {
 			if (state.status === 'set' || state.status === 'switch') {
 				loading = true;
@@ -54,9 +43,6 @@
 
 		function destroy() {
 			unsub();
-			if (adapter) {
-				adapter.destroy();
-			}
 		}
 
 		document.addEventListener('pagehide', destroy);
@@ -184,7 +170,7 @@
 	{/if}
 
 	{#if loading || error}
-		<Loading {initial} {error} {progress} {status} />
+		<Loading {initial} {error} progress={$progress.value} status={$progress.text} />
 	{/if}
 </div>
 

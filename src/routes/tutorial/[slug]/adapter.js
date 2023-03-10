@@ -1,3 +1,17 @@
+import { writable } from 'svelte/store';
+import { browser } from '$app/environment';
+
+export const progress = writable({
+	value: 0,
+	text: 'initialising'
+});
+
+/** @type {import('$lib/types').Adapter} */
+// @ts-expect-error
+export const adapter = browser
+	? create_adapter((value, text) => { progress.set({ value, text }); })
+	: undefined;
+
 /**
  * @param {(progress: number, status: string) => void} callback
  * @returns {import('$lib/types').Adapter}
@@ -46,7 +60,6 @@ export function create_adapter(callback) {
 	current = init().then(() => true);
 
 	return {
-		init: current.then(() => {}),
 		get base() {
 			return adapter_base;
 		},

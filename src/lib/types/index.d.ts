@@ -27,7 +27,6 @@ export interface AdapterInternal {
 export interface Adapter extends AdapterInternal {
 	reset(files: Array<Stub>): Promise<boolean | 'cancelled'>;
 	update(file: Array<FileStub>): Promise<boolean | 'cancelled'>;
-	init: Promise<void>;
 }
 
 export interface Scope {
