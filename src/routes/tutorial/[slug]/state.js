@@ -134,13 +134,16 @@ export const state = {
 		}));
 	},
 
-	/** @param {string} name */
-	toggle_expanded: (name) => {
+	/**
+	 * @param {string} name
+	 * @param {boolean} [expanded]
+	 */
+	toggle_expanded: (name, expanded) => {
 		update((state) => ({
 			...state,
 			expanded: {
 				...state.expanded,
-				[name]: !state.expanded[name]
+				[name]: expanded ?? !state.expanded[name]
 			}
 		}));
 	},

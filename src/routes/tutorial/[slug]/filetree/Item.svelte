@@ -39,7 +39,7 @@
 	}
 </script>
 
-<li class:selected style="--depth: {depth}; --icon: url('{icon}');">
+<li class:selected style="--depth: {depth}; --icon: url('{icon}');" on:keydown>
 	{#if renaming}
 		<!-- svelte-ignore a11y-autofocus -->
 		<div class="basename">

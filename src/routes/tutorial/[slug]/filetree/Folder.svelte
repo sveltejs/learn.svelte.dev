@@ -124,6 +124,11 @@
 	on:cancel={() => {
 		mode = 'idle';
 	}}
+	on:keydown={(e) => {
+		if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+			state.toggle_expanded(directory.name, e.key === 'ArrowRight');
+		}
+	}}
 />
 
 {#if $state.expanded[directory.name]}
