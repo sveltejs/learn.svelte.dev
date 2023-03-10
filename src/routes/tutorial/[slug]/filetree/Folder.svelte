@@ -5,9 +5,7 @@
 	import Item from './Item.svelte';
 	import folder_closed from '$lib/icons/folder.svg';
 	import folder_open from '$lib/icons/folder-open.svg';
-	import { stubs, solution } from '../state.js';
-
-	export let expanded = true;
+	import { state, stubs, solution } from '../state.js';
 
 	/** @type {import('$lib/types').DirectoryStub} */
 	export let directory;
@@ -22,7 +20,7 @@
 	export let files;
 
 	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
-	let state = 'idle';
+	let mode = 'idle';
 
 	const { rename, add, remove, readonly } = context.get();
 
@@ -80,21 +78,21 @@
 			icon: 'file-new',
 			label: 'New file',
 			fn: () => {
-				state = 'add_file';
+				mode = 'add_file';
 			}
 		},
 		can_create.directory && {
 			icon: 'folder-new',
 			label: 'New folder',
 			fn: () => {
-				state = 'add_directory';
+				mode = 'add_directory';
 			}
 		},
 		can_remove && {
 			icon: 'rename',
 			label: 'Rename',
 			fn: () => {
-				state = 'renaming';
+				mode = 'renaming';
 			}
 		},
 		can_remove && {
@@ -110,26 +108,26 @@
 <Item
 	{depth}
 	basename={directory.basename}
-	icon={expanded ? folder_open : folder_closed}
+	icon={$state.expanded[directory.name] ? folder_open : folder_closed}
 	can_rename={can_remove}
-	renaming={state === 'renaming'}
+	renaming={mode === 'renaming'}
 	{actions}
 	on:click={() => {
-		expanded = !expanded;
+		state.toggle_expanded(directory.name);
 	}}
 	on:edit={() => {
-		state = 'renaming';
+		mode = 'renaming';
 	}}
 	on:rename={(e) => {
 		rename(directory, e.detail.basename);
 	}}
 	on:cancel={() => {
-		state = 'idle';
+		mode = 'idle';
 	}}
 />
 
-{#if expanded}
-	{#if state === 'add_directory'}
+{#if $state.expanded[directory.name]}
+	{#if mode === 'add_directory'}
 		<Item
 			depth={depth + 1}
 			renaming
@@ -137,7 +135,7 @@
 				add(prefix + e.detail.basename, 'directory');
 			}}
 			on:cancel={() => {
-				state = 'idle';
+				mode = 'idle';
 			}}
 		/>
 	{/if}
@@ -146,7 +144,7 @@
 		<svelte:self {directory} prefix={directory.name + '/'} depth={depth + 1} files={children} />
 	{/each}
 
-	{#if state === 'add_file'}
+	{#if mode === 'add_file'}
 		<Item
 			depth={depth + 1}
 			renaming
@@ -154,12 +152,12 @@
 				add(prefix + e.detail.basename, 'file');
 			}}
 			on:cancel={() => {
-				state = 'idle';
+				mode = 'idle';
 			}}
 		/>
 	{/if}
 
-	{#each child_files as file}
+	{#each child_files as file, i}
 		<File {file} depth={depth + 1} />
 	{/each}
 {/if}

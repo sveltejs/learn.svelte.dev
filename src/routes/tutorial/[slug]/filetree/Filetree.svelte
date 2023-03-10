@@ -135,7 +135,20 @@
 	}
 </script>
 
-<ul class="filetree">
+<ul
+	class="filetree"
+	on:keydown={(e) => {
+		if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+			e.preventDefault();
+			const lis = Array.from(e.currentTarget.querySelectorAll('li'));
+			const focused = lis.findIndex((li) => li.contains(e.target));
+
+			const d = e.key === 'ArrowUp' ? -1 : +1;
+
+			lis[focused + d]?.querySelector('button')?.focus();
+		}
+	}}
+>
 	<Folder
 		prefix={$scope.prefix}
 		depth={0}
@@ -145,7 +158,6 @@
 			basename: $scope.name
 		}}
 		files={$stubs.filter((stub) => !hidden.has(stub.basename))}
-		expanded
 	/>
 </ul>
 
