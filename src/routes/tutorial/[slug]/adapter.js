@@ -18,6 +18,7 @@ if (browser) {
 			const adapter = await module.create((value, text) => { progress.set({ value, text }); });
 
 			base.set(adapter.base);
+			publish('reload');
 
 			fulfil(adapter);
 		} catch (error) {
@@ -26,12 +27,41 @@ if (browser) {
 	})
 }
 
+/** @typedef {'reload'} EventName */
+
+/** @type {Map<EventName, Set<() => void>>} */
+let subscriptions = new Map([['reload', new Set()]]);
+
+/**
+ * 
+ * @param {EventName} event 
+ * @param {() => void} callback 
+ */
+export function subscribe(event, callback) {
+	subscriptions.get(event)?.add(callback);
+
+	return () =>{
+		subscriptions.get(event)?.delete(callback);
+	};
+}
+
+/**
+ * @param {EventName} event 
+ */
+function publish(event) {
+	subscriptions.get(event)?.forEach(fn => fn());
+}
+
 /**
  * @param {import('$lib/types').Stub[]} files 
  */
 export async function reset(files) {
 	const adapter = await ready;
-	return adapter.reset(files);
+	const should_reload = await adapter.reset(files);
+
+	if (should_reload) {
+		publish('reload');
+	}
 }
 
 /**
@@ -39,5 +69,9 @@ export async function reset(files) {
  */
 export async function update(files) {
 	const adapter = await ready;
-	return adapter.update(files);
+	const should_reload = await adapter.update(files);
+
+	if (should_reload) {
+		publish('reload');
+	}
 }
