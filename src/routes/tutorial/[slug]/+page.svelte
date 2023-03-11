@@ -78,7 +78,9 @@
 								class:completed={$completed}
 								disabled={Object.keys(data.exercise.b).length === 0}
 								on:click={() => {
-									state.toggle_completion();
+									state.set_stubs(
+										$completed ? $state.exercise.initial : Object.values($state.exercise.solution)
+									);
 								}}
 							>
 								{#if $completed && Object.keys(data.exercise.b).length > 0}

@@ -121,20 +121,6 @@ export const state = {
 		adapter.reset(stubs);
 	},
 
-	toggle_completion: () => {
-		update((state) => {
-			const stubs = is_completed(state) ? state.exercise.initial : Object.values(state.exercise.solution);
-
-			// TODO bit naughty, putting this side-effect here
-			adapter.reset(stubs);
-
-			return {
-				...state,
-				stubs,
-			};
-		});
-	},
-
 	/**
 	 * @param {string} name
 	 * @param {boolean} [collapsed]
