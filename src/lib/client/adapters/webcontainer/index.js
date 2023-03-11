@@ -104,7 +104,8 @@ export async function create(base, error, progress) {
 				process.output.pipeTo(console_stream('dev'));
 
 				// keep restarting dev server (can crash in case of illegal +files for example)
-				process.exit.then(run_dev);
+				await process.exit;
+				run_dev();
 			}
 		});
 	}
