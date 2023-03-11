@@ -13,7 +13,7 @@
 	import Sidebar from './Sidebar.svelte';
 	import {
 		files,
-		set_stubs,
+		reset_files,
 		select_file,
 		selected_name,
 		selected_file,
@@ -122,7 +122,7 @@
 								class:completed
 								disabled={!data.exercise.has_solution}
 								on:click={() => {
-									set_stubs(Object.values(completed ? data.exercise.a : data.exercise.b));
+									reset_files(Object.values(completed ? data.exercise.a : data.exercise.b));
 								}}
 							>
 								{#if completed && data.exercise.has_solution}

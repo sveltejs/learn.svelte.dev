@@ -200,13 +200,8 @@ export async function create(base, error, progress) {
 
 			// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 			// because that can result in a broken UI state
-			const should_reload = (
-				!launched ||
-				will_restart || 
-				vite_error ||
-				to_delete.length > 0
-				// `|| added_new_file`, but I don't actually think that's necessary?
-			);
+			const should_reload = !launched || will_restart || vite_error || to_delete.length > 0;
+			// `|| added_new_file`, but I don't actually think that's necessary?
 
 			await launch();
 
@@ -253,10 +248,10 @@ export async function create(base, error, progress) {
  * @param {import('$lib/types').Stub} file
  */
 function will_restart_vite_dev_server(file) {
-	return file.type === 'file' &&
-			(file.name === '/vite.config.js' ||
-				file.name === '/svelte.config.js' ||
-				file.name === '/.env');
+	return (
+		file.type === 'file' &&
+		(file.name === '/vite.config.js' || file.name === '/svelte.config.js' || file.name === '/.env')
+	);
 }
 
 /**
@@ -284,11 +279,11 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 	return tree;
 }
 
-/** @param {import('$lib/types').FileStub} stub */
-function to_file(stub) {
+/** @param {import('$lib/types').FileStub} file */
+function to_file(file) {
 	// special case
-	if (stub.name === '/src/app.html') {
-		const contents = stub.contents.replace(
+	if (file.name === '/src/app.html') {
+		const contents = file.contents.replace(
 			'</head>',
 			'<script type="module" src="/src/__client.js"></script></head>'
 		);
@@ -298,7 +293,7 @@ function to_file(stub) {
 		};
 	}
 
-	const contents = stub.text ? stub.contents : base64.toByteArray(stub.contents);
+	const contents = file.text ? file.contents : base64.toByteArray(file.contents);
 
 	return {
 		file: { contents }
@@ -306,12 +301,12 @@ function to_file(stub) {
 }
 
 /**
- * @param {import('$lib/types').Stub[]} stubs
+ * @param {import('$lib/types').Stub[]} files
  * @returns {Map<string, import('$lib/types').Stub>}
  */
-function stubs_to_map(stubs, map = new Map()) {
-	for (const stub of stubs) {
-		map.set(stub.name, stub);
+function stubs_to_map(files, map = new Map()) {
+	for (const file of files) {
+		map.set(file.name, file);
 	}
 	return map;
 }

@@ -32,18 +32,13 @@ export function update_file(file) {
 	adapter.update(file);
 }
 
-/** @param {import('$lib/types').Stub[]} stubs */
-export function set_stubs(stubs) {
-	files.set(stubs);
-	adapter.reset(stubs);
+/** @param {import('$lib/types').Stub[]} new_files */
+export function reset_files(new_files) {
+	files.set(new_files);
+	adapter.reset(new_files);
 }
 
 /** @param {string | null} name */
 export function select_file(name) {
 	selected_name.set(name);
 }
-
-export const state = {};
-
-// TODO get rid
-export const stubs = files;
