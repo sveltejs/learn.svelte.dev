@@ -52,6 +52,10 @@ export interface Exercise {
 	};
 	a: Record<string, Stub>;
 	b: Record<string, Stub>;
+
+	// TODO these are temporary — use a and b instead
+	initial: Stub[];
+	solution: Stub[];
 }
 
 export interface ExerciseStub {

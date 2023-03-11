@@ -152,6 +152,37 @@ export function get_exercise(slug) {
 				};
 			}
 
+			const editing_constraints = {
+				create: new Set(exercise_meta.editing_constraints?.create ?? []),
+				remove: new Set(exercise_meta.editing_constraints?.remove ?? [])
+			};
+
+			const solution = { ...a };
+
+			// TODO should exercise.a/b be an array in the first place?
+			for (const stub of Object.values(b)) {
+				if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
+					// remove file
+					editing_constraints.remove.add(stub.name);
+					delete solution[stub.name];
+				} else if (stub.name.endsWith('/__delete')) {
+					// remove directory
+					const parent = stub.name.slice(0, stub.name.lastIndexOf('/'));
+					editing_constraints.remove.add(parent);
+					delete solution[parent];
+					for (const k in solution) {
+						if (k.startsWith(parent + '/')) {
+							delete solution[k];
+						}
+					}
+				} else {
+					if (!solution[stub.name]) {
+						editing_constraints.create.add(stub.name);
+					}
+					solution[stub.name] = stub;
+				}
+			}
+
 			return {
 				part: {
 					slug: part_dir,
@@ -169,10 +200,7 @@ export function get_exercise(slug) {
 				prev,
 				next,
 				dir,
-				editing_constraints: {
-					create: new Set(exercise_meta.editing_constraints?.create ?? []),
-					remove: new Set(exercise_meta.editing_constraints?.remove ?? [])
-				},
+				editing_constraints,
 				html: transform(markdown, {
 					codespan: (text) =>
 						filenames.size > 1 && filenames.has(text)
@@ -180,7 +208,9 @@ export function get_exercise(slug) {
 							: `<code>${text}</code>`
 				}),
 				a,
-				b
+				b,
+				initial: Object.values(a),
+				solution: solution
 			};
 		}
 
