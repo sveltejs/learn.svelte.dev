@@ -6,9 +6,7 @@ import * as adapter from './adapter.js';
  *  stubs: import("$lib/types").Stub[];
  *  selected: string | null;
  *  exercise: {
- *    initial: import("$lib/types").Stub[];
  *    solution: Record<string, import("$lib/types").Stub>;
- *    editing_constraints: import("$lib/types").EditingConstraints;
  *  };
  * }} State
  */
@@ -20,12 +18,7 @@ const { subscribe, set, update } = writable({
 	stubs: [],
 	selected: null,
 	exercise: {
-		initial: [],
-		solution: {},
-		editing_constraints: {
-			create: new Set(),
-			remove: new Set()
-		}
+		solution: {}
 	},
 });
 
@@ -58,9 +51,7 @@ export const state = {
 		set({
 			stubs: exercise.initial,
 			exercise: {
-				initial: exercise.initial,
 				solution: exercise.solution,
-				editing_constraints: exercise.editing_constraints
 			},
 			selected: exercise.focus
 		});
@@ -88,8 +79,6 @@ export const selected = derived(
 );
 
 export const solution = derived(state, ($state) => $state.exercise.solution);
-
-export const editing_constraints = derived(state, ($state) => $state.exercise.editing_constraints);
 
 export const completed = derived(state, is_completed);
 

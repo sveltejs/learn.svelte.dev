@@ -79,7 +79,9 @@
 								disabled={Object.keys(data.exercise.b).length === 0}
 								on:click={() => {
 									state.set_stubs(
-										$completed ? $state.exercise.initial : Object.values($state.exercise.solution)
+										$completed
+											? Object.values(data.exercise.a)
+											: Object.values(data.exercise.solution)
 									);
 								}}
 							>

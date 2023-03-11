@@ -3,7 +3,7 @@
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
-	import { state, stubs, editing_constraints, solution } from '../state.js';
+	import { state, stubs, solution } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('svelte/store').Writable<boolean>} */
@@ -11,6 +11,9 @@
 
 	/** @type {import('$lib/types').Scope} */
 	export let scope;
+
+	/** @type {import('$lib/types').Exercise} */
+	export let exercise;
 
 	let modal_text = '';
 
@@ -27,10 +30,10 @@
 		readonly,
 
 		add: async (name, type) => {
-			if (!$solution[name] && !$editing_constraints.create.has(name)) {
+			if (!$solution[name] && !exercise.editing_constraints.create.has(name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
-					Array.from($editing_constraints.create).join('\n');
+					Array.from(exercise.editing_constraints.create).join('\n');
 				return;
 			}
 
@@ -70,17 +73,17 @@
 				return;
 			}
 
-			if (!$solution[new_full_name] && !$editing_constraints.create.has(new_full_name)) {
+			if (!$solution[new_full_name] && !exercise.editing_constraints.create.has(new_full_name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
-					Array.from($editing_constraints.create).join('\n');
+					Array.from(exercise.editing_constraints.create).join('\n');
 				return;
 			}
 
-			if ($solution[to_rename.name] && !$editing_constraints.remove.has(to_rename.name)) {
+			if ($solution[to_rename.name] && !exercise.editing_constraints.remove.has(to_rename.name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be removed in this exercise:\n' +
-					Array.from($editing_constraints.remove).join('\n');
+					Array.from(exercise.editing_constraints.remove).join('\n');
 				return;
 			}
 
@@ -99,10 +102,10 @@
 		},
 
 		remove: async (stub) => {
-			if ($solution[stub.name] && !$editing_constraints.remove.has(stub.name)) {
+			if ($solution[stub.name] && !exercise.editing_constraints.remove.has(stub.name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
-					Array.from($editing_constraints.remove).join('\n');
+					Array.from(exercise.editing_constraints.remove).join('\n');
 				return;
 			}
 
