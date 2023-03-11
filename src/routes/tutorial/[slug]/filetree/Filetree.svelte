@@ -9,9 +9,6 @@
 	/** @type {import('svelte/store').Writable<boolean>} */
 	export let readonly;
 
-	/** @type {import('$lib/types').Scope} */
-	export let scope;
-
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
 
@@ -171,12 +168,12 @@
 	}}
 >
 	<Folder
-		prefix={scope.prefix}
+		prefix={exercise.scope.prefix}
 		depth={0}
 		directory={{
 			type: 'directory',
 			name: '',
-			basename: scope.name
+			basename: exercise.scope.name
 		}}
 		files={$stubs.filter((stub) => !hidden.has(stub.basename))}
 	/>
