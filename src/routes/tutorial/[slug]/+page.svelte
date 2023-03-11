@@ -11,7 +11,7 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import { state, selected, completed } from './state.js';
+	import { files, state, selected_file, solution } from './state.js';
 
 	export let data;
 
@@ -20,6 +20,41 @@
 
 	$: mobile = writable(false);
 	$: $mobile = width < 768;
+
+	$: completed = is_completed($files, data.exercise.b);
+
+	$: files.set(Object.values(data.exercise.a));
+	$: solution.set(data.exercise.b);
+
+	/**
+	 * @param {import('$lib/types').Stub[]} files
+	 * @param {Record<string, import('$lib/types').Stub> | null} solution
+	 */
+	function is_completed(files, solution) {
+		if (!solution) return true;
+
+		for (const file of files) {
+			if (file.type === 'file') {
+				const expected = solution[file.name];
+				if (expected?.type !== 'file') return false;
+				if (normalise(file.contents) !== normalise(expected.contents)) return false;
+			}
+		}
+
+		const names = new Set(files.map((stub) => stub.name));
+
+		for (const name in solution) {
+			if (!names.has(name)) return false;
+		}
+
+		return true;
+	}
+
+	/** @param {string} code */
+	function normalise(code) {
+		// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
+		return code.replace(/\s+/g, ' ').trim();
+	}
 
 	afterNavigate(() => {
 		state.switch_exercise(data.exercise);
@@ -75,17 +110,13 @@
 							<Filetree readonly={mobile} exercise={data.exercise} />
 
 							<button
-								class:completed={$completed}
-								disabled={Object.keys(data.exercise.b).length === 0}
+								class:completed
+								disabled={!data.exercise.has_solution}
 								on:click={() => {
-									state.set_stubs(
-										$completed
-											? Object.values(data.exercise.a)
-											: Object.values(data.exercise.solution)
-									);
+									state.set_stubs(Object.values(completed ? data.exercise.a : data.exercise.b));
 								}}
 							>
-								{#if $completed && Object.keys(data.exercise.b).length > 0}
+								{#if completed && data.exercise.has_solution}
 									reset
 								{:else}
 									solve <Icon name="arrow-right" />
@@ -95,7 +126,7 @@
 
 						<section class="editor-container" slot="b">
 							<Editor read_only={$mobile} />
-							<ImageViewer selected={$selected} />
+							<ImageViewer selected={$selected_file} />
 						</section>
 					</SplitPane>
 				</section>

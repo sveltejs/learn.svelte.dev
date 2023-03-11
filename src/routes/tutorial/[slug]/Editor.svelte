@@ -1,7 +1,7 @@
 <script>
 	import { dev } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { stubs, selected, state } from './state.js';
+	import { stubs, selected_name, state } from './state.js';
 
 	/**
 	 * file extension -> monaco language
@@ -227,7 +227,7 @@
 	}
 
 	$: if (instance && $stubs /* to retrigger on stubs change */) {
-		const model = $selected && models.get($selected.name);
+		const model = $selected_name && models.get($selected_name);
 		instance.editor.setModel(model ?? null);
 	}
 

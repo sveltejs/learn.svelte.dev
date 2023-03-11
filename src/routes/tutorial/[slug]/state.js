@@ -1,112 +1,58 @@
 import { derived, writable } from 'svelte/store';
 import * as adapter from './adapter.js';
 
-/**
- * @typedef {{
- *  stubs: import("$lib/types").Stub[];
- *  selected: string | null;
- *  exercise: {
- *    solution: Record<string, import("$lib/types").Stub>;
- *  };
- * }} State
- */
+/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
+export const files = writable([]);
 
-/**
- * @type {import('svelte/store').Writable<State>}
- */
-const { subscribe, set, update } = writable({
-	stubs: [],
-	selected: null,
-	exercise: {
-		solution: {}
-	},
-});
+/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
+export const solution = writable({});
+
+/** @type {import('svelte/store').Writable<string | null>} */
+export const selected_name = writable(null);
+
+export const selected_file = derived([files, selected_name], ([$files, $selected_name]) => {
+	return /** @type{import('$lib/types').FileStub | undefined} */ (
+		$files.find((stub) => stub.name === $selected_name)
+		) ?? null
+})
 
 export const state = {
-	subscribe,
-
 	/** @param {import('$lib/types').FileStub} file */
 	update_file: (file) => {
-		update((state) => ({
-			...state,
-			stubs: state.stubs.map((stub) => {
-				if (stub.name === file.name) {
+		files.update($files => {
+			return $files.map((old) => {
+				if (old.name === file.name) {
 					return file;
 				}
-				return stub;
-			}),
-		}));
+				return old;
+			})
+		});
 
 		adapter.update(file);
 	},
 
 	/** @param {import('$lib/types').Stub[]} stubs */
 	set_stubs: (stubs) => {
-		update((state) => ({ ...state, stubs }));
+		files.set(stubs);
 		adapter.reset(stubs);
 	},
 
 	/** @param {import('$lib/types').Exercise} exercise */
 	switch_exercise: (exercise) => {
-		set({
-			stubs: exercise.initial,
-			exercise: {
-				solution: exercise.solution,
-			},
-			selected: exercise.focus
-		});
+		const stubs = Object.values(exercise.a);
 
-		adapter.reset(exercise.initial);
+		files.set(stubs);
+
+		selected_name.set(exercise.focus);
+
+		adapter.reset(stubs);
 	},
 
 	/** @param {string | null} name */
 	select_file: (name) => {
-		update((state) => ({
-			...state,
-			selected: name,
-		}));
+		selected_name.set(name);
 	}
 };
 
-export const stubs = derived(state, ($state) => $state.stubs);
-
-export const selected = derived(
-	state,
-	($state) =>
-		/** @type{import('$lib/types').FileStub | undefined} */ (
-			$state.stubs.find((stub) => stub.name === $state.selected)
-		) ?? null
-);
-
-export const solution = derived(state, ($state) => $state.exercise.solution);
-
-export const completed = derived(state, is_completed);
-
-/**
- * @param {State} $state
- */
-function is_completed($state) {
-	const all_stubs_correct = $state.stubs.every((stub) => {
-		if (stub.type === 'directory') {
-			return true;
-		} else if (stub.type === 'file' && stub.name in $state.exercise.solution) {
-			const expected = $state.exercise.solution[stub.name];
-			return expected.type === 'file' && normalise(stub.contents) === normalise(expected.contents);
-		} else {
-			return false;
-		}
-	});
-
-	const stub_names = new Set($state.stubs.map((stub) => stub.name));
-	const stubs_complete = Object.keys($state.exercise.solution).every((name) =>
-		stub_names.has(name)
-	);
-
-	return all_stubs_correct && stubs_complete;
-}
-
-/** @param {string} code */
-function normalise(code) {
-	// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
-	return code.replace(/\s+/g, ' ').trim();
-}
+// TODO get rid
+export const stubs = files;

@@ -3,7 +3,7 @@
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
-	import { state, stubs, solution } from '../state.js';
+	import { files, solution, state, stubs } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('svelte/store').Writable<boolean>} */
@@ -16,7 +16,9 @@
 
 	const hidden = new Set(['__client.js', 'node_modules']);
 
+	/** @type {import('svelte/store').Writable<Record<string, boolean>>}*/
 	const collapsed = writable({});
+
 	afterNavigate(() => {
 		collapsed.set({});
 	});
@@ -34,7 +36,7 @@
 				return;
 			}
 
-			const existing = $state.stubs.find((stub) => stub.name === name);
+			const existing = $files.find((stub) => stub.name === name);
 			if (existing) {
 				modal_text = `A ${existing.type} already exists with this name`;
 				return;

@@ -101,6 +101,7 @@ export function get_exercise(slug) {
 			}
 
 			const b = walk(`${dir}/app-b`);
+			const has_solution = Object.keys(b).length > 0;
 
 			const part_meta = json(`content/tutorial/${part_dir}/meta.json`);
 			const chapter_meta = json(`content/tutorial/${part_dir}/${chapter_dir}/meta.json`);
@@ -159,7 +160,6 @@ export function get_exercise(slug) {
 
 			const solution = { ...a };
 
-			// TODO should exercise.a/b be an array in the first place?
 			for (const stub of Object.values(b)) {
 				if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
 					// remove file
@@ -208,9 +208,8 @@ export function get_exercise(slug) {
 							: `<code>${text}</code>`
 				}),
 				a,
-				b,
-				initial: Object.values(a),
-				solution: solution
+				b: solution,
+				has_solution
 			};
 		}
 
@@ -248,7 +247,7 @@ function extract_frontmatter(markdown, dir) {
  *   exclude?: string[]
  * }} options
  */
-export function walk(cwd, options = {}) {
+function walk(cwd, options = {}) {
 	/** @type {Record<string, import('$lib/types').FileStub | import('$lib/types').DirectoryStub>} */
 	const result = {};
 
