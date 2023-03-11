@@ -6,21 +6,26 @@
 	import Loading from './Loading.svelte';
 	import { base, error, progress, subscribe } from './adapter';
 
-	/** @type {string} */
-	export let path;
+	/** @type {import('$lib/types').Exercise} */
+	export let exercise;
+
+	/** @type {boolean} */
+	export let paused;
 
 	/** @type {HTMLIFrameElement} */
 	let iframe;
 	let loading = true;
 	let initial = true;
 
+	// reset `path` to `exercise.path` each time, but allow it to be controlled by the iframe
+	let path = exercise.path;
+
+	$: if ($base) set_iframe_src($base + (path = exercise.path));
+
 	onMount(() => {
 		const unsubscribe = subscribe('reload', () => {
 			set_iframe_src($base + path);
 		});
-
-		// this is for HMR purposes
-		if ($base) set_iframe_src($base + path);
 
 		return () => {
 			unsubscribe();
@@ -37,6 +42,8 @@
 	/** @param {MessageEvent} e */
 	async function handle_message(e) {
 		if (e.origin !== $base) return;
+
+		if (paused) return;
 
 		if (e.data.type === 'ping') {
 			path = e.data.data.path ?? path;
@@ -89,7 +96,7 @@
 		<iframe bind:this={iframe} title="Output" />
 	{/if}
 
-	{#if loading || $error}
+	{#if paused || loading || $error}
 		<Loading {initial} error={$error} progress={$progress.value} status={$progress.text} />
 	{/if}
 </div>

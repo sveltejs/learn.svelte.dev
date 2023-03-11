@@ -1,7 +1,7 @@
 <script>
 	import Output from './Output.svelte';
 	import { browser } from '$app/environment';
-	import { afterNavigate } from '$app/navigation';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import ContextMenu from './filetree/ContextMenu.svelte';
 	import Filetree from './filetree/Filetree.svelte';
 	import { SplitPane } from '@rich_harris/svelte-split-pane';
@@ -26,6 +26,28 @@
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
 
+	let path = data.exercise.path;
+	let paused = false;
+
+	/** @type {import('$lib/types').Stub[]} */
+	let previous_files = [];
+
+	beforeNavigate(() => {
+		previous_files = $files;
+	});
+
+	afterNavigate(async () => {
+		const will_delete = previous_files.some((file) => !(file.name in data.exercise.a));
+
+		console.log({ will_delete });
+
+		if (data.exercise.path !== path || will_delete) paused = true;
+		await reset($files);
+
+		path = data.exercise.path;
+		paused = false;
+	});
+
 	$: mobile = writable(false);
 	$: $mobile = width < 768;
 
@@ -34,10 +56,6 @@
 	$: files.set(Object.values(data.exercise.a));
 	$: solution.set(data.exercise.b);
 	$: selected_name.set(data.exercise.focus);
-
-	afterNavigate(() => {
-		reset($files);
-	});
 
 	/**
 	 * @param {import('$lib/types').Stub[]} files
@@ -141,7 +159,7 @@
 				</section>
 
 				<section slot="b" class="preview">
-					<Output path={data.exercise.path} />
+					<Output exercise={data.exercise} {paused} />
 				</section>
 			</SplitPane>
 		</section>
