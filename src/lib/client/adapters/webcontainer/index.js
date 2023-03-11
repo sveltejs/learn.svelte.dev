@@ -138,7 +138,7 @@ export async function create(callback) {
 			// For some reason, server-ready is fired again when the vite dev server is restarted.
 			// We need to wait for it to finish before we can continue, else we might
 			// request files from Vite before it's ready, leading to a timeout.
-			const will_restart = will_restart_vite_dev_server(to_write);
+			const will_restart = to_write.some(will_restart_vite_dev_server);
 			const promise = will_restart
 				? new Promise((fulfil, reject) => {
 						const error_unsub = vm.on('error', (error) => {
@@ -191,56 +191,51 @@ export async function create(callback) {
 
 			return should_reload;
 		},
-		update: async (stubs) => {
+		update: async (file) => {
 			await running;
 
 			/** @type {import('@webcontainer/api').FileSystemTree} */
 			const root = {};
 
-			for (const stub of stubs) {
-				let tree = root;
+			let tree = root;
 
-				const path = stub.name.split('/').slice(1);
-				const basename = /** @type {string} */ (path.pop());
+			const path = file.name.split('/').slice(1);
+			const basename = /** @type {string} */ (path.pop());
 
-				for (const part of path) {
-					if (!tree[part]) {
-						/** @type {import('@webcontainer/api').FileSystemTree} */
-						const directory = {};
+			for (const part of path) {
+				if (!tree[part]) {
+					/** @type {import('@webcontainer/api').FileSystemTree} */
+					const directory = {};
 
-						tree[part] = {
-							directory
-						};
-					}
-
-					tree = /** @type {import('@webcontainer/api').DirectoryNode} */ (tree[part]).directory;
+					tree[part] = {
+						directory
+					};
 				}
 
-				tree[basename] = to_file(stub);
+				tree = /** @type {import('@webcontainer/api').DirectoryNode} */ (tree[part]).directory;
 			}
+
+			tree[basename] = to_file(file);
 
 			await vm.mount(root);
 
-			stubs_to_map(stubs, current_stubs);
+			current_stubs.set(file.name, file);
 
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
-			return will_restart_vite_dev_server(stubs);
+			return will_restart_vite_dev_server(file);
 		}
 	};
 }
 
 /**
- * @param {import('$lib/types').Stub[]} stubs
+ * @param {import('$lib/types').Stub} file
  */
-function will_restart_vite_dev_server(stubs) {
-	return stubs.some(
-		(stub) =>
-			stub.type === 'file' &&
-			(stub.name === '/vite.config.js' ||
-				stub.name === '/svelte.config.js' ||
-				stub.name === '/.env')
-	);
+function will_restart_vite_dev_server(file) {
+	return file.type === 'file' &&
+			(file.name === '/vite.config.js' ||
+				file.name === '/svelte.config.js' ||
+				file.name === '/.env');
 }
 
 /**

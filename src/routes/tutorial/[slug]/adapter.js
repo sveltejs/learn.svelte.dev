@@ -12,6 +12,7 @@ export const base = writable(null);
 /** @type {import('svelte/store').Writable<Error | null>} */
 export const error = writable(null);
 
+/** @type {Promise<import('$lib/types').Adapter>} */
 let ready = new Promise(() => {});
 
 if (browser) {
@@ -76,11 +77,11 @@ export async function reset(files) {
 }
 
 /**
- * @param {import('$lib/types').Stub[]} files 
+ * @param {import('$lib/types').FileStub} file
  */
-export async function update(files) {
+export async function update(file) {
 	const adapter = await ready;
-	const should_reload = await adapter.update(files);
+	const should_reload = await adapter.update(file);
 
 	if (should_reload) {
 		publish('reload');

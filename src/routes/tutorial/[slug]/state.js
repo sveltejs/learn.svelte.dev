@@ -48,7 +48,7 @@ export const state = {
 			}),
 		}));
 
-		adapter.update([file]);
+		adapter.update(file);
 	},
 
 	/** @param {import('$lib/types').Stub[]} stubs */
