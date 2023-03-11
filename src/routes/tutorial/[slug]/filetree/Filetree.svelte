@@ -27,10 +27,10 @@
 		readonly,
 
 		add: async (name, type) => {
-			if (!$solution[name] && !$editing_constraints.create.includes(name)) {
+			if (!$solution[name] && !$editing_constraints.create.has(name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
-					$editing_constraints.create.join('\n');
+					Array.from($editing_constraints.create).join('\n');
 				return;
 			}
 
@@ -70,17 +70,17 @@
 				return;
 			}
 
-			if (!$solution[new_full_name] && !$editing_constraints.create.includes(new_full_name)) {
+			if (!$solution[new_full_name] && !$editing_constraints.create.has(new_full_name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
-					$editing_constraints.create.join('\n');
+					Array.from($editing_constraints.create).join('\n');
 				return;
 			}
 
-			if ($solution[to_rename.name] && !$editing_constraints.remove.includes(to_rename.name)) {
+			if ($solution[to_rename.name] && !$editing_constraints.remove.has(to_rename.name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be removed in this exercise:\n' +
-					$editing_constraints.remove.join('\n');
+					Array.from($editing_constraints.remove).join('\n');
 				return;
 			}
 
@@ -99,10 +99,10 @@
 		},
 
 		remove: async (stub) => {
-			if ($solution[stub.name] && !$editing_constraints.remove.includes(stub.name)) {
+			if ($solution[stub.name] && !$editing_constraints.remove.has(stub.name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
-					$editing_constraints.remove.join('\n');
+					Array.from($editing_constraints.remove).join('\n');
 				return;
 			}
 

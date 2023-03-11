@@ -170,8 +170,8 @@ export function get_exercise(slug) {
 				next,
 				dir,
 				editing_constraints: {
-					create: exercise_meta.editing_constraints?.create ?? [],
-					remove: exercise_meta.editing_constraints?.remove ?? []
+					create: new Set(exercise_meta.editing_constraints?.create ?? []),
+					remove: new Set(exercise_meta.editing_constraints?.remove ?? [])
 				},
 				html: transform(markdown, {
 					codespan: (text) =>

@@ -47,8 +47,8 @@ export interface Exercise {
 	html: string;
 	dir: string;
 	editing_constraints: {
-		create: string[];
-		remove: string[];
+		create: Set<string>;
+		remove: Set<string>;
 	};
 	a: Record<string, Stub>;
 	b: Record<string, Stub>;
@@ -72,6 +72,6 @@ export interface PartStub {
 }
 
 export interface EditingConstraints {
-	create: string[];
-	remove: string[];
+	create: Set<string>;
+	remove: Set<string>;
 }

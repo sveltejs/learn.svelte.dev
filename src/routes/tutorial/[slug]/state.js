@@ -23,8 +23,8 @@ const { subscribe, set, update } = writable({
 		initial: [],
 		solution: {},
 		editing_constraints: {
-			create: [],
-			remove: []
+			create: new Set(),
+			remove: new Set()
 		}
 	},
 });
@@ -65,16 +65,12 @@ export const state = {
 		for (const stub of Object.values(exercise.b)) {
 			if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
 				// remove file
-				if (!editing_constraints.remove.includes(stub.name)) {
-					editing_constraints.remove.push(stub.name);
-				}
+				editing_constraints.remove.add(stub.name);
 				delete solution[stub.name];
 			} else if (stub.name.endsWith('/__delete')) {
 				// remove directory
 				const parent = stub.name.slice(0, stub.name.lastIndexOf('/'));
-				if (!editing_constraints.remove.includes(parent)) {
-					editing_constraints.remove.push(parent);
-				}
+				editing_constraints.remove.add(parent);
 				delete solution[parent];
 				for (const k in solution) {
 					if (k.startsWith(parent + '/')) {
@@ -82,8 +78,8 @@ export const state = {
 					}
 				}
 			} else {
-				if (!solution[stub.name] && !editing_constraints.create.includes(stub.name)) {
-					editing_constraints.create.push(stub.name);
+				if (!solution[stub.name]) {
+					editing_constraints.create.add(stub.name);
 				}
 				solution[stub.name] = exercise.b[stub.name];
 			}
