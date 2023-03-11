@@ -3,7 +3,7 @@
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
-	import { files, solution, state, stubs } from '../state.js';
+	import { files, solution, set_stubs, select_file, stubs } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('svelte/store').Writable<boolean>} */
@@ -56,12 +56,12 @@
 					contents: ''
 				};
 
-				state.select_file(stub.name);
+				select_file(stub.name);
 			} else {
 				stub = { type: 'directory', name, basename };
 			}
 
-			state.set_stubs([...$stubs, ...create_directories(name, $stubs), stub]);
+			set_stubs([...$stubs, ...create_directories(name, $stubs), stub]);
 		},
 
 		rename: async (to_rename, new_name) => {
@@ -97,7 +97,7 @@
 			to_rename.basename = /** @type {string} */ (new_full_name.split('/').pop());
 			to_rename.name = new_full_name;
 
-			state.set_stubs([...$stubs, ...create_directories(new_full_name, $stubs)]);
+			set_stubs([...$stubs, ...create_directories(new_full_name, $stubs)]);
 		},
 
 		remove: async (stub) => {
@@ -108,8 +108,8 @@
 				return;
 			}
 
-			state.select_file(null);
-			state.set_stubs(
+			select_file(null);
+			set_stubs(
 				$stubs.filter((s) => {
 					if (s === stub) return false;
 					if (s.name.startsWith(stub.name + '/')) return false;

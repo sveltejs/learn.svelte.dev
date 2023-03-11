@@ -11,48 +11,39 @@ export const solution = writable({});
 export const selected_name = writable(null);
 
 export const selected_file = derived([files, selected_name], ([$files, $selected_name]) => {
-	return /** @type{import('$lib/types').FileStub | undefined} */ (
-		$files.find((stub) => stub.name === $selected_name)
+	return (
+		/** @type{import('$lib/types').FileStub | undefined} */ (
+			$files.find((stub) => stub.name === $selected_name)
 		) ?? null
-})
+	);
+});
 
-export const state = {
-	/** @param {import('$lib/types').FileStub} file */
-	update_file: (file) => {
-		files.update($files => {
-			return $files.map((old) => {
-				if (old.name === file.name) {
-					return file;
-				}
-				return old;
-			})
+/** @param {import('$lib/types').FileStub} file */
+export function update_file(file) {
+	files.update(($files) => {
+		return $files.map((old) => {
+			if (old.name === file.name) {
+				return file;
+			}
+			return old;
 		});
+	});
 
-		adapter.update(file);
-	},
+	adapter.update(file);
+}
 
-	/** @param {import('$lib/types').Stub[]} stubs */
-	set_stubs: (stubs) => {
-		files.set(stubs);
-		adapter.reset(stubs);
-	},
+/** @param {import('$lib/types').Stub[]} stubs */
+export function set_stubs(stubs) {
+	files.set(stubs);
+	adapter.reset(stubs);
+}
 
-	/** @param {import('$lib/types').Exercise} exercise */
-	switch_exercise: (exercise) => {
-		const stubs = Object.values(exercise.a);
+/** @param {string | null} name */
+export function select_file(name) {
+	selected_name.set(name);
+}
 
-		files.set(stubs);
-
-		selected_name.set(exercise.focus);
-
-		adapter.reset(stubs);
-	},
-
-	/** @param {string | null} name */
-	select_file: (name) => {
-		selected_name.set(name);
-	}
-};
+export const state = {};
 
 // TODO get rid
 export const stubs = files;

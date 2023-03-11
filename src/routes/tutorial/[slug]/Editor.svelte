@@ -1,7 +1,7 @@
 <script>
 	import { dev } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { stubs, selected_name, state } from './state.js';
+	import { stubs, selected_name, update_file } from './state.js';
 
 	/**
 	 * file extension -> monaco language
@@ -203,7 +203,7 @@
 
 				if (notify) {
 					stub.contents = contents;
-					state.update_file(stub);
+					update_file(stub);
 				}
 			});
 

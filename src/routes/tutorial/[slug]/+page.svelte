@@ -11,7 +11,15 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import { files, state, selected_file, solution } from './state.js';
+	import {
+		files,
+		set_stubs,
+		select_file,
+		selected_name,
+		selected_file,
+		solution
+	} from './state.js';
+	import { reset } from './adapter.js';
 
 	export let data;
 
@@ -25,6 +33,11 @@
 
 	$: files.set(Object.values(data.exercise.a));
 	$: solution.set(data.exercise.b);
+	$: selected_name.set(data.exercise.focus);
+
+	afterNavigate(() => {
+		reset($files);
+	});
 
 	/**
 	 * @param {import('$lib/types').Stub[]} files
@@ -55,10 +68,6 @@
 		// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
 		return code.replace(/\s+/g, ' ').trim();
 	}
-
-	afterNavigate(() => {
-		state.switch_exercise(data.exercise);
-	});
 </script>
 
 <svelte:head>
@@ -92,7 +101,7 @@
 				index={data.index}
 				exercise={data.exercise}
 				on:select={(e) => {
-					state.select_file(e.detail.file);
+					select_file(e.detail.file);
 				}}
 			/>
 		</section>
@@ -113,7 +122,7 @@
 								class:completed
 								disabled={!data.exercise.has_solution}
 								on:click={() => {
-									state.set_stubs(Object.values(completed ? data.exercise.a : data.exercise.b));
+									set_stubs(Object.values(completed ? data.exercise.a : data.exercise.b));
 								}}
 							>
 								{#if completed && data.exercise.has_solution}
