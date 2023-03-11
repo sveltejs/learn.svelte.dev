@@ -22,12 +22,9 @@
 		// this is for HMR purposes
 		if ($base) set_iframe_src($base + path);
 
-		function destroy() {
+		return () => {
 			unsubscribe();
-		}
-
-		document.addEventListener('pagehide', destroy);
-		return destroy;
+		};
 	});
 
 	afterNavigate(() => {
