@@ -19,12 +19,7 @@ if (browser) {
 	ready = new Promise(async (fulfil, reject) => {
 		try {
 			const module = await import('$lib/client/adapters/webcontainer/index.js');
-			const adapter = await module.create((value, text) => {
-				progress.set({ value, text });
-			});
-
-			base.set(adapter.base);
-			publish('reload');
+			const adapter = await module.create(base, error, progress);
 
 			fulfil(adapter);
 		} catch (error) {

@@ -17,7 +17,6 @@ export interface DirectoryStub {
 export type Stub = FileStub | DirectoryStub;
 
 export interface Adapter {
-	base: string;
 	/** Returns `false` if the reset was in such a way that a reload of the iframe isn't needed */
 	reset(files: Array<Stub>): Promise<boolean>;
 	update(file: FileStub): Promise<boolean>;

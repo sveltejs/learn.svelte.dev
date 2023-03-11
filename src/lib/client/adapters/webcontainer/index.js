@@ -16,15 +16,17 @@ function console_stream(label) {
 }
 
 /**
- * @param {(progress: number, status: string) => void} callback
+ * @param {import('svelte/store').Writable<string | null>} base
+ * @param {import('svelte/store').Writable<Error | null>} error
+ * @param {import('svelte/store').Writable<{ value: number, text: string }>} progress
  * @returns {Promise<import('$lib/types').Adapter>}
  */
-export async function create(callback) {
+export async function create(base, error, progress) {
 	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
 		throw new Error('WebContainers are not supported by Safari');
 	}
 
-	callback(0, 'loading files');
+	progress.set({ value: 0, text: 'loading files' });
 
 	/**
 	 * Keeps track of the latest create/reset to ensure things are not processed in parallel.
@@ -39,10 +41,10 @@ export async function create(callback) {
 	/** @type {boolean} Track whether there was an error from vite dev server */
 	let vite_error = false;
 
-	callback(1 / 5, 'booting webcontainer');
+	progress.set({ value: 1 / 5, text: 'booting webcontainer' });
 	vm = await WebContainer.boot();
 
-	callback(2 / 5, 'writing virtual files');
+	progress.set({ value: 2 / 5, text: 'writing virtual files' });
 	const common = await ready;
 	await vm.mount({
 		'common.zip': {
@@ -53,7 +55,7 @@ export async function create(callback) {
 		}
 	});
 
-	callback(3 / 5, 'unzipping files');
+	progress.set({ value: 3 / 5, text: 'unzipping files' });
 	const unzip = await vm.spawn('node', ['unzip.cjs']);
 	unzip.output.pipeTo(console_stream('unzip'));
 	const code = await unzip.exit;
@@ -64,35 +66,50 @@ export async function create(callback) {
 
 	await vm.spawn('chmod', ['a+x', 'node_modules/vite/bin/vite.js']);
 
-	callback(4 / 5, 'starting dev server');
-	const base = await new Promise(async (fulfil, reject) => {
-		const error_unsub = vm.on('error', (error) => {
-			error_unsub();
-			reject(new Error(error.message));
-		});
-
-		const ready_unsub = vm.on('server-ready', (_port, base) => {
-			ready_unsub();
-			callback(5 / 5, 'ready');
-			fulfil(base); // this will be the last thing that happens if everything goes well
-		});
-
-		await run_dev();
-
-		async function run_dev() {
-			const process = await vm.spawn('turbo', ['run', 'dev']);
-
-			// TODO differentiate between stdout and stderr (sets `vite_error` to `true`)
-			// https://github.com/stackblitz/webcontainer-core/issues/971
-			process.output.pipeTo(console_stream('dev'));
-
-			// keep restarting dev server (can crash in case of illegal +files for example)
-			process.exit.then(run_dev);
-		}
+	vm.on('server-ready', (_port, url) => {
+		base.set(url);
 	});
 
+	vm.on('error', ({ message }) => {
+		error.set(new Error(message));
+	});
+
+	let launched = false;
+
+	async function launch() {
+		if (launched) return;
+		launched = true;
+
+		progress.set({ value: 4 / 5, text: 'starting dev server' });
+
+		await new Promise(async (fulfil, reject) => {
+			const error_unsub = vm.on('error', (error) => {
+				error_unsub();
+				reject(new Error(error.message));
+			});
+
+			const ready_unsub = vm.on('server-ready', (_port, base) => {
+				ready_unsub();
+				progress.set({ value: 5 / 5, text: 'ready' });
+				fulfil(base); // this will be the last thing that happens if everything goes well
+			});
+
+			await run_dev();
+
+			async function run_dev() {
+				const process = await vm.spawn('turbo', ['run', 'dev']);
+
+				// TODO differentiate between stdout and stderr (sets `vite_error` to `true`)
+				// https://github.com/stackblitz/webcontainer-core/issues/971
+				process.output.pipeTo(console_stream('dev'));
+
+				// keep restarting dev server (can crash in case of illegal +files for example)
+				process.exit.then(run_dev);
+			}
+		});
+	}
+
 	return {
-		base,
 		reset: async (stubs) => {
 			await running;
 			/** @type {Function} */
@@ -138,7 +155,7 @@ export async function create(callback) {
 			// For some reason, server-ready is fired again when the vite dev server is restarted.
 			// We need to wait for it to finish before we can continue, else we might
 			// request files from Vite before it's ready, leading to a timeout.
-			const will_restart = to_write.some(will_restart_vite_dev_server);
+			const will_restart = launched && to_write.some(will_restart_vite_dev_server);
 			const promise = will_restart
 				? new Promise((fulfil, reject) => {
 						const error_unsub = vm.on('error', (error) => {
@@ -183,11 +200,14 @@ export async function create(callback) {
 			// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 			// because that can result in a broken UI state
 			const should_reload = (
+				!launched ||
 				will_restart || 
 				vite_error ||
 				to_delete.length > 0
 				// `|| added_new_file`, but I don't actually think that's necessary?
 			);
+
+			await launch();
 
 			return should_reload;
 		},
