@@ -3,11 +3,14 @@
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
-	import { state, stubs, editing_constraints, solution, scope } from '../state.js';
+	import { state, stubs, editing_constraints, solution } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('svelte/store').Writable<boolean>} */
 	export let readonly;
+
+	/** @type {import('$lib/types').Scope} */
+	export let scope;
 
 	let modal_text = '';
 
@@ -165,12 +168,12 @@
 	}}
 >
 	<Folder
-		prefix={$scope.prefix}
+		prefix={scope.prefix}
 		depth={0}
 		directory={{
 			type: 'directory',
 			name: '',
-			basename: $scope.name
+			basename: scope.name
 		}}
 		files={$stubs.filter((stub) => !hidden.has(stub.basename))}
 	/>

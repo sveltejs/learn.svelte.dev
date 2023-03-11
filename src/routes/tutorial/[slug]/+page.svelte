@@ -72,7 +72,7 @@
 				<section slot="a">
 					<SplitPane type="horizontal" min="120px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
-							<Filetree readonly={mobile} />
+							<Filetree readonly={mobile} scope={data.exercise.scope} />
 
 							<button
 								class:completed={$completed}

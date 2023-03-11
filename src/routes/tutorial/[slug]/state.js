@@ -9,7 +9,6 @@ import * as adapter from './adapter.js';
  *    initial: import("$lib/types").Stub[];
  *    solution: Record<string, import("$lib/types").Stub>;
  *    editing_constraints: import("$lib/types").EditingConstraints;
- *    scope: import('$lib/types').Scope;
  *  };
  * }} State
  */
@@ -26,8 +25,7 @@ const { subscribe, set, update } = writable({
 		editing_constraints: {
 			create: [],
 			remove: []
-		},
-		scope: { name: '', prefix: '' }
+		}
 	},
 });
 
@@ -98,8 +96,7 @@ export const state = {
 			exercise: {
 				initial: [...stubs],
 				solution,
-				editing_constraints,
-				scope: exercise.scope
+				editing_constraints
 			},
 			selected: exercise.focus
 		});
@@ -129,8 +126,6 @@ export const selected = derived(
 export const solution = derived(state, ($state) => $state.exercise.solution);
 
 export const editing_constraints = derived(state, ($state) => $state.exercise.editing_constraints);
-
-export const scope = derived(state, ($state) => $state.exercise.scope);
 
 export const completed = derived(state, is_completed);
 
