@@ -22,7 +22,7 @@
 	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
 	let mode = 'idle';
 
-	const { rename, add, remove, readonly } = context.get();
+	const { collapsed, rename, add, remove, readonly } = context.get();
 
 	$: segments = get_depth(prefix);
 
@@ -110,12 +110,12 @@
 <Item
 	{depth}
 	basename={directory.basename}
-	icon={$state.collapsed[directory.name] ? folder_closed : folder_open}
+	icon={$collapsed[directory.name] ? folder_closed : folder_open}
 	can_rename={can_remove}
 	renaming={mode === 'renaming'}
 	{actions}
 	on:click={() => {
-		state.toggle_collapsed(directory.name);
+		$collapsed[directory.name] = !$collapsed[directory.name];
 	}}
 	on:edit={() => {
 		mode = 'renaming';
@@ -128,12 +128,12 @@
 	}}
 	on:keydown={(e) => {
 		if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-			state.toggle_collapsed(directory.name, e.key === 'ArrowLeft');
+			$collapsed[directory.name] = e.key === 'ArrowLeft';
 		}
 	}}
 />
 
-{#if !$state.collapsed[directory.name]}
+{#if !$collapsed[directory.name]}
 	{#if mode === 'add_directory'}
 		<Item
 			depth={depth + 1}

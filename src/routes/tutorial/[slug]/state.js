@@ -11,7 +11,6 @@ import * as adapter from './adapter.js';
  *    editing_constraints: import("$lib/types").EditingConstraints;
  *    scope: import('$lib/types').Scope;
  *  };
- *  collapsed: Record<string, boolean>;
  * }} State
  */
 
@@ -30,7 +29,6 @@ const { subscribe, set, update } = writable({
 		},
 		scope: { name: '', prefix: '' }
 	},
-	collapsed: {}
 });
 
 export const state = {
@@ -64,17 +62,6 @@ export const state = {
 			create: exercise.editing_constraints.create,
 			remove: exercise.editing_constraints.remove
 		};
-
-		/** @type {Record<string, boolean>} */
-		const collapsed = {
-			'': false
-		};
-
-		for (const stub of Object.values(exercise.a)) {
-			if (stub.type === 'directory') {
-				collapsed[stub.name] = false;
-			}
-		}
 
 		// TODO should exercise.a/b be an array in the first place?
 		for (const stub of Object.values(exercise.b)) {
@@ -114,25 +101,10 @@ export const state = {
 				editing_constraints,
 				scope: exercise.scope
 			},
-			selected: exercise.focus,
-			collapsed
+			selected: exercise.focus
 		});
 
 		adapter.reset(stubs);
-	},
-
-	/**
-	 * @param {string} name
-	 * @param {boolean} [collapsed]
-	 */
-	toggle_collapsed: (name, collapsed) => {
-		update((state) => ({
-			...state,
-			collapsed: {
-				...state.collapsed,
-				[name]: collapsed ?? !state.collapsed[name]
-			}
-		}));
 	},
 
 	/** @param {string | null} name */

@@ -1,8 +1,10 @@
 <script>
+	import { writable } from 'svelte/store';
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
 	import { state, stubs, editing_constraints, solution, scope } from '../state.js';
+	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('svelte/store').Writable<boolean>} */
 	export let readonly;
@@ -11,7 +13,14 @@
 
 	const hidden = new Set(['__client.js', 'node_modules']);
 
+	const collapsed = writable({});
+	afterNavigate(() => {
+		collapsed.set({});
+	});
+
 	context.set({
+		collapsed,
+
 		readonly,
 
 		add: async (name, type) => {
