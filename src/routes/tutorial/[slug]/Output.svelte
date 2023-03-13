@@ -4,142 +4,50 @@
 	import { browser, dev } from '$app/environment';
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
-	import { create_adapter } from './adapter';
-	import { state } from './state.js';
+	import { base, error, progress, subscribe } from './adapter';
 
-	/** @type {string} */
-	export let path;
+	/** @type {import('$lib/types').Exercise} */
+	export let exercise;
+
+	/** @type {boolean} */
+	export let paused;
 
 	/** @type {HTMLIFrameElement} */
 	let iframe;
 	let loading = true;
 	let initial = true;
 
-	/** @type {Error | null} */
-	let error = null;
+	// reset `path` to `exercise.path` each time, but allow it to be controlled by the iframe
+	let path = exercise.path;
 
-	let progress = 0;
-	let status = 'initialising';
-
-	/** @type {import('$lib/types').Adapter} Will be defined after first afterNavigate */
-	let adapter;
+	$: if ($base) set_iframe_src($base + (path = exercise.path));
 
 	onMount(() => {
-		const unsub = state.subscribe(async (state) => {
-			if (state.status === 'set' || state.status === 'switch') {
-				loading = true;
-
-				try {
-					clearTimeout(timeout);
-					await reset_adapter(state);
-					initial = false;
-				} catch (e) {
-					error = /** @type {Error} */ (e);
-					console.error(e);
-				}
-
-				loading = false;
-			} else if (state.status === 'update' && state.last_updated) {
-				const reload = await adapter.update([state.last_updated]);
-				if (reload === true) {
-					schedule_iframe_reload();
-				}
-			}
+		const unsubscribe = subscribe('reload', () => {
+			set_iframe_src($base + path);
 		});
 
-		function destroy() {
-			unsub();
-			if (adapter) {
-				adapter.destroy();
-			}
-		}
-
-		document.addEventListener('pagehide', destroy);
-		return destroy;
+		return () => {
+			unsubscribe();
+		};
 	});
 
 	afterNavigate(() => {
 		clearTimeout(timeout);
 	});
 
-	/**
-	 * Loads the adapter initially or resets it. This method can throw.
-	 * @param {import('./state').State} state
-	 */
-	async function reset_adapter(state) {
-		let reload_iframe = true;
-		if (adapter) {
-			const result = await adapter.reset(state.stubs);
-			if (result === 'cancelled') {
-				return;
-			} else {
-				reload_iframe = result || state.status === 'switch';
-			}
-		} else {
-			const _adapter = create_adapter(state.stubs, (p, s) => {
-				progress = p;
-				status = s;
-			});
-			adapter = _adapter;
-			await _adapter.init;
-
-			set_iframe_src(adapter.base + path);
-		}
-
-		await new Promise((fulfil, reject) => {
-			let called = false;
-
-			window.addEventListener('message', function handler(e) {
-				if (e.origin !== adapter.base) return;
-				if (e.data.type === 'ping') {
-					window.removeEventListener('message', handler);
-					called = true;
-					fulfil(undefined);
-				}
-			});
-
-			setTimeout(() => {
-				if (!called) {
-					// Updating the iframe too soon sometimes results in a blank screen,
-					// so we try again after a short delay if we haven't heard back
-					set_iframe_src(adapter.base + path);
-				}
-			}, 5000);
-
-			setTimeout(() => {
-				if (!called) {
-					reject(new Error('Timed out (re)setting adapter'));
-				}
-			}, 10000);
-		});
-
-		if (reload_iframe) {
-			await new Promise((fulfil) => setTimeout(fulfil, 200));
-			set_iframe_src(adapter.base + path);
-		}
-
-		return adapter;
-	}
-
-	/** @type {any} */
-	let reload_timeout;
-	function schedule_iframe_reload() {
-		clearTimeout(reload_timeout);
-		reload_timeout = setTimeout(() => {
-			set_iframe_src(adapter.base + path);
-		}, 1000);
-	}
-
 	/** @type {any} */
 	let timeout;
 
 	/** @param {MessageEvent} e */
 	async function handle_message(e) {
-		if (!adapter) return;
-		if (e.origin !== adapter.base) return;
+		if (e.origin !== $base) return;
+
+		if (paused) return;
 
 		if (e.data.type === 'ping') {
 			path = e.data.data.path ?? path;
+			loading = false;
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
@@ -147,7 +55,7 @@
 
 				// we lost contact, refresh the page
 				loading = true;
-				set_iframe_src(adapter.base + path);
+				set_iframe_src($base + path);
 				loading = false;
 			}, 1000);
 		} else if (e.data.type === 'ping-pause') {
@@ -172,13 +80,13 @@
 	{path}
 	{loading}
 	on:refresh={() => {
-		set_iframe_src(adapter.base + path);
+		set_iframe_src($base + path);
 	}}
 	on:change={(e) => {
-		if (adapter) {
-			const url = new URL(e.detail.value, adapter.base);
+		if ($base) {
+			const url = new URL(e.detail.value, $base);
 			path = url.pathname + url.search + url.hash;
-			set_iframe_src(adapter.base + path);
+			set_iframe_src($base + path);
 		}
 	}}
 />
@@ -188,8 +96,8 @@
 		<iframe bind:this={iframe} title="Output" />
 	{/if}
 
-	{#if loading || error}
-		<Loading {initial} {error} {progress} {status} />
+	{#if paused || loading || $error}
+		<Loading {initial} error={$error} progress={$progress.value} status={$progress.text} />
 	{/if}
 </div>
 

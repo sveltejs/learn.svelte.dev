@@ -16,16 +16,17 @@ function console_stream(label) {
 }
 
 /**
- * @param {import('$lib/types').Stub[]} stubs
- * @param {(progress: number, status: string) => void} callback
- * @returns {Promise<import('$lib/types').AdapterInternal>}
+ * @param {import('svelte/store').Writable<string | null>} base
+ * @param {import('svelte/store').Writable<Error | null>} error
+ * @param {import('svelte/store').Writable<{ value: number, text: string }>} progress
+ * @returns {Promise<import('$lib/types').Adapter>}
  */
-export async function create(stubs, callback) {
+export async function create(base, error, progress) {
 	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
 		throw new Error('WebContainers are not supported by Safari');
 	}
 
-	callback(0, 'loading files');
+	progress.set({ value: 0, text: 'loading files' });
 
 	/**
 	 * Keeps track of the latest create/reset to ensure things are not processed in parallel.
@@ -35,15 +36,15 @@ export async function create(stubs, callback) {
 	let running;
 
 	/** Paths and contents of the currently loaded file stubs */
-	let current_stubs = stubs_to_map(stubs);
+	let current_stubs = stubs_to_map([]);
 
 	/** @type {boolean} Track whether there was an error from vite dev server */
 	let vite_error = false;
 
-	callback(1 / 5, 'booting webcontainer');
+	progress.set({ value: 1 / 5, text: 'booting webcontainer' });
 	vm = await WebContainer.boot();
 
-	callback(2 / 5, 'writing virtual files');
+	progress.set({ value: 2 / 5, text: 'writing virtual files' });
 	const common = await ready;
 	await vm.mount({
 		'common.zip': {
@@ -51,11 +52,10 @@ export async function create(stubs, callback) {
 		},
 		'unzip.cjs': {
 			file: { contents: common.unzip }
-		},
-		...convert_stubs_to_tree(stubs)
+		}
 	});
 
-	callback(3 / 5, 'unzipping files');
+	progress.set({ value: 3 / 5, text: 'unzipping files' });
 	const unzip = await vm.spawn('node', ['unzip.cjs']);
 	unzip.output.pipeTo(console_stream('unzip'));
 	const code = await unzip.exit;
@@ -66,41 +66,51 @@ export async function create(stubs, callback) {
 
 	await vm.spawn('chmod', ['a+x', 'node_modules/vite/bin/vite.js']);
 
-	callback(4 / 5, 'starting dev server');
-	const base = await new Promise(async (fulfil, reject) => {
-		const error_unsub = vm.on('error', (error) => {
-			error_unsub();
-			reject(new Error(error.message));
-		});
-
-		const ready_unsub = vm.on('server-ready', (_port, base) => {
-			ready_unsub();
-			callback(5 / 5, 'ready');
-			fulfil(base); // this will be the last thing that happens if everything goes well
-		});
-
-		await run_dev();
-
-		async function run_dev() {
-			const process = await vm.spawn('turbo', ['run', 'dev']);
-
-			// TODO differentiate between stdout and stderr (sets `vite_error` to `true`)
-			// https://github.com/stackblitz/webcontainer-core/issues/971
-			process.output.pipeTo(console_stream('dev'));
-
-			// keep restarting dev server (can crash in case of illegal +files for example)
-			process.exit.then((code) => {
-				if (code !== 0) {
-					setTimeout(() => {
-						run_dev();
-					}, 2000);
-				}
-			});
-		}
+	vm.on('server-ready', (_port, url) => {
+		base.set(url);
 	});
 
+	vm.on('error', ({ message }) => {
+		error.set(new Error(message));
+	});
+
+	let launched = false;
+
+	async function launch() {
+		if (launched) return;
+		launched = true;
+
+		progress.set({ value: 4 / 5, text: 'starting dev server' });
+
+		await new Promise(async (fulfil, reject) => {
+			const error_unsub = vm.on('error', (error) => {
+				error_unsub();
+				reject(new Error(error.message));
+			});
+
+			const ready_unsub = vm.on('server-ready', (_port, base) => {
+				ready_unsub();
+				progress.set({ value: 5 / 5, text: 'ready' });
+				fulfil(base); // this will be the last thing that happens if everything goes well
+			});
+
+			await run_dev();
+
+			async function run_dev() {
+				const process = await vm.spawn('turbo', ['run', 'dev']);
+
+				// TODO differentiate between stdout and stderr (sets `vite_error` to `true`)
+				// https://github.com/stackblitz/webcontainer-core/issues/971
+				process.output.pipeTo(console_stream('dev'));
+
+				// keep restarting dev server (can crash in case of illegal +files for example)
+				await process.exit;
+				run_dev();
+			}
+		});
+	}
+
 	return {
-		base,
 		reset: async (stubs) => {
 			await running;
 			/** @type {Function} */
@@ -146,7 +156,7 @@ export async function create(stubs, callback) {
 			// For some reason, server-ready is fired again when the vite dev server is restarted.
 			// We need to wait for it to finish before we can continue, else we might
 			// request files from Vite before it's ready, leading to a timeout.
-			const will_restart = will_restart_vite_dev_server(to_write);
+			const will_restart = launched && to_write.some(will_restart_vite_dev_server);
 			const promise = will_restart
 				? new Promise((fulfil, reject) => {
 						const error_unsub = vm.on('error', (error) => {
@@ -190,60 +200,57 @@ export async function create(stubs, callback) {
 
 			// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 			// because that can result in a broken UI state
-			return will_restart || vite_error || to_delete.length > 0 || added_new_file;
+			const should_reload = !launched || will_restart || vite_error || to_delete.length > 0;
+			// `|| added_new_file`, but I don't actually think that's necessary?
+
+			await launch();
+
+			return should_reload;
 		},
-		update: async (stubs) => {
+		update: async (file) => {
 			await running;
 
 			/** @type {import('@webcontainer/api').FileSystemTree} */
 			const root = {};
 
-			for (const stub of stubs) {
-				let tree = root;
+			let tree = root;
 
-				const path = stub.name.split('/').slice(1);
-				const basename = /** @type {string} */ (path.pop());
+			const path = file.name.split('/').slice(1);
+			const basename = /** @type {string} */ (path.pop());
 
-				for (const part of path) {
-					if (!tree[part]) {
-						/** @type {import('@webcontainer/api').FileSystemTree} */
-						const directory = {};
+			for (const part of path) {
+				if (!tree[part]) {
+					/** @type {import('@webcontainer/api').FileSystemTree} */
+					const directory = {};
 
-						tree[part] = {
-							directory
-						};
-					}
-
-					tree = /** @type {import('@webcontainer/api').DirectoryNode} */ (tree[part]).directory;
+					tree[part] = {
+						directory
+					};
 				}
 
-				tree[basename] = to_file(stub);
+				tree = /** @type {import('@webcontainer/api').DirectoryNode} */ (tree[part]).directory;
 			}
+
+			tree[basename] = to_file(file);
 
 			await vm.mount(root);
 
-			stubs_to_map(stubs, current_stubs);
+			current_stubs.set(file.name, file);
 
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
-			return will_restart_vite_dev_server(stubs);
-		},
-		destroy: async () => {
-			vm.teardown();
+			return will_restart_vite_dev_server(file);
 		}
 	};
 }
 
 /**
- * @param {import('$lib/types').Stub[]} stubs
+ * @param {import('$lib/types').Stub} file
  */
-function will_restart_vite_dev_server(stubs) {
-	return stubs.some(
-		(stub) =>
-			stub.type === 'file' &&
-			(stub.name === '/vite.config.js' ||
-				stub.name === '/svelte.config.js' ||
-				stub.name === '/.env')
+function will_restart_vite_dev_server(file) {
+	return (
+		file.type === 'file' &&
+		(file.name === '/vite.config.js' || file.name === '/svelte.config.js' || file.name === '/.env')
 	);
 }
 
@@ -272,11 +279,11 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 	return tree;
 }
 
-/** @param {import('$lib/types').FileStub} stub */
-function to_file(stub) {
+/** @param {import('$lib/types').FileStub} file */
+function to_file(file) {
 	// special case
-	if (stub.name === '/src/app.html') {
-		const contents = stub.contents.replace(
+	if (file.name === '/src/app.html') {
+		const contents = file.contents.replace(
 			'</head>',
 			'<script type="module" src="/src/__client.js"></script></head>'
 		);
@@ -286,7 +293,7 @@ function to_file(stub) {
 		};
 	}
 
-	const contents = stub.text ? stub.contents : base64.toByteArray(stub.contents);
+	const contents = file.text ? file.contents : base64.toByteArray(file.contents);
 
 	return {
 		file: { contents }
@@ -294,12 +301,12 @@ function to_file(stub) {
 }
 
 /**
- * @param {import('$lib/types').Stub[]} stubs
+ * @param {import('$lib/types').Stub[]} files
  * @returns {Map<string, import('$lib/types').Stub>}
  */
-function stubs_to_map(stubs, map = new Map()) {
-	for (const stub of stubs) {
-		map.set(stub.name, stub);
+function stubs_to_map(files, map = new Map()) {
+	for (const file of files) {
+		map.set(file.name, file);
 	}
 	return map;
 }

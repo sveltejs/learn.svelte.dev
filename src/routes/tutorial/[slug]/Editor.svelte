@@ -1,7 +1,7 @@
 <script>
 	import { dev } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { stubs, selected, state } from './state.js';
+	import { files, selected_name, update_file } from './state.js';
 
 	/**
 	 * file extension -> monaco language
@@ -141,11 +141,11 @@
 
 		/**
 		 *
-		 * @param {import('$lib/types').Stub[]} stubs
+		 * @param {import('$lib/types').Stub[]} files
 		 */
-		function update_files(stubs) {
+		function update_files(files) {
 			notify = false;
-			for (const stub of stubs) {
+			for (const stub of files) {
 				if (stub.type === 'directory') {
 					continue;
 				}
@@ -173,7 +173,7 @@
 			}
 
 			for (const [name, model] of models) {
-				if (!stubs.some((stub) => stub.name === name)) {
+				if (!files.some((stub) => stub.name === name)) {
 					model.dispose();
 					models.delete(name);
 				}
@@ -203,7 +203,7 @@
 
 				if (notify) {
 					stub.contents = contents;
-					state.update_file(stub);
+					update_file(stub);
 				}
 			});
 
@@ -219,15 +219,15 @@
 	}
 
 	$: if (instance) {
-		instance.update_files($stubs);
+		instance.update_files($files);
 	}
 
 	$: if (instance) {
 		instance.editor.updateOptions({ readOnly: read_only });
 	}
 
-	$: if (instance && $stubs /* to retrigger on stubs change */) {
-		const model = $selected && models.get($selected.name);
+	$: if (instance && $files /* to retrigger on files change */) {
+		const model = $selected_name ? models.get($selected_name) : null;
 		instance.editor.setModel(model ?? null);
 	}
 

@@ -1,7 +1,7 @@
 <script>
 	import Output from './Output.svelte';
 	import { browser } from '$app/environment';
-	import { afterNavigate } from '$app/navigation';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import ContextMenu from './filetree/ContextMenu.svelte';
 	import Filetree from './filetree/Filetree.svelte';
 	import { SplitPane } from '@rich_harris/svelte-split-pane';
@@ -11,19 +11,81 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import { state, selected, completed } from './state.js';
+	import {
+		files,
+		reset_files,
+		select_file,
+		selected_name,
+		selected_file,
+		solution
+	} from './state.js';
+	import { reset } from './adapter.js';
 
 	export let data;
 
 	let width = browser ? window.innerWidth : 1000;
 	let selected_view = 0;
 
+	let path = data.exercise.path;
+	let paused = false;
+
+	/** @type {import('$lib/types').Stub[]} */
+	let previous_files = [];
+
+	beforeNavigate(() => {
+		previous_files = $files;
+	});
+
+	afterNavigate(async () => {
+		const will_delete = previous_files.some((file) => !(file.name in data.exercise.a));
+
+		console.log({ will_delete });
+
+		if (data.exercise.path !== path || will_delete) paused = true;
+		await reset($files);
+
+		path = data.exercise.path;
+		paused = false;
+	});
+
 	$: mobile = writable(false);
 	$: $mobile = width < 768;
 
-	afterNavigate(() => {
-		state.switch_exercise(data.exercise);
-	});
+	$: completed = is_completed($files, data.exercise.b);
+
+	$: files.set(Object.values(data.exercise.a));
+	$: solution.set(data.exercise.b);
+	$: selected_name.set(data.exercise.focus);
+
+	/**
+	 * @param {import('$lib/types').Stub[]} files
+	 * @param {Record<string, import('$lib/types').Stub> | null} solution
+	 */
+	function is_completed(files, solution) {
+		if (!solution) return true;
+
+		for (const file of files) {
+			if (file.type === 'file') {
+				const expected = solution[file.name];
+				if (expected?.type !== 'file') return false;
+				if (normalise(file.contents) !== normalise(expected.contents)) return false;
+			}
+		}
+
+		const names = new Set(files.map((stub) => stub.name));
+
+		for (const name in solution) {
+			if (!names.has(name)) return false;
+		}
+
+		return true;
+	}
+
+	/** @param {string} code */
+	function normalise(code) {
+		// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
+		return code.replace(/\s+/g, ' ').trim();
+	}
 </script>
 
 <svelte:head>
@@ -57,7 +119,7 @@
 				index={data.index}
 				exercise={data.exercise}
 				on:select={(e) => {
-					state.select_file(e.detail.file);
+					select_file(e.detail.file);
 				}}
 			/>
 		</section>
@@ -72,16 +134,16 @@
 				<section slot="a">
 					<SplitPane type="horizontal" min="120px" max="300px" pos="200px">
 						<section class="navigator" slot="a">
-							<Filetree readonly={mobile} />
+							<Filetree readonly={mobile} exercise={data.exercise} />
 
 							<button
-								class:completed={$completed}
-								disabled={Object.keys(data.exercise.b).length === 0}
+								class:completed
+								disabled={!data.exercise.has_solution}
 								on:click={() => {
-									state.toggle_completion();
+									reset_files(Object.values(completed ? data.exercise.a : data.exercise.b));
 								}}
 							>
-								{#if $completed && Object.keys(data.exercise.b).length > 0}
+								{#if completed && data.exercise.has_solution}
 									reset
 								{:else}
 									solve <Icon name="arrow-right" />
@@ -91,13 +153,13 @@
 
 						<section class="editor-container" slot="b">
 							<Editor read_only={$mobile} />
-							<ImageViewer selected={$selected} />
+							<ImageViewer selected={$selected_file} />
 						</section>
 					</SplitPane>
 				</section>
 
 				<section slot="b" class="preview">
-					<Output path={data.exercise.path} />
+					<Output exercise={data.exercise} {paused} />
 				</section>
 			</SplitPane>
 		</section>

@@ -1,28 +1,42 @@
 <script>
+	import { writable } from 'svelte/store';
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
-	import { state, stubs, editing_constraints, solution, scope } from '../state.js';
+	import { files, solution, reset_files, select_file } from '../state.js';
+	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('svelte/store').Writable<boolean>} */
 	export let readonly;
+
+	/** @type {import('$lib/types').Exercise} */
+	export let exercise;
 
 	let modal_text = '';
 
 	const hidden = new Set(['__client.js', 'node_modules']);
 
+	/** @type {import('svelte/store').Writable<Record<string, boolean>>}*/
+	const collapsed = writable({});
+
+	afterNavigate(() => {
+		collapsed.set({});
+	});
+
 	context.set({
+		collapsed,
+
 		readonly,
 
 		add: async (name, type) => {
-			if (!$solution[name] && !$editing_constraints.create.includes(name)) {
+			if (!$solution[name] && !exercise.editing_constraints.create.has(name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
-					$editing_constraints.create.join('\n');
+					Array.from(exercise.editing_constraints.create).join('\n');
 				return;
 			}
 
-			const existing = $state.stubs.find((stub) => stub.name === name);
+			const existing = $files.find((file) => file.name === name);
 			if (existing) {
 				modal_text = `A ${existing.type} already exists with this name`;
 				return;
@@ -31,10 +45,10 @@
 			const basename = /** @type {string} */ (name.split('/').pop());
 
 			/** @type {import('$lib/types').Stub} */
-			let stub;
+			let file;
 
 			if (type === 'file') {
-				stub = {
+				file = {
 					type: 'file',
 					name,
 					basename,
@@ -42,40 +56,40 @@
 					contents: ''
 				};
 
-				state.select_file(stub.name);
+				select_file(file.name);
 			} else {
-				stub = { type: 'directory', name, basename };
+				file = { type: 'directory', name, basename };
 			}
 
-			state.set_stubs([...$stubs, ...create_directories(name, $stubs), stub]);
+			reset_files([...$files, ...create_directories(name, $files), file]);
 		},
 
 		rename: async (to_rename, new_name) => {
 			const new_full_name = to_rename.name.slice(0, -to_rename.basename.length) + new_name;
 
-			if ($stubs.some((s) => s.name === new_full_name)) {
+			if ($files.some((f) => f.name === new_full_name)) {
 				modal_text = `A file or folder named ${new_full_name} already exists`;
 				return;
 			}
 
-			if (!$solution[new_full_name] && !$editing_constraints.create.includes(new_full_name)) {
+			if (!$solution[new_full_name] && !exercise.editing_constraints.create.has(new_full_name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
-					$editing_constraints.create.join('\n');
+					Array.from(exercise.editing_constraints.create).join('\n');
 				return;
 			}
 
-			if ($solution[to_rename.name] && !$editing_constraints.remove.includes(to_rename.name)) {
+			if ($solution[to_rename.name] && !exercise.editing_constraints.remove.has(to_rename.name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be removed in this exercise:\n' +
-					$editing_constraints.remove.join('\n');
+					Array.from(exercise.editing_constraints.remove).join('\n');
 				return;
 			}
 
 			if (to_rename.type === 'directory') {
-				for (const stub of $stubs) {
-					if (stub.name.startsWith(to_rename.name + '/')) {
-						stub.name = new_full_name + stub.name.slice(to_rename.name.length);
+				for (const file of $files) {
+					if (file.name.startsWith(to_rename.name + '/')) {
+						file.name = new_full_name + file.name.slice(to_rename.name.length);
 					}
 				}
 			}
@@ -83,22 +97,22 @@
 			to_rename.basename = /** @type {string} */ (new_full_name.split('/').pop());
 			to_rename.name = new_full_name;
 
-			state.set_stubs([...$stubs, ...create_directories(new_full_name, $stubs)]);
+			reset_files([...$files, ...create_directories(new_full_name, $files)]);
 		},
 
-		remove: async (stub) => {
-			if ($solution[stub.name] && !$editing_constraints.remove.includes(stub.name)) {
+		remove: async (file) => {
+			if ($solution[file.name] && !exercise.editing_constraints.remove.has(file.name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be deleted in this tutorial chapter:\n' +
-					$editing_constraints.remove.join('\n');
+					Array.from(exercise.editing_constraints.remove).join('\n');
 				return;
 			}
 
-			state.select_file(null);
-			state.set_stubs(
-				$stubs.filter((s) => {
-					if (s === stub) return false;
-					if (s.name.startsWith(stub.name + '/')) return false;
+			select_file(null);
+			reset_files(
+				$files.filter((f) => {
+					if (f === file) return false;
+					if (f.name.startsWith(file.name + '/')) return false;
 					return true;
 				})
 			);
@@ -107,14 +121,14 @@
 
 	/**
 	 * @param {string} name
-	 * @param {import('$lib/types').Stub[]} stubs
+	 * @param {import('$lib/types').Stub[]} files
 	 */
-	function create_directories(name, stubs) {
+	function create_directories(name, files) {
 		const existing = new Set();
 
-		for (const stub of stubs) {
-			if (stub.type === 'directory') {
-				existing.add(stub.name);
+		for (const file of files) {
+			if (file.type === 'directory') {
+				existing.add(file.name);
 			}
 		}
 
@@ -156,14 +170,14 @@
 	}}
 >
 	<Folder
-		prefix={$scope.prefix}
+		prefix={exercise.scope.prefix}
 		depth={0}
 		directory={{
 			type: 'directory',
 			name: '',
-			basename: $scope.name
+			basename: exercise.scope.name
 		}}
-		files={$stubs.filter((stub) => !hidden.has(stub.basename))}
+		contents={$files.filter((file) => !hidden.has(file.basename))}
 	/>
 </ul>
 

@@ -1,77 +1,84 @@
-/**
- * @param {import('$lib/types').Stub[]} initial_stubs
- * @param {(progress: number, status: string) => void} callback
- * @returns {import('$lib/types').Adapter}
- */
-export function create_adapter(initial_stubs, callback) {
-	/**
-	 * @typedef {{ type: 'reset'; stubs: import('$lib/types').Stub[]; } | { type: 'update'; stubs: import('$lib/types').FileStub[]; }} State
-	 */
+import { writable } from 'svelte/store';
+import { browser } from '$app/environment';
 
-	/** @type {State | undefined} */
-	let state;
-	/** @type {Promise<import('$lib/types').AdapterInternal>} */
-	let adapter_promise;
-	let adapter_base = '';
+export const progress = writable({
+	value: 0,
+	text: 'initialising'
+});
 
-	async function init() {
-		const module = await import('$lib/client/adapters/webcontainer/index.js');
-		adapter_promise = module.create(initial_stubs, callback);
-		adapter_base = (await adapter_promise).base;
-	}
+/** @type {import('svelte/store').Writable<string | null>} */
+export const base = writable(null);
 
-	// Keep track of what's currently running, and what's next
-	/** @type {Promise<boolean>} */
-	let current;
-	let token = {};
-	async function next() {
-		const current_token = (token = {});
-		await current;
-		if (current_token !== token || !state) return 'cancelled';
+/** @type {import('svelte/store').Writable<Error | null>} */
+export const error = writable(null);
 
-		const _state = state;
-		state = undefined;
-		current = (async () => {
-			if (_state.type === 'reset') {
-				const adapter = await adapter_promise;
-				return await adapter.reset(_state.stubs);
-			} else {
-				const adapter = await adapter_promise;
-				return await adapter.update(_state.stubs);
-			}
-		})();
+/** @type {Promise<import('$lib/types').Adapter>} */
+let ready = new Promise(() => {});
 
-		return current;
-	}
+if (browser) {
+	ready = new Promise(async (fulfil, reject) => {
+		try {
+			const module = await import('$lib/client/adapters/webcontainer/index.js');
+			const adapter = await module.create(base, error, progress);
 
-	current = init().then(() => true);
-
-	return {
-		init: current.then(() => {}),
-		get base() {
-			return adapter_base;
-		},
-		update: async (stubs) => {
-			if (state) {
-				// add new stubs (which have up-to-date content) to existing stubs
-				const new_stubs = new Set(stubs.map((stub) => stub.name));
-				state = {
-					...state,
-					// @ts-expect-error TS doesn't understand that the union type will be well-formed
-					stubs: state.stubs.filter((stub) => !new_stubs.has(stub.name)).concat(stubs)
-				};
-			} else {
-				state = { type: 'update', stubs };
-			}
-			return next();
-		},
-		reset: async (stubs) => {
-			state = { type: 'reset', stubs };
-			return next();
-		},
-		destroy: async () => {
-			const adapter = await adapter_promise;
-			return adapter.destroy();
+			fulfil(adapter);
+		} catch (error) {
+			reject(error);
 		}
+	})
+}
+
+/** @typedef {'reload'} EventName */
+
+/** @type {Map<EventName, Set<() => void>>} */
+let subscriptions = new Map([['reload', new Set()]]);
+
+/**
+ * 
+ * @param {EventName} event 
+ * @param {() => void} callback 
+ */
+export function subscribe(event, callback) {
+	subscriptions.get(event)?.add(callback);
+
+	return () =>{
+		subscriptions.get(event)?.delete(callback);
 	};
+}
+
+/**
+ * @param {EventName} event 
+ */
+function publish(event) {
+	subscriptions.get(event)?.forEach(fn => fn());
+}
+
+/**
+ * @param {import('$lib/types').Stub[]} files 
+ */
+export async function reset(files) {
+	try {
+		const adapter = await ready;
+		const should_reload = await adapter.reset(files);
+
+		if (should_reload) {
+			publish('reload');
+		}
+
+		error.set(null);
+	} catch (e) {
+		error.set(/** @type {Error} */ (e));
+	}
+}
+
+/**
+ * @param {import('$lib/types').FileStub} file
+ */
+export async function update(file) {
+	const adapter = await ready;
+	const should_reload = await adapter.update(file);
+
+	if (should_reload) {
+		publish('reload');
+	}
 }

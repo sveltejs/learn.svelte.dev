@@ -5,7 +5,7 @@
 	import Item from './Item.svelte';
 	import folder_closed from '$lib/icons/folder.svg';
 	import folder_open from '$lib/icons/folder-open.svg';
-	import { state, stubs, solution } from '../state.js';
+	import { files, solution } from '../state.js';
 
 	/** @type {import('$lib/types').DirectoryStub} */
 	export let directory;
@@ -17,16 +17,16 @@
 	export let depth;
 
 	/** @type {Array<import('$lib/types').Stub>} */
-	export let files;
+	export let contents;
 
 	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
 	let mode = 'idle';
 
-	const { rename, add, remove, readonly } = context.get();
+	const { collapsed, rename, add, remove, readonly } = context.get();
 
 	$: segments = get_depth(prefix);
 
-	$: children = files
+	$: children = contents
 		.filter((file) => file.name.startsWith(prefix))
 		.sort((a, b) => (a.name < b.name ? -1 : 1));
 
@@ -47,26 +47,26 @@
 		if (!$readonly) {
 			const child_prefixes = [];
 
-			for (const stub of $stubs) {
+			for (const file of $files) {
 				if (
-					stub.type === 'directory' &&
-					stub.name.startsWith(prefix) &&
-					get_depth(stub.name) === depth + 1
+					file.type === 'directory' &&
+					file.name.startsWith(prefix) &&
+					get_depth(file.name) === depth + 1
 				) {
-					child_prefixes.push(stub.name + '/');
+					child_prefixes.push(file.name + '/');
 				}
 			}
 
-			for (const stub of Object.values($solution)) {
-				if (!stub.name.startsWith(prefix)) continue;
+			for (const file of Object.values($solution)) {
+				if (!file.name.startsWith(prefix)) continue;
 
-				// if already exists in $stubs, bail
-				if ($stubs.find((s) => s.name === stub.name)) continue;
+				// if already exists in $files, bail
+				if ($files.find((f) => f.name === file.name)) continue;
 
 				// if intermediate directory exists, bail
-				if (child_prefixes.some((prefix) => stub.name.startsWith(prefix))) continue;
+				if (child_prefixes.some((prefix) => file.name.startsWith(prefix))) continue;
 
-				can_create[stub.type] = true;
+				can_create[file.type] = true;
 			}
 		}
 	}
@@ -110,12 +110,12 @@
 <Item
 	{depth}
 	basename={directory.basename}
-	icon={$state.expanded[directory.name] ? folder_open : folder_closed}
+	icon={$collapsed[directory.name] ? folder_closed : folder_open}
 	can_rename={can_remove}
 	renaming={mode === 'renaming'}
 	{actions}
 	on:click={() => {
-		state.toggle_expanded(directory.name);
+		$collapsed[directory.name] = !$collapsed[directory.name];
 	}}
 	on:edit={() => {
 		mode = 'renaming';
@@ -128,12 +128,12 @@
 	}}
 	on:keydown={(e) => {
 		if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-			state.toggle_expanded(directory.name, e.key === 'ArrowRight');
+			$collapsed[directory.name] = e.key === 'ArrowLeft';
 		}
 	}}
 />
 
-{#if $state.expanded[directory.name]}
+{#if !$collapsed[directory.name]}
 	{#if mode === 'add_directory'}
 		<Item
 			depth={depth + 1}
@@ -148,7 +148,7 @@
 	{/if}
 
 	{#each child_directories as directory}
-		<svelte:self {directory} prefix={directory.name + '/'} depth={depth + 1} files={children} />
+		<svelte:self {directory} prefix={directory.name + '/'} depth={depth + 1} contents={children} />
 	{/each}
 
 	{#if mode === 'add_file'}
