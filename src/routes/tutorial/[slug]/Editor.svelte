@@ -7,10 +7,22 @@
 	import { javascript } from '@codemirror/lang-javascript';
 	import { html } from '@codemirror/lang-html';
 	import { svelte } from '@replit/codemirror-lang-svelte';
-	import { files, selected_file, selected_name, update_file } from './state.js';
-
-	import './codemirror.css';
+	import { tags } from '@lezer/highlight';
+	import { HighlightStyle } from '@codemirror/language';
+	import { syntaxHighlighting } from '@codemirror/language';
 	import { afterNavigate } from '$app/navigation';
+	import { files, selected_file, selected_name, update_file } from './state.js';
+	import './codemirror.css';
+
+	// TODO add more styles (selection ranges, etc)
+	const highlights = HighlightStyle.define([
+		{ tag: tags.tagName, color: '#c05726' },
+		{ tag: tags.keyword, color: 'var(--sk-code-keyword)' },
+		{ tag: tags.comment, color: 'var(--sk-code-comment)' },
+		{ tag: tags.string, color: 'var(--sk-code-string)' }
+	]);
+
+	const theme = syntaxHighlighting(highlights);
 
 	/** @type {HTMLDivElement} */
 	let container;
@@ -37,7 +49,7 @@
 
 		let state = editor_states.get(file.name);
 		if (!state) {
-			const extensions = [EditorState.tabSize.of(2), basicSetup];
+			const extensions = [EditorState.tabSize.of(2), basicSetup, theme];
 
 			if (file.name.endsWith('.js') || file.name.endsWith('.json')) {
 				extensions.push(javascript());
