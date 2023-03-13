@@ -1,27 +1,24 @@
 import { WebContainer } from '@webcontainer/api';
 import base64 from 'base64-js';
+import AnsiToHtml from 'ansi-to-html';
 import { get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
 
+const converter = new AnsiToHtml({
+	fg: 'var(--sk-text-3)'
+});
+
 /** @type {import('@webcontainer/api').WebContainer} Web container singleton */
 let vm;
-
-/** @param {string} label */
-function console_stream(label) {
-	return new WritableStream({
-		write(chunk) {
-			console.log(`[${label}] ${chunk}`);
-		}
-	});
-}
 
 /**
  * @param {import('svelte/store').Writable<string | null>} base
  * @param {import('svelte/store').Writable<Error | null>} error
  * @param {import('svelte/store').Writable<{ value: number, text: string }>} progress
+ * @param {import('svelte/store').Writable<string[]>} logs
  * @returns {Promise<import('$lib/types').Adapter>}
  */
-export async function create(base, error, progress) {
+export async function create(base, error, progress, logs) {
 	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
 		throw new Error('WebContainers are not supported by Safari');
 	}
@@ -55,9 +52,22 @@ export async function create(base, error, progress) {
 		}
 	});
 
+	const log_stream = () =>
+		new WritableStream({
+			write(chunk) {
+				if (chunk === '\x1B[1;1H') {
+					// clear screen
+					logs.set([]);
+				} else {
+					const log = converter.toHtml(chunk);
+					logs.update(($logs) => [...$logs, log]);
+				}
+			}
+		});
+
 	progress.set({ value: 3 / 5, text: 'unzipping files' });
 	const unzip = await vm.spawn('node', ['unzip.cjs']);
-	unzip.output.pipeTo(console_stream('unzip'));
+	unzip.output.pipeTo(log_stream());
 	const code = await unzip.exit;
 
 	if (code !== 0) {
@@ -101,7 +111,7 @@ export async function create(base, error, progress) {
 
 				// TODO differentiate between stdout and stderr (sets `vite_error` to `true`)
 				// https://github.com/stackblitz/webcontainer-core/issues/971
-				process.output.pipeTo(console_stream('dev'));
+				process.output.pipeTo(log_stream());
 
 				// keep restarting dev server (can crash in case of illegal +files for example)
 				await process.exit;
