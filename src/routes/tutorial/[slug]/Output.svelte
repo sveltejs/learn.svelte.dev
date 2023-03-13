@@ -4,7 +4,7 @@
 	import { browser, dev } from '$app/environment';
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
-	import { base, error, progress, subscribe } from './adapter';
+	import { base, error, logs, progress, subscribe } from './adapter';
 
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
@@ -16,6 +16,7 @@
 	let iframe;
 	let loading = true;
 	let initial = true;
+	let terminal_visible = false;
 
 	// reset `path` to `exercise.path` each time, but allow it to be controlled by the iframe
 	let path = exercise.path;
@@ -82,6 +83,9 @@
 	on:refresh={() => {
 		set_iframe_src($base + path);
 	}}
+	on:toggle_terminal={() => {
+		terminal_visible = !terminal_visible;
+	}}
 	on:change={(e) => {
 		if ($base) {
 			const url = new URL(e.detail.value, $base);
@@ -99,6 +103,12 @@
 	{#if paused || loading || $error}
 		<Loading {initial} error={$error} progress={$progress.value} status={$progress.text} />
 	{/if}
+
+	<div class="terminal" class:visible={terminal_visible}>
+		{#each $logs as log}
+			<div>{@html log}</div>
+		{/each}
+	</div>
 </div>
 
 <style>
@@ -121,5 +131,42 @@
 		box-sizing: border-box;
 		border: none;
 		background: var(--sk-back-2);
+	}
+
+	.terminal {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 80%;
+		font-family: var(--font-mono);
+		font-size: var(--sk-text-xs);
+		padding: 1rem;
+		background: white;
+		border-top: 1px solid var(--sk-back-3);
+		transform: translate(0, 100%);
+		transition: transform 0.3s;
+	}
+
+	.terminal::after {
+		--thickness: 6px;
+		--shadow: transparent;
+		content: '';
+		display: block;
+		position: absolute;
+		width: 100%;
+		height: var(--thickness);
+		left: 0;
+		top: calc(-1 * var(--thickness));
+		background-image: linear-gradient(to bottom, transparent, var(--shadow));
+		pointer-events: none;
+	}
+
+	.terminal.visible {
+		transform: none;
+	}
+
+	.terminal.visible::after {
+		--shadow: rgba(0, 0, 0, 0.05);
 	}
 </style>

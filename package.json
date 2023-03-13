@@ -36,6 +36,7 @@
 		"@rich_harris/svelte-split-pane": "^1.0.0",
 		"@webcontainer/api": "^1.0.2",
 		"adm-zip": "^0.5.10",
+		"ansi-to-html": "^0.7.2",
 		"base64-js": "^1.5.1",
 		"marked": "^4.2.12",
 		"monaco-editor": "^0.36.1",

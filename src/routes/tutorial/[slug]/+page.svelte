@@ -39,8 +39,6 @@
 	afterNavigate(async () => {
 		const will_delete = previous_files.some((file) => !(file.name in data.exercise.a));
 
-		console.log({ will_delete });
-
 		if (data.exercise.path !== path || will_delete) paused = true;
 		await reset($files);
 
