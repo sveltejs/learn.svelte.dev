@@ -150,7 +150,7 @@
 						</section>
 
 						<section class="editor-container" slot="b">
-							<Editor read_only={$mobile} />
+							<Editor />
 							<ImageViewer selected={$selected_file} />
 						</section>
 					</SplitPane>

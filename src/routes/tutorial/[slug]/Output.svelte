@@ -69,7 +69,7 @@
 		// removing the iframe from the document allows us to
 		// change the src without adding a history entry, which
 		// would make back/forward traversal very annoying
-		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
+		const parentNode = /** @type {HTMLElement} */ (iframe?.parentNode);
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
