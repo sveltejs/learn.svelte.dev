@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@codemirror/autocomplete': ^6.4.2
+  '@codemirror/commands': ^6.2.2
   '@codemirror/lang-css': ^6.1.1
   '@codemirror/lang-html': ^6.4.2
   '@codemirror/lang-javascript': ^6.1.4
@@ -45,6 +46,7 @@ specifiers:
 
 dependencies:
   '@codemirror/autocomplete': 6.4.2_lc2v3dpzp2l5pdzwtgfaudkm3e
+  '@codemirror/commands': 6.2.2
   '@codemirror/lang-css': 6.1.1_i3aqn63zftbgivbr4riltn5mqe
   '@codemirror/lang-html': 6.4.2
   '@codemirror/lang-javascript': 6.1.4

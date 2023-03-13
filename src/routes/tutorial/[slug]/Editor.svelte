@@ -2,8 +2,9 @@
 	import { dev } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { basicSetup } from 'codemirror';
-	import { EditorView } from '@codemirror/view';
+	import { EditorView, keymap } from '@codemirror/view';
 	import { EditorState } from '@codemirror/state';
+	import { indentWithTab } from '@codemirror/commands';
 	import { javascript } from '@codemirror/lang-javascript';
 	import { html } from '@codemirror/lang-html';
 	import { svelte } from '@replit/codemirror-lang-svelte';
@@ -49,7 +50,7 @@
 
 		let state = editor_states.get(file.name);
 		if (!state) {
-			const extensions = [EditorState.tabSize.of(2), basicSetup, theme];
+			const extensions = [basicSetup, EditorState.tabSize.of(2), keymap.of([indentWithTab]), theme];
 
 			if (file.name.endsWith('.js') || file.name.endsWith('.json')) {
 				extensions.push(javascript());
@@ -129,7 +130,7 @@
 	}}
 	on:message={(e) => {
 		if (preserve_editor_focus && e.data.type === 'iframe_took_focus') {
-			// instance?.editor.focus();
+			editor_view.focus();
 		}
 	}}
 />
