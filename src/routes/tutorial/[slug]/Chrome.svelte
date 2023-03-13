@@ -1,6 +1,7 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 	import refresh from '$lib/icons/refresh.svg';
+	import terminal from '$lib/icons/terminal.svg';
 
 	/** @type {string} */
 	export let path;
@@ -24,6 +25,14 @@
 			dispatch('change', { value: e.currentTarget.value });
 		}}
 	/>
+
+	<button
+		disabled={loading}
+		on:click={() => dispatch('toggle_terminal')}
+		aria-label="toggle terminal"
+	>
+		<img src={terminal} alt="Terminal icon" />
+	</button>
 </div>
 
 <style>
@@ -38,6 +47,7 @@
 		padding: 0.8rem;
 		box-sizing: border-box;
 		background: var(--sk-back-4);
+		user-select: none;
 	}
 
 	.chrome button img {
@@ -47,7 +57,7 @@
 		transform: none;
 	}
 
-	.chrome button:active img {
+	.chrome button[aria-label='reload']:active img {
 		transform: rotate(-360deg);
 		transition: none;
 	}

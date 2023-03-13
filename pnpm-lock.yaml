@@ -13,6 +13,7 @@ specifiers:
   '@types/ws': ^8.5.4
   '@webcontainer/api': ^1.0.2
   adm-zip: ^0.5.10
+  ansi-to-html: ^0.7.2
   base64-js: ^1.5.1
   diff: ^5.1.0
   esbuild: ^0.17.11
@@ -35,6 +36,7 @@ dependencies:
   '@rich_harris/svelte-split-pane': 1.0.0_svelte@3.56.0
   '@webcontainer/api': 1.0.2
   adm-zip: 0.5.10
+  ansi-to-html: 0.7.2
   base64-js: 1.5.1
   marked: 4.2.12
   monaco-editor: 0.36.1
@@ -705,6 +707,14 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /ansi-to-html/0.7.2:
+    resolution: {integrity: sha512-v6MqmEpNlxF+POuyhKkidusCHWWkaLcGRURzivcU3I9tv7k4JVhFcnukrM5Rlk2rUywdZuzYAZ+kbZqWCnfN3g==}
+    engines: {node: '>=8.0.0'}
+    hasBin: true
+    dependencies:
+      entities: 2.2.0
+    dev: false
+
   /anymatch/3.1.3:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
@@ -859,6 +869,10 @@ packages:
   /emoji-regex/8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
     dev: true
+
+  /entities/2.2.0:
+    resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
+    dev: false
 
   /es6-promise/3.3.1:
     resolution: {integrity: sha512-SOp9Phqvqn7jtEUxPWdWfWoLmyt2VaJ6MpvP9Comy1MceMXqE6bxvaTu4iaxpYYPzhny28Lc+M87/c2cPK6lDg==}

@@ -12,6 +12,9 @@ export const base = writable(null);
 /** @type {import('svelte/store').Writable<Error | null>} */
 export const error = writable(null);
 
+/** @type {import('svelte/store').Writable<string[]>} */
+export const logs = writable([]);
+
 /** @type {Promise<import('$lib/types').Adapter>} */
 let ready = new Promise(() => {});
 
@@ -19,13 +22,13 @@ if (browser) {
 	ready = new Promise(async (fulfil, reject) => {
 		try {
 			const module = await import('$lib/client/adapters/webcontainer/index.js');
-			const adapter = await module.create(base, error, progress);
+			const adapter = await module.create(base, error, progress, logs);
 
 			fulfil(adapter);
 		} catch (error) {
 			reject(error);
 		}
-	})
+	});
 }
 
 /** @typedef {'reload'} EventName */
@@ -34,27 +37,27 @@ if (browser) {
 let subscriptions = new Map([['reload', new Set()]]);
 
 /**
- * 
- * @param {EventName} event 
- * @param {() => void} callback 
+ *
+ * @param {EventName} event
+ * @param {() => void} callback
  */
 export function subscribe(event, callback) {
 	subscriptions.get(event)?.add(callback);
 
-	return () =>{
+	return () => {
 		subscriptions.get(event)?.delete(callback);
 	};
 }
 
 /**
- * @param {EventName} event 
+ * @param {EventName} event
  */
 function publish(event) {
-	subscriptions.get(event)?.forEach(fn => fn());
+	subscriptions.get(event)?.forEach((fn) => fn());
 }
 
 /**
- * @param {import('$lib/types').Stub[]} files 
+ * @param {import('$lib/types').Stub[]} files
  */
 export async function reset(files) {
 	try {
