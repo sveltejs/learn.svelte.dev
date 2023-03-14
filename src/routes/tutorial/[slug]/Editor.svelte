@@ -6,6 +6,7 @@
 	import { EditorState } from '@codemirror/state';
 	import { indentWithTab } from '@codemirror/commands';
 	import { indentUnit } from '@codemirror/language';
+	import { setDiagnostics } from '@codemirror/lint';
 	import { javascript } from '@codemirror/lang-javascript';
 	import { html } from '@codemirror/lang-html';
 	import { svelte } from '@replit/codemirror-lang-svelte';
@@ -13,7 +14,7 @@
 	import { HighlightStyle } from '@codemirror/language';
 	import { syntaxHighlighting } from '@codemirror/language';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
-	import { files, selected_file, selected_name, update_file } from './state.js';
+	import { files, selected_file, selected_name, update_file, warnings } from './state.js';
 	import './codemirror.css';
 
 	// TODO add more styles (selection ranges, etc)
@@ -49,7 +50,31 @@
 		theme
 	];
 
-	$: if (editor_view) select_state($selected_name);
+	$: if (editor_view) {
+		select_state($selected_name);
+
+		if ($selected_name) {
+			const current_warnings = $warnings[$selected_name];
+
+			if (current_warnings) {
+				const diagnostics = current_warnings.map((warning) => {
+					/** @type {import('@codemirror/lint').Diagnostic} */
+					const diagnostic = {
+						from: warning.start.character,
+						to: warning.end.character,
+						severity: 'warning',
+						message: warning.message
+					};
+
+					return diagnostic;
+				});
+
+				const transaction = setDiagnostics(editor_view.state, diagnostics);
+
+				editor_view.dispatch(transaction);
+			}
+		}
+	}
 
 	$: reset($files);
 
@@ -178,6 +203,9 @@
 		reset($files);
 
 		select_state($selected_name);
+
+		// clear warnings
+		warnings.set({});
 	});
 </script>
 
