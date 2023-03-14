@@ -1,8 +1,5 @@
 lockfileVersion: 5.4
 
-overrides:
-  '@rich_harris/svelte-split-pane': ../libraries/svelte-split-pane
-
 specifiers:
   '@codemirror/autocomplete': ^6.4.2
   '@codemirror/commands': ^6.2.2
