@@ -41,6 +41,8 @@
 	});
 
 	afterNavigate(async () => {
+		w = window.innerWidth;
+
 		const will_delete = previous_files.some((file) => !(file.name in data.exercise.a));
 
 		if (data.exercise.path !== path || will_delete) paused = true;
@@ -101,6 +103,10 @@
 <svelte:window bind:innerWidth={w} />
 
 <ContextMenu />
+
+<div style="position: fixed; top: 50%; left: 10%; background: yellow; color: purple; z-index: 999">
+	<p>w: {w}</p>
+</div>
 
 <div class="container" class:mobile>
 	<div class="top" class:offset={show_editor}>
