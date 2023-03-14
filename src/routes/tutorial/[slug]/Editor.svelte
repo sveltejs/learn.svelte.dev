@@ -10,10 +10,10 @@
 	import { html } from '@codemirror/lang-html';
 	import { svelte } from '@replit/codemirror-lang-svelte';
 	import { tags } from '@lezer/highlight';
-	import { HighlightStyle } from '@codemirror/language';
-	import { syntaxHighlighting } from '@codemirror/language';
+	import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
+	import { setDiagnostics } from '@codemirror/lint';
 	import { afterNavigate } from '$app/navigation';
-	import { files, selected_file, selected_name, update_file } from './state.js';
+	import { files, selected_file, selected_name, update_file, warnings } from './state.js';
 	import './codemirror.css';
 
 	// TODO add more styles (selection ranges, etc)
@@ -40,8 +40,31 @@
 	/** @type {import('@codemirror/view').EditorView} */
 	let editor_view;
 
+	/** @type {import('@codemirror/state').EditorState | undefined} */
+	let current_state;
+
 	$: if (editor_view && $selected_name) {
 		select_state($selected_name);
+
+		const current_warnings = $warnings[$selected_name];
+
+		if (current_warnings) {
+			const diagnostics = current_warnings.map((warning) => {
+				/** @type {import('@codemirror/lint').Diagnostic} */
+				const diagnostic = {
+					from: warning.start.character,
+					to: warning.end.character,
+					severity: 'warning',
+					message: warning.message
+				};
+
+				return diagnostic;
+			});
+
+			const transaction = setDiagnostics(editor_view.state, diagnostics);
+
+			editor_view.dispatch(transaction);
+		}
 	}
 
 	/** @param {string} $selected_name */
@@ -74,6 +97,8 @@
 
 			editor_states.set(file.name, state);
 		}
+
+		current_state = state;
 
 		if (editor_view) {
 			editor_view.setState(state);
@@ -114,6 +139,8 @@
 					// keep `editor_states` updated so that undo/redo history is preserved for files independently
 					editor_states.set($selected_file.name, editor_view.state);
 				}
+
+				current_state = editor_view.state;
 			}
 		});
 
@@ -129,6 +156,9 @@
 	afterNavigate(() => {
 		editor_states.clear();
 		select_state($selected_name);
+
+		// clear warnings
+		warnings.set({});
 	});
 </script>
 

@@ -1,13 +1,34 @@
 import { derived, writable } from 'svelte/store';
 import * as adapter from './adapter.js';
 
-/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
+/**
+ * @template T
+ * @typedef {import('svelte/store').Writable<T>} Writable<T>
+ */
+
+// TODO would be nice if svelte exported this type (maybe it does already?)
+/**
+ * @typedef {{
+ *   code: string;
+ *   start: { line: number, column: number, character: number };
+ *   end: { line: number, column: number, character: number };
+ *   pos: number;
+ *   filename: string;
+ *   frame: string;
+ *   message: string;
+ * }} CompilerWarning
+ */
+
+/** @type {Writable<import('$lib/types').Stub[]>} */
 export const files = writable([]);
 
-/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
+/** @type {Writable<Record<string, import('$lib/types').Stub>>} */
 export const solution = writable({});
 
-/** @type {import('svelte/store').Writable<string | null>} */
+/** @type {Writable<Record<string, CompilerWarning[]>>} */
+export const warnings = writable({});
+
+/** @type {Writable<string | null>} */
 export const selected_name = writable(null);
 
 export const selected_file = derived([files, selected_name], ([$files, $selected_name]) => {

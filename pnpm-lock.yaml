@@ -7,6 +7,7 @@ specifiers:
   '@codemirror/lang-html': ^6.4.2
   '@codemirror/lang-javascript': ^6.1.4
   '@codemirror/language': ^6.6.0
+  '@codemirror/lint': ^6.2.0
   '@codemirror/state': ^6.2.0
   '@codemirror/view': ^6.9.2
   '@fontsource/roboto-mono': ^4.5.10
@@ -51,6 +52,7 @@ dependencies:
   '@codemirror/lang-html': 6.4.2
   '@codemirror/lang-javascript': 6.1.4
   '@codemirror/language': 6.6.0
+  '@codemirror/lint': 6.2.0
   '@codemirror/state': 6.2.0
   '@codemirror/view': 6.9.2
   '@fontsource/roboto-mono': 4.5.10

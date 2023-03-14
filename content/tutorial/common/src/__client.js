@@ -118,4 +118,14 @@ if (import.meta.hot) {
 			'*'
 		);
 	});
+
+	import.meta.hot.on('svelte:warnings', (data) => {
+		parent.postMessage(
+			{
+				type: 'warnings',
+				data
+			},
+			'*'
+		);
+	});
 }
