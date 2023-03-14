@@ -23,8 +23,7 @@
 
 	export let data;
 
-	let width = browser ? window.innerWidth : 1000;
-	let selected_view = 0;
+	let show_editor = false;
 
 	let path = data.exercise.path;
 	let paused = false;
@@ -45,9 +44,6 @@
 		path = data.exercise.path;
 		paused = false;
 	});
-
-	$: mobile = writable(false);
-	$: $mobile = width < 768;
 
 	$: completed = is_completed($files, data.exercise.b);
 
@@ -105,72 +101,81 @@
 
 <ContextMenu />
 
-<div class="container" style="--toggle-height: {$mobile ? '4.6rem' : '0px'}">
-	<SplitPane
-		type="horizontal"
-		min={$mobile ? '0px' : '360px'}
-		max={$mobile ? '100%' : '50%'}
-		pos={$mobile ? (selected_view === 0 ? '100%' : '0%') : '33%'}
-	>
-		<section slot="a" class="content">
-			<Sidebar
-				index={data.index}
-				exercise={data.exercise}
-				on:select={(e) => {
-					select_file(e.detail.file);
-				}}
-			/>
-		</section>
+<div class="container">
+	<div class="top" class:offset={show_editor}>
+		<SplitPane id="main" type="horizontal" min="360px" max="50%" pos="33%">
+			<section slot="a" class="content">
+				<Sidebar
+					index={data.index}
+					exercise={data.exercise}
+					on:select={(e) => {
+						select_file(e.detail.file);
+					}}
+				/>
+			</section>
 
-		<section slot="b" class:hidden={$mobile && selected_view === 0}>
-			<SplitPane
-				type="vertical"
-				min={$mobile ? '0px' : '100px'}
-				max={$mobile ? '100%' : '50%'}
-				pos={$mobile ? (selected_view === 1 ? '100%' : '0%') : '50%'}
-			>
-				<section slot="a">
-					<SplitPane type="horizontal" min="120px" max="300px" pos="200px">
-						<section class="navigator" slot="a">
-							<Filetree readonly={mobile} exercise={data.exercise} />
+			<section slot="b">
+				<SplitPane type="vertical" min="100px" max="50%" pos="50%">
+					<section slot="a">
+						<SplitPane type="horizontal" min="120px" max="300px" pos="200px">
+							<section class="navigator" slot="a">
+								<Filetree exercise={data.exercise} />
 
-							<button
-								class:completed
-								disabled={!data.exercise.has_solution}
-								on:click={() => {
-									reset_files(Object.values(completed ? data.exercise.a : data.exercise.b));
-								}}
-							>
-								{#if completed && data.exercise.has_solution}
-									reset
-								{:else}
-									solve <Icon name="arrow-right" />
-								{/if}
-							</button>
-						</section>
+								<button
+									class:completed
+									disabled={!data.exercise.has_solution}
+									on:click={() => {
+										reset_files(Object.values(completed ? data.exercise.a : data.exercise.b));
+									}}
+								>
+									{#if completed && data.exercise.has_solution}
+										reset
+									{:else}
+										solve <Icon name="arrow-right" />
+									{/if}
+								</button>
+							</section>
 
-						<section class="editor-container" slot="b">
-							<Editor />
-							<ImageViewer selected={$selected_file} />
-						</section>
-					</SplitPane>
-				</section>
+							<section class="editor-container" slot="b">
+								<Editor />
+								<ImageViewer selected={$selected_file} />
+							</section>
+						</SplitPane>
+					</section>
 
-				<section slot="b" class="preview">
-					<Output exercise={data.exercise} {paused} />
-				</section>
-			</SplitPane>
-		</section>
-	</SplitPane>
-	{#if $mobile}
-		<ScreenToggle labels={['Tutorial', 'Input', 'Output']} bind:selected={selected_view} />
-	{/if}
+					<section slot="b" class="preview">
+						<Output exercise={data.exercise} {paused} />
+					</section>
+				</SplitPane>
+			</section>
+		</SplitPane>
+	</div>
+
+	<div class="screen-toggle">
+		<ScreenToggle bind:selected={show_editor} />
+	</div>
 </div>
 
 <style>
 	.container {
-		height: calc(100% - var(--toggle-height));
-		max-height: 100%;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	.top {
+		width: 200vw;
+		height: 0;
+		flex: 1;
+		transition: transform 0.2s;
+	}
+
+	.top.offset {
+		transform: translate(-50%);
+	}
+
+	.screen-toggle {
+		height: 4.6rem;
 	}
 
 	.content {
@@ -224,7 +229,24 @@
 		background-color: var(--sk-back-3);
 	}
 
-	.hidden {
-		display: none;
+	/* on mobile, override the <SplitPane> controls */
+	@media (max-width: 799px) {
+		:global([data-pane='main']) {
+			--pos: 50% !important;
+		}
+
+		:global([data-pane='main']) :global(.divider) {
+			cursor: default;
+		}
+	}
+
+	@media (min-width: 800px) {
+		.top {
+			width: 100vw;
+		}
+
+		.screen-toggle {
+			display: none;
+		}
 	}
 </style>

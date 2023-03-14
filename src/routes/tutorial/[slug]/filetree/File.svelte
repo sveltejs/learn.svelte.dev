@@ -10,11 +10,11 @@
 	/** @type {number} */
 	export let depth;
 
-	const { rename, remove, readonly } = context.get();
+	const { rename, remove } = context.get();
 
 	let renaming = false;
 
-	$: can_remove = !$readonly && !$solution[file.name];
+	$: can_remove = !$solution[file.name];
 
 	/** @type {import('./ContextMenu.svelte').MenuItems} */
 	$: actions = can_remove

@@ -6,9 +6,6 @@
 	import { files, solution, reset_files, select_file } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
-	/** @type {import('svelte/store').Writable<boolean>} */
-	export let readonly;
-
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
 
@@ -25,8 +22,6 @@
 
 	context.set({
 		collapsed,
-
-		readonly,
 
 		add: async (name, type) => {
 			if (!$solution[name] && !exercise.editing_constraints.create.has(name)) {
