@@ -135,11 +135,7 @@
 															? 'page'
 															: undefined}
 													>
-														<a
-															data-sveltekit-preload-data
-															href="/tutorial/{exercise.slug}"
-															on:click={() => (is_open = false)}
-														>
+														<a href="/tutorial/{exercise.slug}" on:click={() => (is_open = false)}>
 															{exercise.title}
 														</a>
 													</li>
