@@ -1,0 +1,60 @@
+.codemirror-wrapper {
+	height: 100%;
+}
+
+.cm-editor {
+	height: 100%;
+}
+
+.cm-editor .cm-scroller {
+	font-family: var(--font-mono);
+	font-size: 1.3rem;
+	line-height: 2rem;
+}
+
+.cm-editor .cm-gutters {
+	background: var(--sk-back-3);
+	border-right: none;
+	padding: 0;
+	width: 5rem;
+}
+
+.cm-editor .cm-activeLineGutter {
+	background-color: var(--sk-back-3);
+}
+
+.cm-editor .cm-lineNumbers {
+	flex: 1;
+	color: #237893;
+}
+
+.cm-editor .cm-foldGutter {
+	width: 1rem;
+}
+
+.cm-editor .cm-content {
+	padding: 1rem 0;
+}
+
+.cm-editor .cm-line {
+	padding: 0 1rem;
+}
+
+.cm-editor .cm-selectionBackground {
+	border-radius: 2px;
+}
+
+.cm-editor .cm-selectionMatch {
+	background: rgba(0,0,0,0.2);
+	color: var(--sk-text-2);
+}
+
+@media (prefers-color-scheme: dark) {
+	.cm-editor .cm-activeLineGutter {
+		background-color: var(--sk-back-3);
+	}
+
+	.cm-editor .cm-activeLine {
+		background-color: var(--sk-back-2);
+	}
+}

@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test';
 
 const iframe_selector = 'iframe[src*="webcontainer.io/"]';
 
+test.describe.configure({ mode: 'parallel' });
+
 test('.env file: no timeout error occurs when switching a tutorials without a .env file to one with it', async ({
 	page
 }) => {

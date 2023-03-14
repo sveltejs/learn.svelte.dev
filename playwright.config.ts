@@ -5,7 +5,12 @@ const config: PlaywrightTestConfig = {
 		command: 'pnpm preview',
 		port: 4173
 	},
-	timeout: 60000
+	timeout: 60000,
+	use: {
+		trace: {
+			mode: 'retain-on-failure'
+		}
+	}
 };
 
 export default config;

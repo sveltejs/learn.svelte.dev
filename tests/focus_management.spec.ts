@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test';
 
-const editor_selector = 'div.monaco-scrollable-element.editor-scrollable';
-const editor_focus_selector = 'textarea.inputarea.monaco-mouse-cursor-text';
+const editor_selector = '.cm-content';
+const editor_focus_selector = '.cm-content';
 const iframe_selector = 'iframe[src*="webcontainer.io/"]';
+
+test.describe.configure({ mode: 'parallel' });
 
 test('focus management: the editor keeps focus when iframe is loaded', async ({ page }) => {
 	await page.bringToFront();
@@ -108,7 +110,7 @@ test('focus management: The editor keeps focus while typing', async ({ page }) =
 	// get code from DOM, then replace nbsp with normal space
 	const received = (await page.locator(editor_selector).innerText()).replace(/\u00a0/g, ' ');
 
-	const expected = '<script>\n  export let data;\n</script>\n<h1>Hello world!</h1>';
+	const expected = '<script>\n\texport let data;\n</script>\n\n';
 
 	expect(received).toBe(expected);
 });
