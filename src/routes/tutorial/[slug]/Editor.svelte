@@ -75,7 +75,9 @@
 			editor_states.set(file.name, state);
 		}
 
-		editor_view.setState(state);
+		if (editor_view) {
+			editor_view.setState(state);
+		}
 	}
 
 	onMount(() => {
