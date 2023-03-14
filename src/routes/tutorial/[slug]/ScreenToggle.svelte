@@ -6,9 +6,9 @@
 </script>
 
 <div class="input-output-toggle">
-	<span aria-hidden="true">Tutorial</span>
+	<button aria-hidden="true" on:click={() => (selected = false)}>Tutorial</button>
 	<ToggleButton bind:pressed={selected} label="Show editor" />
-	<span aria-hidden="true">Editor</span>
+	<button aria-hidden="true" on:click={() => (selected = true)}>Editor</button>
 </div>
 
 <style>

@@ -30,6 +30,10 @@
 		border: transparent;
 	}
 
+	button:focus-visible {
+		outline: 2px solid var(--sk-theme-3);
+	}
+
 	button::before {
 		content: '';
 		position: absolute;
