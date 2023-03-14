@@ -106,6 +106,7 @@
 
 <div style="position: fixed; top: 50%; left: 10%; background: yellow; color: purple; z-index: 999">
 	<p>w: {w}</p>
+	<p>mobile: {mobile}</p>
 </div>
 
 <div class="container" class:mobile>
