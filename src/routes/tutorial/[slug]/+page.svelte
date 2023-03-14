@@ -245,6 +245,10 @@
 			width: 100vw;
 		}
 
+		.top.offset {
+			transform: none;
+		}
+
 		.screen-toggle {
 			display: none;
 		}
