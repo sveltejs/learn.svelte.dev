@@ -165,13 +165,17 @@
 
 	.top {
 		width: 200vw;
+		margin-left: -100vw;
 		height: 0;
 		flex: 1;
 		transition: transform 0.2s;
+		/* we transform the default state, rather than the editor state, because otherwise
+		   the positioning of tooltips is wrong (doesn't take into account transforms) */
+		transform: translate(50%, 0);
 	}
 
 	.top.offset {
-		transform: translate(-50%);
+		transform: none;
 	}
 
 	.screen-toggle {
@@ -243,9 +247,7 @@
 	@media (min-width: 800px) {
 		.top {
 			width: 100vw;
-		}
-
-		.top.offset {
+			margin: 0;
 			transform: none;
 		}
 
