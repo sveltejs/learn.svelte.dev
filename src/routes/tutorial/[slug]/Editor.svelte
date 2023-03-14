@@ -5,6 +5,7 @@
 	import { EditorView, keymap } from '@codemirror/view';
 	import { EditorState } from '@codemirror/state';
 	import { indentWithTab } from '@codemirror/commands';
+	import { indentUnit } from '@codemirror/language';
 	import { javascript } from '@codemirror/lang-javascript';
 	import { html } from '@codemirror/lang-html';
 	import { svelte } from '@replit/codemirror-lang-svelte';
@@ -50,7 +51,13 @@
 
 		let state = editor_states.get(file.name);
 		if (!state) {
-			const extensions = [basicSetup, EditorState.tabSize.of(2), keymap.of([indentWithTab]), theme];
+			const extensions = [
+				basicSetup,
+				EditorState.tabSize.of(2),
+				keymap.of([indentWithTab]),
+				indentUnit.of('\t'),
+				theme
+			];
 
 			if (file.name.endsWith('.js') || file.name.endsWith('.json')) {
 				extensions.push(javascript());

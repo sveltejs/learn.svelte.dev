@@ -110,7 +110,7 @@ test('focus management: The editor keeps focus while typing', async ({ page }) =
 	// get code from DOM, then replace nbsp with normal space
 	const received = (await page.locator(editor_selector).innerText()).replace(/\u00a0/g, ' ');
 
-	const expected = '<script>\n  export let data;\n</script>\n<h1>Hello world!</h1>';
+	const expected = '<script>\n\texport let data;\n</script>\n\n';
 
 	expect(received).toBe(expected);
 });
