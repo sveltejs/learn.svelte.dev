@@ -169,7 +169,7 @@
 			</div>
 			<div class="fake-content">
 				{#each $selected_file.contents.split('\n') as line}
-					<pre>{line}</pre>
+					<pre>{line || ' '}</pre>
 				{/each}
 			</div>
 		</div>
