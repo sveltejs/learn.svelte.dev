@@ -49,6 +49,28 @@
 	color: var(--sk-text-2);
 }
 
+.cm-editor .cm-tooltip {
+	border: none;
+	border-radius: 2px;
+	overflow: hidden;
+	margin: 0.4rem 0;
+	filter: drop-shadow(1px 2px 5px rgba(0,0,0,0.1));
+}
+.cm-editor .cm-tooltip-hover {}
+.cm-editor .cm-tooltip-below {}
+.cm-editor .cm-tooltip-lint {}
+.cm-editor .cm-tooltip-section {}
+.cm-editor .cm-diagnostic {
+	border: none;
+	padding: 0.2rem 0.8rem;
+}
+.cm-editor .cm-diagnostic-warning {
+	/* background: hsl(36, 100%, 32%); */
+	background: hsl(39, 100%, 10%);
+}
+.cm-editor .cm-diagnosticText {}
+
+
 @media (prefers-color-scheme: dark) {
 	.cm-editor .cm-activeLineGutter {
 		background-color: var(--sk-back-3);
@@ -56,5 +78,9 @@
 
 	.cm-editor .cm-activeLine {
 		background-color: var(--sk-back-2);
+	}
+
+	.cm-editor .cm-diagnostic-warning {
+		background: hsl(39, 100%, 20%);
 	}
 }
