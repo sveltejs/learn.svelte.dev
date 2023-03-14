@@ -104,11 +104,6 @@
 
 <ContextMenu />
 
-<div style="position: fixed; top: 50%; left: 10%; background: yellow; color: purple; z-index: 999">
-	<p>w: {w}</p>
-	<p>mobile: {mobile}</p>
-</div>
-
 <div class="container" class:mobile>
 	<div class="top" class:offset={show_editor}>
 		<SplitPane id="main" type="horizontal" min="360px" max="50%" pos="33%">
