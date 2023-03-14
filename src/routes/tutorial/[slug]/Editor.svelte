@@ -119,6 +119,7 @@
 
 	afterNavigate(() => {
 		editor_states.clear();
+		select_state($selected_name);
 	});
 </script>
 
