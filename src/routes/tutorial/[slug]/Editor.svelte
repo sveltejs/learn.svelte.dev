@@ -214,4 +214,10 @@
 	.fake-content {
 		padding: 0 1rem;
 	}
+
+	@media (prefers-color-scheme: dark) {
+		.fake * {
+			color: #666;
+		}
+	}
 </style>
