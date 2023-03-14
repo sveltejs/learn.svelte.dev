@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test';
 
-const editor_selector = 'div.monaco-scrollable-element.editor-scrollable';
-const editor_focus_selector = 'textarea.inputarea.monaco-mouse-cursor-text';
+const editor_selector = '.cm-content';
+const editor_focus_selector = '.cm-content';
 const iframe_selector = 'iframe[src*="webcontainer.io/"]';
+
+test.describe.configure({ mode: 'parallel' });
 
 test('focus management: the editor keeps focus when iframe is loaded', async ({ page }) => {
 	await page.bringToFront();

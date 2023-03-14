@@ -5,7 +5,7 @@
 		"dev": "vite dev",
 		"build": "node scripts/create-common-bundle && vite build",
 		"preview": "vite preview",
-		"test": "playwright test",
+		"test": "npm run build && playwright test",
 		"check": "svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./jsconfig.json --watch",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. .",
