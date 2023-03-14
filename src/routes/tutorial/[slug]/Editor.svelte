@@ -1,18 +1,19 @@
 <script>
 	import { browser, dev } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { basicSetup } from 'codemirror';
 	import { EditorView, keymap } from '@codemirror/view';
 	import { EditorState } from '@codemirror/state';
 	import { indentWithTab } from '@codemirror/commands';
 	import { indentUnit } from '@codemirror/language';
+	import { setDiagnostics } from '@codemirror/lint';
 	import { javascript } from '@codemirror/lang-javascript';
 	import { html } from '@codemirror/lang-html';
 	import { svelte } from '@replit/codemirror-lang-svelte';
 	import { tags } from '@lezer/highlight';
-	import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
-	import { setDiagnostics } from '@codemirror/lint';
-	import { afterNavigate } from '$app/navigation';
+	import { HighlightStyle } from '@codemirror/language';
+	import { syntaxHighlighting } from '@codemirror/language';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { files, selected_file, selected_name, update_file, warnings } from './state.js';
 	import './codemirror.css';
 
@@ -30,6 +31,7 @@
 	let container;
 
 	let preserve_editor_focus = false;
+	let skip_reset = true;
 
 	/** @type {any} */
 	let remove_focus_timeout;
@@ -40,69 +42,103 @@
 	/** @type {import('@codemirror/view').EditorView} */
 	let editor_view;
 
-	/** @type {import('@codemirror/state').EditorState | undefined} */
-	let current_state;
+	const extensions = [
+		basicSetup,
+		EditorState.tabSize.of(2),
+		keymap.of([indentWithTab]),
+		indentUnit.of('\t'),
+		theme
+	];
 
-	$: if (editor_view && $selected_name) {
+	$: if (editor_view) {
 		select_state($selected_name);
 
-		const current_warnings = $warnings[$selected_name];
+		if ($selected_name) {
+			const current_warnings = $warnings[$selected_name];
 
-		if (current_warnings) {
-			const diagnostics = current_warnings.map((warning) => {
-				/** @type {import('@codemirror/lint').Diagnostic} */
-				const diagnostic = {
-					from: warning.start.character,
-					to: warning.end.character,
-					severity: 'warning',
-					message: warning.message
-				};
+			if (current_warnings) {
+				const diagnostics = current_warnings.map((warning) => {
+					/** @type {import('@codemirror/lint').Diagnostic} */
+					const diagnostic = {
+						from: warning.start.character,
+						to: warning.end.character,
+						severity: 'warning',
+						message: warning.message
+					};
 
-				return diagnostic;
-			});
+					return diagnostic;
+				});
 
-			const transaction = setDiagnostics(editor_view.state, diagnostics);
+				const transaction = setDiagnostics(editor_view.state, diagnostics);
 
-			editor_view.dispatch(transaction);
+				editor_view.dispatch(transaction);
+			}
 		}
 	}
 
-	/** @param {string} $selected_name */
-	function select_state($selected_name) {
-		const file = $files.find((file) => file.name === $selected_name);
-		if (file?.type !== 'file') return;
+	$: reset($files);
 
-		let state = editor_states.get(file.name);
-		if (!state) {
-			const extensions = [
-				basicSetup,
-				EditorState.tabSize.of(2),
-				keymap.of([indentWithTab]),
-				indentUnit.of('\t'),
-				theme
-			];
+	/** @param {import('$lib/types').Stub[]} $files */
+	function reset($files) {
+		if (skip_reset) return;
 
-			if (file.name.endsWith('.js') || file.name.endsWith('.json')) {
-				extensions.push(javascript());
-			} else if (file.name.endsWith('.html')) {
-				extensions.push(html());
-			} else if (file.name.endsWith('.svelte')) {
-				extensions.push(svelte());
+		for (const file of $files) {
+			if (file.type !== 'file') continue;
+
+			let state = editor_states.get(file.name);
+
+			if (state) {
+				const existing = state.doc.toString();
+
+				if (file.contents !== existing) {
+					const transaction = state.update({
+						changes: {
+							from: 0,
+							to: existing.length,
+							insert: file.contents
+						}
+					});
+
+					editor_states.set(file.name, transaction.state);
+					state = transaction.state;
+
+					if ($selected_name === file.name) {
+						editor_view.setState(state);
+					}
+				}
+			} else {
+				let lang;
+
+				if (file.name.endsWith('.js') || file.name.endsWith('.json')) {
+					lang = javascript();
+				} else if (file.name.endsWith('.html')) {
+					lang = html();
+				} else if (file.name.endsWith('.svelte')) {
+					lang = svelte();
+				}
+
+				state = EditorState.create({
+					doc: file.contents,
+					extensions: lang ? [...extensions, lang] : extensions
+				});
+
+				editor_states.set(file.name, state);
 			}
+		}
+	}
 
-			state = EditorState.create({
-				doc: file.contents,
-				extensions
+	/** @param {string | null} $selected_name */
+	function select_state($selected_name) {
+		if (skip_reset) return;
+
+		const state =
+			($selected_name && editor_states.get($selected_name)) ||
+			EditorState.create({
+				doc: '',
+				extensions: [EditorState.readOnly.of(true)]
 			});
 
-			editor_states.set(file.name, state);
-		}
-
-		current_state = state;
-
-		if (editor_view) {
-			editor_view.setState(state);
-		}
+		editor_view.setState(state);
 	}
 
 	onMount(() => {
@@ -126,10 +162,12 @@
 
 		editor_view = new EditorView({
 			parent: container,
-			dispatch(transaction) {
+			async dispatch(transaction) {
 				editor_view.update([transaction]);
 
 				if (transaction.docChanged && $selected_file) {
+					skip_reset = true;
+
 					// TODO do we even need to update `$files`? maintaining separate editor states is probably sufficient
 					update_file({
 						...$selected_file,
@@ -138,9 +176,10 @@
 
 					// keep `editor_states` updated so that undo/redo history is preserved for files independently
 					editor_states.set($selected_file.name, editor_view.state);
-				}
 
-				current_state = editor_view.state;
+					await tick();
+					skip_reset = false;
+				}
 			}
 		});
 
@@ -153,8 +192,16 @@
 		};
 	});
 
+	beforeNavigate(() => {
+		skip_reset = true;
+	});
+
 	afterNavigate(() => {
+		skip_reset = false;
+
 		editor_states.clear();
+		reset($files);
+
 		select_state($selected_name);
 
 		// clear warnings
@@ -243,5 +290,11 @@
 
 	.fake-content {
 		padding: 0 1rem;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.fake * {
+			color: #666;
+		}
 	}
 </style>

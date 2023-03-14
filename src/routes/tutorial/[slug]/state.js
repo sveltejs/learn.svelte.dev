@@ -55,6 +55,12 @@ export function update_file(file) {
 
 /** @param {import('$lib/types').Stub[]} new_files */
 export function reset_files(new_files) {
+	// if the selected file no longer exists, clear it
+	selected_name.update(($selected_name) => {
+		const file = new_files.find((file) => file.name === $selected_name);
+		return file?.name ?? null;
+	});
+
 	files.set(new_files);
 	adapter.reset(new_files);
 }
