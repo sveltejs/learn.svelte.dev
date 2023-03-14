@@ -19,6 +19,10 @@
 	width: 5rem;
 }
 
+.cm-editor .cm-activeLineGutter {
+	background-color: var(--sk-back-3);
+}
+
 .cm-editor .cm-lineNumbers {
 	flex: 1;
 	color: #237893;
@@ -30,4 +34,23 @@
 
 .cm-editor .cm-line {
 	padding: 0 1rem;
+}
+
+.cm-editor .cm-selectionBackground {
+	border-radius: 2px;
+}
+
+.cm-editor .cm-selectionMatch {
+	background: rgba(0,0,0,0.2);
+	color: var(--sk-text-2);
+}
+
+@media (prefers-color-scheme: dark) {
+	.cm-editor .cm-activeLineGutter {
+		background-color: var(--sk-back-3);
+	}
+
+	.cm-editor .cm-activeLine {
+		background-color: var(--sk-back-2);
+	}
 }
