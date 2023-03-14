@@ -1,13 +1,22 @@
 <!-- TODO this is copied from kit.svelte.dev — probably belongs in site-kit -->
 <script>
-	/** @type {boolean} */
-	export let pressed;
+	import { createEventDispatcher } from 'svelte';
 
 	/** @type {string} */
 	export let label;
+
+	export let pressed = false;
+
+	const dispatch = createEventDispatcher();
 </script>
 
-<button aria-pressed={pressed ? 'true' : 'false'} on:click={() => (pressed = !pressed)}>
+<button
+	aria-pressed={pressed ? 'true' : 'false'}
+	on:click={() => {
+		pressed = !pressed;
+		dispatch('change', { pressed });
+	}}
+>
 	<span class="visually-hidden">{label}</span>
 </button>
 

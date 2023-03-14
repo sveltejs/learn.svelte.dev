@@ -100,7 +100,13 @@
 	<meta property="og:image" content="https://svelte.dev/images/twitter-thumbnail.jpg" />
 </svelte:head>
 
-<svelte:window bind:innerWidth={w} />
+<svelte:window
+	bind:innerWidth={w}
+	on:popstate={(e) => {
+		const q = new URLSearchParams(location.search);
+		show_editor = q.get('view') === 'editor';
+	}}
+/>
 
 <ContextMenu />
 
@@ -181,7 +187,15 @@
 	</div>
 
 	<div class="screen-toggle">
-		<ScreenToggle bind:selected={show_editor} />
+		<ScreenToggle
+			on:change={(e) => {
+				show_editor = e.detail.pressed;
+
+				const view = show_editor ? 'editor' : 'tutorial';
+				history.pushState({}, '', `?view=${view}`);
+			}}
+			pressed={show_editor}
+		/>
 	</div>
 </div>
 
