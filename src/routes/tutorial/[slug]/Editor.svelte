@@ -9,6 +9,7 @@
 	import { javascript } from '@codemirror/lang-javascript';
 	import { html } from '@codemirror/lang-html';
 	import { svelte } from '@replit/codemirror-lang-svelte';
+	import { vim } from '@replit/codemirror-vim';
 	import { tags } from '@lezer/highlight';
 	import { HighlightStyle } from '@codemirror/language';
 	import { syntaxHighlighting } from '@codemirror/language';
@@ -53,6 +54,7 @@
 		if (!state) {
 			const extensions = [
 				basicSetup,
+				vim(),
 				EditorState.tabSize.of(2),
 				keymap.of([indentWithTab]),
 				indentUnit.of('\t'),
