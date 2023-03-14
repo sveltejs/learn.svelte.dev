@@ -1,12 +1,10 @@
 <script>
 	import Output from './Output.svelte';
-	import { browser } from '$app/environment';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import ContextMenu from './filetree/ContextMenu.svelte';
 	import Filetree from './filetree/Filetree.svelte';
 	import { SplitPane } from '@rich_harris/svelte-split-pane';
 	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
-	import { writable } from 'svelte/store';
 	import Editor from './Editor.svelte';
 	import ImageViewer from './ImageViewer.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
@@ -23,13 +21,20 @@
 
 	export let data;
 
-	let show_editor = false;
-
 	let path = data.exercise.path;
+	let show_editor = false;
+	let show_filetree = false;
 	let paused = false;
+	let w = 1000;
 
 	/** @type {import('$lib/types').Stub[]} */
 	let previous_files = [];
+
+	$: mobile = w < 800; // for the things we can't do with media queries
+	$: completed = is_completed($files, data.exercise.b);
+	$: files.set(Object.values(data.exercise.a));
+	$: solution.set(data.exercise.b);
+	$: selected_name.set(data.exercise.focus);
 
 	beforeNavigate(() => {
 		previous_files = $files;
@@ -44,12 +49,6 @@
 		path = data.exercise.path;
 		paused = false;
 	});
-
-	$: completed = is_completed($files, data.exercise.b);
-
-	$: files.set(Object.values(data.exercise.a));
-	$: solution.set(data.exercise.b);
-	$: selected_name.set(data.exercise.focus);
 
 	/**
 	 * @param {import('$lib/types').Stub[]} files
@@ -99,9 +98,11 @@
 	<meta property="og:image" content="https://svelte.dev/images/twitter-thumbnail.jpg" />
 </svelte:head>
 
+<svelte:window bind:innerWidth={w} />
+
 <ContextMenu />
 
-<div class="container">
+<div class="container" class:mobile>
 	<div class="top" class:offset={show_editor}>
 		<SplitPane id="main" type="horizontal" min="360px" max="50%" pos="33%">
 			<section slot="a" class="content">
@@ -117,11 +118,27 @@
 			<section slot="b">
 				<SplitPane type="vertical" min="100px" max="50%" pos="50%">
 					<section slot="a">
-						<SplitPane type="horizontal" min="120px" max="300px" pos="200px">
+						<SplitPane
+							id="editor"
+							type={mobile ? 'vertical' : 'horizontal'}
+							min="120px"
+							max="300px"
+							pos="200px"
+						>
 							<section class="navigator" slot="a">
-								<Filetree exercise={data.exercise} />
+								{#if mobile}
+									<button class="file" on:click={() => (show_filetree = !show_filetree)}>
+										{$selected_file?.name.replace(
+											data.exercise.scope.prefix,
+											data.exercise.scope.name + '/'
+										) ?? 'Files'}
+									</button>
+								{:else}
+									<Filetree exercise={data.exercise} />
+								{/if}
 
 								<button
+									class="solve"
 									class:completed
 									disabled={!data.exercise.has_solution}
 									on:click={() => {
@@ -139,6 +156,16 @@
 							<section class="editor-container" slot="b">
 								<Editor />
 								<ImageViewer selected={$selected_file} />
+
+								{#if mobile && show_filetree}
+									<div class="mobile-filetree">
+										<Filetree
+											mobile
+											exercise={data.exercise}
+											on:select={() => (show_filetree = false)}
+										/>
+									</div>
+								{/if}
 							</section>
 						</SplitPane>
 					</section>
@@ -200,7 +227,7 @@
 		flex-direction: column;
 	}
 
-	.navigator button {
+	.navigator .solve {
 		position: relative;
 		background: var(--sk-theme-2);
 		padding: 0.5rem;
@@ -211,15 +238,15 @@
 		opacity: 1;
 	}
 
-	.navigator button:disabled {
+	.navigator .solve:disabled {
 		opacity: 0.5;
 	}
 
-	.navigator button:not(:disabled) {
+	.navigator .solve:not(:disabled) {
 		background: var(--sk-theme-1);
 	}
 
-	.navigator button.completed {
+	.navigator .solve.completed {
 		background: var(--sk-theme-2);
 	}
 
@@ -233,13 +260,45 @@
 		background-color: var(--sk-back-3);
 	}
 
+	.mobile .navigator {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 1rem;
+	}
+
+	.mobile .navigator .file {
+		flex: 1;
+		text-align: left;
+	}
+
+	.mobile .navigator .solve {
+		width: 9rem;
+		height: auto;
+		padding: 0.2rem;
+		border-radius: 4rem;
+		border: none;
+	}
+
+	.mobile-filetree {
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow-y: auto;
+	}
+
 	/* on mobile, override the <SplitPane> controls */
 	@media (max-width: 799px) {
 		:global([data-pane='main']) {
 			--pos: 50% !important;
 		}
 
-		:global([data-pane='main']) :global(.divider) {
+		:global([data-pane='editor']) {
+			--pos: 5.4rem !important;
+		}
+
+		:global([data-pane]) :global(.divider) {
 			cursor: default;
 		}
 	}

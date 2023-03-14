@@ -1,4 +1,5 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
@@ -9,9 +10,13 @@
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
 
-	let modal_text = '';
+	export let mobile = false;
+
+	const dispatch = createEventDispatcher();
 
 	const hidden = new Set(['__client.js', 'node_modules']);
+
+	let modal_text = '';
 
 	/** @type {import('svelte/store').Writable<Record<string, boolean>>}*/
 	const collapsed = writable({});
@@ -111,6 +116,11 @@
 					return true;
 				})
 			);
+		},
+
+		select: (name) => {
+			dispatch('select');
+			select_file(name);
 		}
 	});
 
@@ -152,6 +162,7 @@
 
 <ul
 	class="filetree"
+	class:mobile
 	on:keydown={(e) => {
 		if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
 			e.preventDefault();
@@ -198,7 +209,11 @@
 		list-style: none;
 	}
 
-	.filetree::before {
+	.filetree.mobile {
+		height: 100%;
+	}
+
+	.filetree:not(.mobile)::before {
 		content: '';
 		position: absolute;
 		width: 0;
