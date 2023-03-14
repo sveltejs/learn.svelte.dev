@@ -1,5 +1,5 @@
 <script>
-	import { dev } from '$app/environment';
+	import { browser, dev } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { basicSetup } from 'codemirror';
 	import { EditorView, keymap } from '@codemirror/view';
@@ -136,6 +136,7 @@
 />
 
 <div
+	class="container"
 	bind:this={container}
 	on:keydown={(e) => {
 		if (e.key === 'Tab') {
@@ -158,11 +159,49 @@
 			preserve_editor_focus = false;
 		}, 200);
 	}}
-/>
+>
+	{#if !browser && $selected_file}
+		<div class="fake">
+			<div class="fake-gutter">
+				{#each $selected_file.contents.split('\n') as _, i}
+					<div class="fake-line">{i + 1}</div>
+				{/each}
+			</div>
+			<div class="fake-content">
+				{#each $selected_file.contents.split('\n') as line}
+					<pre>{line}</pre>
+				{/each}
+			</div>
+		</div>
+	{/if}
+</div>
 
 <style>
-	div {
+	.container {
 		width: 100%;
 		height: 100%;
+	}
+
+	.fake {
+		display: grid;
+		grid-template-columns: 4rem 1fr;
+		grid-gap: 1rem;
+		padding: 1rem 0;
+		font-size: 1.3rem;
+		line-height: 2rem;
+	}
+
+	.fake * {
+		font-family: var(--font-mono) !important;
+		color: #ccc;
+	}
+
+	.fake-gutter {
+		text-align: right;
+		padding-right: 3px;
+	}
+
+	.fake-content {
+		padding: 0 1rem;
 	}
 </style>

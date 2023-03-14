@@ -28,6 +28,10 @@
 	color: #237893;
 }
 
+.cm-editor .cm-foldGutter {
+	width: 1rem;
+}
+
 .cm-editor .cm-content {
 	padding: 1rem 0;
 }
