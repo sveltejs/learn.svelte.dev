@@ -1,14 +1,14 @@
 <script>
 	async function getRandomNumber() {
-		const res = await fetch(
-			`https://svelte.dev/tutorial/random-number`
-		);
-		const text = await res.text();
+		// Fetch a random number between 0 and 100
+		// (with a delay, so that we can see it)
+		const res = await fetch('/random-number');
 
 		if (res.ok) {
-			return text;
+			return await res.text();
 		} else {
-			throw new Error(text);
+			// Sometimes the API will fail!
+			throw new Error('Request failed');
 		}
 	}
 
@@ -19,7 +19,9 @@
 	}
 </script>
 
-<button on:click={handleClick}> generate random number </button>
+<button on:click={handleClick}>
+	generate random number
+</button>
 
 <!-- replace this element -->
 <p>{promise}</p>
