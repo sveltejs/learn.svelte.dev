@@ -6,11 +6,13 @@ If you need to loop over lists of data, use an `each` block:
 
 ```svelte
 <ul>
-	{#each cats as cat}
-		<li><a target="_blank" href="https://www.youtube.com/watch?v={cat.id}">
-			{cat.name}
-		</a></li>
-	{/each}
+	+++{#each cats as cat}+++
+		<li>
+			<a href="https://www.youtube.com/watch?v={cat.id}">
+				{cat.name}
+			</a>
+		</li>
+	+++{/each}+++
 </ul>
 ```
 
@@ -19,10 +21,12 @@ If you need to loop over lists of data, use an `each` block:
 You can get the current _index_ as a second argument, like so:
 
 ```svelte
-{#each cats as cat, i}
-	<li><a target="_blank" href="https://www.youtube.com/watch?v={cat.id}">
-		{i + 1}: {cat.name}
-	</a></li>
+{#each cats as cat+++, i}+++
+	<li>
+		<a href="https://www.youtube.com/watch?v={cat.id}">
+			+++{i + 1}:+++ {cat.name}
+		</a>
+	</li>
 {/each}
 ```
 

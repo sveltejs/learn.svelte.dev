@@ -19,13 +19,10 @@
 
 <ul>
 	<!-- open each block -->
-	<li>
-		<a
-			target="_blank"
-			href="https://www.youtube.com/watch?v={cat.id}"
-		>
-			{cat.name}
-		</a>
-	</li>
+		<li>
+			<a href="https://www.youtube.com/watch?v={cat.id}">
+				{cat.name}
+			</a>
+		</li>
 	<!-- close each block -->
 </ul>
