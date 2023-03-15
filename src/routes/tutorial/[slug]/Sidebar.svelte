@@ -143,6 +143,10 @@
 		background: rgba(255, 62, 0, 0.1);
 	}
 
+	.text :global(.desktop) {
+		display: none;
+	}
+
 	footer {
 		padding: 1rem 3rem;
 		display: flex;
@@ -178,5 +182,15 @@
 		margin: 1em 0 0 0;
 		border-radius: var(--sk-border-radius);
 		line-height: 1;
+	}
+
+	@media (min-width: 800px) {
+		.text :global(.mobile) {
+			display: none;
+		}
+
+		.text :global(.desktop) {
+			display: inline;
+		}
 	}
 </style>
