@@ -32,6 +32,10 @@
 	width: 1rem;
 }
 
+.cm-focused .cm-cursor {
+	border-left-color: var(--sk-text-3);
+}
+
 .cm-editor .cm-content {
 	padding: 1rem 0;
 }
