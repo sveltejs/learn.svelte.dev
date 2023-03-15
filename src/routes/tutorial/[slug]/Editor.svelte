@@ -202,7 +202,10 @@
 		editor_states.clear();
 		reset($files);
 
-		select_state($selected_name);
+		if (editor_view) {
+			// could be false if onMount returned early
+			select_state($selected_name);
+		}
 
 		// clear warnings
 		warnings.set({});

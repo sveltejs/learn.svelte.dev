@@ -17,7 +17,7 @@ specifiers:
   '@lezer/lr': ^1.3.3
   '@playwright/test': ^1.31.2
   '@replit/codemirror-lang-svelte': ^6.0.0
-  '@rich_harris/svelte-split-pane': ^1.0.1
+  '@rich_harris/svelte-split-pane': ^1.0.2
   '@sveltejs/adapter-vercel': 2.3.1
   '@sveltejs/kit': ^1.11.0
   '@sveltejs/site-kit': ^3.2.2
@@ -61,7 +61,7 @@ dependencies:
   '@lezer/javascript': 1.4.1
   '@lezer/lr': 1.3.3
   '@replit/codemirror-lang-svelte': 6.0.0_ybny7xhlf2ysg4majw54z4nkly
-  '@rich_harris/svelte-split-pane': 1.0.1_svelte@3.56.0
+  '@rich_harris/svelte-split-pane': 1.0.2_svelte@3.56.0
   '@webcontainer/api': 1.0.2
   adm-zip: 0.5.10
   ansi-to-html: 0.7.2
@@ -730,8 +730,8 @@ packages:
       '@lezer/lr': 1.3.3
     dev: false
 
-  /@rich_harris/svelte-split-pane/1.0.1_svelte@3.56.0:
-    resolution: {integrity: sha512-/11fp3792qh4pXxO3XtVmIQf6SCDFKcQyyQvVOAKr8U5tG0Z4QaLEXsyOKOpeAkngqWT1dbBfjVynUXa7kb1EA==}
+  /@rich_harris/svelte-split-pane/1.0.2_svelte@3.56.0:
+    resolution: {integrity: sha512-8Qhno4kshsBFWC3MnM0++TIbyAvbiuCWXxiCA38VhCr/ZFKQcS8k9mjzWt9eynQjgkyZHejXN0j0V7ws7LV1KA==}
     peerDependencies:
       svelte: ^3.54.0
     dependencies:

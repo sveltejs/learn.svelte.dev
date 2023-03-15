@@ -1,4 +1,5 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
@@ -6,15 +7,16 @@
 	import { files, solution, reset_files, select_file } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
-	/** @type {import('svelte/store').Writable<boolean>} */
-	export let readonly;
-
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
 
-	let modal_text = '';
+	export let mobile = false;
+
+	const dispatch = createEventDispatcher();
 
 	const hidden = new Set(['__client.js', 'node_modules']);
+
+	let modal_text = '';
 
 	/** @type {import('svelte/store').Writable<Record<string, boolean>>}*/
 	const collapsed = writable({});
@@ -25,8 +27,6 @@
 
 	context.set({
 		collapsed,
-
-		readonly,
 
 		add: async (name, type) => {
 			if (!$solution[name] && !exercise.editing_constraints.create.has(name)) {
@@ -116,6 +116,11 @@
 					return true;
 				})
 			);
+		},
+
+		select: (name) => {
+			dispatch('select');
+			select_file(name);
 		}
 	});
 
@@ -157,6 +162,7 @@
 
 <ul
 	class="filetree"
+	class:mobile
 	on:keydown={(e) => {
 		if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
 			e.preventDefault();
@@ -203,7 +209,11 @@
 		list-style: none;
 	}
 
-	.filetree::before {
+	.filetree.mobile {
+		height: 100%;
+	}
+
+	.filetree:not(.mobile)::before {
 		content: '';
 		position: absolute;
 		width: 0;

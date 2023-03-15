@@ -2,7 +2,7 @@
 	import * as context from './context.js';
 	import Item from './Item.svelte';
 	import file_icon from '$lib/icons/file.svg';
-	import { selected_name, select_file, solution } from '../state.js';
+	import { selected_name, solution } from '../state.js';
 
 	/** @type {import('$lib/types').FileStub} */
 	export let file;
@@ -10,11 +10,11 @@
 	/** @type {number} */
 	export let depth;
 
-	const { rename, remove, readonly } = context.get();
+	const { rename, remove, select } = context.get();
 
 	let renaming = false;
 
-	$: can_remove = !$readonly && !$solution[file.name];
+	$: can_remove = !$solution[file.name];
 
 	/** @type {import('./ContextMenu.svelte').MenuItems} */
 	$: actions = can_remove
@@ -45,7 +45,7 @@
 	icon={file_icon}
 	selected={file.name === $selected_name}
 	{actions}
-	on:click={() => select_file(file.name)}
+	on:click={() => select(file.name)}
 	on:edit={() => {
 		renaming = true;
 	}}

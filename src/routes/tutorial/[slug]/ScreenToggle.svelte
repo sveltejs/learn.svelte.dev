@@ -1,42 +1,54 @@
 <script>
-	/** @type {string[]} */
-	export let labels;
-	export let selected = 0;
+	import { createEventDispatcher } from 'svelte';
+	import ToggleButton from './ToggleButton.svelte';
+
+	/** @type {boolean} */
+	export let pressed = false;
+
+	const dispatch = createEventDispatcher();
 </script>
 
-<div class="toggle">
-	{#each labels as label, index}
-		<button class:selected={selected === index} on:click={() => (selected = index)}>
-			{label}
-		</button>
-	{/each}
+<div class="input-output-toggle">
+	<button
+		aria-hidden="true"
+		on:click={() => {
+			if (pressed) {
+				pressed = false;
+				dispatch('change', { pressed });
+			}
+		}}>Tutorial</button
+	>
+	<ToggleButton label="Show editor" {pressed} on:change />
+	<button
+		aria-hidden="true"
+		on:click={() => {
+			if (!pressed) {
+				pressed = true;
+				dispatch('change', { pressed });
+			}
+		}}>Editor</button
+	>
 </div>
 
 <style>
-	.toggle {
-		position: fixed;
-		bottom: 0;
-		width: 100%;
-		height: var(--toggle-height);
+	.input-output-toggle {
+		position: relative;
 		display: flex;
-		justify-content: center;
+		gap: 0.5em;
+		user-select: none;
 		align-items: center;
-		border-top: 1px solid var(--sk-text-2);
-		background-color: var(--sk-back-1);
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+		margin: 0 auto;
 	}
-	button {
-		margin: 0 0.15em;
-		width: 4em;
-		height: 1em;
-		padding: 0.3em 0.4em;
-		border-radius: var(--sk-border-radius);
-		line-height: 1em;
-		box-sizing: content-box;
-		color: var(--sk-text-2);
-		border: 1px solid var(--sk-back-3);
-	}
-	.selected {
-		background-color: var(--sk-theme-1);
-		color: white;
+
+	@media (min-width: 832px) {
+		.input-output-toggle {
+			padding-left: 3.2rem;
+			width: var(--sidebar-menu-width);
+			margin: 0 0 0 auto;
+		}
 	}
 </style>

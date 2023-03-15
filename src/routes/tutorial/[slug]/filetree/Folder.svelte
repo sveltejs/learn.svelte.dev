@@ -22,7 +22,7 @@
 	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
 	let mode = 'idle';
 
-	const { collapsed, rename, add, remove, readonly } = context.get();
+	const { collapsed, rename, add, remove } = context.get();
 
 	$: segments = get_depth(prefix);
 
@@ -44,35 +44,33 @@
 		can_create.file = false;
 		can_create.directory = false;
 
-		if (!$readonly) {
-			const child_prefixes = [];
+		const child_prefixes = [];
 
-			for (const file of $files) {
-				if (
-					file.type === 'directory' &&
-					file.name.startsWith(prefix) &&
-					get_depth(file.name) === depth + 1
-				) {
-					child_prefixes.push(file.name + '/');
-				}
+		for (const file of $files) {
+			if (
+				file.type === 'directory' &&
+				file.name.startsWith(prefix) &&
+				get_depth(file.name) === depth + 1
+			) {
+				child_prefixes.push(file.name + '/');
 			}
+		}
 
-			for (const file of Object.values($solution)) {
-				if (!file.name.startsWith(prefix)) continue;
+		for (const file of Object.values($solution)) {
+			if (!file.name.startsWith(prefix)) continue;
 
-				// if already exists in $files, bail
-				if ($files.find((f) => f.name === file.name)) continue;
+			// if already exists in $files, bail
+			if ($files.find((f) => f.name === file.name)) continue;
 
-				// if intermediate directory exists, bail
-				if (child_prefixes.some((prefix) => file.name.startsWith(prefix))) continue;
+			// if intermediate directory exists, bail
+			if (child_prefixes.some((prefix) => file.name.startsWith(prefix))) continue;
 
-				can_create[file.type] = true;
-			}
+			can_create[file.type] = true;
 		}
 	}
 
 	// fake root directory has no name
-	$: can_remove = !$readonly && directory.name ? !$solution[directory.name] : false;
+	$: can_remove = directory.name ? !$solution[directory.name] : false;
 
 	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
 	$: actions = [

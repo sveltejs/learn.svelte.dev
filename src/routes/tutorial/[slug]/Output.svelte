@@ -72,10 +72,12 @@
 
 	/** @param {string} src */
 	function set_iframe_src(src) {
+		if (!iframe) return; // HMR
+
 		// removing the iframe from the document allows us to
 		// change the src without adding a history entry, which
 		// would make back/forward traversal very annoying
-		const parentNode = /** @type {HTMLElement} */ (iframe?.parentNode);
+		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
@@ -148,7 +150,7 @@
 		font-family: var(--font-mono);
 		font-size: var(--sk-text-xs);
 		padding: 1rem;
-		background: white;
+		background: var(--sk-back-1);
 		border-top: 1px solid var(--sk-back-3);
 		transform: translate(0, 100%);
 		transition: transform 0.3s;
