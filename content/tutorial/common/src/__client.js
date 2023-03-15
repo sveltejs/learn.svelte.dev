@@ -93,6 +93,22 @@ window.addEventListener('focusin', (e) => {
 	}
 });
 
+window.addEventListener('click', (e) => {
+	let node = e.target;
+	while (node) {
+		if (node.nodeName === 'A') {
+			const href = node.href;
+			const url = new URL(href);
+
+			if (url.origin !== location.origin) {
+				e.preventDefault();
+				window.open(url, '_blank');
+			}
+		}
+		node = node.parent;
+	}
+});
+
 function ping() {
 	parent.postMessage(
 		{
