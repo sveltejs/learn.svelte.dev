@@ -69,8 +69,7 @@
 	padding: 0.2rem 0.8rem;
 }
 .cm-editor .cm-diagnostic-warning {
-	/* background: hsl(36, 100%, 32%); */
-	background: hsl(39, 100%, 10%);
+	background: hsl(39, 100%, 70%);
 }
 .cm-editor .cm-diagnosticText {}
 
@@ -86,5 +85,9 @@
 
 	.cm-editor .cm-diagnostic-warning {
 		background: hsl(39, 100%, 20%);
+	}
+
+	.cm-editor .cm-diagnostic-warning {
+		background: hsl(39, 100%, 10%);
 	}
 }
