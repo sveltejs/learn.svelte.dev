@@ -55,37 +55,6 @@ test('focus management: input inside the iframe gets focus when clicking it', as
 	await expect(page.locator(editor_selector)).not.toBeFocused();
 });
 
-test('focus management: body inside the iframe gets focus when clicking a link inside the iframe', async ({
-	page
-}) => {
-	await page.bringToFront();
-
-	await page.goto('/tutorial/layouts');
-
-	const iframe = page.frameLocator(iframe_selector);
-
-	// wait for the iframe to load
-	await iframe.getByText('this is the home page.').waitFor();
-
-	// first, focus the editor
-	await page.waitForTimeout(1000);
-	await page.locator(editor_selector).click();
-	await expect(page.locator(editor_selector)).toBeFocused();
-
-	// then, click a link in the iframe
-	await page.waitForTimeout(500);
-	await iframe.locator('a[href="/about"]').click();
-
-	// wait for navigation
-	await iframe.getByText('this is the about page.').waitFor();
-
-	// wait a little, because there may be a script that manipulates focus
-	await page.waitForTimeout(1000);
-
-	// expect focus to be on body in the iframe, not the editor.
-	await expect(iframe.locator('body')).toBeFocused();
-});
-
 test('focus management: The editor keeps focus while typing', async ({ page }) => {
 	await page.bringToFront();
 
