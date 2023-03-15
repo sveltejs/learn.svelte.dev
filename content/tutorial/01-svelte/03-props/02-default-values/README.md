@@ -14,5 +14,5 @@ If we now add a second component _without_ an `answer` prop, it will fall back t
 
 ```svelte
 <Nested answer={42}/>
-+++<Nested/>+++
++++<Nested />+++
 ```
