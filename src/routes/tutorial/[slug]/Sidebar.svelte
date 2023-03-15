@@ -143,6 +143,21 @@
 		background: rgba(255, 62, 0, 0.1);
 	}
 
+	.text :global([data-file]) {
+		cursor: pointer;
+		background-image: url($lib/icons/file-edit.svg);
+		background-repeat: no-repeat;
+		background-position: 0.5rem 50%;
+		background-size: 1rem 1rem;
+		padding-left: 2rem;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.text :global([data-file]) {
+			background-image: url($lib/icons/file-edit-inline-dark.svg);
+		}
+	}
+
 	.text :global(.desktop) {
 		display: none;
 	}
