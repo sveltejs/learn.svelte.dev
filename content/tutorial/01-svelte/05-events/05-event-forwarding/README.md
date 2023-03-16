@@ -30,5 +30,5 @@ But that's a lot of code to write, so Svelte gives us an equivalent shorthand â€
 	import Inner from './Inner.svelte';
 </script>
 
-<Inner on:message/>
+<Inner +++on:message+++/>
 ```
