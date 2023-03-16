@@ -1,7 +1,7 @@
 import { WebContainer } from '@webcontainer/api';
 import base64 from 'base64-js';
 import AnsiToHtml from 'ansi-to-html';
-import { get_depth } from '../../../utils.js';
+import { escape_html, get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
 
 const converter = new AnsiToHtml({
@@ -59,7 +59,7 @@ export async function create(base, error, progress, logs) {
 					// clear screen
 					logs.set([]);
 				} else {
-					const log = converter.toHtml(chunk);
+					const log = converter.toHtml(escape_html(chunk));
 					logs.update(($logs) => [...$logs, log]);
 				}
 			}
