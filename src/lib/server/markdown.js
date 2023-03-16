@@ -4,6 +4,7 @@ import 'prismjs/components/prism-diff.js';
 import 'prismjs/components/prism-typescript.js';
 import 'prism-svelte';
 import { marked } from 'marked';
+import { escape_html } from '$lib/utils';
 
 const languages = {
 	bash: 'bash',
@@ -16,18 +17,6 @@ const languages = {
 	ts: 'typescript',
 	'': ''
 };
-
-/** @type {Record<string, string>} */
-const chars = {
-	'&': '&amp;',
-	'<': '&lt;',
-	'>': '&gt;'
-};
-
-/** @param {string} html */
-function escape(html) {
-	return html.replace(/[&<>]/g, (c) => chars[c]);
-}
 
 const delimiter_substitutes = {
 	'+++': '             ',
@@ -84,7 +73,7 @@ const default_renderer = {
 
 				return {
 					type,
-					content: escape(content)
+					content: escape_html(content)
 				};
 			});
 
@@ -99,7 +88,7 @@ const default_renderer = {
 			const plang = languages[lang];
 			const highlighted = plang
 				? PrismJS.highlight(source, PrismJS.languages[plang], language)
-				: escape(source);
+				: escape_html(source);
 
 			html = `<div class="code-block">${
 				options.file ? `<span class="filename">${options.file}</span>` : ''
