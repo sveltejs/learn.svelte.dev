@@ -1,6 +1,7 @@
 import { WebContainer } from '@webcontainer/api';
 import base64 from 'base64-js';
 import AnsiToHtml from 'ansi-to-html';
+import * as yootils from 'yootils';
 import { escape_html, get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
 
@@ -25,12 +26,7 @@ export async function create(base, error, progress, logs) {
 
 	progress.set({ value: 0, text: 'loading files' });
 
-	/**
-	 * Keeps track of the latest create/reset to ensure things are not processed in parallel.
-	 * (if this turns out to be insufficient, we can use a queue)
-	 * @type {Promise<any> | undefined}
-	 */
-	let running;
+	const q = yootils.queue(1);
 
 	/** Paths and contents of the currently loaded file stubs */
 	let current_stubs = stubs_to_map([]);
@@ -121,135 +117,134 @@ export async function create(base, error, progress, logs) {
 	}
 
 	return {
-		reset: async (stubs) => {
-			await running;
-			/** @type {Function} */
-			let resolve = () => {};
-			running = new Promise((fulfil) => (resolve = fulfil));
-			vite_error = false;
+		reset: (stubs) => {
+			return q.add(async () => {
+				/** @type {Function} */
+				let resolve = () => {};
+				vite_error = false;
 
-			let added_new_file = false;
+				const previous_env = /** @type {import('$lib/types').FileStub=} */ (
+					current_stubs.get('/.env')
+				);
 
-			const previous_env = /** @type {import('$lib/types').FileStub=} */ (
-				current_stubs.get('/.env')
-			);
+				/** @type {import('$lib/types').Stub[]} */
+				const to_write = [];
 
-			/** @type {import('$lib/types').Stub[]} */
-			const to_write = [];
+				for (const stub of stubs) {
+					if (stub.type === 'file') {
+						const current = /** @type {import('$lib/types').FileStub} */ (
+							current_stubs.get(stub.name)
+						);
 
-			for (const stub of stubs) {
-				if (stub.type === 'file') {
-					const current = /** @type {import('$lib/types').FileStub} */ (
-						current_stubs.get(stub.name)
-					);
-
-					if (current?.contents !== stub.contents) {
+						if (current?.contents !== stub.contents) {
+							to_write.push(stub);
+						}
+					} else {
+						// always add directories, otherwise convert_stubs_to_tree will fail
 						to_write.push(stub);
 					}
 
-					if (!current) added_new_file = true;
-				} else {
-					// always add directories, otherwise convert_stubs_to_tree will fail
-					to_write.push(stub);
+					current_stubs.delete(stub.name);
 				}
 
-				current_stubs.delete(stub.name);
-			}
+				// Don't delete the node_modules folder when switching from one exercise to another
+				// where, as this crashes the dev server.
+				['/node_modules', '/node_modules/.bin'].forEach((name) => current_stubs.delete(name));
 
-			// Don't delete the node_modules folder when switching from one exercise to another
-			// where, as this crashes the dev server.
-			['/node_modules', '/node_modules/.bin'].forEach((name) => current_stubs.delete(name));
+				const to_delete = Array.from(current_stubs.keys());
+				current_stubs = stubs_to_map(stubs);
 
-			const to_delete = Array.from(current_stubs.keys());
-			current_stubs = stubs_to_map(stubs);
+				// For some reason, server-ready is fired again when the vite dev server is restarted.
+				// We need to wait for it to finish before we can continue, else we might
+				// request files from Vite before it's ready, leading to a timeout.
+				const will_restart = launched && to_write.some(will_restart_vite_dev_server);
+				const promise = will_restart
+					? new Promise((fulfil, reject) => {
+							const error_unsub = vm.on('error', (error) => {
+								error_unsub();
+								resolve();
+								reject(new Error(error.message));
+							});
 
-			// For some reason, server-ready is fired again when the vite dev server is restarted.
-			// We need to wait for it to finish before we can continue, else we might
-			// request files from Vite before it's ready, leading to a timeout.
-			const will_restart = launched && to_write.some(will_restart_vite_dev_server);
-			const promise = will_restart
-				? new Promise((fulfil, reject) => {
-						const error_unsub = vm.on('error', (error) => {
-							error_unsub();
-							resolve();
-							reject(new Error(error.message));
-						});
+							const ready_unsub = vm.on('server-ready', (port, base) => {
+								ready_unsub();
+								console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
+								resolve();
+								fulfil(undefined);
+							});
 
-						const ready_unsub = vm.on('server-ready', (port, base) => {
-							ready_unsub();
-							console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
-							resolve();
-							fulfil(undefined);
-						});
+							setTimeout(() => {
+								resolve();
+								reject(new Error('Timed out resetting WebContainer'));
+							}, 10000);
+					  })
+					: Promise.resolve();
 
-						setTimeout(() => {
-							resolve();
-							reject(new Error('Timed out resetting WebContainer'));
-						}, 10000);
-				  })
-				: Promise.resolve();
+				for (const file of to_delete) {
+					await vm.fs.rm(file, { force: true, recursive: true });
+				}
 
-			for (const file of to_delete) {
-				await vm.fs.rm(file, { force: true, recursive: true });
-			}
+				// Adding a `.env` file does not restart Vite, but environment variables from `.env`
+				// are not available until Vite is restarted. By creating a dummy `.env` file, it will
+				// be recognized as changed when the real `.env` file is loaded into the Webcontainer.
+				// This will invoke a restart of Vite. Hacky but it works.
+				// TODO: remove when https://github.com/vitejs/vite/issues/12127 is closed
+				if (!previous_env && current_stubs.has('/.env')) {
+					await vm.spawn('touch', ['.env']);
+				}
 
-			// Adding a `.env` file does not restart Vite, but environment variables from `.env`
-			// are not available until Vite is restarted. By creating a dummy `.env` file, it will
-			// be recognized as changed when the real `.env` file is loaded into the Webcontainer.
-			// This will invoke a restart of Vite. Hacky but it works.
-			// TODO: remove when https://github.com/vitejs/vite/issues/12127 is closed
-			if (!previous_env && current_stubs.has('/.env')) {
-				await vm.spawn('touch', ['.env']);
-			}
+				await vm.mount(convert_stubs_to_tree(to_write));
+				await promise;
+				// await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
 
-			await vm.mount(convert_stubs_to_tree(to_write));
-			await promise;
-			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
+				resolve();
 
-			resolve();
+				// Also trigger a reload of the iframe in case new files were added / old ones deleted,
+				// because that can result in a broken UI state
+				const should_reload = !launched || will_restart || vite_error || to_delete.length > 0;
+				// `|| added_new_file`, but I don't actually think that's necessary?
 
-			// Also trigger a reload of the iframe in case new files were added / old ones deleted,
-			// because that can result in a broken UI state
-			const should_reload = !launched || will_restart || vite_error || to_delete.length > 0;
-			// `|| added_new_file`, but I don't actually think that's necessary?
+				await launch();
 
-			await launch();
-
-			return should_reload;
+				return should_reload;
+			});
 		},
-		update: async (file) => {
-			await running;
+		update: (file) => {
+			return q.add(async () => {
+				/** @type {import('@webcontainer/api').FileSystemTree} */
+				const root = {};
 
-			/** @type {import('@webcontainer/api').FileSystemTree} */
-			const root = {};
+				let tree = root;
 
-			let tree = root;
+				const path = file.name.split('/').slice(1);
+				const basename = /** @type {string} */ (path.pop());
 
-			const path = file.name.split('/').slice(1);
-			const basename = /** @type {string} */ (path.pop());
+				for (const part of path) {
+					if (!tree[part]) {
+						/** @type {import('@webcontainer/api').FileSystemTree} */
+						const directory = {};
 
-			for (const part of path) {
-				if (!tree[part]) {
-					/** @type {import('@webcontainer/api').FileSystemTree} */
-					const directory = {};
+						tree[part] = {
+							directory
+						};
+					}
 
-					tree[part] = {
-						directory
-					};
+					tree = /** @type {import('@webcontainer/api').DirectoryNode} */ (tree[part]).directory;
 				}
 
-				tree = /** @type {import('@webcontainer/api').DirectoryNode} */ (tree[part]).directory;
-			}
+				tree[basename] = to_file(file);
 
-			tree[basename] = to_file(file);
+				await vm.mount(root);
 
-			await vm.mount(root);
+				current_stubs.set(file.name, file);
 
-			current_stubs.set(file.name, file);
+				// we need to stagger sequential updates, just enough that the HMR
+				// wires don't get crossed. 50ms seems to be enough of a delay
+				// to avoid glitches without noticeably affecting update speed
+				await new Promise((f) => setTimeout(f, 50));
 
-			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
-
-			return will_restart_vite_dev_server(file);
+				return will_restart_vite_dev_server(file);
+			});
 		}
 	};
 }
