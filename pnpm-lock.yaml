@@ -44,6 +44,7 @@ specifiers:
   typescript: ~4.9.5
   vite: ^4.2.0
   ws: ^8.12.1
+  yootils: ^0.3.1
 
 dependencies:
   '@codemirror/autocomplete': 6.4.2_lc2v3dpzp2l5pdzwtgfaudkm3e
@@ -72,6 +73,7 @@ dependencies:
   prism-svelte: 0.5.0
   prismjs: 1.29.0
   ws: 8.12.1
+  yootils: 0.3.1
 
 devDependencies:
   '@playwright/test': 1.31.2
@@ -2004,3 +2006,7 @@ packages:
   /yallist/4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
     dev: true
+
+  /yootils/0.3.1:
+    resolution: {integrity: sha512-A7AMeJfGefk317I/3tBoUYRcDcNavKEkpiPN/nQsBz/viI2GvT7BtrqdPD6rGqBFN8Ax7v4obf+Cl32JF9DDVw==}
+    dev: false
