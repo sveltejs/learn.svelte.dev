@@ -116,9 +116,6 @@ export async function create(base, error, progress, logs) {
 	return {
 		reset: (stubs) => {
 			return q.add(async () => {
-				/** @type {Function} */
-				let resolve = () => {};
-
 				/** @type {import('$lib/types').Stub[]} */
 				const to_write = [];
 
@@ -154,19 +151,16 @@ export async function create(base, error, progress, logs) {
 					? new Promise((fulfil, reject) => {
 							const error_unsub = vm.on('error', (error) => {
 								error_unsub();
-								resolve();
 								reject(new Error(error.message));
 							});
 
 							const ready_unsub = vm.on('server-ready', (port, base) => {
 								ready_unsub();
 								console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
-								resolve();
 								fulfil(undefined);
 							});
 
 							setTimeout(() => {
-								resolve();
 								reject(new Error('Timed out resetting WebContainer'));
 							}, 10000);
 					  })
@@ -179,8 +173,6 @@ export async function create(base, error, progress, logs) {
 				await vm.mount(convert_stubs_to_tree(to_write));
 				await promise;
 				await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
-
-				resolve();
 
 				// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 				// because that can result in a broken UI state
