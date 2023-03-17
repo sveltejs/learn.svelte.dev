@@ -74,6 +74,12 @@
 	function set_iframe_src(src) {
 		if (!iframe) return; // HMR
 
+		// To prevent iframe flickering.
+		// Set to `visible` by calling `set_iframe_visible` function
+		// from iframe on:load or setTimeout
+		iframe.style.visibility = 'hidden';
+		setTimeout(set_iframe_visible, 1000);
+
 		// removing the iframe from the document allows us to
 		// change the src without adding a history entry, which
 		// would make back/forward traversal very annoying
@@ -81,6 +87,12 @@
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
+	}
+
+	function set_iframe_visible() {
+		if (iframe.style.visibility === 'hidden') {
+			iframe.style.visibility = 'visible';
+		}
 	}
 </script>
 
@@ -105,7 +117,7 @@
 
 <div class="content">
 	{#if browser}
-		<iframe bind:this={iframe} title="Output" />
+		<iframe bind:this={iframe} title="Output" on:load={set_iframe_visible} />
 	{/if}
 
 	{#if paused || loading || $error}
