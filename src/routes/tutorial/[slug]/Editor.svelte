@@ -1,5 +1,5 @@
 <script>
-	import { browser, dev } from '$app/environment';
+	import { browser } from '$app/environment';
 	import { onMount, tick } from 'svelte';
 	import { basicSetup } from 'codemirror';
 	import { EditorView, keymap } from '@codemirror/view';
@@ -142,24 +142,6 @@
 	}
 
 	onMount(() => {
-		if (dev && !/chrome/i.test(navigator.userAgent)) {
-			container.innerHTML =
-				'<p style="text-align: center; width: 20em; max-width: calc(100% - 4rem)">The code editor requires Chrome during development, as it uses module workers</p>';
-			return;
-		}
-
-		// TODO is this still necessary?
-		let dark_mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-		/** @param {MediaQueryListEvent} event */
-		const on_mode_change = (event) => {
-			const dark = event.matches;
-			if (dark !== dark_mode) {
-				dark_mode = dark;
-			}
-		};
-		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', on_mode_change);
-
 		editor_view = new EditorView({
 			parent: container,
 			async dispatch(transaction) {
@@ -184,10 +166,6 @@
 		});
 
 		return () => {
-			window
-				.matchMedia('(prefers-color-scheme: dark)')
-				.removeEventListener('change', on_mode_change);
-
 			editor_view.destroy();
 		};
 	});
