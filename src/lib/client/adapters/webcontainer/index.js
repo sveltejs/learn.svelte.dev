@@ -35,9 +35,6 @@ export async function create(base, error, progress, logs) {
 	/** Paths and contents of the currently loaded file stubs */
 	let current_stubs = stubs_to_map([]);
 
-	/** @type {boolean} Track whether there was an error from vite dev server */
-	let vite_error = false;
-
 	progress.set({ value: 1 / 5, text: 'booting webcontainer' });
 	vm = await WebContainer.boot();
 
@@ -126,13 +123,6 @@ export async function create(base, error, progress, logs) {
 			/** @type {Function} */
 			let resolve = () => {};
 			running = new Promise((fulfil) => (resolve = fulfil));
-			vite_error = false;
-
-			let added_new_file = false;
-
-			const previous_env = /** @type {import('$lib/types').FileStub=} */ (
-				current_stubs.get('/.env')
-			);
 
 			/** @type {import('$lib/types').Stub[]} */
 			const to_write = [];
@@ -146,8 +136,6 @@ export async function create(base, error, progress, logs) {
 					if (current?.contents !== stub.contents) {
 						to_write.push(stub);
 					}
-
-					if (!current) added_new_file = true;
 				} else {
 					// always add directories, otherwise convert_stubs_to_tree will fail
 					to_write.push(stub);
@@ -193,15 +181,6 @@ export async function create(base, error, progress, logs) {
 				await vm.fs.rm(file, { force: true, recursive: true });
 			}
 
-			// Adding a `.env` file does not restart Vite, but environment variables from `.env`
-			// are not available until Vite is restarted. By creating a dummy `.env` file, it will
-			// be recognized as changed when the real `.env` file is loaded into the Webcontainer.
-			// This will invoke a restart of Vite. Hacky but it works.
-			// TODO: remove when https://github.com/vitejs/vite/issues/12127 is closed
-			if (!previous_env && current_stubs.has('/.env')) {
-				await vm.spawn('touch', ['.env']);
-			}
-
 			await vm.mount(convert_stubs_to_tree(to_write));
 			await promise;
 			await new Promise((f) => setTimeout(f, 200)); // wait for chokidar
@@ -210,8 +189,7 @@ export async function create(base, error, progress, logs) {
 
 			// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 			// because that can result in a broken UI state
-			const should_reload = !launched || will_restart || vite_error || to_delete.length > 0;
-			// `|| added_new_file`, but I don't actually think that's necessary?
+			const should_reload = !launched || will_restart || to_delete.length > 0;
 
 			await launch();
 
