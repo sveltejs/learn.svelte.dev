@@ -103,6 +103,19 @@ export function get_exercise(slug) {
 			const b = walk(`${dir}/app-b`);
 			const has_solution = Object.keys(b).length > 0;
 
+			// ensure no duplicate content
+			for (const key in b) {
+				if (!a[key]) continue;
+				if (b[key].type !== 'file') continue;
+
+				const a_ = /** @type {import('$lib/types').FileStub} */ (a[key]);
+				const b_ = /** @type {import('$lib/types').FileStub} */ (b[key]);
+
+				if (a_.contents === b_.contents) {
+					throw new Error(`duplicate file: ${exercise_slug} ${key}`)
+				}
+			}
+
 			const part_meta = json(`content/tutorial/${part_dir}/meta.json`);
 			const chapter_meta = json(`content/tutorial/${part_dir}/${chapter_dir}/meta.json`);
 
