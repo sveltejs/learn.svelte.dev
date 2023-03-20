@@ -15,9 +15,9 @@ You can also declare event handlers inline:
 </script>
 
 <div
-	+++on:mousemove={(e) => {
+	on:mousemove={+++(e) => {
 		m = { x: e.clientX, y: e.clientY };
-	}}+++
+	}+++}
 >
 	The mouse position is {m.x} x {m.y}
 </div>
