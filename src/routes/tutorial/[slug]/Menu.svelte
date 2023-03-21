@@ -25,7 +25,8 @@
 	$: expanded_part = current.part.slug;
 	$: expanded_chapter = current.chapter.slug;
 
-	$: regex = new RegExp(`\\b${search.length >= 2 ? search : ''}`, 'i');
+	$: escaped = search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+	$: regex = new RegExp(`\\b${search.length >= 2 ? escaped : ''}`, 'i');
 
 	$: filtered = index
 		.map((part) => {
@@ -147,6 +148,8 @@
 							</ul>
 						{/if}
 					</li>
+				{:else}
+					<li>No search results!</li>
 				{/each}
 			</ul>
 		</div>
