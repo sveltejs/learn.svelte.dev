@@ -7,12 +7,7 @@
 	onInterval(callback, interval);
 </script>
 
-<p>
-	This component executes a callback every
-	{interval} millisecond{interval === 1
-		? ''
-		: 's'}
-</p>
+<p>This component executes a callback every {interval}ms</p>
 
 <style>
 	p {

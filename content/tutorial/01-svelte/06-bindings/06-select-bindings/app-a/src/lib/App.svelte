@@ -51,11 +51,3 @@
 		? selected.id
 		: '[waiting...]'}
 </p>
-
-<style>
-	input {
-		display: block;
-		width: 500px;
-		max-width: 100%;
-	}
-</style>
