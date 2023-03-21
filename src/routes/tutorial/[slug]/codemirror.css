@@ -6,6 +6,10 @@
 	height: 100%;
 }
 
+.cm-editor ::selection {
+	color: revert;
+}
+
 .cm-editor .cm-scroller {
 	font-family: var(--font-mono);
 	font-size: 1.3rem;
