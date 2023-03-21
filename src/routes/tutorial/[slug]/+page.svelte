@@ -104,7 +104,14 @@
 	bind:innerWidth={w}
 	on:popstate={(e) => {
 		const q = new URLSearchParams(location.search);
-		show_editor = q.get('view') === 'editor';
+		const file = q.get('file');
+
+		if (file) {
+			show_editor = true;
+			select_file(file || null); // empty string === null
+		} else {
+			show_editor = false;
+		}
 	}}
 />
 
@@ -119,6 +126,12 @@
 					exercise={data.exercise}
 					on:select={(e) => {
 						select_file(e.detail.file);
+
+						if (mobile) {
+							show_editor = true;
+							const q = new URLSearchParams({ file: e.detail.file || '' });
+							history.pushState({}, '', `?${q}`);
+						}
 					}}
 				/>
 			</section>
@@ -142,7 +155,12 @@
 										) ?? 'Files'}
 									</button>
 								{:else}
-									<Filetree exercise={data.exercise} />
+									<Filetree
+										exercise={data.exercise}
+										on:select={(e) => {
+											select_file(e.detail.name);
+										}}
+									/>
 								{/if}
 
 								<button
@@ -170,7 +188,16 @@
 										<Filetree
 											mobile
 											exercise={data.exercise}
-											on:select={() => (show_filetree = false)}
+											on:select={(e) => {
+												select_file(e.detail.name);
+
+												show_filetree = false;
+
+												if (mobile) {
+													const q = new URLSearchParams({ file: e.detail.name || '' });
+													history.pushState({}, '', `?${q}`);
+												}
+											}}
 										/>
 									</div>
 								{/if}
@@ -191,8 +218,13 @@
 			on:change={(e) => {
 				show_editor = e.detail.pressed;
 
-				const view = show_editor ? 'editor' : 'tutorial';
-				history.pushState({}, '', `?view=${view}`);
+				const url = new URL(location.origin + location.pathname);
+
+				if (show_editor) {
+					url.searchParams.set('file', $selected_name ?? '');
+				}
+
+				history.pushState({}, '', url);
 			}}
 			pressed={show_editor}
 		/>

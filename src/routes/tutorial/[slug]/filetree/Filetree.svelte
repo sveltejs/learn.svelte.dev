@@ -4,7 +4,7 @@
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
-	import { files, solution, reset_files, select_file } from '../state.js';
+	import { files, solution, reset_files } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('$lib/types').Exercise} */
@@ -56,7 +56,7 @@
 					contents: ''
 				};
 
-				select_file(file.name);
+				dispatch('select', { name });
 			} else {
 				file = { type: 'directory', name, basename };
 			}
@@ -108,7 +108,8 @@
 				return;
 			}
 
-			select_file(null);
+			dispatch('select', { name: null });
+
 			reset_files(
 				$files.filter((f) => {
 					if (f === file) return false;
@@ -119,8 +120,7 @@
 		},
 
 		select: (name) => {
-			dispatch('select');
-			select_file(name);
+			dispatch('select', { name });
 		}
 	});
 
