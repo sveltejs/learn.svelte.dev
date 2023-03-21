@@ -12,10 +12,11 @@
 	import {
 		files,
 		reset_files,
-		select_file,
 		selected_name,
 		selected_file,
-		solution
+		solution,
+		create_directories,
+		creating
 	} from './state.js';
 	import { reset } from './adapter.js';
 
@@ -81,6 +82,47 @@
 		// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
 		return code.replace(/\s+/g, ' ').trim();
 	}
+
+	/** @param {string | null} name */
+	function select_file(name) {
+		const file = name && $files.find((file) => file.name === name);
+
+		if (!file && name) {
+			// trigger file creation input. first, create any intermediate directories
+			const new_directories = create_directories(name, $files);
+
+			if (new_directories.length > 0) {
+				reset_files([...$files, ...new_directories]);
+			}
+
+			// find the parent directory
+			const parent = name.split('/').slice(0, -1).join('/');
+
+			creating.set({
+				parent,
+				type: 'file'
+			});
+
+			show_filetree = true;
+		} else {
+			show_filetree = false;
+			selected_name.set(name);
+		}
+
+		show_editor = true;
+	}
+
+	/** @param {string} name */
+	function navigate_to_file(name) {
+		if (name === $selected_name) return;
+
+		select_file(name);
+
+		if (mobile) {
+			const q = new URLSearchParams({ file: $selected_name || '' });
+			history.pushState({}, '', `?${q}`);
+		}
+	}
 </script>
 
 <svelte:head>
@@ -125,13 +167,7 @@
 					index={data.index}
 					exercise={data.exercise}
 					on:select={(e) => {
-						select_file(e.detail.file);
-
-						if (mobile) {
-							show_editor = true;
-							const q = new URLSearchParams({ file: e.detail.file || '' });
-							history.pushState({}, '', `?${q}`);
-						}
+						navigate_to_file(e.detail.file);
 					}}
 				/>
 			</section>
@@ -189,14 +225,7 @@
 											mobile
 											exercise={data.exercise}
 											on:select={(e) => {
-												select_file(e.detail.name);
-
-												show_filetree = false;
-
-												if (mobile) {
-													const q = new URLSearchParams({ file: e.detail.name || '' });
-													history.pushState({}, '', `?${q}`);
-												}
+												navigate_to_file(e.detail.name);
 											}}
 										/>
 									</div>
