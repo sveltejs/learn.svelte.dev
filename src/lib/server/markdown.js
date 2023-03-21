@@ -44,7 +44,7 @@ const default_renderer = {
 		let html = '';
 
 		source = source
-			.replace(/\/\/\/ (.+?): (.+)\n/gm, (_, key, value) => {
+			.replace(/\/\/\/ (.+?)(?:: (.+))?\n/gm, (_, key, value) => {
 				options[key] = value;
 				return '';
 			})

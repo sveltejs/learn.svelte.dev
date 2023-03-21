@@ -5,6 +5,7 @@ title: Slots
 Just like elements can have children...
 
 ```html
+/// no-file
 <div>
 	<p>I'm a child of the div</p>
 </div>

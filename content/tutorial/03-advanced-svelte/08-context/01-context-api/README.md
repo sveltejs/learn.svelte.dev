@@ -57,5 +57,6 @@ Contexts and stores seem similar. They differ in that stores are available to _a
 In fact, you might use the two together. Since context is not reactive, values that change over time should be represented as stores:
 
 ```js
+/// no-file
 const { these, are, stores } = getContext(...);
 ```
