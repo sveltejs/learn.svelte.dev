@@ -11,6 +11,7 @@ We can optimise this by telling the `<Todo>` component to expect _immutable_ dat
 Add this to the top of the `Todo.svelte` file:
 
 ```svelte
+/// file: Todo.svelte
 <svelte:options immutable={true}/>
 ```
 

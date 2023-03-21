@@ -32,6 +32,7 @@ export function load() {
 We can access this data in `src/routes/blog/+page.svelte` via the `data` prop:
 
 ```svelte
+/// file: src/routes/blog/+page.svelte
 +++<script>
 	export let data;
 </script>+++

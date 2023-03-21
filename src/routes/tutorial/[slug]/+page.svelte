@@ -12,10 +12,11 @@
 	import {
 		files,
 		reset_files,
-		select_file,
 		selected_name,
 		selected_file,
-		solution
+		solution,
+		create_directories,
+		creating
 	} from './state.js';
 	import { reset } from './adapter.js';
 
@@ -81,6 +82,47 @@
 		// TODO think about more sophisticated normalisation (e.g. truncate multiple newlines)
 		return code.replace(/\s+/g, ' ').trim();
 	}
+
+	/** @param {string | null} name */
+	function select_file(name) {
+		const file = name && $files.find((file) => file.name === name);
+
+		if (!file && name) {
+			// trigger file creation input. first, create any intermediate directories
+			const new_directories = create_directories(name, $files);
+
+			if (new_directories.length > 0) {
+				reset_files([...$files, ...new_directories]);
+			}
+
+			// find the parent directory
+			const parent = name.split('/').slice(0, -1).join('/');
+
+			creating.set({
+				parent,
+				type: 'file'
+			});
+
+			show_filetree = true;
+		} else {
+			show_filetree = false;
+			selected_name.set(name);
+		}
+
+		show_editor = true;
+	}
+
+	/** @param {string} name */
+	function navigate_to_file(name) {
+		if (name === $selected_name) return;
+
+		select_file(name);
+
+		if (mobile) {
+			const q = new URLSearchParams({ file: $selected_name || '' });
+			history.pushState({}, '', `?${q}`);
+		}
+	}
 </script>
 
 <svelte:head>
@@ -104,7 +146,14 @@
 	bind:innerWidth={w}
 	on:popstate={(e) => {
 		const q = new URLSearchParams(location.search);
-		show_editor = q.get('view') === 'editor';
+		const file = q.get('file');
+
+		if (file) {
+			show_editor = true;
+			select_file(file || null); // empty string === null
+		} else {
+			show_editor = false;
+		}
 	}}
 />
 
@@ -118,7 +167,7 @@
 					index={data.index}
 					exercise={data.exercise}
 					on:select={(e) => {
-						select_file(e.detail.file);
+						navigate_to_file(e.detail.file);
 					}}
 				/>
 			</section>
@@ -142,7 +191,12 @@
 										) ?? 'Files'}
 									</button>
 								{:else}
-									<Filetree exercise={data.exercise} />
+									<Filetree
+										exercise={data.exercise}
+										on:select={(e) => {
+											select_file(e.detail.name);
+										}}
+									/>
 								{/if}
 
 								<button
@@ -170,7 +224,9 @@
 										<Filetree
 											mobile
 											exercise={data.exercise}
-											on:select={() => (show_filetree = false)}
+											on:select={(e) => {
+												navigate_to_file(e.detail.name);
+											}}
 										/>
 									</div>
 								{/if}
@@ -191,8 +247,13 @@
 			on:change={(e) => {
 				show_editor = e.detail.pressed;
 
-				const view = show_editor ? 'editor' : 'tutorial';
-				history.pushState({}, '', `?view=${view}`);
+				const url = new URL(location.origin + location.pathname);
+
+				if (show_editor) {
+					url.searchParams.set('file', $selected_name ?? '');
+				}
+
+				history.pushState({}, '', url);
 			}}
 			pressed={show_editor}
 		/>

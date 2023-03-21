@@ -62,6 +62,11 @@
 					dispatch('select', { file });
 				}
 			}
+
+			if (node.nodeName === 'SPAN' && node.classList.contains('filename')) {
+				const file = exercise.scope.prefix + node.textContent;
+				dispatch('select', { file });
+			}
 		}}
 	>
 		{@html exercise.html}
@@ -143,17 +148,26 @@
 		background: rgba(255, 62, 0, 0.1);
 	}
 
-	.text :global([data-file]) {
+	.text :global([data-file]), .text :global(.filename) {
 		cursor: pointer;
 		background-image: url($lib/icons/file-edit.svg);
 		background-repeat: no-repeat;
+	}
+
+	.text :global([data-file]) {
 		background-position: 0.5rem 50%;
 		background-size: 1rem 1rem;
 		padding-left: 2rem;
 	}
 
+	.text :global(.filename) {
+		background-position: 1rem 54%;
+		background-size: 1rem 1rem;
+		padding-left: 2.5rem;
+	}
+
 	@media (prefers-color-scheme: dark) {
-		.text :global([data-file]) {
+		.text :global([data-file]), .text :global(.filename) {
 			background-image: url($lib/icons/file-edit-inline-dark.svg);
 		}
 	}

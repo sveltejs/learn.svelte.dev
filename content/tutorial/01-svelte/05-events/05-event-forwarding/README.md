@@ -9,6 +9,7 @@ In this case, we have the same `App.svelte` and `Inner.svelte` as in the [previo
 One way we _could_ solve the problem is adding `createEventDispatcher` to `Outer.svelte`, listening for the `message` event, and creating a handler for it:
 
 ```svelte
+/// file: Outer.svelte
 <script>
 	import Inner from './Inner.svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -26,6 +27,7 @@ One way we _could_ solve the problem is adding `createEventDispatcher` to `Outer
 But that's a lot of code to write, so Svelte gives us an equivalent shorthand — an `on:message` event directive without a value means 'forward all `message` events'.
 
 ```svelte
+/// file: Outer.svelte
 <script>
 	import Inner from './Inner.svelte';
 </script>

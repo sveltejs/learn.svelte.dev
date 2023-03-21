@@ -50,6 +50,8 @@
 		theme
 	];
 
+	$: reset($files);
+
 	$: if (editor_view) {
 		select_state($selected_name);
 
@@ -75,8 +77,6 @@
 			}
 		}
 	}
-
-	$: reset($files);
 
 	/** @param {import('$lib/types').Stub[]} $files */
 	function reset($files) {

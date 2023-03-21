@@ -5,6 +5,7 @@ title: Custom CSS transitions
 The `svelte/transition` module has a handful of built-in transitions, but it's very easy to create your own. By way of example, this is the source of the `fade` transition:
 
 ```js
+/// no-file
 function fade(node, { delay = 0, duration = 400 }) {
 	const o = +getComputedStyle(node).opacity;
 
@@ -31,6 +32,7 @@ Most of the time you should return the `css` property and _not_ the `tick` prope
 For example, the `fade` transition generates a CSS animation somewhat like this:
 
 ```css
+/// no-file
 0% {
 	opacity: 0;
 }
@@ -49,6 +51,7 @@ For example, the `fade` transition generates a CSS animation somewhat like this:
 We can get a lot more creative though. Let's make something truly gratuitous:
 
 ```svelte
+/// file: App.svelte
 <script>
 	import { fade } from 'svelte/transition';
 	+++import { elasticOut } from 'svelte/easing';+++

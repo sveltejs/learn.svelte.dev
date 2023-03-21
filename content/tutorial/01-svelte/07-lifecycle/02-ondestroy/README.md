@@ -7,6 +7,7 @@ To run code when your component is destroyed, use `onDestroy`.
 For example, we can add a `setInterval` function when our component initialises, and clean it up when it's no longer relevant. Doing so prevents memory leaks.
 
 ```svelte
+/// file: Timer.svelte
 <script>
 	import { onDestroy } from 'svelte';
 
@@ -20,6 +21,7 @@ For example, we can add a `setInterval` function when our component initialises,
 While it's important to call lifecycle functions during the component's initialisation, it doesn't matter _where_ you call them from. So if we wanted, we could abstract the interval logic into a helper function in `utils.js`...
 
 ```js
+/// no-file
 import { onDestroy } from 'svelte';
 
 export function onInterval(callback, milliseconds) {
@@ -34,6 +36,7 @@ export function onInterval(callback, milliseconds) {
 ...and import it into our component:
 
 ```svelte
+/// no-file
 <script>
 	import { onInterval } from './utils.js';
 

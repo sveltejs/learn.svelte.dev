@@ -7,6 +7,7 @@ We can make more appealing user interfaces by gracefully transitioning elements 
 First, import the `fade` function from `svelte/transition`...
 
 ```svelte
+/// file: App.svelte
 <script>
 	+++import { fade } from 'svelte/transition';+++
 	let visible = true;
@@ -16,5 +17,6 @@ First, import the `fade` function from `svelte/transition`...
 ...then add it to the `<p>` element:
 
 ```svelte
+/// file: App.svelte
 <p +++transition:fade+++>Fades in and out</p>
 ```

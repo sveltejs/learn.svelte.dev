@@ -7,6 +7,7 @@ So far, we've dealt exclusively with internal state — that is to say, the valu
 In any real application, you'll need to pass data from one component down to its children. To do that, we need to declare _properties_, generally shortened to 'props'. In Svelte, we do that with the `export` keyword. Edit the `Nested.svelte` component:
 
 ```svelte
+/// file: Nested.svelte
 <script>
 	+++export+++ let answer;
 </script>

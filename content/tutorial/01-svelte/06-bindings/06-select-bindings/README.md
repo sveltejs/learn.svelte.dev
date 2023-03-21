@@ -5,6 +5,7 @@ title: Select bindings
 We can also use `bind:value` with `<select>` elements. Update line 32:
 
 ```svelte
+/// file: App.svelte
 <select bind:value={selected} on:change="{() => answer = ''}">
 ```
 

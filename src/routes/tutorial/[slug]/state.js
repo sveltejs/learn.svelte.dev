@@ -28,6 +28,9 @@ export const solution = writable({});
 /** @type {Writable<Record<string, CompilerWarning[]>>} */
 export const warnings = writable({});
 
+/** @type {Writable<{ parent: string, type: 'file' | 'directory' } | null>} */
+export const creating = writable(null);
+
 /** @type {Writable<string | null>} */
 export const selected_name = writable(null);
 
@@ -65,7 +68,37 @@ export function reset_files(new_files) {
 	adapter.reset(new_files);
 }
 
-/** @param {string | null} name */
-export function select_file(name) {
-	selected_name.set(name);
+/**
+ * @param {string} name
+ * @param {import('$lib/types').Stub[]} files
+ */
+export function create_directories(name, files) {
+	const existing = new Set();
+
+	for (const file of files) {
+		if (file.type === 'directory') {
+			existing.add(file.name);
+		}
+	}
+
+	/** @type {import('$lib/types').DirectoryStub[]} */
+	const directories = [];
+
+	const parts = name.split('/');
+	while (parts.length) {
+		parts.pop();
+
+		const dir = parts.join('/');
+		if (existing.has(dir)) {
+			break;
+		}
+
+		directories.push({
+			type: 'directory',
+			name: dir,
+			basename: /** @type {string} */ (parts.at(-1))
+		});
+	}
+
+	return directories;
 }

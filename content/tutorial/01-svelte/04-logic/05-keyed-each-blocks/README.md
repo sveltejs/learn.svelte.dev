@@ -11,6 +11,7 @@ Instead, we'd like to remove only the first `<Thing>` component and its DOM node
 To do that, we specify a unique identifier (or "key") for the `each` block:
 
 ```svelte
+/// file: App.svelte
 {#each things as thing (+++thing.id+++)}
 	<Thing name={thing.name}/>
 {/each}

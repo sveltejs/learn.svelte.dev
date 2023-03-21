@@ -4,7 +4,7 @@
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
-	import { files, solution, reset_files, select_file } from '../state.js';
+	import { files, solution, reset_files, create_directories } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('$lib/types').Exercise} */
@@ -45,23 +45,15 @@
 			const basename = /** @type {string} */ (name.split('/').pop());
 
 			/** @type {import('$lib/types').Stub} */
-			let file;
-
-			if (type === 'file') {
-				file = {
-					type: 'file',
-					name,
-					basename,
-					text: true,
-					contents: ''
-				};
-
-				select_file(file.name);
-			} else {
-				file = { type: 'directory', name, basename };
-			}
+			const file = type === 'file'
+				? { type, name, basename, text: true, contents: '' }
+				: { type, name, basename };
 
 			reset_files([...$files, ...create_directories(name, $files), file]);
+
+			if (type === 'file') {
+				dispatch('select', { name });
+			}
 		},
 
 		rename: async (to_rename, new_name) => {
@@ -108,7 +100,8 @@
 				return;
 			}
 
-			select_file(null);
+			dispatch('select', { name: null });
+
 			reset_files(
 				$files.filter((f) => {
 					if (f === file) return false;
@@ -119,45 +112,9 @@
 		},
 
 		select: (name) => {
-			dispatch('select');
-			select_file(name);
+			dispatch('select', { name });
 		}
 	});
-
-	/**
-	 * @param {string} name
-	 * @param {import('$lib/types').Stub[]} files
-	 */
-	function create_directories(name, files) {
-		const existing = new Set();
-
-		for (const file of files) {
-			if (file.type === 'directory') {
-				existing.add(file.name);
-			}
-		}
-
-		/** @type {import('$lib/types').DirectoryStub[]} */
-		const directories = [];
-
-		const parts = name.split('/');
-		while (parts.length) {
-			parts.pop();
-
-			const dir = parts.join('/');
-			if (existing.has(dir)) {
-				break;
-			}
-
-			directories.push({
-				type: 'directory',
-				name: dir,
-				basename: /** @type {string} */ (parts.at(-1))
-			});
-		}
-
-		return directories;
-	}
 </script>
 
 <ul

@@ -1,6 +1,5 @@
 <div class="box">
-	<slot name="header">No header was provided</slot
-	>
+	<slot name="header">No header was provided</slot>
 	<p>Some content between header and footer</p>
 	<slot name="footer" />
 </div>

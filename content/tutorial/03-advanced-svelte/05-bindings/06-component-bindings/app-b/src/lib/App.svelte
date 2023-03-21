@@ -11,7 +11,7 @@
 	}
 </script>
 
-<h1 style="color: {pin ? '#333' : '#ccc'}">
+<h1 style="opacity: {pin ? 1 : 0.4}">
 	{view}
 </h1>
 

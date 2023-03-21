@@ -80,6 +80,7 @@ In turn, these modules can only be imported by _other_ server modules.
 The `static` in `$env/static/private` indicates that these values are known at build time, and can be _statically replaced_. This enables useful optimisations:
 
 ```js
+/// no-file
 import { FEATURE_FLAG_X } from '$env/static/private';
 
 if (FEATURE_FLAG_X === 'enabled') {

@@ -5,6 +5,7 @@ title: Else blocks
 Since the two conditions — `if user.loggedIn` and `if !user.loggedIn` — are mutually exclusive, we can simplify this component slightly by using an `else` block:
 
 ```svelte
+/// file: App.svelte
 {#if user.loggedIn}
 	<button on:click={toggle}>
 		Log out

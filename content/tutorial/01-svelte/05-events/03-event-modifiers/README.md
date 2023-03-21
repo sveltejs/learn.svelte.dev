@@ -5,6 +5,7 @@ title: Event modifiers
 DOM event handlers can have _modifiers_ that alter their behaviour. For example, a handler with a `once` modifier will only run a single time:
 
 ```svelte
+/// file: App.svelte
 <script>
 	function handleClick() {
 		alert(+++'no more alerts'+++)

@@ -7,6 +7,7 @@ Some environment variables _can_ be safely exposed to the browser. These are dis
 Add values to the two public environment variables in `.env`:
 
 ```env
+/// file: .env
 PUBLIC_THEME_BACKGROUND=+++"steelblue"+++
 PUBLIC_THEME_FOREGROUND=+++"bisque"+++
 ```

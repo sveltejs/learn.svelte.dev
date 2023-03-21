@@ -123,11 +123,6 @@ export function get_exercise(slug) {
 			const exercise_meta = fs.existsSync(exercise_meta_file) ? json(exercise_meta_file) : {};
 
 			const scope = chapter_meta.scope ?? part_meta.scope;
-			const filenames = new Set(
-				Object.keys(a)
-					.filter((filename) => filename.startsWith(scope.prefix) && a[filename].type === 'file')
-					.map((filename) => filename.slice(scope.prefix.length))
-			);
 
 			const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
 			const { frontmatter, markdown } = extract_frontmatter(text, dir);
@@ -195,6 +190,27 @@ export function get_exercise(slug) {
 					solution[stub.name] = stub;
 				}
 			}
+
+			// ensure every code block for an exercise with multiple files has a `/// file:` annotation
+			const filtered = Object.values(solution).filter(item => {
+				return item.type === 'file' && item.name.startsWith(scope.prefix);
+			});
+
+			if (filtered.length > 0) {
+				for (const match of markdown.matchAll(/```[a-z]+\n([\s\S]+?)\n```/g)) {
+					const content = match[1];
+					if (!content.includes('/// file') && !content.includes('/// no-file')) {
+						throw new Error(`Code block lacks a \`/// file: ...\` annotation: ${dir}/README.md`);
+					}
+				}
+			}
+
+			const all_files = { ...a, ...solution };
+			const filenames = new Set(
+				Object.keys(all_files)
+					.filter((filename) => filename.startsWith(scope.prefix) && all_files[filename].type === 'file')
+					.map((filename) => filename.slice(scope.prefix.length))
+			);
 
 			return {
 				part: {

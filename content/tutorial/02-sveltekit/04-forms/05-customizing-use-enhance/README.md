@@ -38,6 +38,7 @@ When we create or delete items, it now takes a full second before the UI updates
 ...and toggle `creating` inside the first `use:enhance`:
 
 ```svelte
+/// file: src/routes/+page.svelte
 <form
 	method="POST"
 	action="?/create"
@@ -65,6 +66,7 @@ When we create or delete items, it now takes a full second before the UI updates
 In the case of deletions, we don't really need to wait for the server to validate anything — we can just update the UI immediately:
 
 ```svelte
+/// file: src/routes/+page.svelte
 <ul>
 	{#each +++data.todos.filter((todo) => !deleting.includes(todo.id))+++ as todo (todo.id)}
 		<li class="todo" in:fly={{ y: 20 }} out:slide>

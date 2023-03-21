@@ -4,7 +4,8 @@ title: Slots
 
 Just like elements can have children...
 
-```svelte
+```html
+/// no-file
 <div>
 	<p>I'm a child of the div</p>
 </div>
@@ -13,6 +14,7 @@ Just like elements can have children...
 ...so can components. Before a component can accept children, though, it needs to know where to put them. We do this with the `<slot>` element. Put this inside `Box.svelte`:
 
 ```svelte
+/// file: Box.svelte
 <div class="box">
 	<slot></slot>
 </div>
@@ -21,6 +23,7 @@ Just like elements can have children...
 You can now put things in the box:
 
 ```svelte
+/// file: App.svelte
 <Box>
 	<h2>Hello!</h2>
 	<p>This is a box. It can contain anything.</p>

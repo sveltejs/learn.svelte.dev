@@ -6,7 +6,8 @@ Similar to `<svelte:window>`, the `<svelte:document>` element allows you to list
 
 Add the `selectionchange` handler to the `<svelte:document>` tag:
 
-```html
+```svelte
+/// file: App.svelte
 <svelte:document on:selectionchange={handleSelectionChange} />
 ```
 

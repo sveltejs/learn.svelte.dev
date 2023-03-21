@@ -7,18 +7,21 @@ If you have multiple inputs relating to the same value, you can use `bind:group`
 Add `bind:group` to each input:
 
 ```svelte
+/// file: App.svelte
 <input type=radio bind:group={scoops} name="scoops" value={1}>
 ```
 
 In this case, we could make the code simpler by moving the checkbox inputs into an `each` block. First, add a `menu` variable to the `<script>` block...
 
 ```js
+/// file: App.svelte
 let menu = ['Cookies and cream', 'Mint choc chip', 'Raspberry ripple'];
 ```
 
 ...then replace the second section:
 
 ```svelte
+/// file: App.svelte
 <h2>Flavours</h2>
 
 {#each menu as flavour}

@@ -6,8 +6,8 @@ The `<svelte:fragment>` element allows you to place content in a named slot with
 
 In the example notice how we applied a flex layout with a gap of `1em` to the box.
 
-```sv
-<!-- Box.svelte -->
+```svelte
+/// file: Box.svelte
 <div class="box">
 	<slot name="header">No header was provided</slot>
 	<p>Some content between header and footer</p>
@@ -27,7 +27,8 @@ However, the content in the footer is not spaced out according to this rhythm be
 
 We can solve this by changing `<div slot="footer">` in the `App` component. Replace the `<div>` with `<svelte:fragment>`:
 
-```sv
+```svelte
+/// file: App.svelte
 <svelte:fragment slot="footer">
 	<p>All rights reserved.</p>
 	<p>Copyright (c) 2019 Svelte Industries</p>

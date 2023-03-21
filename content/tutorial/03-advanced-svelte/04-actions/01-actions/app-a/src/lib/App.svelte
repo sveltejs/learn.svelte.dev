@@ -2,9 +2,10 @@
 	let showModal = true;
 </script>
 
-<button on:click={() => (showModal = true)}
-	>Show Modal</button
->
+<button on:click={() => (showModal = true)}>
+	Show Modal
+</button>
+
 {#if showModal}
 	<div
 		class="box"

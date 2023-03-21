@@ -6,11 +6,11 @@ Different routes of your app will often share common UI. Instead of repeating it
 
 In this app we have two routes, `src/routes/+page.svelte` and `src/routes/about/+page.svelte`, that contain the same navigation UI. Let's create a new file, `src/routes/+layout.svelte`...
 
-```diff
+```
 src/routes/
 ├ about/
 │ └ +page.svelte
-+├ +layout.svelte
++++├ +layout.svelte+++
 └ +page.svelte
 ```
 

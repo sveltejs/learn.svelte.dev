@@ -7,6 +7,7 @@ HTML doesn't have a way of expressing _logic_, like conditionals and loops. Svel
 To conditionally render some markup, we wrap it in an `if` block:
 
 ```svelte
+/// file: App.svelte
 +++{#if user.loggedIn}+++
 	<button on:click={toggle}>
 		Log out

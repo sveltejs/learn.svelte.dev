@@ -5,6 +5,7 @@ title: Component events
 Components can also dispatch events. To do so, they must create an event dispatcher. Update `Inner.svelte`:
 
 ```svelte
+/// file: Inner.svelte
 <script>
 	+++import { createEventDispatcher } from 'svelte';+++
 
@@ -23,6 +24,7 @@ Components can also dispatch events. To do so, they must create an event dispatc
 Then, add an `on:message` handler in `App.svelte`:
 
 ```svelte
+/// file: App.svelte
 <Inner +++on:message={handleMessage}+++ />
 ```
 

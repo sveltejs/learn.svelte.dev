@@ -9,6 +9,7 @@ But sometimes you need to render HTML directly into a component. For example, th
 In Svelte, you do this with the special `{@html ...}` tag:
 
 ```svelte
+/// file: App.svelte
 <p>{+++@html+++ string}</p>
 ```
 

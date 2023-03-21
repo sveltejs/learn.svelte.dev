@@ -7,6 +7,7 @@ In this app, we have a `<Hoverable>` component that tracks whether the mouse is 
 For this, we use _slot props_. In `Hoverable.svelte`, pass the `hovering` value into the slot:
 
 ```svelte
+/// file: Hoverable.svelte
 <div on:mouseenter={enter} on:mouseleave={leave}>
 	<slot hovering={hovering}></slot>
 </div>
@@ -17,6 +18,7 @@ For this, we use _slot props_. In `Hoverable.svelte`, pass the `hovering` value 
 Then, to expose `hovering` to the contents of the `<Hoverable>` component, we use the `let` directive:
 
 ```svelte
+/// file: App.svelte
 <Hoverable let:hovering={hovering}>
 	<div class:active={hovering}>
 		{#if hovering}
@@ -31,6 +33,7 @@ Then, to expose `hovering` to the contents of the `<Hoverable>` component, we us
 You can rename the variable, if you want — let's call it `active` in the parent component:
 
 ```svelte
+/// file: App.svelte
 <Hoverable let:hovering={active}>
 	<div class:active>
 		{#if active}
