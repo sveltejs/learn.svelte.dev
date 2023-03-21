@@ -67,5 +67,7 @@
 		background-color: #666;
 		mask: url(svelte-logo-mask.svg) 50% 50% no-repeat;
 		mask-size: 40%;
+		-webkit-mask: url(svelte-logo-mask.svg) 50% 50% no-repeat;
+		-webkit-mask-size: 40%;
 	}
 </style>

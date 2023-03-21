@@ -36,8 +36,12 @@
 				line-height: 1.1;
 			}
 
-			:is(h1, h2, h3, h4, h5, h6, p, label) {
+			:is(h1, h2, h3, h4, h5, h6, p) {
 				margin: 1rem 0.1rem;
+			}
+
+			label {
+				margin: 0.5rem 0.1rem;
 			}
 
 			:is(h1, h2, h3, h4, h5, h6, p, label):first-child {
@@ -91,6 +95,12 @@
 
 			button:active {
 				background: var(--link-active);
+			}
+
+			:is(button, button:hover, button:active):disabled {
+				background: var(--link);
+				filter: grayscale(1);
+				opacity: 0.4;
 			}
 
 			input, textarea, select {
