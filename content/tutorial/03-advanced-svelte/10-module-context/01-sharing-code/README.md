@@ -9,6 +9,7 @@ Very occasionally, you'll need to run some code outside of an individual compone
 We can do that by declaring a `<script context="module">` block. Code contained inside it will run once, when the module first evaluates, rather than when a component is instantiated. Place this at the top of `AudioPlayer.svelte`:
 
 ```svelte
+/// file: AudioPlayer.svelte
 <script context="module">
 	let current;
 </script>
@@ -17,6 +18,7 @@ We can do that by declaring a `<script context="module">` block. Code contained 
 It's now possible for the components to 'talk' to each other without any state management:
 
 ```js
+/// file: AudioPlayer.svelte
 function stopOthers() {
 	if (current && current !== audio) current.pause();
 	current = audio;

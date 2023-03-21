@@ -8,9 +8,10 @@ Take this pair of todo lists, in which toggling a todo sends it to the opposite 
 
 We can achieve this effect using the `crossfade` function, as seen in transition.js, which creates a pair of transitions called `send` and `receive`. When an element is 'sent', it looks for a corresponding element being 'received', and generates a transition that transforms the element to its counterpart's position and fades it out. When an element is 'received', the reverse happens. If there is no counterpart, the `fallback` transition is used.
 
-Open TodoList.svelte. First, import the `send` and `receive` transitions from transition.js:
+Open `TodoList.svelte`. First, import the `send` and `receive` transitions from transition.js:
 
 ```svelte
+/// file: TodoList.svelte
 <script>
 	+++import { send, receive } from './transition.js';+++
 
@@ -22,6 +23,7 @@ Open TodoList.svelte. First, import the `send` and `receive` transitions from tr
 Then, add them to the `<label>` element, using the `todo.id` property as a key to match the elements:
 
 ```svelte
+/// file: TodoList.svelte
 <label
 	+++in:receive={{ key: todo.id }}+++
 	+++out:send={{ key: todo.id }}+++

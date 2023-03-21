@@ -4,18 +4,19 @@ title: Adding parameters
 
 Like transitions and animations, an action can take an argument, which the action function will be called with alongside the element it belongs to.
 
-Here, we're using a `longpress` action that fires an event with the same name whenever the user presses and holds the button for a given duration. Right now, if you switch over to the `longpress.js` file, you'll see it's hardcoded to 500ms.
+Here, we're using a `longpress` action that fires an event with the same name whenever the user presses and holds the button for a given duration. Right now, if you switch over to `longpress.js`, you'll see it's hardcoded to 500ms.
 
 We can change the action function to accept a `duration` as a second argument, and pass that `duration` to the `setTimeout` call:
 
 ```js
-export function longpress(node, duration) {
+/// file: longpress.js
+export function longpress(node, +++duration+++) {
 	// ...
 
 	const handleMousedown = () => {
 		timer = setTimeout(() => {
 			node.dispatchEvent(new CustomEvent('longpress'));
-		}, duration);
+		}, +++duration+++);
 	};
 
 	// ...
@@ -25,7 +26,14 @@ export function longpress(node, duration) {
 Back in `App.svelte`, we can pass the `duration` value to the action:
 
 ```svelte
-<button use:longpress={duration}
+/// file: App.svelte
+<button
+	use:longpress+++={duration}+++
+	on:longpress={() => (pressed = true)}
+	on:mouseenter={() => (pressed = false)}
+>
+	press and hold
+</button>
 ```
 
 This _almost_ works — the event now only fires after 2 seconds. But if you slide the duration down, it will still take two seconds.
@@ -33,6 +41,7 @@ This _almost_ works — the event now only fires after 2 seconds. But if you sli
 To change that, we can add an `update` method in `longpress.js`. This will be called whenever the argument changes:
 
 ```js
+/// file: longpress.js
 return {
 	update(newDuration) {
 		duration = newDuration;

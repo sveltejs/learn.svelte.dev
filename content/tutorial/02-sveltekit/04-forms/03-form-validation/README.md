@@ -7,6 +7,7 @@ Users are a mischievous bunch, who will submit all kinds of nonsensical data if 
 The first line of defense is the browser's [built-in form validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#using_built-in_form_validation), which makes it easy to, for example, mark an `<input>` as required:
 
 ```svelte
+/// file: src/routes/+page.svelte
 <form method="POST" action="?/create">
 	<label>
 		Add a todo

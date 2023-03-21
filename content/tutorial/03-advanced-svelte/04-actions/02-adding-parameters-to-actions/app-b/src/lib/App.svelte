@@ -19,8 +19,9 @@
 	use:longpress={duration}
 	on:longpress={() => (pressed = true)}
 	on:mouseenter={() => (pressed = false)}
-	>press and hold</button
 >
+	press and hold
+</button>
 
 {#if pressed}
 	<p>

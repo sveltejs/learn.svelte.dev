@@ -21,10 +21,12 @@ Import the `enhance` function from `$app/forms`...
 ...and add the `use:enhance` directive to the `<form>` elements:
 
 ```svelte
+/// file: src/routes/+page.svelte
 <form method="POST" action="?/create" +++use:enhance+++>
 ```
 
 ```svelte
+/// file: src/routes/+page.svelte
 <form method="POST" action="?/delete" +++use:enhance+++>
 ```
 
@@ -49,5 +51,6 @@ Now that we're updating the page rather than reloading it, we can get fancy with
 ```
 
 ```svelte
+/// file: src/routes/+page.svelte
 <li class="todo" +++in:fly={{ y: 20 }} out:slide+++>...</li>
 ```

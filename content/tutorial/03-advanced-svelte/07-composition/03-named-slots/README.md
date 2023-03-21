@@ -7,6 +7,7 @@ The previous example contained a _default slot_, which renders the direct childr
 In `ContactCard.svelte`, add a `name` attribute to each slot:
 
 ```svelte
+/// file: ContactCard.svelte
 <article class="contact-card">
 	<h2>
 		<slot name="name">
@@ -31,6 +32,7 @@ In `ContactCard.svelte`, add a `name` attribute to each slot:
 Then, add elements with corresponding `slot="..."` attributes inside the `<ContactCard>` component:
 
 ```svelte
+/// file: App.svelte
 <ContactCard>
 	<span slot="name">
 		P. Sherman

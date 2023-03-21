@@ -13,18 +13,20 @@ Notice that both instances of `<Project>` in this example render a container for
 In `Project.svelte`, update the `class:has-discussion` directive on the `<article>`:
 
 ```svelte
-<article class:has-discussion={$$slots.comments}>
+/// file: Project.svelte
+<article class:has-discussion={+++$$slots.comments+++}>
 ```
 
 Next, wrap the `comments` slot and its wrapping `<div>` in an `if` block that checks `$$slots`:
 
 ```svelte
-{#if $$slots.comments}
+/// file: Project.svelte
++++{#if $$slots.comments}+++
 	<div class="discussion">
 		<h3>Comments</h3>
 		<slot name="comments"></slot>
 	</div>
-{/if}
++++{/if}+++
 ```
 
 Now the comments container and the notification dot won't render when `<App>` leaves the `comments` slot empty.

@@ -5,9 +5,10 @@ title: Slot fallbacks
 A component can specify _fallbacks_ for any slots that are left empty, by putting content inside the `<slot>` element:
 
 ```svelte
+/// file: Box.svelte
 <div class="box">
 	<slot>
-		<em>no content was provided</em>
+		+++<em>no content was provided</em>+++
 	</slot>
 </div>
 ```
@@ -15,10 +16,11 @@ A component can specify _fallbacks_ for any slots that are left empty, by puttin
 We can now create instances of `<Box>` without any children:
 
 ```svelte
+/// file: App.svelte
 <Box>
 	<h2>Hello!</h2>
 	<p>This is a box. It can contain anything.</p>
 </Box>
 
-<Box/>
++++<Box/>+++
 ```

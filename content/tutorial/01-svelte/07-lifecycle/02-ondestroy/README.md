@@ -7,6 +7,7 @@ To run code when your component is destroyed, use `onDestroy`.
 For example, we can add a `setInterval` function when our component initialises, and clean it up when it's no longer relevant. Doing so prevents memory leaks.
 
 ```svelte
+/// file: Timer.svelte
 <script>
 	import { onDestroy } from 'svelte';
 

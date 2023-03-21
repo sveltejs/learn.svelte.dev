@@ -3,3 +3,8 @@
 </script>
 
 <InputField />
+
+<button>
+	Focus field
+</button>
+

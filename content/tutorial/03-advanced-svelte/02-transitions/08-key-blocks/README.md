@@ -7,6 +7,7 @@ Key blocks destroy and recreate their contents when the value of an expression c
 Here, for example, we'd like to play the `typewriter` transition from `transition.js` whenever the loading message changes. Wrap the `<p>` element in a key block:
 
 ```svelte
+/// file: App.svelte
 +++{#key i}+++
 	<p in:typewriter={{ speed: 10 }}>
 		{messages[i] || ''}

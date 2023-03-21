@@ -9,6 +9,7 @@ To complete the illusion, we also need to apply motion to the elements that _are
 First, import the `flip` function — flip stands for ['First, Last, Invert, Play'](https://aerotwist.com/blog/flip-your-animations/) — from `svelte/animate` into `TodoList.svelte`:
 
 ```svelte
+/// file: TodoList.svelte
 <script>
 	+++import { flip } from 'svelte/animate';+++
 	import { send, receive } from './transition.js';
@@ -21,6 +22,7 @@ First, import the `flip` function — flip stands for ['First, Last, Invert, Pla
 Then add it to the `<label>` elements:
 
 ```svelte
+/// file: TodoList.svelte
 <label
 	in:receive={{ key: todo.id }}
 	out:send={{ key: todo.id }}
@@ -31,6 +33,7 @@ Then add it to the `<label>` elements:
 The movement is a little slow in this case, so we can add a `duration` parameter:
 
 ```svelte
+/// file: TodoList.svelte
 <label
 	in:receive={{ key: todo.id }}
 	out:send={{ key: todo.id }}

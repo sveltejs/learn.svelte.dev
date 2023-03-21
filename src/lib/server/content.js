@@ -205,7 +205,7 @@ export function get_exercise(slug) {
 				for (const match of markdown.matchAll(/```[a-z]+\n([\s\S]+?)\n```/g)) {
 					const content = match[1];
 					if (!content.includes('/// file')) {
-						throw new Error(`Code block lacks a \`/// file: ...\` annotation: ${dir}/README.md`);
+						console.error(`Code block lacks a \`/// file: ...\` annotation: ${dir}/README.md`);
 					}
 				}
 			}

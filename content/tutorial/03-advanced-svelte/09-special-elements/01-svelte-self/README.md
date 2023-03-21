@@ -7,6 +7,7 @@ Svelte provides a variety of built-in elements. The first, `<svelte:self>`, allo
 It's useful for things like this folder tree view, where folders can contain _other_ folders. In `Folder.svelte` we want to be able to do this...
 
 ```svelte
+/// file: Folder.svelte
 {#if file.files}
 	<Folder {...file}/>
 {:else}
@@ -17,8 +18,9 @@ It's useful for things like this folder tree view, where folders can contain _ot
 ...but that's impossible, because a module can't import itself. Instead, we use `<svelte:self>`:
 
 ```svelte
+/// file: Folder.svelte
 {#if file.files}
-	<svelte:self {...file}/>
+	+++<svelte:self {...file}/>+++
 {:else}
 	<File {...file}/>
 {/if}
