@@ -123,11 +123,6 @@ export function get_exercise(slug) {
 			const exercise_meta = fs.existsSync(exercise_meta_file) ? json(exercise_meta_file) : {};
 
 			const scope = chapter_meta.scope ?? part_meta.scope;
-			const filenames = new Set(
-				Object.keys(a)
-					.filter((filename) => filename.startsWith(scope.prefix) && a[filename].type === 'file')
-					.map((filename) => filename.slice(scope.prefix.length))
-			);
 
 			const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
 			const { frontmatter, markdown } = extract_frontmatter(text, dir);
@@ -209,6 +204,13 @@ export function get_exercise(slug) {
 					}
 				}
 			}
+
+			const all_files = { ...a, ...solution };
+			const filenames = new Set(
+				Object.keys(all_files)
+					.filter((filename) => filename.startsWith(scope.prefix) && all_files[filename].type === 'file')
+					.map((filename) => filename.slice(scope.prefix.length))
+			);
 
 			return {
 				part: {
