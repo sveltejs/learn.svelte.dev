@@ -15,7 +15,7 @@
 		border: 1px solid #999;
 		padding: 1em;
 		margin: 1em 0 0 0;
-		border-radius: 2px;
+		border-radius: 4px;
 	}
 
 	:global(.layout::before) {

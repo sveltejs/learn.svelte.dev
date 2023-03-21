@@ -18,10 +18,6 @@
 >
 
 <style>
-	button {
-		display: block;
-	}
-
 	.selected {
 		background-color: #ff3e00;
 		color: white;

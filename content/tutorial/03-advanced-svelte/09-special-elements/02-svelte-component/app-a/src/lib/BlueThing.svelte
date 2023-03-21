@@ -1,7 +1,7 @@
-<strong>Blue thing</strong>
+<p>Blue thing</p>
 
 <style>
-	strong {
+	p {
 		color: blue;
 	}
 </style>

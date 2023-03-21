@@ -46,10 +46,8 @@
 	.board > input {
 		font-size: 1.4em;
 		grid-column: 1/3;
-		border-radius: 5px;
-		background: #f4f4f4;
 		padding: 0.5em;
-		border: none;
+		margin: 0 0 1rem 0;
 	}
 
 	h2 {

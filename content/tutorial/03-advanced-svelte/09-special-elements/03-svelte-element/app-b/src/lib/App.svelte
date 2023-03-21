@@ -9,4 +9,6 @@
 	{/each}
 </select>
 
-<svelte:element this={selected}>I'm a {selected} tag</svelte:element>
+<svelte:element this={selected}>
+	I'm a <code>&lt;{selected}&gt;</code>
+</svelte:element>

@@ -21,6 +21,7 @@
 				background: var(--bg-1);
 				color: var(--fg-1);
 				font-family: var(--font);
+				line-height: 1.5;
 				margin: 1rem;
 			}
 
@@ -32,19 +33,19 @@
 			h6 {
 				font-weight: normal;
 				font-variant-numeric: tabular-nums;
-				margin: 0 0 1rem;
+				line-height: 1.1;
 			}
 
-			p {
-				margin: 1rem 0;
+			:is(h1, h2, h3, h4, h5, h6, p, label) {
+				margin: 1rem 0.1rem;
 			}
 
-			p:first-child {
-				margin: 0 0 1rem 0;
+			:is(h1, h2, h3, h4, h5, h6, p, label):first-child {
+				margin-top: 0;
 			}
 
-			p:last-child {
-				margin: 1rem 0 0 0;
+			:is(h1, h2, h3, h4, h5, h6, p, label):last-child {
+				margin-bottom: 0;
 			}
 
 			a {
@@ -59,11 +60,21 @@
 				color: var(--link-active);
 			}
 
+			label {
+				display: flex;
+				gap: 0.5rem;
+				align-items: center;
+			}
+
+			label input {
+				margin: 0;
+			}
+
 			button,
-			input {
+			input,
+			select {
 				font-family: inherit;
 				font-size: inherit;
-				margin: 0 0 1rem 0;
 			}
 
 			button {
@@ -82,10 +93,42 @@
 				background: var(--link-active);
 			}
 
-			input {
+			input, textarea, select {
 				padding: 0.5rem;
 				border: 1px solid var(--bg-2);
 				border-radius: var(--border-radius);
+				box-sizing: border-box;
+			}
+
+			input, textarea {
+				background: var(--bg-1);
+			}
+
+			select {
+				background: var(--bg-2);
+			}
+
+			textarea {
+				font-family: var(--font-mono);
+				font-size: 0.9rem;
+			}
+
+			form {
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+				align-items: baseline;
+			}
+
+			ul:has(li):has(form) {
+				list-style: none;
+				padding: 0;
+			}
+
+			li form {
+				flex-direction: row;
+				gap: 0.5rem;
+				margin: 0.5rem 0;
 			}
 
 			nav {
@@ -93,15 +136,27 @@
 				display: flex;
 				gap: 1em;
 				padding: 1em;
-				background-color: #ffeedd;
+				background: var(--bg-2);
 				z-index: 2;
 				margin: 0 0 1em 0;
-				border-radius: 2px;
+				border-radius: var(--border-radius);
 			}
 
 			ul:has(form) {
 				list-style: none;
 				padding: 0;
+			}
+
+			progress {
+				margin: 0.5rem 0;
+			}
+
+			progress:first-child {
+				margin-top: 0;
+			}
+
+			progress:lsat-child {
+				margin-bottom: 0;
 			}
 
 			.error {
@@ -111,7 +166,7 @@
 			code {
 				background: var(--bg-2);
 				font-family: var(--font-mono);
-				font-size: 0.9rem;
+				font-size: 0.9em;
 				padding: 0.15rem 0.3rem;
 				border-radius: var(--border-radius);
 			}
@@ -124,10 +179,6 @@
 					--link: hsl(206, 96%, 72%);
 					--link-hover: hsl(206, 96%, 78%);
 					--link-active: hsl(206, 96%, 64%);
-				}
-
-				nav {
-					background-color: #345;
 				}
 			}
 		</style>
