@@ -7,6 +7,7 @@ A select can have a `multiple` attribute, in which case it will populate an arra
 Returning to our [earlier ice cream example](/tutorial/group-inputs), we can replace the checkboxes with a `<select multiple>`:
 
 ```svelte
+/// file: App.svelte
 <h2>Flavours</h2>
 
 <select multiple bind:value={flavours}>

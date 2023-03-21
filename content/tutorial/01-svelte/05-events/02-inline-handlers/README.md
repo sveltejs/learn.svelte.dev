@@ -5,6 +5,7 @@ title: Inline handlers
 You can also declare event handlers inline:
 
 ```svelte
+/// file: App.svelte
 <script>
 	let m = { x: 0, y: 0 };
 

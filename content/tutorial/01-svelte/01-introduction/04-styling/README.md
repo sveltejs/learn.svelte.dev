@@ -5,6 +5,7 @@ title: Styling
 Just like in HTML, you can add a `<style>` tag to your component. Let's add some styles to the `<p>` element:
 
 ```svelte
+/// file: App.svelte
 <p>This is a paragraph.</p>
 
 <style>

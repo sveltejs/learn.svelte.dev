@@ -9,6 +9,7 @@ The `<audio>` and `<video>` elements have several properties that you can bind t
 On line 62, add `currentTime={time}`, `duration` and `paused` bindings:
 
 ```svelte
+/// file: App.svelte
 <video
 	poster="https://sveltejs.github.io/assets/caminandes-llamigos.jpg"
 	src="https://sveltejs.github.io/assets/caminandes-llamigos.mp4"

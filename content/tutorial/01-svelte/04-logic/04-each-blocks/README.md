@@ -5,6 +5,7 @@ title: Each blocks
 If you need to loop over lists of data, use an `each` block:
 
 ```svelte
+/// file: App.svelte
 <ul>
 	+++{#each cats as cat}+++
 		<li>
@@ -21,6 +22,7 @@ If you need to loop over lists of data, use an `each` block:
 You can get the current _index_ as a second argument, like so:
 
 ```svelte
+/// file: App.svelte
 {#each cats as cat+++, i}+++
 	<li>
 		<a href="https://www.youtube.com/watch?v={cat.id}">

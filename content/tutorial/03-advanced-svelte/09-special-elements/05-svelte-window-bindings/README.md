@@ -5,6 +5,7 @@ title: <svelte:window> bindings
 We can also bind to certain properties of `window`, such as `scrollY`. Update line 7:
 
 ```svelte
+/// file: App.svelte
 <svelte:window bind:scrollY={y}/>
 ```
 

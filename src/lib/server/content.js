@@ -196,7 +196,7 @@ export function get_exercise(slug) {
 				return item.type === 'file' && item.name.startsWith(scope.prefix);
 			});
 
-			if (filtered.length > 1) {
+			if (filtered.length > 0) {
 				for (const match of markdown.matchAll(/```[a-z]+\n([\s\S]+?)\n```/g)) {
 					const content = match[1];
 					if (!content.includes('/// file') && !content.includes('/// no-file')) {

@@ -7,6 +7,7 @@ Just as you can add event listeners to any DOM element, you can add event listen
 On line 11, add the `keydown` listener:
 
 ```svelte
+/// file: App.svelte
 <svelte:window on:keydown={handleKeydown}/>
 ```
 

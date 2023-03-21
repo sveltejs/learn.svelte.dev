@@ -9,6 +9,7 @@ Setting values and watching the DOM update automatically is cool. Know what's ev
 Let's start by changing the `progress` store to a `tweened` value:
 
 ```svelte
+/// file: App.svelte
 <script>
 	import { +++tweened+++ } from 'svelte/+++motion+++';
 
@@ -19,6 +20,7 @@ Let's start by changing the `progress` store to a `tweened` value:
 Clicking the buttons causes the progress bar to animate to its new value. It's a bit robotic and unsatisfying though. We need to add an easing function:
 
 ```svelte
+/// file: App.svelte
 <script>
 	import { tweened } from 'svelte/motion';
 	+++import { cubicOut } from 'svelte/easing';+++

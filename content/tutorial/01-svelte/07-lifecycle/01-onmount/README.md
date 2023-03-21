@@ -11,6 +11,7 @@ The one you'll use most frequently is `onMount`, which runs after the component 
 We'll add an `onMount` handler that loads some data over the network:
 
 ```svelte
+/// file: App.svelte
 <script>
 	import { onMount } from 'svelte';
 

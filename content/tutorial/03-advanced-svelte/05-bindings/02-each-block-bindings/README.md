@@ -5,6 +5,7 @@ title: Each block bindings
 You can even bind to properties inside an `each` block.
 
 ```svelte
+/// file: App.svelte
 {#each todos as todo}
 	<input
 		type=checkbox

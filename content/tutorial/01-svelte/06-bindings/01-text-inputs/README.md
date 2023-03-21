@@ -9,6 +9,7 @@ Sometimes it's useful to break that rule. Take the case of the `<input>` element
 Instead, we can use the `bind:value` directive:
 
 ```svelte
+/// file: App.svelte
 <input bind:value={name}>
 ```
 
