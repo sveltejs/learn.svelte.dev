@@ -345,10 +345,18 @@
 		flex-direction: row;
 		align-items: center;
 		padding: 1rem;
+		gap: 1rem;
 	}
 
 	.mobile .navigator .file {
 		flex: 1;
+		text-align: left;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		/* put ellipsis at start */
+		direction: rtl;
 		text-align: left;
 	}
 
