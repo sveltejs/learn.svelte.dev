@@ -7,6 +7,7 @@ It would be impractical to put your entire app in a single component. Instead, w
 Add a `<script>` tag that imports `Nested.svelte`...
 
 ```svelte
+/// file: App.svelte
 +++<script>
 	import Nested from './Nested.svelte';
 </script>+++
@@ -15,6 +16,7 @@ Add a `<script>` tag that imports `Nested.svelte`...
 ...and include a `<Nested />` component:
 
 ```svelte
+/// file: App.svelte
 <p>This is a paragraph.</p>
 +++<Nested />+++
 ```

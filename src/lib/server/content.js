@@ -196,6 +196,20 @@ export function get_exercise(slug) {
 				}
 			}
 
+			// ensure every code block for an exercise with multiple files has a `/// file:` annotation
+			const filtered = Object.values(solution).filter(item => {
+				return item.type === 'file' && item.name.startsWith(scope.prefix);
+			});
+
+			if (filtered.length > 1) {
+				for (const match of markdown.matchAll(/```[a-z]+\n([\s\S]+?)\n```/g)) {
+					const content = match[1];
+					if (!content.includes('/// file')) {
+						throw new Error(`Code block lacks a \`/// file: ...\` annotation: ${dir}/README.md`);
+					}
+				}
+			}
+
 			return {
 				part: {
 					slug: part_dir,
