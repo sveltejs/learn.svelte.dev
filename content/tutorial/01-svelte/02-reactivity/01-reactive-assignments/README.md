@@ -9,6 +9,9 @@ To demonstrate it, we first need to wire up an event handler (we'll learn more a
 ```svelte
 /// file: App.svelte
 <button +++on:click={increment}+++>
+	Clicked {count}
+	{count === 1 ? 'time' : 'times'}
+</button>
 ```
 
 Inside the `increment` function, all we need to do is change the value of `count`:
