@@ -9,14 +9,14 @@ You can also declare event handlers inline:
 <script>
 	let m = { x: 0, y: 0 };
 
-	---function handleMousemove(event) {
+	---function handleMove(event) {
 		m.x = event.clientX;
 		m.y = event.clientY;
 	}---
 </script>
 
 <div
-	on:mousemove={+++(e) => {
+	on:pointermove={+++(e) => {
 		m = { x: e.clientX, y: e.clientY };
 	}+++}
 >

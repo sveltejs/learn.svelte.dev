@@ -3,11 +3,11 @@
 </script>
 
 <div
-	on:mousemove={(e) => {
+	on:pointermove={(e) => {
 		m = { x: e.clientX, y: e.clientY };
 	}}
 >
-	The mouse position is {m.x} x {m.y}
+	The pointer is at {m.x} x {m.y}
 </div>
 
 <style>
