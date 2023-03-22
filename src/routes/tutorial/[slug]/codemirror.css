@@ -77,6 +77,11 @@
 }
 .cm-editor .cm-diagnosticText {}
 
+.cm-editor .cm-tooltip.cm-tooltip-autocomplete > ul {
+	font-family: var(--font-mono);
+	font-size: 1.3rem;
+}
+
 
 @media (prefers-color-scheme: dark) {
 	.cm-editor .cm-activeLineGutter {

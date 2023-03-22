@@ -6,6 +6,7 @@
 	import { EditorState } from '@codemirror/state';
 	import { indentWithTab } from '@codemirror/commands';
 	import { indentUnit } from '@codemirror/language';
+	import { acceptCompletion } from '@codemirror/autocomplete';
 	import { setDiagnostics } from '@codemirror/lint';
 	import { javascript } from '@codemirror/lang-javascript';
 	import { html } from '@codemirror/lang-html';
@@ -16,16 +17,6 @@
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { files, selected_file, selected_name, update_file, warnings } from './state.js';
 	import './codemirror.css';
-
-	// TODO add more styles (selection ranges, etc)
-	const highlights = HighlightStyle.define([
-		{ tag: tags.tagName, color: '#c05726' },
-		{ tag: tags.keyword, color: 'var(--sk-code-keyword)' },
-		{ tag: tags.comment, color: 'var(--sk-code-comment)' },
-		{ tag: tags.string, color: 'var(--sk-code-string)' }
-	]);
-
-	const theme = syntaxHighlighting(highlights);
 
 	/** @type {HTMLDivElement} */
 	let container;
@@ -45,9 +36,17 @@
 	const extensions = [
 		basicSetup,
 		EditorState.tabSize.of(2),
-		keymap.of([indentWithTab]),
+		keymap.of([{ key: 'Tab', run: acceptCompletion }, indentWithTab]),
 		indentUnit.of('\t'),
-		theme
+		syntaxHighlighting(
+			HighlightStyle.define([
+				// TODO add more styles
+				{ tag: tags.tagName, color: '#c05726' },
+				{ tag: tags.keyword, color: 'var(--sk-code-keyword)' },
+				{ tag: tags.comment, color: 'var(--sk-code-comment)' },
+				{ tag: tags.string, color: 'var(--sk-code-string)' }
+			])
+		)
 	];
 
 	$: reset($files);
