@@ -1,9 +1,3 @@
-<script>
-	function handleClick() {
-		alert('clicked');
-	}
-</script>
-
-<button on:click={handleClick}>
+<button on:click={() => alert('clicked')}>
 	Click me
 </button>
