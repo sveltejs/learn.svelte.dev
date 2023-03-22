@@ -1,14 +1,14 @@
 <script>
-	let m = { x: 0, y: 0 };
+	let m = { x: '???', y: '???' };
 
-	function handleMousemove(event) {
+	function handleMove(event) {
 		m.x = event.clientX;
 		m.y = event.clientY;
 	}
 </script>
 
-<div on:mousemove={handleMousemove}>
-	The mouse position is {m.x} x {m.y}
+<div on:pointermove={handleMove}>
+	The pointer is at {m.x} x {m.y}
 </div>
 
 <style>
