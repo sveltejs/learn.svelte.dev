@@ -11,7 +11,7 @@ Our image is missing a `src` — let's add one:
 <img +++src={src}+++ />
 ```
 
-That's better. But Svelte is giving us a warning:
+That's better. But if you hover over the `<img>` in the editor, Svelte is giving us a warning:
 
 > A11y: &lt;img&gt; element should have an alt attribute
 

@@ -4,7 +4,7 @@ title: Nested components
 
 It would be impractical to put your entire app in a single component. Instead, we can import components from other files and include them in our markup.
 
-Add a `<script>` tag that imports `Nested.svelte`...
+Add a `<script>` tag to the top of `App.svelte` that imports `Nested.svelte`...
 
 ```svelte
 /// file: App.svelte

@@ -17,7 +17,7 @@ You can easily group statements together with a block:
 /// file: App.svelte
 $: +++{+++
 	console.log(`the count is ${count}`);
-	alert(`I SAID THE COUNT IS ${count}`);
+	console.log(`this will also be logged whenever count changes`);
 +++}+++
 ```
 
