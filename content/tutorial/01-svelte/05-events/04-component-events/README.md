@@ -28,4 +28,4 @@ Then, add an `on:message` handler in `App.svelte`:
 <Inner +++on:message={handleMessage}+++ />
 ```
 
-> You can also try changing the event name to something else. For instance, change `dispatch('message')` to `dispatch('myevent')` in `Inner.svelte` and change the attribute name from `on:message` to `on:myevent` in `App.svelte`.
+> You can also try changing the event name to something else. For instance, change `dispatch('message')` to `dispatch('greet')` in `Inner.svelte` and change the attribute name from `on:message` to `on:greet` in `App.svelte`.
