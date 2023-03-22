@@ -10,7 +10,7 @@ Instead, we can use the `bind:value` directive:
 
 ```svelte
 /// file: App.svelte
-<input bind:value={name}>
+<input +++bind:+++value={name}>
 ```
 
 This means that not only will changes to the value of `name` update the input value, but changes to the input value will update `name`.
