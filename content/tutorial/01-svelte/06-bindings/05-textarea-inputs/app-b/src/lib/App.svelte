@@ -5,7 +5,7 @@
 
 {@html marked(value)}
 
-<textarea bind:value />
+<textarea bind:value></textarea>
 
 <style>
 	textarea {
