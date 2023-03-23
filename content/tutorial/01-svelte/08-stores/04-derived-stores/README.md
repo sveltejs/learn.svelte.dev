@@ -8,7 +8,7 @@ You can create a store whose value is based on the value of one or more _other_ 
 /// file: stores.js
 export const elapsed = derived(
     time,
-    ($time) => Math.round(($time - start) / 1000)
+    ($time) => +++Math.round(($time - start) / 1000)+++
 );
 ```
 
