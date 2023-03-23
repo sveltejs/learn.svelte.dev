@@ -13,7 +13,7 @@ Now, in `Incrementer.svelte`, wire up the `+` button:
 ```js
 /// file: Incrementer.svelte
 function increment() {
-	count.update((n) => n + 1);
+	+++count.update((n) => n + 1);+++
 }
 ```
 
@@ -24,6 +24,6 @@ Finally, in `Resetter.svelte`, implement `reset`:
 ```js
 /// file: Resetter.svelte
 function reset() {
-	count.set(0);
+	+++count.set(0);+++
 }
 ```
