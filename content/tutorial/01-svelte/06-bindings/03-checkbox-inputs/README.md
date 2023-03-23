@@ -6,5 +6,5 @@ Checkboxes are used for toggling between states. Instead of binding to `input.va
 
 ```svelte
 /// file: App.svelte
-<input type=checkbox bind:checked={yes}>
+<input type=checkbox +++bind:+++checked={yes}>
 ```

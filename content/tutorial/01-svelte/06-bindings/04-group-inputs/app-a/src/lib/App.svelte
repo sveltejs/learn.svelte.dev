@@ -1,46 +1,37 @@
 <script>
 	let scoops = 1;
-	let flavours = ['Mint choc chip'];
+	let flavours = [];
 
-	function join(flavours) {
-		if (flavours.length === 1) return flavours[0];
-		return `${flavours.slice(0, -1).join(', ')} and ${flavours[flavours.length - 1]}`;
-	}
+	const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
 </script>
 
 <h2>Size</h2>
 
-<label>
-	<input type=radio group={scoops} name="scoops" value={1}>
-	One scoop
-</label>
+{#each [1, 2, 3] as number}
+	<label>
+		<input
+			type="radio"
+			name="scoops"
+			value={number}
+		/>
 
-<label>
-	<input type=radio group={scoops} name="scoops" value={2}>
-	Two scoops
-</label>
-
-<label>
-	<input type=radio group={scoops} name="scoops" value={3}>
-	Three scoops
-</label>
+		{number} {number === 1 ? 'scoop' : 'scoops'}
+	</label>
+{/each}
 
 <h2>Flavours</h2>
 
-<label>
-	<input type=checkbox group={flavours} name="flavours" value="Cookies and cream">
-	Cookies and cream
-</label>
+{#each ['cookies and cream', 'mint choc chip', 'raspberry ripple'] as flavour}
+	<label>
+		<input
+			type="checkbox"
+			name="flavours"
+			value={flavour}
+		/>
 
-<label>
-	<input type=checkbox group={flavours} name="flavours" value="Mint choc chip">
-	Mint choc chip
-</label>
-
-<label>
-	<input type=checkbox group={flavours} name="flavours" value="Raspberry ripple">
-	Raspberry ripple
-</label>
+		{flavour}
+	</label>
+{/each}
 
 {#if flavours.length === 0}
 	<p>Please select at least one flavour</p>
@@ -49,6 +40,6 @@
 {:else}
 	<p>
 		You ordered {scoops} {scoops === 1 ? 'scoop' : 'scoops'}
-		of {join(flavours)}
+		of {formatter.format(flavours)}
 	</p>
 {/if}
