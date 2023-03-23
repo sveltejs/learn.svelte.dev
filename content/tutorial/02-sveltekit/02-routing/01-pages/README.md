@@ -4,11 +4,9 @@ title: Pages
 
 SvelteKit uses filesystem-based routing, which means that the _routes_ of your app — in other words, what the app should do when a user navigates to a particular URL — are defined by the directories in your codebase.
 
-The routes are located within `src/routes`. Every directory within which contains a `+page.svelte` file creates a route in your app.
+Every `+page.svelte` file inside `src/routes` creates a page in your app. In this app we currently have one page — `src/routes/+page.svelte`, which maps to `/`. If we navigate to `/about`, we'll see a 404 Not Found error.
 
-In this app we currently have one route — `src/routes/+page.svelte`, which maps to `/`.
-
-Let's add a second route, `src/routes/about/+page.svelte`, which maps to `/about`:
+Let's fix that. Add a second page, `src/routes/about/+page.svelte`, copy the contents of `src/routes/+page.svelte`, and update it:
 
 ```svelte
 /// file: src/routes/about/+page.svelte
@@ -17,8 +15,8 @@ Let's add a second route, `src/routes/about/+page.svelte`, which maps to `/about
 	<a href="/about">about</a>
 </nav>
 
-<h1>about</h1>
-<p>this is the about page.</p>
+<h1>+++about+++</h1>
+<p>this is the +++about+++ page.</p>
 ```
 
 We can now navigate between `/` and `/about`.
