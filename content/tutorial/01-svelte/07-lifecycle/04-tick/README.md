@@ -10,14 +10,16 @@ You can see that behaviour in this example. Select a range of text and hit the t
 
 ```js
 /// file: App.svelte
-import { tick } from 'svelte';
++++import { tick } from 'svelte';+++
+
+let text = `Select some text and hit the tab key to toggle uppercase`;
 ```
 
 ...and running it immediately before we set `this.selectionStart` and `this.selectionEnd` at the end of `handleKeydown`:
 
 ```js
 /// file: App.svelte
-await tick();
++++await tick();+++
 this.selectionStart = selectionStart;
 this.selectionEnd = selectionEnd;
 ```

@@ -8,15 +8,8 @@
 
 		event.preventDefault();
 
-		const {
-			selectionStart,
-			selectionEnd,
-			value
-		} = this;
-		const selection = value.slice(
-			selectionStart,
-			selectionEnd
-		);
+		const { selectionStart, selectionEnd, value } = this;
+		const selection = value.slice(selectionStart, selectionEnd);
 
 		const replacement = /[a-z]/.test(selection)
 			? selection.toUpperCase()
@@ -41,6 +34,7 @@
 <style>
 	textarea {
 		width: 100%;
-		height: 200px;
+		height: 100%;
+		resize: none;
 	}
 </style>
