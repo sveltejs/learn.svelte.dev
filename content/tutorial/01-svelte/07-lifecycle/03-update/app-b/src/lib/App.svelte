@@ -6,58 +6,48 @@
 	} from 'svelte';
 
 	let div;
-	let autoscroll;
+	let autoscroll = false;
 
 	beforeUpdate(() => {
-		autoscroll =
-			div &&
-			div.offsetHeight + div.scrollTop >
-				div.scrollHeight - 20;
+		autoscroll = div && div.offsetHeight + div.scrollTop > div.scrollHeight - 20;
 	});
 
 	afterUpdate(() => {
-		if (autoscroll)
+		if (autoscroll) {
 			div.scrollTo(0, div.scrollHeight);
+		}
 	});
 
 	const eliza = new Eliza();
+	const pause = (ms) => new Promise((fulfil) => setTimeout(fulfil, ms));
+
+	const typing = { author: 'eliza', text: '...' };
 
 	let comments = [
 		{ author: 'eliza', text: eliza.getInitial() }
 	];
 
-	function handleKeydown(event) {
-		if (event.key === 'Enter') {
-			const text = event.target.value;
-			if (!text) return;
-
-			comments = comments.concat({
-				author: 'user',
-				text
-			});
-
+	async function handleKeydown(event) {
+		if (event.key === 'Enter' && event.target.value) {
 			event.target.value = '';
 
-			const reply = eliza.transform(text);
+			const comment = {
+				author: 'user',
+				text: event.target.value
+			};
 
-			setTimeout(() => {
-				comments = comments.concat({
-					author: 'eliza',
-					text: '...',
-					placeholder: true
-				});
+			const reply = {
+				author: 'eliza',
+				text: eliza.transform(comment.text)
+			};
 
-				setTimeout(() => {
-					comments = comments
-						.filter(
-							(comment) => !comment.placeholder
-						)
-						.concat({
-							author: 'eliza',
-							text: reply
-						});
-				}, 500 + Math.random() * 500);
-			}, 200 + Math.random() * 200);
+			comments = [...comments, comment];
+
+			await pause(200 * (1 + Math.random()));
+			comments = [...comments, typing];
+
+			await pause(500 * (1 + Math.random()));
+			comments = [...comments, reply].filter(comment => comment !== typing);
 		}
 	}
 </script>

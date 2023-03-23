@@ -11,14 +11,16 @@ This [Eliza](https://en.wikipedia.org/wiki/ELIZA) chatbot is annoying to use, be
 ```js
 /// file: App.svelte
 let div;
-let autoscroll;
++++let autoscroll = false;+++
 
 beforeUpdate(() => {
-	autoscroll = div && div.offsetHeight + div.scrollTop > div.scrollHeight - 20;
+	+++autoscroll = div && div.offsetHeight + div.scrollTop > div.scrollHeight - 20;+++
 });
 
 afterUpdate(() => {
-	if (autoscroll) div.scrollTo(0, div.scrollHeight);
++++	if (autoscroll) {
+		div.scrollTo(0, div.scrollHeight);
+	}+++
 });
 ```
 
