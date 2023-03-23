@@ -32,10 +32,10 @@
 	let previous_files = [];
 
 	$: mobile = w < 800; // for the things we can't do with media queries
-	$: completed = is_completed($files, data.exercise.b);
 	$: files.set(Object.values(data.exercise.a));
 	$: solution.set(data.exercise.b);
 	$: selected_name.set(data.exercise.focus);
+	$: completed = is_completed($files, data.exercise.b);
 
 	beforeNavigate(() => {
 		previous_files = $files;
