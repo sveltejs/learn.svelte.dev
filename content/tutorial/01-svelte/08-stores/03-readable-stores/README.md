@@ -8,13 +8,13 @@ Open `stores.js`. The first argument to `readable` is an initial value, which ca
 
 ```js
 /// file: stores.js
-export const time = readable(new Date(), function start(set) {
-	const interval = setInterval(() => {
+export const time = readable(+++new Date()+++, function start(set) {
++++	const interval = setInterval(() => {
 		set(new Date());
-	}, 1000);
+	}, 1000);+++
 
 	return function stop() {
-		clearInterval(interval);
+		+++clearInterval(interval);+++
 	};
 });
 ```
