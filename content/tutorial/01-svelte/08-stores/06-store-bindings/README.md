@@ -17,7 +17,7 @@ We can also assign directly to store values inside a component. Add a `<button>`
 
 ```svelte
 /// file: App.svelte
-<button on:click={() => $name += '!'}>
+<button +++on:click={() => $name += '!'}+++>
 	Add exclamation mark!
 </button>
 ```
