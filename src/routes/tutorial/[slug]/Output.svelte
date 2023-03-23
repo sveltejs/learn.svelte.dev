@@ -162,10 +162,10 @@
 		font-family: var(--font-mono);
 		font-size: var(--sk-text-xs);
 		padding: 1rem;
-		background: var(--sk-back-1);
-		border-top: 1px solid var(--sk-back-3);
+		background: rgba(255,255,255,0.5);
 		transform: translate(0, 100%);
 		transition: transform 0.3s;
+		backdrop-filter: blur(3px);
 	}
 
 	.terminal::after {
@@ -188,5 +188,11 @@
 
 	.terminal.visible::after {
 		--shadow: rgba(0, 0, 0, 0.05);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.terminal {
+			background: rgba(0,0,0,0.5);
+		}
 	}
 </style>
