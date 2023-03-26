@@ -29,7 +29,14 @@
 		collapsed,
 
 		add: async (name, type) => {
-			if (!$solution[name] && !exercise.editing_constraints.create.has(name)) {
+			const expected = $solution[name];
+
+			if (type !== expected.type) {
+				modal_text = `${name.slice(exercise.scope.prefix.length)} should be a ${expected.type}, not a ${type}!`;
+				return;
+			}
+
+			if (!expected && !exercise.editing_constraints.create.has(name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
 					Array.from(exercise.editing_constraints.create).join('\n');
