@@ -41,6 +41,23 @@
 	/** @type {any} */
 	let timeout;
 
+	function reset_timeout() {
+		loading = false;
+
+		clearTimeout(timeout);
+
+		if (document.visibilityState === 'hidden') return;
+
+		timeout = setTimeout(() => {
+			if (dev && !iframe) return;
+
+			// we lost contact, refresh the page
+			loading = true;
+			set_iframe_src($base + path);
+			loading = false;
+		}, 1000);
+	}
+
 	/** @param {MessageEvent} e */
 	async function handle_message(e) {
 		if (e.origin !== $base) return;
@@ -49,17 +66,7 @@
 
 		if (e.data.type === 'ping') {
 			path = e.data.data.path ?? path;
-			loading = false;
-
-			clearTimeout(timeout);
-			timeout = setTimeout(() => {
-				if (dev && !iframe) return;
-
-				// we lost contact, refresh the page
-				loading = true;
-				set_iframe_src($base + path);
-				loading = false;
-			}, 1000);
+			reset_timeout();
 		} else if (e.data.type === 'ping-pause') {
 			clearTimeout(timeout);
 		} else if (e.data.type === 'warnings') {
@@ -97,6 +104,7 @@
 </script>
 
 <svelte:window on:message={handle_message} />
+<svelte:document on:visibilitychange={reset_timeout} />
 <Chrome
 	{path}
 	{loading}
