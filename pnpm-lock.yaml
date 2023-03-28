@@ -20,7 +20,7 @@ specifiers:
   '@rich_harris/svelte-split-pane': ^1.0.2
   '@sveltejs/adapter-vercel': 2.3.1
   '@sveltejs/kit': ^1.13.0
-  '@sveltejs/site-kit': ^3.2.2
+  '@sveltejs/site-kit': ^3.3.6
   '@types/diff': ^5.0.2
   '@types/marked': ^4.0.8
   '@types/prismjs': ^1.26.0
@@ -47,9 +47,9 @@ specifiers:
   yootils: ^0.3.1
 
 dependencies:
-  '@codemirror/autocomplete': 6.4.2_lc2v3dpzp2l5pdzwtgfaudkm3e
+  '@codemirror/autocomplete': 6.4.2
   '@codemirror/commands': 6.2.2
-  '@codemirror/lang-css': 6.1.1_i3aqn63zftbgivbr4riltn5mqe
+  '@codemirror/lang-css': 6.1.1
   '@codemirror/lang-html': 6.4.2
   '@codemirror/lang-javascript': 6.1.4
   '@codemirror/language': 6.6.0
@@ -67,7 +67,7 @@ dependencies:
   adm-zip: 0.5.10
   ansi-to-html: 0.7.2
   base64-js: 1.5.1
-  codemirror: 6.0.1_@lezer+common@1.0.2
+  codemirror: 6.0.1
   marked: 4.2.12
   port-authority: 2.0.1
   prism-svelte: 0.5.0
@@ -79,7 +79,7 @@ devDependencies:
   '@playwright/test': 1.31.2
   '@sveltejs/adapter-vercel': 2.3.1_@sveltejs+kit@1.13.0
   '@sveltejs/kit': 1.13.0_svelte@3.57.0+vite@4.2.1
-  '@sveltejs/site-kit': 3.2.2
+  '@sveltejs/site-kit': 3.3.6_px2pahnw67xpuvhwev7s666cfu
   '@types/diff': 5.0.2
   '@types/marked': 4.0.8
   '@types/prismjs': 1.26.0
@@ -96,17 +96,12 @@ devDependencies:
 
 packages:
 
-  /@codemirror/autocomplete/6.4.2_lc2v3dpzp2l5pdzwtgfaudkm3e:
+  /@codemirror/autocomplete/6.4.2:
     resolution: {integrity: sha512-8WE2xp+D0MpWEv5lZ6zPW1/tf4AGb358T5GWYiKEuCP8MvFfT3tH2mIF9Y2yr2e3KbHuSvsVhosiEyqCpiJhZQ==}
-    peerDependencies:
-      '@codemirror/language': ^6.0.0
-      '@codemirror/state': ^6.0.0
-      '@codemirror/view': ^6.0.0
-      '@lezer/common': ^1.0.0
     dependencies:
       '@codemirror/language': 6.6.0
       '@codemirror/state': 6.2.0
-      '@codemirror/view': 6.9.2
+      '@codemirror/view': 6.9.3
       '@lezer/common': 1.0.2
     dev: false
 
@@ -119,23 +114,20 @@ packages:
       '@lezer/common': 1.0.2
     dev: false
 
-  /@codemirror/lang-css/6.1.1_i3aqn63zftbgivbr4riltn5mqe:
+  /@codemirror/lang-css/6.1.1:
     resolution: {integrity: sha512-P6jdNEHyRcqqDgbvHYyC9Wxkek0rnG3a9aVSRi4a7WrjPbQtBTaOmvYpXmm13zZMAatO4Oqpac+0QZs7sy+LnQ==}
     dependencies:
-      '@codemirror/autocomplete': 6.4.2_lc2v3dpzp2l5pdzwtgfaudkm3e
+      '@codemirror/autocomplete': 6.4.2
       '@codemirror/language': 6.6.0
       '@codemirror/state': 6.2.0
       '@lezer/css': 1.1.1
-    transitivePeerDependencies:
-      - '@codemirror/view'
-      - '@lezer/common'
     dev: false
 
   /@codemirror/lang-html/6.4.2:
     resolution: {integrity: sha512-bqCBASkteKySwtIbiV/WCtGnn/khLRbbiV5TE+d9S9eQJD7BA4c5dTRm2b3bVmSpilff5EYxvB4PQaZzM/7cNw==}
     dependencies:
-      '@codemirror/autocomplete': 6.4.2_lc2v3dpzp2l5pdzwtgfaudkm3e
-      '@codemirror/lang-css': 6.1.1_i3aqn63zftbgivbr4riltn5mqe
+      '@codemirror/autocomplete': 6.4.2
+      '@codemirror/lang-css': 6.1.1
       '@codemirror/lang-javascript': 6.1.4
       '@codemirror/language': 6.6.0
       '@codemirror/state': 6.2.0
@@ -148,7 +140,7 @@ packages:
   /@codemirror/lang-javascript/6.1.4:
     resolution: {integrity: sha512-OxLf7OfOZBTMRMi6BO/F72MNGmgOd9B0vetOLvHsDACFXayBzW8fm8aWnDM0yuy68wTK03MBf4HbjSBNRG5q7A==}
     dependencies:
-      '@codemirror/autocomplete': 6.4.2_lc2v3dpzp2l5pdzwtgfaudkm3e
+      '@codemirror/autocomplete': 6.4.2
       '@codemirror/language': 6.6.0
       '@codemirror/lint': 6.2.0
       '@codemirror/state': 6.2.0
@@ -190,6 +182,14 @@ packages:
 
   /@codemirror/view/6.9.2:
     resolution: {integrity: sha512-ci0r/v6aKOSlzOs7/STMTYP3jX/+YMq2dAfAJcLIB6uom4ThtrUlzeuS7GTRGNqJJ+qAJR1vGWfXgu4CO/0myQ==}
+    dependencies:
+      '@codemirror/state': 6.2.0
+      style-mod: 4.0.2
+      w3c-keyname: 2.2.6
+    dev: false
+
+  /@codemirror/view/6.9.3:
+    resolution: {integrity: sha512-BJ5mvEIhFM+SrNwc5X8pLIvMM9ffjkviVbxpg84Xk2OE8ZyKaEbId8kX+nAYEEso7+qnbwsXe1bkAHsasebMow==}
     dependencies:
       '@codemirror/state': 6.2.0
       style-mod: 4.0.2
@@ -719,8 +719,8 @@ packages:
       '@lezer/javascript': ^1.2.0
       '@lezer/lr': ^1.0.0
     dependencies:
-      '@codemirror/autocomplete': 6.4.2_lc2v3dpzp2l5pdzwtgfaudkm3e
-      '@codemirror/lang-css': 6.1.1_i3aqn63zftbgivbr4riltn5mqe
+      '@codemirror/autocomplete': 6.4.2
+      '@codemirror/lang-css': 6.1.1
       '@codemirror/lang-html': 6.4.2
       '@codemirror/lang-javascript': 6.1.4
       '@codemirror/language': 6.6.0
@@ -789,8 +789,14 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/site-kit/3.2.2:
-    resolution: {integrity: sha512-HBLtfNdLr5Ykl8i8CvJcYjib7zMIJupg4T/omplp3ccpgpiUh26tk71vRG1+a6yMkfbfy0ShoPb9uwNril5cnw==}
+  /@sveltejs/site-kit/3.3.6_px2pahnw67xpuvhwev7s666cfu:
+    resolution: {integrity: sha512-MUqHseHHFJOT6AcJYTbUqK7hMy1OkBa231tS4TXkmbgQ8EaFVI2unjs9+WY8m3CXASc4p31givOiKVSqtorbbg==}
+    peerDependencies:
+      '@sveltejs/kit': ^1.0.0
+      svelte: ^3.54.0
+    dependencies:
+      '@sveltejs/kit': 1.13.0_svelte@3.57.0+vite@4.2.1
+      svelte: 3.57.0
     dev: true
 
   /@sveltejs/vite-plugin-svelte/2.0.3_svelte@3.57.0+vite@4.2.1:
@@ -997,18 +1003,16 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /codemirror/6.0.1_@lezer+common@1.0.2:
+  /codemirror/6.0.1:
     resolution: {integrity: sha512-J8j+nZ+CdWmIeFIGXEFbFPtpiYacFMDR8GlHK3IyHQJMCaVRfGx9NT+Hxivv1ckLWPvNdZqndbr/7lVhrf/Svg==}
     dependencies:
-      '@codemirror/autocomplete': 6.4.2_lc2v3dpzp2l5pdzwtgfaudkm3e
+      '@codemirror/autocomplete': 6.4.2
       '@codemirror/commands': 6.2.2
       '@codemirror/language': 6.6.0
       '@codemirror/lint': 6.2.0
       '@codemirror/search': 6.3.0
       '@codemirror/state': 6.2.0
       '@codemirror/view': 6.9.2
-    transitivePeerDependencies:
-      - '@lezer/common'
     dev: false
 
   /color-support/1.1.3:

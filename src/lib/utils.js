@@ -14,3 +14,8 @@ const chars = {
 export function escape_html(html) {
 	return html.replace(/[&<>]/g, (c) => chars[c]);
 }
+
+/** @param {string} path */
+export function posixify(path) {
+	return path.replace(/\\/g, '/');
+}

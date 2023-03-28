@@ -1,3 +1,4 @@
+import { posixify } from '$lib/utils.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import glob from 'tiny-glob/sync.js';
@@ -32,16 +33,19 @@ function is_valid(dir) {
  * @returns {import('$lib/types').PartStub[]}
  */
 export function get_index() {
-	const parts = fs.readdirSync('content/tutorial').filter(is_valid);
+	const parts = fs.readdirSync('content/tutorial').filter(is_valid).map(posixify);
 
 	return parts.map((part) => {
-		const chapters = fs.readdirSync(`content/tutorial/${part}`).filter(is_valid);
+		const chapters = fs.readdirSync(`content/tutorial/${part}`).filter(is_valid).map(posixify);
 
 		return {
 			slug: part,
 			title: json(`content/tutorial/${part}/meta.json`).title,
 			chapters: chapters.map((chapter) => {
-				const exercises = fs.readdirSync(`content/tutorial/${part}/${chapter}`).filter(is_valid);
+				const exercises = fs
+					.readdirSync(`content/tutorial/${part}/${chapter}`)
+					.filter(is_valid)
+					.map(posixify);
 
 				return {
 					slug: chapter,
@@ -71,7 +75,7 @@ export function get_index() {
 export function get_exercise(slug) {
 	const exercises = glob('[0-9][0-9]-*/[0-9][0-9]-*/[0-9][0-9]-*/README.md', {
 		cwd: 'content/tutorial'
-	});
+	}).map(posixify);
 
 	/** @type {string[]} */
 	const chain = [];
@@ -112,7 +116,7 @@ export function get_exercise(slug) {
 				const b_ = /** @type {import('$lib/types').FileStub} */ (b[key]);
 
 				if (a_.contents === b_.contents) {
-					throw new Error(`duplicate file: ${exercise_slug} ${key}`)
+					throw new Error(`duplicate file: ${exercise_slug} ${key}`);
 				}
 			}
 
@@ -192,7 +196,7 @@ export function get_exercise(slug) {
 			}
 
 			// ensure every code block for an exercise with multiple files has a `/// file:` annotation
-			const filtered = Object.values(solution).filter(item => {
+			const filtered = Object.values(solution).filter((item) => {
 				return item.type === 'file' && item.name.startsWith(scope.prefix);
 			});
 
@@ -208,7 +212,9 @@ export function get_exercise(slug) {
 			const all_files = { ...a, ...solution };
 			const filenames = new Set(
 				Object.keys(all_files)
-					.filter((filename) => filename.startsWith(scope.prefix) && all_files[filename].type === 'file')
+					.filter(
+						(filename) => filename.startsWith(scope.prefix) && all_files[filename].type === 'file'
+					)
 					.map((filename) => filename.slice(scope.prefix.length))
 			);
 
@@ -287,14 +293,14 @@ function walk(cwd, options = {}) {
 	 * @param {number} depth
 	 */
 	function walk_dir(dir, depth) {
-		const files = fs.readdirSync(path.join(cwd, dir));
+		const files = fs.readdirSync(path.join(cwd, dir)).map(posixify);
 
 		for (const basename of files) {
 			if (excluded.has(basename)) continue;
 
 			const name = dir + basename;
 
-			if (options.exclude?.some((exclude) => name.replace(/\\/g, '/').endsWith(exclude))) continue;
+			if (options.exclude?.some((exclude) => posixify(name).endsWith(exclude))) continue;
 
 			const resolved = path.join(cwd, name);
 			const stats = fs.statSync(resolved);

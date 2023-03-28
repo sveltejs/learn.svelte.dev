@@ -1,24 +1,24 @@
 <script>
-	import Output from './Output.svelte';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
+	import { SplitPane } from '@rich_harris/svelte-split-pane';
+	import { Icon } from '@sveltejs/site-kit/components';
+	import { reset } from './adapter.js';
+	import Editor from './Editor.svelte';
 	import ContextMenu from './filetree/ContextMenu.svelte';
 	import Filetree from './filetree/Filetree.svelte';
-	import { SplitPane } from '@rich_harris/svelte-split-pane';
-	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
-	import Editor from './Editor.svelte';
 	import ImageViewer from './ImageViewer.svelte';
+	import Output from './Output.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
 	import {
+		create_directories,
+		creating,
 		files,
 		reset_files,
-		selected_name,
 		selected_file,
-		solution,
-		create_directories,
-		creating
+		selected_name,
+		solution
 	} from './state.js';
-	import { reset } from './adapter.js';
 
 	export let data;
 
@@ -264,7 +264,7 @@
 	.container {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		height: calc(100dvh - var(--sk-nav-height));
 		/** necessary for innerWidth to be correct, so we can determine `mobile` */
 		width: 100vw;
 		overflow: hidden;

@@ -1,6 +1,7 @@
 {
 	"name": "learn.svelte.dev",
 	"version": "0.0.1",
+	"private": true,
 	"scripts": {
 		"dev": "vite dev",
 		"build": "node scripts/create-common-bundle && vite build",
@@ -15,7 +16,7 @@
 		"@playwright/test": "^1.31.2",
 		"@sveltejs/adapter-vercel": "2.3.1",
 		"@sveltejs/kit": "^1.13.0",
-		"@sveltejs/site-kit": "^3.2.2",
+		"@sveltejs/site-kit": "^3.3.6",
 		"@types/diff": "^5.0.2",
 		"@types/marked": "^4.0.8",
 		"@types/prismjs": "^1.26.0",
