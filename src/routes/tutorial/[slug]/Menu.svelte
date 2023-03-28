@@ -1,11 +1,10 @@
 <script>
 	import { page } from '$app/stores';
-	import { slide } from 'svelte/transition';
 	import arrow from '$lib/icons/arrow.svg';
-
-	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
+	import { slide } from 'svelte/transition';
 	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
+	import { Icon } from '@sveltejs/site-kit/components';
 	import { tick } from 'svelte';
 
 	/** @type {import('$lib/types').PartStub[]}*/
