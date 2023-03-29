@@ -137,7 +137,9 @@
 				extensions: [EditorState.readOnly.of(true)]
 			});
 
-		editor_view.setState(state);
+		if (state !== editor_view.state) {
+			editor_view.setState(state);
+		}
 	}
 
 	onMount(() => {
@@ -146,20 +148,23 @@
 			async dispatch(transaction) {
 				editor_view.update([transaction]);
 
-				if (transaction.docChanged && $selected_file) {
-					skip_reset = true;
-
-					// TODO do we even need to update `$files`? maintaining separate editor states is probably sufficient
-					update_file({
-						...$selected_file,
-						contents: editor_view.state.doc.toString()
-					});
+				if ($selected_file) {
 
 					// keep `editor_states` updated so that undo/redo history is preserved for files independently
 					editor_states.set($selected_file.name, editor_view.state);
 
-					await tick();
-					skip_reset = false;
+					if (transaction.docChanged) {
+						skip_reset = true;
+
+						// TODO do we even need to update `$files`? maintaining separate editor states is probably sufficient
+						update_file({
+							...$selected_file,
+							contents: editor_view.state.doc.toString()
+						});
+
+						await tick();
+						skip_reset = false;
+					}
 				}
 			}
 		});
