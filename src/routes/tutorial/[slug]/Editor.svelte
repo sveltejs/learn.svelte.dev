@@ -51,8 +51,9 @@
 
 	$: reset($files);
 
+	$: select_state($selected_name);
+
 	$: if (editor_view) {
-		select_state($selected_name);
 
 		if ($selected_name) {
 			const current_warnings = $warnings[$selected_name];
