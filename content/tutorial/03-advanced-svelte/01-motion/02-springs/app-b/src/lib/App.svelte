@@ -29,7 +29,7 @@
 		<input
 			bind:value={coords.stiffness}
 			type="range"
-			min="0"
+			min="0.01"
 			max="1"
 			step="0.01"
 		/>
@@ -40,7 +40,7 @@
 		<input
 			bind:value={coords.damping}
 			type="range"
-			min="0"
+			min="0.01"
 			max="1"
 			step="0.01"
 		/>
