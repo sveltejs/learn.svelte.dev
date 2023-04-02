@@ -2,10 +2,7 @@
 	let html = '<p>Write some text!</p>';
 </script>
 
-<div
-	contenteditable="true"
-	bind:innerHTML={html}
-/>
+<div bind:innerHTML={html} contenteditable />
 
 <pre>{html}</pre>
 
