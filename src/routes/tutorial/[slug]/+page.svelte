@@ -173,7 +173,7 @@
 			</section>
 
 			<section slot="b">
-				<SplitPane type="vertical" min="100px" max="50%" pos="50%">
+				<SplitPane type="vertical" min="100px" max="-300px" pos="50%">
 					<section slot="a">
 						<SplitPane
 							id="editor"
