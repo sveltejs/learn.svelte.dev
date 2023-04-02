@@ -68,8 +68,8 @@ We can get a lot more creative though. Let's make something truly gratuitous:
 					transform: scale(${eased}) rotate(${eased * 1080}deg);
 					color: hsl(
 						${Math.trunc(t * 360)},
-						${Math.min(100, 1000 - 1000 * t)}%,
-						${Math.min(50, 500 - 500 * t)}%
+						${Math.min(100, 1000 * (1 - t))}%,
+						${Math.min(50, 500 * (1 - t))}%
 					);`
 			}+++
 		};
