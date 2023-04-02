@@ -138,9 +138,10 @@ export async function create(base, error, progress, logs) {
 
 				// Don't delete the node_modules folder when switching from one exercise to another
 				// where, as this crashes the dev server.
-				['/node_modules', '/node_modules/.bin'].forEach((name) => current_stubs.delete(name));
+				const to_delete = Array.from(current_stubs.keys()).filter(
+					(s) => !s.startsWith('/node_modules')
+				);
 
-				const to_delete = Array.from(current_stubs.keys());
 				current_stubs = stubs_to_map(stubs);
 
 				// For some reason, server-ready is fired again when the vite dev server is restarted.
