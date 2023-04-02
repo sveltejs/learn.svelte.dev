@@ -33,19 +33,11 @@ For example, the `fade` transition generates a CSS animation somewhat like this:
 
 ```css
 /// no-file
-0% {
-	opacity: 0;
-}
-10% {
-	opacity: 0.1;
-}
-20% {
-	opacity: 0.2;
-}
+0% { opacity: 0 }
+10% { opacity: 0.1 }
+20% { opacity: 0.2 }
 /* ... */
-100% {
-	opacity: 1;
-}
+100% { opacity: 1 }
 ```
 
 We can get a lot more creative though. Let's make something truly gratuitous:
