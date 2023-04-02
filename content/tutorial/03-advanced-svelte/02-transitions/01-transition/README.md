@@ -18,5 +18,7 @@ First, import the `fade` function from `svelte/transition`...
 
 ```svelte
 /// file: App.svelte
-<p +++transition:fade+++>Fades in and out</p>
+<p +++transition:fade+++>
+	Fades in and out
+</p>
 ```

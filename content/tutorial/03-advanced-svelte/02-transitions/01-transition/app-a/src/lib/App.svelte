@@ -8,5 +8,7 @@
 </label>
 
 {#if visible}
-	<p>Fades in and out</p>
+	<p>
+		Fades in and out
+	</p>
 {/if}
