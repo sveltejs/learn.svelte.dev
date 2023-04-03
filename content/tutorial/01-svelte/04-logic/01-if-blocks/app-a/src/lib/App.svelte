@@ -1,15 +1,12 @@
 <script>
-	let user = { loggedIn: false };
+	let count = 0;
 
-	function toggle() {
-		user.loggedIn = !user.loggedIn;
+	function increment() {
+		count += 1;
 	}
 </script>
 
-<button on:click={toggle}>
-	Log out
-</button>
-
-<button on:click={toggle}>
-	Log in
+<button on:click={increment}>
+	Clicked {count}
+	{count === 1 ? 'time' : 'times'}
 </button>

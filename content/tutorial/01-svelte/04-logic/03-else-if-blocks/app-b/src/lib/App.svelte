@@ -1,13 +1,20 @@
 <script>
-	let x = 0;
+	let count = 0;
+
+	function increment() {
+		count += 1;
+	}
 </script>
 
-<button on:click={() => x += 1}>+1</button>
+<button on:click={increment}>
+	Clicked {count}
+	{count === 1 ? 'time' : 'times'}
+</button>
 
-{#if x > 10}
-	<p>{x} is greater than 10</p>
-{:else if x < 5}
-	<p>{x} is less than 5</p>
+{#if count > 10}
+	<p>{count} is greater than 10</p>
+{:else if count < 5}
+	<p>{count} is less than 5</p>
 {:else}
-	<p>{x} is between 5 and 10</p>
+	<p>{count} is between 5 and 10</p>
 {/if}
