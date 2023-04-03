@@ -13,4 +13,4 @@ One approach is to use `console.log(...)` inside your markup. If you want to pau
 <h1>Hello {user.firstname}!</h1>
 ```
 
-If you now open your devtools and start interacting with the `<input>` elements, you'll trigger the debugger as the value of `user` changes.
+If you now open your devtools and start interacting with the `<input>` elements, you'll trigger the debugger as the value of `user` changes. (Note that the call stack and local variables will be hidden in this tutorial, because of iframe security restrictions.)
