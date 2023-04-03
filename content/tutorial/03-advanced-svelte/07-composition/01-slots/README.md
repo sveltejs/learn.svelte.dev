@@ -16,7 +16,7 @@ Just like elements can have children...
 ```svelte
 /// file: Box.svelte
 <div class="box">
-	<slot></slot>
+	<slot />
 </div>
 ```
 
