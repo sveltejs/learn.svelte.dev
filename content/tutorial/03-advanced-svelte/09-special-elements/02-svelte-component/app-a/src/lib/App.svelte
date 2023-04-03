@@ -20,8 +20,6 @@
 
 {#if selected.color === 'red'}
 	<RedThing />
-{:else if selected.color === 'green'}
-	<GreenThing />
-{:else if selected.color === 'blue'}
-	<BlueThing />
+{:else}
+	<p>TODO others</p>
 {/if}
