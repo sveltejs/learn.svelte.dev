@@ -17,7 +17,7 @@
 		{#each files as file}
 			<li>
 				{#if file.files}
-					<!-- show folder -->
+					<span>TODO subfolders</span>
 				{:else}
 					<File {...file} />
 				{/if}
