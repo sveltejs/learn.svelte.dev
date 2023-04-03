@@ -4,7 +4,7 @@
 	const handleSelectionChange = (e) => selection = document.getSelection();
 </script>
 
-<svelte:body />
+<svelte:document />
 
-<p>Select this text to fire events</p>
+<h1>Select this text to fire events</h1>
 <p>Selection: {selection}</p>

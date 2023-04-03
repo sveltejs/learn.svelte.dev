@@ -6,5 +6,5 @@
 
 <svelte:document on:selectionchange={handleSelectionChange} />
 
-<p>Select this text to fire events</p>
+<h1>Select this text to fire events</h1>
 <p>Selection: {selection}</p>
