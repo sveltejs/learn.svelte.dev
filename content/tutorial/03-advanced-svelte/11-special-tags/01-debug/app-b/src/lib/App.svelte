@@ -5,8 +5,15 @@
 	};
 </script>
 
-<input bind:value={user.firstname} />
-<input bind:value={user.lastname} />
+<label>
+	<input bind:value={user.firstname} />
+	first name
+</label>
+
+<label>
+	<input bind:value={user.lastname} />
+	last name
+</label>
 
 {@debug user}
 
