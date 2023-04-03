@@ -5,6 +5,10 @@ import glob from 'tiny-glob/sync.js';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 
+if (!!process.env.VERCEL) {
+	execSync('git clean -d -f content/tutorial');
+}
+
 const cwd = 'content/tutorial/common';
 
 execSync('npm ci', { cwd });

@@ -30,6 +30,15 @@ function is_valid(dir) {
 }
 
 /**
+ * @param {string} part
+ * @param {string} chapter
+ * @param {string} dir
+ */
+function exists_readme(part, chapter, dir) {
+	return fs.existsSync(`content/tutorial/${part}/${chapter}/${dir}/README.md`);
+}
+
+/**
  * @returns {import('$lib/types').PartStub[]}
  */
 export function get_index() {
@@ -44,7 +53,7 @@ export function get_index() {
 			chapters: chapters.map((chapter) => {
 				const exercises = fs
 					.readdirSync(`content/tutorial/${part}/${chapter}`)
-					.filter(is_valid)
+					.filter((dir) => is_valid(dir) && exists_readme(part, chapter, dir))
 					.map(posixify);
 
 				return {
