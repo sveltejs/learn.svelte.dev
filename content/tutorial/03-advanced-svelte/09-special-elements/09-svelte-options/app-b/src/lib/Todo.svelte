@@ -1,4 +1,4 @@
-<svelte:options immutable={true} />
+<svelte:options immutable />
 
 <script>
 	import { afterUpdate } from 'svelte';
@@ -6,25 +6,16 @@
 
 	export let todo;
 
-	let button;
+	let label;
 
 	afterUpdate(() => {
-		flash(button);
+		flash(label);
 	});
 </script>
 
 <!-- the text will flash red whenever
      the `todo` object changes -->
-<button bind:this={button} type="button" on:click>
-	{todo.done ? '👍' : ''}
+<label bind:this={label}>
+	<input type="checkbox" checked={todo.done} on:change />
 	{todo.text}
-</button>
-
-<style>
-	button {
-		all: unset;
-		display: block;
-		cursor: pointer;
-		line-height: 1.5;
-	}
-</style>
+</label>
