@@ -7,7 +7,7 @@ The readonly `this` binding applies to every element (and component) and allows 
 ```svelte
 /// file: App.svelte
 <canvas
-	bind:this={canvas}
+	+++bind:this={canvas}+++
 	width={32}
 	height={32}
 ></canvas>
