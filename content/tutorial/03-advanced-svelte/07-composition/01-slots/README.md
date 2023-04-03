@@ -16,7 +16,7 @@ Just like elements can have children...
 ```svelte
 /// file: Box.svelte
 <div class="box">
-	<slot />
+	+++<slot />+++
 </div>
 ```
 
@@ -25,7 +25,7 @@ You can now put things in the box:
 ```svelte
 /// file: App.svelte
 <Box>
-	<h2>Hello!</h2>
-	<p>This is a box. It can contain anything.</p>
+	+++<h2>Hello!</h2>+++
+	+++<p>This is a box. It can contain anything.</p>+++
 </Box>
 ```
