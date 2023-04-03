@@ -2,24 +2,19 @@
 title: <svelte:element>
 ---
 
-Sometimes we don't know in advance what kind of DOM element to render. `<svelte:element>` comes in handy here. Instead of a sequence of `if` blocks...
+Similarly, we don't always know in advance what kind of DOM element to render. `<svelte:element>` comes in handy here. As with the [previous exercise](svelte-component), we can replace a long sequence of `if` blocks with a single dynamic element:
 
 ```svelte
 /// file: App.svelte
-{#if selected === 'h1'}
-	<h1>I'm a h1 tag</h1>
-{:else if selected === 'h3'}
-	<h3>I'm a h3 tag</h3>
-{:else if selected === 'p'}
-	<p>I'm a p tag</p>
-{/if}
-```
+<select bind:value={selected}>
+	{#each options as option}
+		<option value={option}>{option}</option>
+	{/each}
+</select>
 
-...we can have a single dynamic component:
-
-```svelte
-/// file: App.svelte
-<svelte:element this={selected}>I'm a {selected} tag</svelte:element>
++++<svelte:element this={selected}>
+	I'm a {selected} tag
+</svelte:element>+++
 ```
 
 The `this` value can be any string, or a falsy value — if it's falsy, no element is rendered.
