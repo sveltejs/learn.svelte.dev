@@ -10,7 +10,7 @@
 </select>
 
 {#if selected === 'h1'}
-	<h1>I'm a <code>&lt;h1&gt;</code></h1>
+	<h1>I'm a <code>&lt;h1&gt;</code> element</h1>
 {:else}
 	<p>TODO others</p>
 {/if}

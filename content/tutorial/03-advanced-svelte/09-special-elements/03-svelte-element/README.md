@@ -13,7 +13,7 @@ Similarly, we don't always know in advance what kind of DOM element to render. `
 </select>
 
 +++<svelte:element this={selected}>
-	I'm a {selected} tag
+	I'm a <code>&lt;{selected}&gt;</code> element
 </svelte:element>+++
 ```
 
