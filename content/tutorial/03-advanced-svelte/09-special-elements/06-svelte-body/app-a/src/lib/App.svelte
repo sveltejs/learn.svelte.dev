@@ -1,10 +1,7 @@
 <script>
-	let hereKitty = false;
+	import kitten from './kitten.png';
 
-	const handleMouseenter = () =>
-		(hereKitty = true);
-	const handleMouseleave = () =>
-		(hereKitty = false);
+	let hereKitty = false;
 </script>
 
 <svelte:body />
@@ -13,7 +10,7 @@
 <img
 	class:curious={hereKitty}
 	alt="Kitten wants to know what's going on"
-	src="/kitten.png"
+	src={kitten}
 />
 
 <style>
@@ -21,7 +18,7 @@
 		position: absolute;
 		left: 0;
 		bottom: -60px;
-		transform: translate(-80%, 0) rotate(-30deg);
+		transform: translate(-80%, 0) rotate(-15deg);
 		transform-origin: 100% 100%;
 		transition: transform 0.4s;
 	}
