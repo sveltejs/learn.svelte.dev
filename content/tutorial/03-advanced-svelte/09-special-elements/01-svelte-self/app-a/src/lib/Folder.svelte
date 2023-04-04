@@ -17,7 +17,7 @@
 		{#each files as file}
 			<li>
 				{#if file.files}
-					<!-- show folder -->
+					<span>TODO subfolders</span>
 				{:else}
 					<File {...file} />
 				{/if}
@@ -31,7 +31,7 @@
 		padding: 0 0 0 1.5em;
 		background: url(/tutorial/icons/folder.svg) 0 0.1em no-repeat;
 		background-size: 1em 1em;
-		color: #222;
+		color: var(--fg-1);
 		font-weight: bold;
 		cursor: pointer;
 		border: none;
@@ -46,7 +46,7 @@
 		padding: 0.2em 0 0 0.5em;
 		margin: 0 0 0 0.5em;
 		list-style: none;
-		border-left: 1px solid #eee;
+		border-left: 1px solid rgba(128, 128, 128, 0.4);
 	}
 
 	li {

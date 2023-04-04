@@ -1,5 +1,5 @@
 <script>
-	const options = ['h1', 'h3', 'p'];
+	const options = ['h1', 'h2', 'h3', 'p', 'marquee'];
 	let selected = options[0];
 </script>
 
@@ -10,9 +10,7 @@
 </select>
 
 {#if selected === 'h1'}
-	<h1>I'm a <code>&lt;h1&gt;</code></h1>
-{:else if selected === 'h3'}
-	<h3>I'm a <code>&lt;h3&gt;</code></h3>
-{:else if selected === 'p'}
-	<p>I'm a <code>&lt;p&gt;</code></p>
+	<h1>I'm a <code>&lt;h1&gt;</code> element</h1>
+{:else}
+	<p>TODO others</p>
 {/if}

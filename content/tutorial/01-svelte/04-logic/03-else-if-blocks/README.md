@@ -6,11 +6,11 @@ Multiple conditions can be 'chained' together with `else if`:
 
 ```svelte
 /// file: App.svelte
-{#if x > 10}
-	<p>{x} is greater than 10</p>
-{:+++else if+++ x < 5}
-	<p>{x} is less than 5</p>
+{#if count > 10}
+	<p>{count} is greater than 10</p>
++++{:else if count < 5}
+	<p>{count} is less than 5</p>+++
 {:else}
-	<p>{x} is between 5 and 10</p>
+	<p>{count} is between +++5+++ and 10</p>
 {/if}
 ```

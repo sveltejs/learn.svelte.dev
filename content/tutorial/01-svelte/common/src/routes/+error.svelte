@@ -15,8 +15,6 @@
 			>{$page.status}</a
 		>
 	</p>
-
-	<pre>{$page.error?.stack || ''}</pre>
 {/if}
 
 <style>
@@ -24,15 +22,5 @@
 		font-weight: 200;
 		font-size: 2rem;
 		margin: 0 0 0.5em 0;
-	}
-
-	pre {
-		font-family: Menlo, Monaco, monospace;
-		font-size: 13px;
-		background: hsl(0, 100%, 95%);
-		padding: 1rem;
-		overflow-x: auto;
-		border-radius: 5px;
-		color: hsl(0, 100%, 30%);
 	}
 </style>

@@ -1,19 +1,16 @@
 <script>
-	let user = { loggedIn: false };
+	let count = 0;
 
-	function toggle() {
-		user.loggedIn = !user.loggedIn;
+	function increment() {
+		count += 1;
 	}
 </script>
 
-{#if user.loggedIn}
-	<button on:click={toggle}>
-		Log out
-	</button>
-{/if}
+<button on:click={increment}>
+	Clicked {count}
+	{count === 1 ? 'time' : 'times'}
+</button>
 
-{#if !user.loggedIn}
-	<button on:click={toggle}>
-		Log in
-	</button>
+{#if count > 10}
+	<p>{count} is greater than 10</p>
 {/if}

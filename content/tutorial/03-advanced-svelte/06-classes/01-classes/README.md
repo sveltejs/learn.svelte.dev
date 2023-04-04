@@ -17,7 +17,7 @@ This is such a common pattern in UI development that Svelte includes a special d
 ```svelte
 /// file: App.svelte
 <button
-	class:selected={current === 'foo'}
+	+++class:selected={current === 'foo'}+++
 	on:click={() => current = 'foo'}
 >foo</button>
 ```

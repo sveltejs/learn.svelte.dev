@@ -1,35 +1,23 @@
 <script>
-	let photos = [];
+	import { paint } from './gradient.js';
 </script>
 
-<h1>Photo album</h1>
-
-<div class="photos">
-	{#each photos as photo}
-		<figure>
-			<img
-				src={photo.thumbnailUrl}
-				alt={photo.title}
-			/>
-			<figcaption>{photo.title}</figcaption>
-		</figure>
-	{:else}
-		<!-- this block renders when photos.length === 0 -->
-		<p>loading...</p>
-	{/each}
-</div>
+<canvas
+	width={32}
+	height={32}
+/>
 
 <style>
-	.photos {
+	canvas {
+		position: fixed;
+		left: 0;
+		top: 0;
 		width: 100%;
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		grid-gap: 8px;
-	}
-
-	figure,
-	img {
-		width: 100%;
-		margin: 0;
+		height: 100%;
+		background-color: #666;
+		mask: url(./svelte-logo-mask.svg) 50% 50% no-repeat;
+		mask-size: 60vmin;
+		-webkit-mask: url(./svelte-logo-mask.svg) 50% 50% no-repeat;
+		-webkit-mask-size: 60vmin;
 	}
 </style>

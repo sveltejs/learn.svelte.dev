@@ -8,11 +8,11 @@ We'll use the `immutable` option as an example. In this app, the `<Todo>` compon
 
 We can optimise this by telling the `<Todo>` component to expect _immutable_ data. This means that we're promising never to _mutate_ the `todo` prop, but will instead create new todo objects whenever things change.
 
-Add this to the top of the `Todo.svelte` file:
+Add this to the top of `Todo.svelte`:
 
 ```svelte
 /// file: Todo.svelte
-<svelte:options immutable={true}/>
+<svelte:options immutable={true} />
 ```
 
 > You can shorten this to `<svelte:options immutable/>` if you prefer.

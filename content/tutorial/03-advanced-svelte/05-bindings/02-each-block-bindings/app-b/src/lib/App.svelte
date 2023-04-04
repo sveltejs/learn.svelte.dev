@@ -1,9 +1,6 @@
 <script>
 	let todos = [
-		{
-			done: false,
-			text: 'finish Svelte tutorial'
-		},
+		{ done: false, text: 'finish Svelte tutorial' },
 		{ done: false, text: 'build an app' },
 		{ done: false, text: 'world domination' }
 	];
@@ -19,9 +16,7 @@
 		todos = todos.filter((t) => !t.done);
 	}
 
-	$: remaining = todos.filter(
-		(t) => !t.done
-	).length;
+	$: remaining = todos.filter((t) => !t.done).length;
 </script>
 
 <h1>Todos</h1>
@@ -42,7 +37,9 @@
 
 <p>{remaining} remaining</p>
 
-<button on:click={add}> Add new </button>
+<button on:click={add}>
+	Add new
+</button>
 
 <button on:click={clear}>
 	Clear completed

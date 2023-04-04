@@ -6,12 +6,12 @@ Every block-level element has `clientWidth`, `clientHeight`, `offsetWidth` and `
 
 ```svelte
 /// file: App.svelte
-<div bind:clientWidth={w} bind:clientHeight={h}>
+<div +++bind:clientWidth={w} bind:clientHeight={h}+++>
 	<span style="font-size: {size}px">{text}</span>
 </div>
 ```
 
-These bindings are readonly — changing the values of `w` and `h` won't have any effect.
+These bindings are readonly — changing the values of `w` and `h` won't have any effect on the element.
 
 > Elements are measured using a technique similar to [this one](http://www.backalleycoder.com/2013/03/18/cross-browser-event-based-element-resize-detection/). There is some overhead involved, so it's not recommended to use this for large numbers of elements.
 >
