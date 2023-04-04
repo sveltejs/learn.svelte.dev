@@ -34,6 +34,8 @@ Then, add a function that runs when the component mounts:
 </script>
 ```
 
+> In a [later exercise](bind-this), we'll learn how to get an element reference without using `document.querySelector`.
+
 So far so good — you should see gently undulating colours in the shape of the Svelte logo. But there's one problem — the loop will continue even after the component has been destroyed. To fix that, we need to return a cleanup function from `onMount`:
 
 ```js
