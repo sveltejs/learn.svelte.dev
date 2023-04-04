@@ -34,13 +34,6 @@
 		};
 	});
 
-	afterNavigate(() => {
-		clearTimeout(timeout);
-	});
-
-	/** @type {any} */
-	let timeout;
-
 	/** @param {MessageEvent} e */
 	async function handle_message(e) {
 		if (e.origin !== $base) return;
@@ -48,20 +41,7 @@
 		if (paused) return;
 
 		if (e.data.type === 'ping') {
-			path = e.data.data.path ?? path;
 			loading = false;
-
-			clearTimeout(timeout);
-			timeout = setTimeout(() => {
-				if (dev && !iframe) return;
-
-				// we lost contact, refresh the page
-				loading = true;
-				set_iframe_src($base + path);
-				loading = false;
-			}, 1000);
-		} else if (e.data.type === 'ping-pause') {
-			clearTimeout(timeout);
 		} else if (e.data.type === 'warnings') {
 			warnings.update(($warnings) => ({
 				...$warnings,
