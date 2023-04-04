@@ -1,8 +1,10 @@
 <script>
+	import { onDestroy } from 'svelte';
 
 	export let callback;
 	const interval = setInterval(callback, 1000);
 
+	onDestroy(() => clearInterval(interval));
 </script>
 
 <p>The Timer component opened...</p>
