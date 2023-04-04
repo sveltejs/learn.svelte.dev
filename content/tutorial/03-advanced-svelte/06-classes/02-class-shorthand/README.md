@@ -6,14 +6,20 @@ Often, the name of the class will be the same as the name of the value it depend
 
 ```svelte
 /// no-file
-<div class:big={big}>
+<button
+	class="card"
+	class:flipped={flipped}
+	on:click={() => flipped = !flipped}
+>
 ```
 
 In those cases we can use a shorthand form:
 
 ```svelte
 /// file: App.svelte
-<div +++class:big+++>
-	some {big ? 'big' : 'small'} text
-</div>
+<button
+	class="card"
+	+++class:flipped+++
+	on:click={() => flipped = !flipped}
+>
 ```
