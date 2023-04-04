@@ -23,7 +23,7 @@ Then, add a function that runs when the component mounts:
 	import { paint } from './gradient.js';
 
 +++	onMount(() => {
-		const canvas = document.querySelector('canvas')
+		const canvas = document.querySelector('canvas');
 		const context = canvas.getContext('2d');+++
 
 +++		requestAnimationFrame(function loop(t) {
