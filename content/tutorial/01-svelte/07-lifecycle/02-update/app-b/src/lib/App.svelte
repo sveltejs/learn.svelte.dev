@@ -100,7 +100,6 @@
 		flex: 1;
 		font-size: 1.4em;
 		text-align: center;
-		border-bottom: 1px solid var(--bg-1);
 	}
 
 	.chat {
@@ -125,9 +124,9 @@
 	}
 
 	.eliza span {
-		background-color: #eee;
+		background-color: var(--bg-1);
 		border-radius: 1em 1em 1em 0;
-		color: black;
+		color: var(--fg-1);
 	}
 
 	.user span {
@@ -143,7 +142,7 @@
 
 	@media (min-width: 400px) {
 		.phone {
-			background: var(--bg-1);
+			background: var(--bg-2);
 			position: relative;
 			font-size: min(2.5vh, 1rem);
 			width: auto;
@@ -152,7 +151,7 @@
 			border: 0.2em solid #222;
 			border-radius: 1em;
 			box-sizing: border-box;
-			filter: drop-shadow(1px 1px 0px var(--fg-1)) drop-shadow(2px 2px 0px var(--fg-1)) drop-shadow(3px 3px 0px var(--fg-1))
+			filter: drop-shadow(1px 1px 0px #222) drop-shadow(2px 2px 0px #222) drop-shadow(3px 3px 0px #222)
 		}
 
 		.phone::after {
