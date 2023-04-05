@@ -184,6 +184,29 @@
 				border-radius: var(--border-radius);
 			}
 
+			ul.todos {
+				padding: 0;
+			}
+
+			ul.todos li:not(:has(> form)),
+			ul.todos li form {
+				position: relative;
+				display: flex;
+				align-items: center;
+				padding-left: 1em;
+				height: 3em;
+				margin: 0 0 0.5em 0;
+				gap: 0.5em;
+				border-radius: 5px;
+				user-select: none;
+				background: white;
+				filter: drop-shadow(2px 3px 6px rgba(0,0,0,0.1));
+			}
+
+			ul.todos .done {
+
+			}
+
 			@media (prefers-color-scheme: dark) {
 				body {
 					--bg-1: hsl(0, 0%, 18%);

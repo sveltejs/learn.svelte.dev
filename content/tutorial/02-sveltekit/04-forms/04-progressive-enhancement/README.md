@@ -52,5 +52,5 @@ Now that we're updating the page rather than reloading it, we can get fancy with
 
 ```svelte
 /// file: src/routes/+page.svelte
-<li class="todo" +++in:fly={{ y: 20 }} out:slide+++>...</li>
+<li +++in:fly={{ y: 20 }} out:slide+++>...</li>
 ```

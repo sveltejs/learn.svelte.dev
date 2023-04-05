@@ -52,24 +52,38 @@ When we create or delete items, it now takes a full second before the UI updates
 	}}+++
 >
 	<label>
-		+++{creating? 'saving...' : 'add a todo:'}+++
+		add a todo:
 		<input
 			+++disabled={creating}+++
 			name="description"
 			value={form?.description ?? ''}
+			autocomplete="off"
 			required
 		/>
 	</label>
 </form>
 ```
 
+We can then show a message while we're saving data:
+
+```svelte
+/// file: App.svelte
+<ul class="todos">
+	<!-- ... -->
+</ul>
+
++++{#if creating}
+	<span class="saving">saving...</span>
+{/if}+++
+```
+
 In the case of deletions, we don't really need to wait for the server to validate anything — we can just update the UI immediately:
 
 ```svelte
 /// file: src/routes/+page.svelte
-<ul>
+<ul class="todos">
 	{#each +++data.todos.filter((todo) => !deleting.includes(todo.id))+++ as todo (todo.id)}
-		<li class="todo" in:fly={{ y: 20 }} out:slide>
+		<li in:fly={{ y: 20 }} out:slide>
 			<form
 				method="POST"
 				action="?/delete"

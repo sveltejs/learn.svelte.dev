@@ -13,7 +13,10 @@ Let's build a todo app. We've already got an in-memory database set up in `src/l
 +++<form method="POST">
 	<label>
 		add a todo:
-		<input name="description" />
+		<input
+			name="description"
+			autocomplete="off"
+		/>
 	</label>
 </form>+++
 
