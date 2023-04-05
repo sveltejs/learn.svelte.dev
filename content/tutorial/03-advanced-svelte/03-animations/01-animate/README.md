@@ -15,15 +15,16 @@ First, import the `flip` function — flip stands for ['First, Last, Invert, Pla
 	import { send, receive } from './transition.js';
 
 	export let store;
-	export let filter;
+	export let done;
 </script>
 ```
 
-Then add it to the `<label>` elements:
+Then add it to the `<li>` elements:
 
 ```svelte
 /// file: TodoList.svelte
-<label
+<li
+	class:done
 	in:receive={{ key: todo.id }}
 	out:send={{ key: todo.id }}
 	+++animate:flip+++
@@ -34,7 +35,8 @@ The movement is a little slow in this case, so we can add a `duration` parameter
 
 ```svelte
 /// file: TodoList.svelte
-<label
+<li
+	class:done
 	in:receive={{ key: todo.id }}
 	out:send={{ key: todo.id }}
 	animate:flip+++={{ duration: 200 }}+++

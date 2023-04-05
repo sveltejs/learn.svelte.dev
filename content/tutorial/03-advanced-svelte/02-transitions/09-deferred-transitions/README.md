@@ -16,15 +16,16 @@ Open `TodoList.svelte`. First, import the `send` and `receive` transitions from 
 	+++import { send, receive } from './transition.js';+++
 
 	export let store;
-	export let filter;
+	export let done;
 </script>
 ```
 
-Then, add them to the `<label>` element, using the `todo.id` property as a key to match the elements:
+Then, add them to the `<li>` element, using the `todo.id` property as a key to match the elements:
 
 ```svelte
 /// file: TodoList.svelte
-<label
+<li
+	class:done
 	+++in:receive={{ key: todo.id }}+++
 	+++out:send={{ key: todo.id }}+++
 >
