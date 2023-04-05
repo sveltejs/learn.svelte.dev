@@ -105,6 +105,15 @@ function ping() {
 	);
 }
 
+let pre_url = location.href;
+const url_observer = new MutationObserver(() => {
+	if (location.href !== pre_url) {
+		pre_url = location.href;
+		ping();
+	}
+});
+url_observer.observe(document, { subtree: true, childList: true, attributes: true });
+
 ping();
 
 if (import.meta.hot) {

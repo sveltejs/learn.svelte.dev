@@ -41,6 +41,7 @@
 		if (paused) return;
 
 		if (e.data.type === 'ping') {
+			path = e.data.data.path ?? path;
 			loading = false;
 		} else if (e.data.type === 'warnings') {
 			warnings.update(($warnings) => ({
