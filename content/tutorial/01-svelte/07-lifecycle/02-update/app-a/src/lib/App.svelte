@@ -27,8 +27,6 @@
 
 	async function handleKeydown(event) {
 		if (event.key === 'Enter' && event.target.value) {
-			event.target.value = '';
-
 			const comment = {
 				author: 'user',
 				text: event.target.value
@@ -39,6 +37,7 @@
 				text: eliza.transform(comment.text)
 			};
 
+			event.target.value = '';
 			comments = [...comments, comment];
 
 			await pause(200 * (1 + Math.random()));
