@@ -14,7 +14,10 @@ let div;
 +++let autoscroll = false;+++
 
 beforeUpdate(() => {
-	+++autoscroll = div && div.offsetHeight + div.scrollTop > div.scrollHeight - 20;+++
++++	if (div) {
+		const scrollableDistance = div.scrollHeight - div.offsetHeight;
+		autoscroll = div.scrollTop > scrollableDistance - 20;
+	}+++
 });
 
 afterUpdate(() => {
