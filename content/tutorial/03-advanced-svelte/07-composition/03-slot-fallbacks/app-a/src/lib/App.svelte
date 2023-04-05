@@ -11,7 +11,7 @@
 
 		<span slot="company">
 			Pierce &amp; Pierce
-			<small>Mergers and Acquisitions</small>
+			<small>Mergers and Aquisitions</small>
 		</span>
 		
 		<span slot="address">358 Exchange Place, New York, N.Y. 100099 fax 212 555 6390 telex 10 4534</span>
