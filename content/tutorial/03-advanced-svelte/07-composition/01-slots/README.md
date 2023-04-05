@@ -11,21 +11,21 @@ Just like elements can have children...
 </div>
 ```
 
-...so can components. Before a component can accept children, though, it needs to know where to put them. We do this with the `<slot>` element. Put this inside `Box.svelte`:
+...so can components. Before a component can accept children, though, it needs to know where to put them. We do this with the `<slot>` element. Put this inside `Card.svelte`:
 
 ```svelte
-/// file: Box.svelte
-<div class="box">
+/// file: Card.svelte
+<div class="card ">
 	+++<slot />+++
 </div>
 ```
 
-You can now put things in the box:
+You can now put things on the card:
 
 ```svelte
 /// file: App.svelte
-<Box>
-	+++<h2>Hello!</h2>+++
-	+++<p>This is a box. It can contain anything.</p>+++
-</Box>
+<Card>
+	+++<span>Patrick BATEMAN</span>+++
+	+++<span>Vice President</span>+++
+</Card>
 ```

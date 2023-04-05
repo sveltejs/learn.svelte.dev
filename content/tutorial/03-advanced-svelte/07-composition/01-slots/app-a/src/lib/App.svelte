@@ -1,7 +1,18 @@
 <script>
-	import Box from './Box.svelte';
+	import Card from './Card.svelte';
 </script>
 
-<Box>
-	<!-- put content here -->
-</Box>
+<main>
+	<Card>
+		<!-- content goes here -->
+	</Card>
+</main>
+
+<style>
+	main {
+		display: grid;
+		place-items: center;
+		height: 100%;
+		background: url(./wood.svg);
+	}
+</style>
