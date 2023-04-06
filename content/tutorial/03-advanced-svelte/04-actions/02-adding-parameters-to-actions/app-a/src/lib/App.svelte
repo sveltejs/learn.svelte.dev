@@ -3,20 +3,21 @@
 	import 'tippy.js/dist/tippy.css';
 	import 'tippy.js/themes/material.css';
 
-	function tooltip(node, params) {
-		const tooltip = tippy(node, params);
+	let content = 'Hello!';
+
+	function tooltip(node) {
+		const tooltip = tippy(node);
 
 		return {
-			update: (params) => {
-				tooltip.setProps(params);
-			},
-			destroy: () => {
+			destroy() {
 				tooltip.destroy();
 			}
 		};
 	}
 </script>
 
-<button use:tooltip={{ content: 'Hello!', theme: 'material' }}>
+<input bind:value={content} />
+
+<button use:tooltip>
 	Hover me
 </button>
