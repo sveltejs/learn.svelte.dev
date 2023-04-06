@@ -47,34 +47,43 @@ window.addEventListener('message', async (e) => {
 	}
 });
 
+let can_focus = false;
+
+window.addEventListener('pointerdown', (e) => {
+	can_focus = true;
+});
+
+window.addEventListener('pointerup', (e) => {
+	can_focus = false;
+});
+
+window.addEventListener('keydown', (e) => {
+	can_focus = true;
+});
+
+window.addEventListener('keyup', (e) => {
+	can_focus = false;
+});
+
 /**
  * The iframe sometimes takes focus control in ways we can't prevent
- * while the editor is focussed. Refocus the editor in these cases.
+ * while the editor is focused. Refocus the editor in these cases.
  */
 window.addEventListener('focusin', (e) => {
-	/**
-	 * This condition would only be `true` if the iframe took focus when loaded,
-	 * and `false` in other cases, for example:
-	 * - navigation inside the iframe - for example, if you click a link inside
-	 *   the iframe, the `focusin` event will be fired twice, the first time
-	 *   `e.target` will be its anchor, the second time `e.target` will be body,
-	 *   and `e.relatedTarget` will be its anchor (if `csr = false` in only the
-	 *   first `focusin` event will be fired)
-	 * - an element such as input gets focus (either from inside or outside the
-	 *   iframe) - for example, if an input inside the iframe gets focus,
-	 *   `e.target` will be the input.
-	 */
-	if (
-		e.target.tagName === 'BODY' &&
-		!e.target.contains(e.relatedTarget)
-	) {
-		parent.postMessage(
-			{
-				type: 'iframe_took_focus'
-			},
-			'*'
-		);
-	}
+	// if focusin happened as a result of a mouse/keyboard event, allow it
+	if (can_focus) return;
+
+	// if `e.target` is the `<body>` and there's a `relatedTarget`,
+	// assume the focusin was the result of a user navigation — allow it
+	if (e.target.tagName === 'BODY' && e.relatedTarget) return;
+
+	// otherwise, broadcast an event that causes the editor to reclaim focus
+	parent.postMessage(
+		{
+			type: 'iframe_took_focus'
+		},
+		'*'
+	);
 });
 
 window.addEventListener('click', (e) => {
