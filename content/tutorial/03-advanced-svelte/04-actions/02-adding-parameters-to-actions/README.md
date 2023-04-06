@@ -4,50 +4,46 @@ title: Adding parameters
 
 Like transitions and animations, an action can take an argument, which the action function will be called with alongside the element it belongs to.
 
-Here, we're using a `longpress` action that fires an event with the same name whenever the user presses and holds the button for a given duration. Right now, if you switch over to `longpress.js`, you'll see it's hardcoded to 500ms.
+In this exercise, we want to add a tooltip to the `<button>` using the [`Tippy.js`](https://atomiks.github.io/tippyjs/) library. The action is already wired up with `use:tooltip`, but if you hover over the button (or focus it with the keyboard) the tooltip contains no content.
 
-We can change the action function to accept a `duration` as a second argument, and pass that `duration` to the `setTimeout` call:
+First, the action needs to accept some options and pass them to Tippy:
 
 ```js
-/// file: longpress.js
-export function longpress(node, +++duration+++) {
-	// ...
+/// file: App.svelte
+function tooltip(node, +++options+++) {
+	const tooltip = tippy(node, +++options+++);
 
-	const handleMousedown = () => {
-		timer = setTimeout(() => {
-			node.dispatchEvent(new CustomEvent('longpress'));
-		}, +++duration+++);
+	return {
+		destroy() {
+			tooltip.destroy();
+		}
 	};
-
-	// ...
 }
 ```
 
-Back in `App.svelte`, we can pass the `duration` value to the action:
+Then, we need to pass some options into the action:
 
 ```svelte
 /// file: App.svelte
-<button
-	use:longpress+++={duration}+++
-	on:longpress={() => (pressed = true)}
-	on:mouseenter={() => (pressed = false)}
->
-	press and hold
+<button use:tooltip+++={{ content, theme: 'material' }}+++>
+	Hover me
 </button>
 ```
 
-This _almost_ works — the event now only fires after 2 seconds. But if you slide the duration down, it will still take two seconds.
-
-To change that, we can add an `update` method in `longpress.js`. This will be called whenever the argument changes:
+The tooltip now works — almost. If we change the text in the `<input>`, the tooltip will not reflect the new content. We can fix that by adding an `update` method to the returned object.
 
 ```js
-/// file: longpress.js
-return {
-	update(newDuration) {
-		duration = newDuration;
-	},
-	// ...
-};
-```
+/// file: App.svelte
+function tooltip(node, options) {
+	const tooltip = tippy(node, options);
 
-> If you need to pass multiple arguments to an action, combine them into a single object, as in `use:longpress={{duration, spiciness}}`
+	return {
++++		update(options) {
+			tooltip.setProps(options);
+		},+++
+		destroy() {
+			tooltip.destroy();
+		}
+	};
+}
+```

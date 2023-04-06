@@ -1,30 +1,26 @@
 <script>
-	import { longpress } from './longpress.js';
+	import tippy from 'tippy.js';
+	import 'tippy.js/dist/tippy.css';
+	import 'tippy.js/themes/material.css';
 
-	let pressed = false;
-	let duration = 2000;
+	let content = 'Hello!';
+
+	function tooltip(node, options) {
+		const tooltip = tippy(node, options);
+
+		return {
+			update(options) {
+				tooltip.setProps(options);
+			},
+			destroy() {
+				tooltip.destroy();
+			}
+		};
+	}
 </script>
 
-<label>
-	<input
-		type="range"
-		bind:value={duration}
-		max={2000}
-		step={100}
-	/>
-	{duration}ms
-</label>
+<input bind:value={content} />
 
-<button
-	use:longpress={duration}
-	on:longpress={() => (pressed = true)}
-	on:mouseenter={() => (pressed = false)}
->
-	press and hold
+<button use:tooltip={{ content, theme: 'material' }}>
+	Hover me
 </button>
-
-{#if pressed}
-	<p>
-		congratulations, you pressed and held for {duration}ms
-	</p>
-{/if}
