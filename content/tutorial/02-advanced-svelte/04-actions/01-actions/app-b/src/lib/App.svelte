@@ -44,16 +44,15 @@
 		</div>
 	{/if}
 
-	<button class="show-menu" on:click={() => showMenu = !showMenu}>
-		{showMenu ? 'close' : 'menu'}
-	</button>
+	<div class="controls">
+		<button class="show-menu" on:click={() => showMenu = !showMenu}>
+			{showMenu ? 'close' : 'menu'}
+		</button>
+	</div>
 </div>
 
 <style>
 	.container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
 		position: fixed;
 		left: 0;
 		top: 0;
@@ -61,10 +60,14 @@
 		height: 100%;
 	}
 
-	.show-menu {
+	.controls {
 		position: absolute;
-		left: 1em;
-		top: 1em;
+		left: 0;
+		top: 0;
+		padding: 1em;
+	}
+
+	.show-menu {
 		width: 5em;
 	}
 
