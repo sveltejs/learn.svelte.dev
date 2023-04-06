@@ -81,7 +81,7 @@
 <Chrome
 	{path}
 	{loading}
-	href={$base + path}
+	href={$base && ($base + path)}
 	on:refresh={() => {
 		set_iframe_src($base + path);
 	}}
