@@ -29,7 +29,7 @@ It's now possible for the components to 'talk' to each other without any state m
 
 		if (audio !== current) {
 			current?.pause();
-			current = e.currentTarget;
+			current = audio;
 		}
 	}}+++
 	on:ended={() => {

@@ -32,7 +32,7 @@
 
 			if (audio !== current) {
 				current?.pause();
-				current = e.currentTarget;
+				current = audio;
 			}
 		}}
 		on:ended={() => {
