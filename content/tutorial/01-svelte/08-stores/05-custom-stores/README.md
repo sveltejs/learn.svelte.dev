@@ -18,4 +18,6 @@ function createCount() {
 		reset: () => +++set(0)+++
 	};
 }
+
++++export const count = createCount();+++
 ```
