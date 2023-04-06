@@ -7,21 +7,21 @@
 
 <div>
 	<button
-		aria-current="{selected === 'red' ? 'true' : undefined}"
+		aria-current={selected === 'red'}
 		aria-label="red"
 		style="background: red"
 		on:click={() => selected = 'red'}
 	></button>
 
 	<button
-		aria-current="{selected === 'orange' ? 'true' : undefined}"
+		aria-current={selected === 'orange'}
 		aria-label="orange"
 		style="background: orange"
 		on:click={() => selected = 'orange'}
 	></button>
 
 	<button
-		aria-current="{selected === 'yellow' ? 'true' : undefined}"
+		aria-current={selected === 'yellow'}
 		aria-label="yellow"
 		style="background: yellow"
 		on:click={() => selected = 'yellow'}
