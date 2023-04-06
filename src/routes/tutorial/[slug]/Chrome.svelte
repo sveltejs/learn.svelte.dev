@@ -9,6 +9,9 @@
 	/** @type {boolean} */
 	export let loading;
 
+	/** @type {string} */
+	export let href;
+
 	const dispatch = createEventDispatcher();
 </script>
 
@@ -26,6 +29,10 @@
 		}}
 	/>
 
+	{#if !loading}
+		<a {href} target="_blank">Open in New Tab</a>
+	{/if}
+
 	<button
 		disabled={loading}
 		on:click={() => dispatch('toggle_terminal')}
@@ -41,6 +48,14 @@
 		height: 4rem;
 		display: flex;
 		border-top: 1px solid var(--sk-back-4);
+	}
+
+	.chrome a {
+		color: var(--sk-text-1);
+		padding: 0.8rem;
+		box-sizing: border-box;
+		background: var(--sk-back-3);
+		user-select: none;
 	}
 
 	.chrome button {
