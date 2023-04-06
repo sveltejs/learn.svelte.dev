@@ -54,14 +54,4 @@
 		font-size: 2em;
 		font-weight: 200;
 	}
-
-	.todo {
-		--label: #222;
-		--filter: drop-shadow(2px 3px 6px rgba(0,0,0,0.1));
-	}
-
-	.done {
-		--label: #999;
-		--filter: none;
-	}
 </style>

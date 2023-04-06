@@ -34,10 +34,6 @@
 		display: flex;
 	}
 
-	.done {
-		opacity: 0.5;
-	}
-
 	span {
 		flex: 1;
 	}

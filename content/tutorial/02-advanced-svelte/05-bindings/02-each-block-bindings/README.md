@@ -7,17 +7,18 @@ You can even bind to properties inside an `each` block.
 ```svelte
 /// file: App.svelte
 {#each todos as todo}
-	<div class:done={todo.done}>
+	<li class:done={todo.done}>
 		<input
 			type="checkbox"
 			+++bind:+++checked={todo.done}
 		/>
 
 		<input
+			type="text"
 			placeholder="What needs to be done?"
 			+++bind:+++value={todo.text}
 		/>
-	</div>
+	</li>
 {/each}
 ```
 
