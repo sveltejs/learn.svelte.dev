@@ -8,7 +8,7 @@
 <div>
 	{#each colors as color, i}
 		<button
-			aria-current="{selected === color ? 'true' : undefined}"
+			aria-current={selected === color}
 			aria-label={color}
 			style="background: {color}"
 			on:click={() => selected = color}

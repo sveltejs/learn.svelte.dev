@@ -9,51 +9,56 @@ Actions are essentially element-level lifecycle functions. They're useful for th
 - tooltips
 - adding custom event handlers
 
-In this app, we want to make the orange modal close when the user clicks outside it. It has an event handler for the `outclick` event, but it isn't a native DOM event. We have to dispatch it ourselves. First, import the `clickOutside` function...
+In this app, you can scribble on the `<canvas>`, and change colours and brush size via the menu. But if you open the menu and cycle through the options with the Tab key, you'll soon find that the focus isn't _trapped_ inside the modal.
+
+We can fix that with an action. Import `trapFocus` from `actions.js`...
 
 ```svelte
 /// file: App.svelte
 <script>
-	+++import { clickOutside } from './actions.js';+++
+	import Canvas from './Canvas.svelte';
+	+++import { trapFocus } from './actions.js';+++
 
-	let showModal = true;
+	const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'white', 'black'];
+	let selected = colors[0];
+	let size = 10;
+
+	let showMenu = true;
 </script>
 ```
 
-...then use it with the element:
+...then add it to the menu with the `use:` directive:
 
 ```svelte
 /// file: App.svelte
-<div
-	class="box"
-	+++use:clickOutside+++
-	on:outclick={() => (showModal = false)}
->
-	Click outside me!
-</div>
+<div class="menu" +++use:trapFocus+++>
 ```
 
-Open `actions.js`. Like transition functions, an action function receives a `node` (which is the element that the action is applied to) and some optional parameters, and returns an action object. That object can have a `destroy` function, which is called when the element is unmounted.
+Let's take a look at the `trapFocus` function in `actions.js`. An action function is called with a `node` — the `<div class="menu">` in our case — when the node is mounted to the DOM, and can return an action object with a `destroy` method.
 
-We want to fire the `outclick` event when the user clicks outside the orange box. One possible implementation looks like this:
+First, we need to add an event listener that intercepts Tab key presses:
 
 ```js
 /// file: actions.js
-export function clickOutside(node) {
-	const handleClick = (event) => {
-		if (!node.contains(event.target)) {
-			node.dispatchEvent(new CustomEvent('outclick'));
-		}
-	};
+focusable()[0]?.focus();
 
-	document.addEventListener('click', handleClick, true);
-
-	return {
-		destroy() {
-			document.removeEventListener('click', handleClick, true);
-		}
-	};
-}
++++node.addEventListener('keydown', handleKeydown);+++
 ```
 
-Update the `clickOutside` function, click the button to show the modal and then click outside it to close it.
+Second, we need to do some cleanup when the node is unmounted — removing the event listener, and restoring focus to where it was before the element mounted:
+
+```js
+/// file: actions.js
+focusable()[0]?.focus();
+
+node.addEventListener('keydown', handleKeydown);
+
++++return {
+	destroy() {
+		node.removeEventListener('keydown', handleKeydown);
+		previous?.focus();
+	}
+};+++
+```
+
+Now, when you open the menu, you can cycle through the options with the Tab key.
