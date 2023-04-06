@@ -109,8 +109,23 @@ export function get_exercise(slug) {
 				...walk(`content/tutorial/${part_dir}/common`)
 			};
 
+			const remove_files = [];
+
 			for (const dir of chain) {
-				Object.assign(a, walk(dir));
+				const stubs = walk(dir);
+				Object.assign(a, stubs);
+
+				for (const key in stubs) {
+					const stub = stubs[key];
+					if (stub.type === 'file' && stub.contents.startsWith('__delete')) {
+						remove_files.push(stub.name);
+					}
+				}	
+			}
+
+			for (const remove_file of remove_files) {
+				// remove file
+				delete a[remove_file];
 			}
 
 			const b = walk(`${dir}/app-b`);
