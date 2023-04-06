@@ -15,7 +15,7 @@
 		flex-direction: column;
 		height: 100%;
 		justify-content: center;
-		gap: 2em;
+		gap: 0.5em;
 		max-width: 40em;
 		margin: 0 auto;
 	}

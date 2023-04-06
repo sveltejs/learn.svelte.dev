@@ -18,9 +18,20 @@
 </script>
 
 <div class="player" class:paused>
+	<audio
+		src={src}
+		bind:currentTime={time}
+		bind:duration
+		bind:paused
+		on:ended={() => {
+			time = 0;
+		}}
+	/>
+	
 	<button
 		class="play"
 		aria-label={paused ? 'play' : 'pause'}
+		on:click={() => paused = !paused}
 	/>
 
 	<div class="info">
@@ -43,7 +54,7 @@
 						if (p < 0) p = 0;
 						if (p > 1) p = 1;
 						
-						// TODO update the time
+						time = p * duration;
 					}
 
 					seek(e);
