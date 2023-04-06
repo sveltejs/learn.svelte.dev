@@ -1,3 +1,7 @@
+export const config = {
+	matcher: ['/((?!assets\/).*)'],
+};
+
 export default function middleware(_request, _event) {
 	const response = new Response();
 
