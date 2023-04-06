@@ -48,7 +48,7 @@
 		"@lezer/javascript": "^1.4.1",
 		"@lezer/lr": "^1.3.3",
 		"@replit/codemirror-lang-svelte": "^6.0.0",
-		"@rich_harris/svelte-split-pane": "^1.0.2",
+		"@rich_harris/svelte-split-pane": "^1.1.0",
 		"@webcontainer/api": "^1.1.0",
 		"adm-zip": "^0.5.10",
 		"ansi-to-html": "^0.7.2",
