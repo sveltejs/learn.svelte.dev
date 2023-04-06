@@ -2,22 +2,20 @@
 title: Exports
 ---
 
-Anything exported from a `context="module"` script block becomes an export from the module itself. If we export a `stopAll` function from `AudioPlayer.svelte`...
+Anything exported from a `context="module"` script block becomes an export from the module itself. Let's export a `stopAll` function:
 
 ```svelte
 /// file: AudioPlayer.svelte
 <script context="module">
-	const elements = new Set();
+	let current;
 
 +++	export function stopAll() {
-		elements.forEach(element => {
-			element.pause();
-		});
+		current?.pause();
 	}+++
 </script>
 ```
 
-...we can then import it from `App.svelte`...
+We can now import `stopAll` in `App.svelte`...
 
 ```svelte
 /// file: App.svelte
@@ -30,9 +28,15 @@ Anything exported from a `context="module"` script block becomes an export from 
 
 ```svelte
 /// file: App.svelte
-<button +++on:click={stopAll}+++>
-	stop all audio
-</button>
+<div class="centered">
+	{#each tracks as track}
+		<AudioPlayer {...track} />
+	{/each}
+
++++	<button on:click={stopAll}>
+		stop all
+	</button>+++
+</div>
 ```
 
 > You can't have a default export, because the component _is_ the default export.

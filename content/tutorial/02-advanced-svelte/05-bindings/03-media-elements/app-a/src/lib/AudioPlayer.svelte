@@ -1,11 +1,3 @@
-<script context="module">
-	let current;
-
-	export function stopAll() {
-		current?.pause();
-	}
-</script>
-
 <script>
 	export let src;
 	export let title;
@@ -26,28 +18,9 @@
 </script>
 
 <div class="player" class:paused>
-	<audio
-		src={src}
-		bind:currentTime={time}
-		bind:duration
-		bind:paused
-		on:play={(e) => {
-			const audio = e.currentTarget;
-
-			if (audio !== current) {
-				current?.pause();
-				current = audio;
-			}
-		}}
-		on:ended={() => {
-			time = 0;
-		}}
-	/>
-
 	<button
 		class="play"
 		aria-label={paused ? 'play' : 'pause'}
-		on:click={() => paused = !paused}
 	/>
 
 	<div class="info">
@@ -62,15 +35,15 @@
 				class="slider"
 				on:pointerdown={e => {
 					const div = e.currentTarget;
-
+					
 					function seek(e) {
 						const { left, width } = div.getBoundingClientRect();
 
 						let p = (e.clientX - left) / width;
 						if (p < 0) p = 0;
 						if (p > 1) p = 1;
-
-						time = p * duration;
+						
+						// TODO update the time
 					}
 
 					seek(e);
@@ -109,7 +82,7 @@
 		color: var(--fg-1);
 		filter: drop-shadow(0.5em 0.5em 1em rgba(0,0,0,0.1));
 	}
-
+	
 	button {
 		width: 100%;
 		aspect-ratio: 1;
@@ -117,7 +90,7 @@
 		background-position: 50% 50%;
 		border-radius: 50%;
 	}
-
+	
 	[aria-label="pause"] {
 		background-image: url(./pause.svg);
 	}
