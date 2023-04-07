@@ -24,16 +24,19 @@
 	}
 </script>
 
-<h2>Todos</h2>
-<ul>
-	{#each todos as todo}
-		<li><Todo {todo} on:change={() => toggle(todo)} /></li>
-	{/each}
-</ul>
+<div class="centered">
+	<h1>todos</h1>
+
+	<ul class="todos">
+		{#each todos as todo (todo.id)}
+			<Todo {todo} on:change={() => toggle(todo)} />
+		{/each}
+	</ul>
+</div>
 
 <style>
-	ul {
-		list-style: none;
-		padding-left: 0.5em;
+	.centered {
+		max-width: 20em;
+		margin: 0 auto;
 	}
 </style>

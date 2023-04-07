@@ -6,16 +6,18 @@
 
 	export let todo;
 
-	let label;
+	let element;
 
 	afterUpdate(() => {
-		flash(label);
+		flash(element);
 	});
 </script>
 
 <!-- the text will flash red whenever
      the `todo` object changes -->
-<label bind:this={label}>
-	<input type="checkbox" checked={todo.done} on:change />
-	{todo.text}
-</label>
+<li bind:this={element}>
+	<label>
+		<input type="checkbox" checked={todo.done} on:change />
+		{todo.text}
+	</label>
+</li>
