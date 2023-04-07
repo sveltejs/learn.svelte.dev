@@ -2,61 +2,89 @@
 title: setContext and getContext
 ---
 
-> This exercise doesn't currently work. You can switch to the old tutorial instead: https://svelte.dev/tutorial/context-api
+The context API provides a mechanism for components to 'talk' to each other without passing around data and functions as props, or dispatching lots of events. It's an advanced feature, but a useful one. In this exercise, we're going to recreate [Schotter](https://collections.vam.ac.uk/item/O221321/schotter-print-nees-georg/) by George Nees — one of the pioneers of generative art — using the context API.
 
-The context API provides a mechanism for components to 'talk' to each other without passing around data and functions as props, or dispatching lots of events. It's an advanced feature, but a useful one.
+Inside `Canvas.svelte`, there's an `addItem` function that adds an item to the canvas. We can make it available to components inside `<Canvas>`, like `<Square>`, with `setContext`:
 
-Take this example app using a [Mapbox GL](https://docs.mapbox.com/mapbox-gl-js/overview/) map. We'd like to display the markers, using the `<MapMarker>` component, but we don't want to have to pass around a reference to the underlying Mapbox instance as a prop on each component.
+```svelte
+/// file: Canvas.svelte
+<script>
+	import { +++setContext+++, afterUpdate, onMount, tick } from 'svelte';
 
-There are two halves to the context API — `setContext` and `getContext`. If a component calls `setContext(key, context)`, then any _child_ component can retrieve the context with `const context = getContext(key)`.
+	// ...
 
-Let's set the context first. In `Map.svelte`, import `setContext` from `svelte` and `key` from `mapbox.js` and call `setContext`:
+	onMount(() => {
+		ctx = canvas.getContext('2d');
+	});
 
-```js
-/// file: Map.svelte
-import { onMount, setContext } from 'svelte';
-import { mapbox, key } from './mapbox.js';
++++	setContext('canvas', {
+		addItem
+	});+++
 
-setContext(key, {
-	getMap: () => map
-});
+	function addItem(fn) {...}
+
+	function draw() {...}
+</script>
 ```
 
-The context object can be anything you like. Like [lifecycle functions](/tutorial/onmount), `setContext` and `getContext` must be called during component initialisation. Calling it afterwards - for example inside `onMount` - will throw an error. In this example, since `map` isn't created until the component has mounted, our context object contains a `getMap` function rather than `map` itself.
+Inside child components, we can now get the context with, well, `getContext`:
 
-On the other side of the equation, in `MapMarker.svelte`, we can now get a reference to the Mapbox instance:
+```svelte
+/// file: Square.svelte
+<script>
+	+++import { getContext } from 'svelte';+++
 
-```js
-/// file: MapMarker.svelte
-import { getContext } from 'svelte';
-import { mapbox, key } from './mapbox.js';
+	export let x;
+	export let y;
+	export let size;
+	export let rotate;
 
-const { getMap } = getContext(key);
-const map = getMap();
+	+++getContext('canvas').addItem(draw);+++
+
+	function draw(ctx) {...}
+</script>
 ```
 
-The markers can now add themselves to the map.
+So far, so... boring. Let's add some randomness to the grid:
 
-> A more finished version of `<MapMarker>` would also handle removal and prop changes, but we're only demonstrating context here.
-
-## Context keys
-
-In `mapbox.js` you'll see this line:
-
-```js
-/// file: mapbox.js
-const key = {};
+```svelte
+/// file: App.svelte
+<div class="container">
+	<Canvas width={800} height={1200}>
+		{#each Array(12) as _, c}
+			{#each Array(22) as _, r}
+				<Square
+					x={180 + c * 40+++ + jitter(r * 2)+++}
+					y={180 + r * 40+++ + jitter(r * 2)+++}
+					size={40}
+					+++rotate={jitter(r * 0.05)}+++
+				/>
+			{/each}
+		{/each}
+	</Canvas>
+</div>
 ```
 
-We can use anything as a key — we could do `setContext('mapbox', ...)` for example. The downside of using a string is that different component libraries might accidentally use the same one; using an object literal means the keys are guaranteed not to conflict in any circumstance (since an object only has referential equality to itself, i.e. `{} !== {}` whereas `"x" === "x"`), even when you have multiple different contexts operating across many component layers.
+Like [lifecycle functions](/tutorial/onmount), `setContext` and `getContext` must be called during component initialisation. (The context key (`'canvas'` in this case) can be anything you like, including non-strings, which is useful for controlling who can access the context.)
 
-## Contexts vs. stores
-
-Contexts and stores seem similar. They differ in that stores are available to _any_ part of an app, while a context is only available to _a component and its descendants_. This can be helpful if you want to use several instances of a component without the state of one interfering with the state of the others.
-
-In fact, you might use the two together. Since context is not reactive, values that change over time should be represented as stores:
+Your context object can include anything, including stores. This allows you to pass values that change over time to child components:
 
 ```js
 /// no-file
-const { these, are, stores } = getContext(...);
+// in a parent component
+import { setContext } from 'svelte';
+import { writable } from 'svelte/store';
+
+setContext('my-context', {
+	count: writable(0)
+});
+```
+```js
+/// no-file
+// in a child component
+import { getContext } from 'svelte';
+
+const { count } = getContext('my-context');
+
+$: console.log({ count });
 ```

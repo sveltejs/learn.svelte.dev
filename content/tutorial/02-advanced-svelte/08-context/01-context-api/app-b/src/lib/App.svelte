@@ -21,9 +21,10 @@
 		{#each Array(12) as _, c}
 			{#each Array(22) as _, r}
 				<Square
-					x={180 + c * 40}
-					y={180 + r * 40}
+					x={180 + c * 40 + jitter(r * 2)}
+					y={180 + r * 40 + jitter(r * 2)}
 					size={40}
+					rotate={jitter(r * 0.05)}
 				/>
 			{/each}
 		{/each}
