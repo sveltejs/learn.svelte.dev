@@ -22,7 +22,7 @@ Inside the `<Card>` component, we've got `<span slot="telephone">` and others fo
 </div>
 ```
 
-We need to add some styles to the `<small>` element so that it occupies its own line. The contents of `<Card>` inherit styles from `Card.svelte`, such as `font-family` (the lettering is something called ['Silian Rail'](https://www.youtube.com/watch?v=aZVkW9p-cCU)), but normal scoping rules apply — we need to add the styles to `App.svelte` because that's where the element is:
+We need to add some styles to the `<small>` element in `App.svelte` so that it occupies its own line. The contents of `<Card>` inherit styles from `Card.svelte`, such as `font-family` (the lettering is something called ['Silian Rail'](https://www.youtube.com/watch?v=aZVkW9p-cCU)), but normal scoping rules apply — we need to add the styles to `App.svelte` because that's where the element is:
 
 ```svelte
 /// file: App.svelte
