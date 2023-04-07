@@ -1,26 +1,65 @@
 <script>
-	import Hoverable from './Hoverable.svelte';
+	import FilterableList from './FilterableList.svelte';
+	import { colors } from './colors.js';
+
+	let row = colors[0];
 </script>
 
-<Hoverable>
-	<div class:active={hovering}>
-		{#if hovering}
-			<p>I am being hovered upon.</p>
-		{:else}
-			<p>Hover over me!</p>
-		{/if}
+<FilterableList
+	data={colors}
+	field="name"
+>
+	<div class="row">
+		<span class="color" style="background-color: {row.hex}" />
+		<span class="name">{row.name}</span>
+		<span class="hex">{row.hex}</span>
+		<span class="rgb">{row.rgb}</span>
+		<span class="hsl">{row.hsl}</span>
 	</div>
-</Hoverable>
+</FilterableList>
 
 <style>
-	div {
-		padding: 1em;
-		margin: 0 0 1em 0;
-		border: 1px solid #ff3e00;
+	.row {
+		display: grid;
+		align-items: center;
+		grid-template-columns: 2em 4fr 3fr;
+		gap: 1em;
+		padding: 0.1em;
+		background: var(--bg-1);
+		border-radius: 0.2em;
 	}
 
-	.active {
-		background-color: #ff3e00;
-		color: white;
+	.row:hover {
+		background: var(--bg-2);
+	}
+
+	.color {
+		aspect-ratio: 1;
+		height: 100%;
+		border-radius: 0.1em;
+	}
+
+	.rgb, .hsl {
+		display: none;
+	}
+
+	@media (min-width: 40rem) {
+		.row {
+			grid-template-columns: 2em 4fr 3fr 3fr;
+		}
+
+		.rgb {
+			display: block;
+		}
+	}
+
+	@media (min-width: 60rem) {
+		.row {
+			grid-template-columns: 2em 4fr 3fr 3fr 3fr;
+		}
+
+		.hsl {
+			display: block;
+		}
 	}
 </style>

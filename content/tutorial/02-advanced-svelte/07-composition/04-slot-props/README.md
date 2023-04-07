@@ -2,49 +2,52 @@
 title: Slot props
 ---
 
-In this app, we have a `<Hoverable>` component that tracks whether the mouse is currently over it. It needs to pass that data _back_ to the parent component, so that we can update the slotted contents.
+Components can pass data _back_ to their slotted content via _slot props_. In this app, we have a list of named CSS colours. Typing into the `<input>` will filter the list.
 
-For this, we use _slot props_. In `Hoverable.svelte`, pass the `hovering` value into the slot:
+Right now every row is showing `AliceBlue`, and as lovely a colour as it is, that's not what we want.
+
+Open `FilterableList.svelte`. The `<slot>` is being rendered for each filtered item in the list. Pass the data into the slot:
 
 ```svelte
-/// file: Hoverable.svelte
-<div on:mouseenter={enter} on:mouseleave={leave}>
-	<slot hovering={hovering}></slot>
+/// file: FilterableList.svelte
+<div class="content">
+	{#each data.filter(matches) as item}
+		<slot +++{item}+++ />
+	{/each}
 </div>
 ```
 
-> Remember you can also use the `{hovering}` shorthand, if you prefer.
+(As in other contexts, `{item}` is shorthand for `item={item}`.)
 
-Then, to expose `hovering` to the contents of the `<Hoverable>` component, we use the `let` directive:
-
-```svelte
-/// file: App.svelte
-<Hoverable let:hovering={hovering}>
-	<div class:active={hovering}>
-		{#if hovering}
-			<p>I am being hovered upon.</p>
-		{:else}
-			<p>Hover over me!</p>
-		{/if}
-	</div>
-</Hoverable>
-```
-
-You can rename the variable, if you want — let's call it `active` in the parent component:
+Then, on the other side, expose the data to the slotted content with the `let:` directive:
 
 ```svelte
 /// file: App.svelte
-<Hoverable let:hovering={active}>
-	<div class:active>
-		{#if active}
-			<p>I am being hovered upon.</p>
-		{:else}
-			<p>Hover over me!</p>
-		{/if}
+<FilterableList
+	data={colors}
+	field="name"
+	+++let:item={row}+++
+>
+	<div class="row">
+		<span class="color" style="background-color: {row.hex}" />
+		<span class="name">{row.name}</span>
+		<span class="hex">{row.hex}</span>
+		<span class="rgb">{row.rgb}</span>
+		<span class="hsl">{row.hsl}</span>
 	</div>
-</Hoverable>
+</FilterableList>
 ```
 
-You can have as many of these components as you like, and the slotted props will remain local to the component where they're declared.
+Finally, get rid of the placeholder variable, which we no longer need:
+
+```svelte
+/// file: App.svelte
+<script>
+	import FilterableList from './FilterableList.svelte';
+	import { colors } from './colors.js';
+
+	---let row = colors[0];---
+</script>
+```
 
 > Named slots can also have props; use the `let` directive on an element with a `slot="..."` attribute, instead of on the component itself.
