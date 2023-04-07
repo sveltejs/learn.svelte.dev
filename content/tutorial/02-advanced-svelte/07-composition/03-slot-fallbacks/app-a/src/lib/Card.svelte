@@ -28,7 +28,8 @@
 		font-family: 'Silian Rail';
 		width: 24em;
 		aspect-ratio: 3.5 / 2.0;
-		background: url(./paper.svg);
+		background: url(./paper.svg) no-repeat 50% 50%;
+		background-size: cover;
 		border-radius: 2px;
 		filter: drop-shadow(0.1em 0.1em 0.1em rgba(0, 0, 0, 0.2));
 		padding: 1.5em 1em 1em 1em;
