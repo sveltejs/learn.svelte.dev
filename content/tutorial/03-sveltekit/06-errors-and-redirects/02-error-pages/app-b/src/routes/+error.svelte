@@ -1,11 +1,6 @@
 <script>
 	import { page } from '$app/stores';
-
-	const emojis = {
-		// TODO add the rest!
-		420: '🫠',
-		500: '💥'
-	};
+	import { emojis } from './emojis.js';
 </script>
 
 <h1>{$page.status} {$page.error.message}</h1>

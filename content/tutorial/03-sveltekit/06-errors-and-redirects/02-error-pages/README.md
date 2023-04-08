@@ -10,12 +10,7 @@ The default error page is somewhat bland. We can customize it by creating a `src
 /// file: src/routes/+error.svelte
 <script>
 	import { page } from '$app/stores';
-
-	const emojis = {
-		// TODO add the rest!
-		420: '🫠',
-		500: '💥'
-	};
+	import { emojis } from './emojis.js';
 </script>
 
 <h1>{$page.status} {$page.error.message}</h1>
