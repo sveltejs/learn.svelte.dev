@@ -27,7 +27,7 @@
 	/** @type {any} */
 	let remove_focus_timeout;
 
-	/** @type {Map<string, import('@codemirror/state').EditorState>} */
+	/** @type {Map<import('$lib/types').FileStub, import('@codemirror/state').EditorState>} */
 	let editor_states = new Map();
 
 	/** @type {import('@codemirror/view').EditorView} */
@@ -51,7 +51,7 @@
 
 	$: reset($files);
 
-	$: select_state($selected_name);
+	$: select_state($selected_file);
 
 	$: if (editor_view) {
 
@@ -85,7 +85,7 @@
 		for (const file of $files) {
 			if (file.type !== 'file') continue;
 
-			let state = editor_states.get(file.name);
+			let state = editor_states.get(file);
 
 			if (state) {
 				const existing = state.doc.toString();
@@ -99,7 +99,7 @@
 						}
 					});
 
-					editor_states.set(file.name, transaction.state);
+					editor_states.set(file, transaction.state);
 					state = transaction.state;
 
 					if ($selected_name === file.name) {
@@ -122,17 +122,17 @@
 					extensions: lang ? [...extensions, lang] : extensions
 				});
 
-				editor_states.set(file.name, state);
+				editor_states.set(file, state);
 			}
 		}
 	}
 
-	/** @param {string | null} $selected_name */
-	function select_state($selected_name) {
+	/** @param {import('$lib/types').FileStub | null} $selected_file */
+	function select_state($selected_file) {
 		if (skip_reset) return;
 
 		const state =
-			($selected_name && editor_states.get($selected_name)) ||
+			($selected_file && editor_states.get($selected_file)) ||
 			EditorState.create({
 				doc: '',
 				extensions: [EditorState.readOnly.of(true)]
@@ -157,7 +157,7 @@
 					});
 
 					// keep `editor_states` updated so that undo/redo history is preserved for files independently
-					editor_states.set($selected_file.name, editor_view.state);
+					editor_states.set($selected_file, editor_view.state);
 
 					await tick();
 					skip_reset = false;
@@ -182,7 +182,7 @@
 
 		if (editor_view) {
 			// could be false if onMount returned early
-			select_state($selected_name);
+			select_state($selected_file);
 		}
 
 		// clear warnings

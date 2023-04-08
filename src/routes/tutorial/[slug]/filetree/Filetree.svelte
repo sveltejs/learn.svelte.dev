@@ -4,7 +4,7 @@
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
-	import { files, solution, reset_files, create_directories } from '../state.js';
+	import { files, solution, reset_files, create_directories, selected_name } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
 	/** @type {import('$lib/types').Exercise} */
@@ -93,10 +93,16 @@
 				}
 			}
 
+			const was_selected = $selected_name === to_rename.name;
+
 			to_rename.basename = /** @type {string} */ (new_full_name.split('/').pop());
 			to_rename.name = new_full_name;
 
 			reset_files([...$files, ...create_directories(new_full_name, $files)]);
+
+			if (was_selected) {
+				dispatch('select', { name: new_full_name });
+			}
 		},
 
 		remove: async (file) => {
