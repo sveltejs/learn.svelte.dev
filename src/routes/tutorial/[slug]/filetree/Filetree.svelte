@@ -31,7 +31,7 @@
 		add: async (name, type) => {
 			const expected = $solution[name];
 
-			if (type !== expected.type) {
+			if (expected && type !== expected.type) {
 				modal_text = `${name.slice(exercise.scope.prefix.length)} should be a ${expected.type}, not a ${type}!`;
 				return;
 			}
