@@ -1,37 +1,16 @@
 <script>
 	import Board from './Board.svelte';
+	import { getWinningLine } from './utils.js';
 
 	let squares = Array(9).fill('');
 	let next = 'x';
 
-	function getLine(squares) {
-		const lines = [
-			[0, 1, 2],
-			[3, 4, 5],
-			[6, 7, 8],
-			[0, 3, 6],
-			[1, 4, 7],
-			[2, 5, 8],
-			[0, 4, 8],
-			[2, 4, 6]
-		];
-
-		for (const line of lines) {
-			const [a, b, c] = line;
-			if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-				return line;
-			}
-		}
-
-		return null;
-	}
-
-	$: winningLine = getLine(squares);
+	$: winningLine = getWinningLine(squares);
 </script>
 
 <div class="container">
 	<Board size={3}>
-		<svelte:fragment slot="game">
+		<div slot="game">
 			{#each squares as square, i}
 				<button
 					class="square"
@@ -45,15 +24,17 @@
 					{square}
 				</button>
 			{/each}
-		</svelte:fragment>
-	</Board>
+		</div>
 
-	<button on:click={() => {
-		squares = Array(9).fill('');
-		next = 'x';
-	}}>
-		Reset
-	</button>
+		<div slot="controls">
+			<button on:click={() => {
+				squares = Array(9).fill('');
+				next = 'x';
+			}}>
+				Reset
+			</button>
+		</div>
+	</Board>
 </div>
 
 <style>
@@ -63,7 +44,6 @@
 		gap: 1em;
 		align-items: center;
 		justify-content: center;
-		width: min(calc(100vmin - 2em), 20em);
 		height: 100%;
 		margin: 0 auto;
 	}
@@ -74,6 +54,7 @@
 		color: #222;
 		opacity: 1;
 		font-size: 2em;
+		padding: 0;
 	}
 
 	.winning {

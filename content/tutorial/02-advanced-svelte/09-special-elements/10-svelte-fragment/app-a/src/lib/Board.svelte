@@ -13,7 +13,8 @@
 		display: grid;
 		grid-template-columns: repeat(var(--size), 1fr);
 		grid-template-rows: repeat(var(--size), 1fr);
-		width: 100%;
+		height: 100%;
+		max-height: 20em;
 		aspect-ratio: 1;
 		background: black;
 		gap: 1px;

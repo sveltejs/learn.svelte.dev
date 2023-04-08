@@ -2,35 +2,27 @@
 title: <svelte:fragment>
 ---
 
-The `<svelte:fragment>` element allows you to place content in a named slot without wrapping it in a container DOM element. This keeps the flow layout of your document intact.
+The `<svelte:fragment>` element allows you to place content in a named slot without wrapping it in a container DOM element.
 
-In the example notice how we applied a flex layout with a gap of `1em` to the box.
+In this exercise, we're making a Tic-Tac-Toe game. To form a grid, the `<button>` elements in `App.svelte` should be direct descendants of the `<div class="board">` element in `Board.svelte`.
 
-```svelte
-/// file: Box.svelte
-<div class="box">
-	<slot name="header">No header was provided</slot>
-	<p>Some content between header and footer</p>
-	<slot name="footer"></slot>
-</div>
-
-<style>
-	.box {
-		display: flex;
-		flex-direction: column;
-		gap: 1em;
-	}
-</style>
-```
-
-However, the content in the footer is not spaced out according to this rhythm because wrapping it in a div created a new flow layout.
-
-We can solve this by changing `<div slot="footer">` in the `App` component. Replace the `<div>` with `<svelte:fragment>`:
+At the moment, it's horribly broken, because they're children of `<div slot="game">` instead. Let's fix it:
 
 ```svelte
 /// file: App.svelte
-<svelte:fragment slot="footer">
-	<p>All rights reserved.</p>
-	<p>Copyright (c) 2019 Svelte Industries</p>
-</svelte:fragment>
+<+++svelte:fragment+++ slot="game">
+	{#each squares as square, i}
+		<button
+			class="square"
+			class:winning={winningLine?.includes(i)}
+			disabled={square}
+			on:click={() => {
+				squares[i] = next;
+				next = next === 'x' ? 'o' : 'x';
+			}}
+		>
+			{square}
+		</button>
+	{/each}
+</+++svelte:fragment+++>
 ```
