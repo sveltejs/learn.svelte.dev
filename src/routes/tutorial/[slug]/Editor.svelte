@@ -206,15 +206,6 @@
 <div
 	class="container"
 	bind:this={container}
-	on:keydown={(e) => {
-		if (e.key === 'Tab') {
-			preserve_editor_focus = false;
-
-			setTimeout(() => {
-				preserve_editor_focus = true;
-			}, 200);
-		}
-	}}
 	on:focusin={() => {
 		clearTimeout(remove_focus_timeout);
 		preserve_editor_focus = true;
