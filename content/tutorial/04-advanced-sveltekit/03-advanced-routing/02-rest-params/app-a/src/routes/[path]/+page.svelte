@@ -4,20 +4,29 @@
 	let words = ['how', 'deep', 'does', 'the', 'rabbit', 'hole', 'go'];
 
 	$: depth = $page.params.path.split('/').filter(Boolean).length;
-
-	$: href =
-		depth === words.length
-			? '/'
-			: `/${words.slice(0, depth + 1).join('/')}`;
+	$: next = depth === words.length ? '/' : `/${words.slice(0, depth + 1).join('/')}`;
 </script>
 
-<a {href}>{words[depth] ?? '?'}</a>
+<div class="flex">
+	{#each words.slice(0, depth) as word}
+		<p>{word}</p>
+	{/each}
+
+	<p><a href={next}>{words[depth] ?? '?'}</a></p>
+</div>
 
 <style>
-	:global(html),
-	:global(body) {
+	.flex {
+		display: flex;
 		height: 100%;
-		margin: 0;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	p {
+		margin: 0.5rem 0;
+		line-height: 1;
 	}
 
 	a {
@@ -26,6 +35,6 @@
 		height: 100%;
 		align-items: center;
 		justify-content: center;
-		font-size: 20vmin;
+		font-size: 4rem;
 	}
 </style>

@@ -119,8 +119,17 @@ export async function create(base, error, progress, logs) {
 				/** @type {import('$lib/types').Stub[]} */
 				const to_write = [];
 
+				const force_delete = [];
+
 				for (const stub of stubs) {
-					if (stub.type === 'file') {
+					if (stub.name.endsWith('/__delete')) {
+						force_delete.push(stub.name.slice(0, -9));
+					} else if (stub.type === 'file') {
+						if (stub.contents.startsWith('__delete')) {
+							force_delete.push(stub.name);
+							continue;
+						}
+
 						const current = /** @type {import('$lib/types').FileStub} */ (
 							current_stubs.get(stub.name)
 						);
@@ -138,9 +147,12 @@ export async function create(base, error, progress, logs) {
 
 				// Don't delete the node_modules folder when switching from one exercise to another
 				// where, as this crashes the dev server.
-				const to_delete = Array.from(current_stubs.keys()).filter(
-					(s) => !s.startsWith('/node_modules')
-				);
+				const to_delete = [
+					...Array.from(current_stubs.keys()).filter(
+						(s) => !s.startsWith('/node_modules')
+					),
+					...force_delete
+				];
 
 				current_stubs = stubs_to_map(stubs);
 

@@ -1,1 +1,1 @@
-__delete;
+__delete

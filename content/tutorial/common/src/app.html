@@ -14,6 +14,7 @@
 				--bg-3: hsl(206, 20%, 80%);
 				--fg-1: hsl(0, 0%, 13%);
 				--fg-2: hsl(0, 0%, 20%);
+				--fg-2: hsl(0, 0%, 30%);
 				--link: hsl(208, 77%, 47%);
 				--link-hover: hsl(208, 77%, 55%);
 				--link-active: hsl(208, 77%, 40%);
@@ -200,10 +201,12 @@
 				user-select: none;
 				background: var(--bg-1);
 				filter: drop-shadow(2px 3px 6px rgba(0,0,0,0.1));
+				transition: filter 0.2s, opacity 0.2s;
 			}
 
 			ul.todos .done {
 				filter: none;
+				opacity: 0.4;
 			}
 
 			ul.todos button {
@@ -232,6 +235,7 @@
 					--bg-3: hsl(0, 0%, 40%);
 					--fg-1: hsl(0, 0%, 90%);
 					--fg-2: hsl(0, 0%, 70%);
+					--fg-3: hsl(0, 0%, 60%);
 					--link: hsl(206, 96%, 72%);
 					--link-hover: hsl(206, 96%, 78%);
 					--link-active: hsl(206, 96%, 64%);
