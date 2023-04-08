@@ -1,67 +1,18 @@
+function post(data) {
+	parent.postMessage(data, '*');
+}
+
 // Hack into the alert that's used in some tutorials and send a message prior to the alert,
 // else the parent thinks we lost contact and wrongfully reloads the page.
 // The drawback is that alert is no longer blocking, but no tutorial relies on this.
 const alert = window.alert;
 window.alert = (message) => {
-	parent.postMessage(
-		{
-			type: 'ping-pause'
-		},
-		'*'
-	);
+	post({ type: 'ping-pause' });
+
 	setTimeout(() => {
 		alert(message);
 	});
 };
-
-window.addEventListener('message', async (e) => {
-	if (e.data.type === 'fetch') {
-		const names = e.data.names;
-
-		const transformed = await Promise.all(
-			names.map(async (name) => {
-				const res = await fetch(name);
-				return {
-					name,
-					code: await res.text()
-				};
-			})
-		);
-
-		const css_files = [];
-
-		for (const { name, code } of transformed) {
-			if (
-				name.endsWith('.svelte') &&
-				code.includes('svelte&type=style&lang.css')
-			) {
-				css_files.push(name + '?svelte&type=style&lang.css');
-			}
-		}
-
-		if (css_files.length > 0) {
-			const css_transformed = await Promise.all(
-				css_files.map(async (name) => {
-					const res = await fetch(name);
-					return {
-						name,
-						code: await res.text()
-					};
-				})
-			);
-
-			transformed.push(...css_transformed);
-		}
-
-		parent.postMessage(
-			{
-				type: 'fetch-result',
-				data: transformed
-			},
-			'*'
-		);
-	}
-});
 
 let can_focus = false;
 
@@ -94,12 +45,7 @@ window.addEventListener('focusin', (e) => {
 	if (e.target.tagName === 'BODY' && e.relatedTarget) return;
 
 	// otherwise, broadcast an event that causes the editor to reclaim focus
-	parent.postMessage(
-		{
-			type: 'iframe_took_focus'
-		},
-		'*'
-	);
+	post({ type: 'iframe_took_focus' });
 });
 
 window.addEventListener('click', (e) => {
@@ -119,47 +65,38 @@ window.addEventListener('click', (e) => {
 });
 
 function ping() {
-	parent.postMessage(
-		{
-			type: 'ping',
-			data: {
-				path: location.pathname + location.search + location.hash
-			}
-		},
-		'*'
-	);
+	post({
+		type: 'ping',
+		data: {
+			path: location.pathname + location.search + location.hash
+		}
+	});
 }
 
-let pre_url = location.href;
+let previous_href = location.href;
+
 const url_observer = new MutationObserver(() => {
-	if (location.href !== pre_url) {
-		pre_url = location.href;
+	if (location.href !== previous_href) {
+		previous_href = location.href;
 		ping();
 	}
 });
-url_observer.observe(document, { subtree: true, childList: true, attributes: true });
+
+url_observer.observe(document, {
+	subtree: true,
+	childList: true,
+	attributes: true
+});
 
 setInterval(ping, 100);
 ping();
 
 if (import.meta.hot) {
 	import.meta.hot.on('vite:beforeUpdate', (event) => {
-		parent.postMessage(
-			{
-				type: 'hmr',
-				data: event.updates
-			},
-			'*'
-		);
+		post({ type: 'hmr', data: event.updates });
 	});
 
 	import.meta.hot.on('svelte:warnings', (data) => {
-		parent.postMessage(
-			{
-				type: 'warnings',
-				data
-			},
-			'*'
-		);
+		post({ type: 'warnings', data });
 	});
 }
