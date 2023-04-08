@@ -23,7 +23,7 @@
 			frame = requestAnimationFrame(loop);
 
 			confetti = confetti.map((emoji) => {
-				emoji.y += 0.7 * emoji.r;
+				emoji.y += 0.3 * emoji.r;
 				if (emoji.y > 120) emoji.y = -20;
 				return emoji;
 			});
