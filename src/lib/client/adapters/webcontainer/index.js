@@ -274,11 +274,8 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 /** @param {import('$lib/types').FileStub} file */
 function to_file(file) {
 	// special case
-	if (file.name === '/src/app.html') {
-		const contents = file.contents.replace(
-			'</head>',
-			'<script type="module" src="/src/__client.js"></script></head>'
-		);
+	if (file.name === '/src/app.html' || file.name === '/src/error.html') {
+		const contents = file.contents + '<script type="module" src="/src/__client.js"></script></head>';
 
 		return {
 			file: { contents }
