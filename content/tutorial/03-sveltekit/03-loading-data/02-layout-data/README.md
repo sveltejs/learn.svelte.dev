@@ -9,7 +9,7 @@ Suppose we'd like to add a 'more posts' sidebar to our blog post page. We _could
 
 Instead, let's rename `src/routes/blog/+page.server.js` to `src/routes/blog/+layout.server.js`. Notice that the `/blog` route continues to work — `data.summaries` is still available to the page.
 
-Now, create a layout for the post page:
+Now, add a sidebar in the layout for the post page:
 
 ```svelte
 /// file: src/routes/blog/[slug]/+layout.svelte
@@ -22,7 +22,7 @@ Now, create a layout for the post page:
 		<slot />
 	</main>
 
-	<aside>
++++	<aside>
 		<h2>More posts</h2>
 		<ul>
 			{#each data.summaries as { slug, title }}
@@ -31,7 +31,7 @@ Now, create a layout for the post page:
 				</li>
 			{/each}
 		</ul>
-	</aside>
+	</aside>+++
 </div>
 
 <style>
