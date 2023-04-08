@@ -33,5 +33,5 @@ We can fix that by using the special `$$slots` variable in `FilterableList.svelt
 	<div class="header">
 		<slot name="header"/>
 	</div>
-+++{{/if}}+++
++++{/if}+++
 ```
