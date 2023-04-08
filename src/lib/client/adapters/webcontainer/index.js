@@ -275,7 +275,7 @@ function convert_stubs_to_tree(stubs, depth = 1) {
 function to_file(file) {
 	// special case
 	if (file.name === '/src/app.html' || file.name === '/src/error.html') {
-		const contents = file.contents + '<script type="module" src="/src/__client.js"></script></head>';
+		const contents = file.contents + '<script type="module" src="/src/__client.js"></script>';
 
 		return {
 			file: { contents }
