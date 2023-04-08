@@ -1,5 +1,6 @@
 ---
 title: invalidateAll
+path: /Europe/London
 ---
 
 Finally, there's the nuclear option — `invalidateAll()`. This will indiscriminately re-run all `load` functions for the current page, regardless of what they depend on.

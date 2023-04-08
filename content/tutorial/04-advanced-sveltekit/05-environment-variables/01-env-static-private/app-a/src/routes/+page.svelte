@@ -5,7 +5,7 @@
 <form method="POST">
 	<label>
 		enter the passphrase
-		<input name="passphrase" />
+		<input name="passphrase" autocomplete="off" />
 	</label>
 </form>
 

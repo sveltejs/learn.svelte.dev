@@ -5,6 +5,8 @@ title: $env/static/private
 Environment variables — like API keys and database credentials — can be added to a `.env` file, and they will be made available to your application.
 
 > You can also use `.env.local` or `.env.[mode]` files — see the [Vite documentation](https://vitejs.dev/guide/env-and-mode.html#env-files) for more information). Make sure you add any files containing sensitive information to your `.gitignore` file!
+>
+> Environment variables in `process.env` are also available via `$env/static/private`.
 
 In this exercise, we want to allow the user to enter the website if they know the correct passphrase, using an environment variable.
 
@@ -48,8 +50,6 @@ export const actions = {
 ```
 
 The website is now accessible to anyone who knows the correct passphrase.
-
-> Environment variables in `process.env` are also available via `$env/static/private`.
 
 ## Keeping secrets
 
