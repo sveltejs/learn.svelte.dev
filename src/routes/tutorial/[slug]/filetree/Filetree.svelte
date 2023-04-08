@@ -1,20 +1,22 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
-	import { files, solution, reset_files, select_file } from '../state.js';
+	import { files, solution, reset_files, create_directories, selected_name } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
-
-	/** @type {import('svelte/store').Writable<boolean>} */
-	export let readonly;
 
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
 
-	let modal_text = '';
+	export let mobile = false;
 
-	const hidden = new Set(['__client.js', 'node_modules']);
+	const dispatch = createEventDispatcher();
+
+	const hidden = new Set(['__client.js', 'node_modules', '__delete']);
+
+	let modal_text = '';
 
 	/** @type {import('svelte/store').Writable<Record<string, boolean>>}*/
 	const collapsed = writable({});
@@ -26,10 +28,15 @@
 	context.set({
 		collapsed,
 
-		readonly,
-
 		add: async (name, type) => {
-			if (!$solution[name] && !exercise.editing_constraints.create.has(name)) {
+			const expected = $solution[name];
+
+			if (expected && type !== expected.type) {
+				modal_text = `${name.slice(exercise.scope.prefix.length)} should be a ${expected.type}, not a ${type}!`;
+				return;
+			}
+
+			if (!expected && !exercise.editing_constraints.create.has(name)) {
 				modal_text =
 					'Only the following files and folders are allowed to be created in this exercise:\n' +
 					Array.from(exercise.editing_constraints.create).join('\n');
@@ -45,23 +52,15 @@
 			const basename = /** @type {string} */ (name.split('/').pop());
 
 			/** @type {import('$lib/types').Stub} */
-			let file;
-
-			if (type === 'file') {
-				file = {
-					type: 'file',
-					name,
-					basename,
-					text: true,
-					contents: ''
-				};
-
-				select_file(file.name);
-			} else {
-				file = { type: 'directory', name, basename };
-			}
+			const file = type === 'file'
+				? { type, name, basename, text: true, contents: '' }
+				: { type, name, basename };
 
 			reset_files([...$files, ...create_directories(name, $files), file]);
+
+			if (type === 'file') {
+				dispatch('select', { name });
+			}
 		},
 
 		rename: async (to_rename, new_name) => {
@@ -94,10 +93,16 @@
 				}
 			}
 
+			const was_selected = $selected_name === to_rename.name;
+
 			to_rename.basename = /** @type {string} */ (new_full_name.split('/').pop());
 			to_rename.name = new_full_name;
 
 			reset_files([...$files, ...create_directories(new_full_name, $files)]);
+
+			if (was_selected) {
+				dispatch('select', { name: new_full_name });
+			}
 		},
 
 		remove: async (file) => {
@@ -108,7 +113,8 @@
 				return;
 			}
 
-			select_file(null);
+			dispatch('select', { name: null });
+
 			reset_files(
 				$files.filter((f) => {
 					if (f === file) return false;
@@ -116,47 +122,25 @@
 					return true;
 				})
 			);
+		},
+
+		select: (name) => {
+			dispatch('select', { name });
 		}
 	});
 
-	/**
-	 * @param {string} name
-	 * @param {import('$lib/types').Stub[]} files
-	 */
-	function create_directories(name, files) {
-		const existing = new Set();
+	/** @param {import('$lib/types').Stub} file */
+	function is_deleted(file) {
+		if (file.type === 'directory') return `${file.name}/__delete` in exercise.a;
+		if (file.text) return file.contents.startsWith('__delete');
 
-		for (const file of files) {
-			if (file.type === 'directory') {
-				existing.add(file.name);
-			}
-		}
-
-		/** @type {import('$lib/types').DirectoryStub[]} */
-		const directories = [];
-
-		const parts = name.split('/');
-		while (parts.length) {
-			parts.pop();
-
-			const dir = parts.join('/');
-			if (existing.has(dir)) {
-				break;
-			}
-
-			directories.push({
-				type: 'directory',
-				name: dir,
-				basename: /** @type {string} */ (parts.at(-1))
-			});
-		}
-
-		return directories;
+		return false;
 	}
 </script>
 
 <ul
 	class="filetree"
+	class:mobile
 	on:keydown={(e) => {
 		if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
 			e.preventDefault();
@@ -177,7 +161,7 @@
 			name: '',
 			basename: exercise.scope.name
 		}}
-		contents={$files.filter((file) => !hidden.has(file.basename))}
+		contents={$files.filter((file) => !hidden.has(file.basename) && !is_deleted(file))}
 	/>
 </ul>
 
@@ -203,7 +187,11 @@
 		list-style: none;
 	}
 
-	.filetree::before {
+	.filetree.mobile {
+		height: 100%;
+	}
+
+	.filetree:not(.mobile)::before {
 		content: '';
 		position: absolute;
 		width: 0;

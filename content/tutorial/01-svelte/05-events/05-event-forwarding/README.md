@@ -6,9 +6,10 @@ Unlike DOM events, component events don't _bubble_. If you want to listen to an 
 
 In this case, we have the same `App.svelte` and `Inner.svelte` as in the [previous chapter](/tutorial/component-events), but there's now an `Outer.svelte` component that contains `<Inner/>`.
 
-One way we could solve the problem is adding `createEventDispatcher` to `Outer.svelte`, listening for the `message` event, and creating a handler for it:
+One way we _could_ solve the problem is adding `createEventDispatcher` to `Outer.svelte`, listening for the `message` event, and creating a handler for it:
 
 ```svelte
+/// file: Outer.svelte
 <script>
 	import Inner from './Inner.svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -26,9 +27,10 @@ One way we could solve the problem is adding `createEventDispatcher` to `Outer.s
 But that's a lot of code to write, so Svelte gives us an equivalent shorthand — an `on:message` event directive without a value means 'forward all `message` events'.
 
 ```svelte
+/// file: Outer.svelte
 <script>
 	import Inner from './Inner.svelte';
 </script>
 
-<Inner on:message/>
+<Inner +++on:message+++/>
 ```

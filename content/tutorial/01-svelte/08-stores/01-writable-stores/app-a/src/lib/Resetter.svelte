@@ -6,4 +6,6 @@
 	}
 </script>
 
-<button on:click={reset}> reset </button>
+<button on:click={reset}>
+	reset
+</button>

@@ -1,7 +1,5 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import refresh from '$lib/icons/refresh.svg';
-	import terminal from '$lib/icons/terminal.svg';
 
 	/** @type {string} */
 	export let path;
@@ -9,13 +7,14 @@
 	/** @type {boolean} */
 	export let loading;
 
+	/** @type {string | null} */
+	export let href;
+
 	const dispatch = createEventDispatcher();
 </script>
 
-<div class="chrome">
-	<button disabled={loading} on:click={() => dispatch('refresh')} aria-label="reload">
-		<img src={refresh} alt="Reload icon" />
-	</button>
+<div class="chrome" class:loading>
+	<button disabled={loading} class="reload icon" on:click={() => dispatch('refresh')} aria-label="reload" />
 
 	<input
 		disabled={loading}
@@ -26,13 +25,14 @@
 		}}
 	/>
 
+	<a {href} class="new-tab icon" target="_blank" aria-label="open in new tab" tabindex="0" />
+
 	<button
 		disabled={loading}
+		class="terminal icon"
 		on:click={() => dispatch('toggle_terminal')}
 		aria-label="toggle terminal"
-	>
-		<img src={terminal} alt="Terminal icon" />
-	</button>
+	/>
 </div>
 
 <style>
@@ -43,26 +43,11 @@
 		border-top: 1px solid var(--sk-back-4);
 	}
 
-	.chrome button {
-		padding: 0.8rem;
-		box-sizing: border-box;
-		background: var(--sk-back-4);
+	button {
 		user-select: none;
 	}
 
-	.chrome button img {
-		width: 2rem;
-		height: 2rem;
-		transition: 0.2s ease-out;
-		transform: none;
-	}
-
-	.chrome button[aria-label='reload']:active img {
-		transform: rotate(-360deg);
-		transition: none;
-	}
-
-	.chrome input {
+	input {
 		flex: 1;
 		padding: 0.5rem 1rem 0.4rem 1rem;
 		background-color: var(--sk-back-3);
@@ -71,14 +56,44 @@
 		font-size: 1.6rem;
 	}
 
-	.chrome button,
-	.chrome input {
-		border: 2px solid transparent;
-	}
-
-	.chrome button:focus-visible,
-	.chrome input:focus-visible {
+	a:focus-visible,
+	button:focus-visible,
+	input:focus-visible {
 		outline: none;
 		border: 2px solid var(--sk-theme-3);
+	}
+
+	.icon, .icon::after {
+		position: relative;
+		height: 100%;
+		aspect-ratio: 1;
+		background: var(--sk-back-4) no-repeat 50% 50%;
+		background-size: 2rem;
+	}
+
+	.loading a {
+		opacity: 0.5;
+	}
+
+	.new-tab {
+		background-image: url($lib/icons/external.svg);
+	}
+
+	.terminal {
+		background-image: url($lib/icons/terminal.svg);
+	}
+
+	.reload::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		background-image: url($lib/icons/refresh.svg);
+		transition: 0.2s ease-out;
+	}
+
+	.reload:active::after {
+		transform: rotate(-360deg);
+		transition: none;
 	}
 </style>

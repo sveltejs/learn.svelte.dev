@@ -1,11 +1,13 @@
 <script>
-	import { browser, dev } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import { onMount, tick } from 'svelte';
 	import { basicSetup } from 'codemirror';
 	import { EditorView, keymap } from '@codemirror/view';
 	import { EditorState } from '@codemirror/state';
 	import { indentWithTab } from '@codemirror/commands';
 	import { indentUnit } from '@codemirror/language';
+	import { acceptCompletion } from '@codemirror/autocomplete';
+	import { setDiagnostics } from '@codemirror/lint';
 	import { javascript } from '@codemirror/lang-javascript';
 	import { html } from '@codemirror/lang-html';
 	import { svelte } from '@replit/codemirror-lang-svelte';
@@ -13,24 +15,15 @@
 	import { tags } from '@lezer/highlight';
 	import { HighlightStyle } from '@codemirror/language';
 	import { syntaxHighlighting } from '@codemirror/language';
-	import { afterNavigate } from '$app/navigation';
-	import { files, selected_file, selected_name, update_file } from './state.js';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
+	import { files, selected_file, selected_name, update_file, warnings } from './state.js';
 	import './codemirror.css';
-
-	// TODO add more styles (selection ranges, etc)
-	const highlights = HighlightStyle.define([
-		{ tag: tags.tagName, color: '#c05726' },
-		{ tag: tags.keyword, color: 'var(--sk-code-keyword)' },
-		{ tag: tags.comment, color: 'var(--sk-code-comment)' },
-		{ tag: tags.string, color: 'var(--sk-code-string)' }
-	]);
-
-	const theme = syntaxHighlighting(highlights);
 
 	/** @type {HTMLDivElement} */
 	let container;
 
 	let preserve_editor_focus = false;
+	let skip_reset = true;
 
 	/** @type {any} */
 	let remove_focus_timeout;
@@ -41,70 +34,124 @@
 	/** @type {import('@codemirror/view').EditorView} */
 	let editor_view;
 
-	$: if (editor_view && $selected_name) {
-		select_state($selected_name);
+	const extensions = [
+		basicSetup,
+		vim(),
+		EditorState.tabSize.of(2),
+		keymap.of([{ key: 'Tab', run: acceptCompletion }, indentWithTab]),
+		indentUnit.of('\t'),
+		syntaxHighlighting(
+			HighlightStyle.define([
+				// TODO add more styles
+				{ tag: tags.tagName, color: '#c05726' },
+				{ tag: tags.keyword, color: 'var(--sk-code-keyword)' },
+				{ tag: tags.comment, color: 'var(--sk-code-comment)' },
+				{ tag: tags.string, color: 'var(--sk-code-string)' }
+			])
+		)
+	];
+
+	$: reset($files);
+
+	$: select_state($selected_name);
+
+	$: if (editor_view) {
+
+		if ($selected_name) {
+			const current_warnings = $warnings[$selected_name];
+
+			if (current_warnings) {
+				const diagnostics = current_warnings.map((warning) => {
+					/** @type {import('@codemirror/lint').Diagnostic} */
+					const diagnostic = {
+						from: warning.start.character,
+						to: warning.end.character,
+						severity: 'warning',
+						message: warning.message
+					};
+
+					return diagnostic;
+				});
+
+				const transaction = setDiagnostics(editor_view.state, diagnostics);
+
+				editor_view.dispatch(transaction);
+			}
+		}
 	}
 
-	/** @param {string} $selected_name */
-	function select_state($selected_name) {
-		const file = $files.find((file) => file.name === $selected_name);
-		if (file?.type !== 'file') return;
+	/** @param {import('$lib/types').Stub[]} $files */
+	function reset($files) {
+		if (skip_reset) return;
 
-		let state = editor_states.get(file.name);
-		if (!state) {
-			const extensions = [
-				basicSetup,
-				vim(),
-				EditorState.tabSize.of(2),
-				keymap.of([indentWithTab]),
-				indentUnit.of('\t'),
-				theme
-			];
+		for (const file of $files) {
+			if (file.type !== 'file') continue;
 
-			if (file.name.endsWith('.js') || file.name.endsWith('.json')) {
-				extensions.push(javascript());
-			} else if (file.name.endsWith('.html')) {
-				extensions.push(html());
-			} else if (file.name.endsWith('.svelte')) {
-				extensions.push(svelte());
+			let state = editor_states.get(file.name);
+
+			if (state) {
+				const existing = state.doc.toString();
+
+				if (file.contents !== existing) {
+					const transaction = state.update({
+						changes: {
+							from: 0,
+							to: existing.length,
+							insert: file.contents
+						}
+					});
+
+					editor_states.set(file.name, transaction.state);
+					state = transaction.state;
+
+					if ($selected_name === file.name) {
+						editor_view.setState(state);
+					}
+				}
+			} else {
+				let lang;
+
+				if (file.name.endsWith('.js') || file.name.endsWith('.json')) {
+					lang = javascript();
+				} else if (file.name.endsWith('.html')) {
+					lang = html();
+				} else if (file.name.endsWith('.svelte')) {
+					lang = svelte();
+				}
+
+				state = EditorState.create({
+					doc: file.contents,
+					extensions: lang ? [...extensions, lang] : extensions
+				});
+
+				editor_states.set(file.name, state);
 			}
-
-			state = EditorState.create({
-				doc: file.contents,
-				extensions
-			});
-
-			editor_states.set(file.name, state);
 		}
+	}
+
+	/** @param {string | null} $selected_name */
+	function select_state($selected_name) {
+		if (skip_reset) return;
+
+		const state =
+			($selected_name && editor_states.get($selected_name)) ||
+			EditorState.create({
+				doc: '',
+				extensions: [EditorState.readOnly.of(true)]
+			});
 
 		editor_view.setState(state);
 	}
 
 	onMount(() => {
-		if (dev && !/chrome/i.test(navigator.userAgent)) {
-			container.innerHTML =
-				'<p style="text-align: center; width: 20em; max-width: calc(100% - 4rem)">The code editor requires Chrome during development, as it uses module workers</p>';
-			return;
-		}
-
-		// TODO is this still necessary?
-		let dark_mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-		/** @param {MediaQueryListEvent} event */
-		const on_mode_change = (event) => {
-			const dark = event.matches;
-			if (dark !== dark_mode) {
-				dark_mode = dark;
-			}
-		};
-		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', on_mode_change);
-
 		editor_view = new EditorView({
 			parent: container,
-			dispatch(transaction) {
+			async dispatch(transaction) {
 				editor_view.update([transaction]);
 
 				if (transaction.docChanged && $selected_file) {
+					skip_reset = true;
+
 					// TODO do we even need to update `$files`? maintaining separate editor states is probably sufficient
 					update_file({
 						...$selected_file,
@@ -113,22 +160,35 @@
 
 					// keep `editor_states` updated so that undo/redo history is preserved for files independently
 					editor_states.set($selected_file.name, editor_view.state);
+
+					await tick();
+					skip_reset = false;
 				}
 			}
 		});
 
 		return () => {
-			window
-				.matchMedia('(prefers-color-scheme: dark)')
-				.removeEventListener('change', on_mode_change);
-
 			editor_view.destroy();
 		};
 	});
 
+	beforeNavigate(() => {
+		skip_reset = true;
+	});
+
 	afterNavigate(() => {
+		skip_reset = false;
+
 		editor_states.clear();
-		select_state($selected_name);
+		reset($files);
+
+		if (editor_view) {
+			// could be false if onMount returned early
+			select_state($selected_name);
+		}
+
+		// clear warnings
+		warnings.set({});
 	});
 </script>
 
@@ -148,15 +208,6 @@
 <div
 	class="container"
 	bind:this={container}
-	on:keydown={(e) => {
-		if (e.key === 'Tab') {
-			preserve_editor_focus = false;
-
-			setTimeout(() => {
-				preserve_editor_focus = true;
-			}, 200);
-		}
-	}}
 	on:focusin={() => {
 		clearTimeout(remove_focus_timeout);
 		preserve_editor_focus = true;
@@ -213,5 +264,11 @@
 
 	.fake-content {
 		padding: 0 1rem;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.fake * {
+			color: #666;
+		}
 	}
 </style>

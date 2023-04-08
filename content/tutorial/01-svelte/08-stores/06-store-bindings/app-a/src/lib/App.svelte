@@ -4,3 +4,7 @@
 
 <h1>{$greeting}</h1>
 <input value={$name} />
+
+<button>
+	Add exclamation mark!
+</button>

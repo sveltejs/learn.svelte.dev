@@ -7,14 +7,15 @@ As long as an object correctly implements the `subscribe` method, it's a store. 
 For example, the `count` store from our earlier example could include `increment`, `decrement` and `reset` methods and avoid exposing `set` and `update`:
 
 ```js
+/// file: stores.js
 function createCount() {
 	const { subscribe, set, update } = writable(0);
 
 	return {
 		subscribe,
-		increment: () => update((n) => n + 1),
-		decrement: () => update((n) => n - 1),
-		reset: () => set(0)
+		increment: () => +++update((n) => n + 1)+++,
+		decrement: () => +++update((n) => n - 1)+++,
+		reset: () => +++set(0)+++
 	};
 }
 ```

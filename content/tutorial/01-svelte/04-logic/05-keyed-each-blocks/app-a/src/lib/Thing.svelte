@@ -1,6 +1,4 @@
 <script>
-	import { onDestroy } from 'svelte';
-
 	const emojis = {
 		apple: '🍎',
 		banana: '🍌',
@@ -12,35 +10,9 @@
 	// the name is updated whenever the prop value changes...
 	export let name;
 
-	// ...but the "emoji" variable is fixed upon initialisation of the component
+	// ...but the "emoji" variable is fixed upon initialisation
+	// of the component because it uses `const` instead of `$:`
 	const emoji = emojis[name];
-
-	// observe in the console which entry is removed
-	onDestroy(() => {
-		console.log('thing destroyed: ' + name);
-	});
 </script>
 
-<p>
-	<span>The emoji for {name} is {emoji}</span>
-</p>
-
-<style>
-	p {
-		margin: 0.8em 0;
-	}
-
-	span {
-		display: inline-block;
-		padding: 0.2em 1em 0.3em;
-		text-align: center;
-		border-radius: 0.2em;
-		background-color: #ffdfd3;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		span {
-			background-color: #4f352b;
-		}
-	}
-</style>
+<p>{emoji} = {name}</p>

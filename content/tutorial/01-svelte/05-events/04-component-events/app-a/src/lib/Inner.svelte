@@ -1,7 +1,9 @@
 <script>
-	// setup code goes here
-
-	function sayHello() {}
+	function sayHello() {
+		dispatch('message', {
+			text: 'Hello!'
+		});
+	}
 </script>
 
 <button on:click={sayHello}>

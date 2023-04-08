@@ -1,16 +1,5 @@
 <script>
-	async function getRandomNumber() {
-		const res = await fetch(
-			`https://svelte.dev/tutorial/random-number`
-		);
-		const text = await res.text();
-
-		if (res.ok) {
-			return text;
-		} else {
-			throw new Error(text);
-		}
-	}
+	import { getRandomNumber } from './utils.js';
 
 	let promise = getRandomNumber();
 
@@ -19,7 +8,8 @@
 	}
 </script>
 
-<button on:click={handleClick}> generate random number </button>
+<button on:click={handleClick}>
+	generate random number
+</button>
 
-<!-- replace this element -->
-<p>{promise}</p>
+<p>...waiting</p>

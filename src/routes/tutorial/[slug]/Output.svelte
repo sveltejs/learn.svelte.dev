@@ -5,6 +5,7 @@
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
 	import { base, error, logs, progress, subscribe } from './adapter';
+	import { warnings } from './state';
 
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
@@ -47,7 +48,7 @@
 		if (paused) return;
 
 		if (e.data.type === 'ping') {
-			path = e.data.data.path ?? path;
+			path = e.data.path;
 			loading = false;
 
 			clearTimeout(timeout);
@@ -61,18 +62,37 @@
 			}, 1000);
 		} else if (e.data.type === 'ping-pause') {
 			clearTimeout(timeout);
+		} else if (e.data.type === 'warnings') {
+			warnings.update(($warnings) => ({
+				...$warnings,
+				[e.data.data.normalizedFilename]: e.data.data.allWarnings
+			}));
 		}
 	}
 
 	/** @param {string} src */
 	function set_iframe_src(src) {
+		if (!iframe) return; // HMR
+
+		// To prevent iframe flickering.
+		// Set to `visible` by calling `set_iframe_visible` function
+		// from iframe on:load or setTimeout
+		iframe.style.visibility = 'hidden';
+		setTimeout(set_iframe_visible, 1000);
+
 		// removing the iframe from the document allows us to
 		// change the src without adding a history entry, which
 		// would make back/forward traversal very annoying
-		const parentNode = /** @type {HTMLElement} */ (iframe?.parentNode);
+		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
 		parentNode?.removeChild(iframe);
 		iframe.src = src;
 		parentNode?.appendChild(iframe);
+	}
+
+	function set_iframe_visible() {
+		if (iframe.style.visibility === 'hidden') {
+			iframe.style.visibility = 'visible';
+		}
 	}
 </script>
 
@@ -80,6 +100,7 @@
 <Chrome
 	{path}
 	{loading}
+	href={$base && ($base + path)}
 	on:refresh={() => {
 		set_iframe_src($base + path);
 	}}
@@ -97,7 +118,7 @@
 
 <div class="content">
 	{#if browser}
-		<iframe bind:this={iframe} title="Output" />
+		<iframe bind:this={iframe} title="Output" on:load={set_iframe_visible} />
 	{/if}
 
 	{#if paused || loading || $error}
@@ -142,10 +163,10 @@
 		font-family: var(--font-mono);
 		font-size: var(--sk-text-xs);
 		padding: 1rem;
-		background: white;
-		border-top: 1px solid var(--sk-back-3);
+		background: rgba(255,255,255,0.5);
 		transform: translate(0, 100%);
 		transition: transform 0.3s;
+		backdrop-filter: blur(3px);
 	}
 
 	.terminal::after {
@@ -168,5 +189,11 @@
 
 	.terminal.visible::after {
 		--shadow: rgba(0, 0, 0, 0.05);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.terminal {
+			background: rgba(0,0,0,0.5);
+		}
 	}
 </style>

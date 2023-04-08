@@ -1,13 +1,37 @@
 import { derived, writable } from 'svelte/store';
 import * as adapter from './adapter.js';
 
-/** @type {import('svelte/store').Writable<import('$lib/types').Stub[]>} */
+/**
+ * @template T
+ * @typedef {import('svelte/store').Writable<T>} Writable<T>
+ */
+
+// TODO would be nice if svelte exported this type (maybe it does already?)
+/**
+ * @typedef {{
+ *   code: string;
+ *   start: { line: number, column: number, character: number };
+ *   end: { line: number, column: number, character: number };
+ *   pos: number;
+ *   filename: string;
+ *   frame: string;
+ *   message: string;
+ * }} CompilerWarning
+ */
+
+/** @type {Writable<import('$lib/types').Stub[]>} */
 export const files = writable([]);
 
-/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Stub>>} */
+/** @type {Writable<Record<string, import('$lib/types').Stub>>} */
 export const solution = writable({});
 
-/** @type {import('svelte/store').Writable<string | null>} */
+/** @type {Writable<Record<string, CompilerWarning[]>>} */
+export const warnings = writable({});
+
+/** @type {Writable<{ parent: string, type: 'file' | 'directory' } | null>} */
+export const creating = writable(null);
+
+/** @type {Writable<string | null>} */
 export const selected_name = writable(null);
 
 export const selected_file = derived([files, selected_name], ([$files, $selected_name]) => {
@@ -34,11 +58,47 @@ export function update_file(file) {
 
 /** @param {import('$lib/types').Stub[]} new_files */
 export function reset_files(new_files) {
+	// if the selected file no longer exists, clear it
+	selected_name.update(($selected_name) => {
+		const file = new_files.find((file) => file.name === $selected_name);
+		return file?.name ?? null;
+	});
+
 	files.set(new_files);
 	adapter.reset(new_files);
 }
 
-/** @param {string | null} name */
-export function select_file(name) {
-	selected_name.set(name);
+/**
+ * @param {string} name
+ * @param {import('$lib/types').Stub[]} files
+ */
+export function create_directories(name, files) {
+	const existing = new Set();
+
+	for (const file of files) {
+		if (file.type === 'directory') {
+			existing.add(file.name);
+		}
+	}
+
+	/** @type {import('$lib/types').DirectoryStub[]} */
+	const directories = [];
+
+	const parts = name.split('/');
+	while (parts.length) {
+		parts.pop();
+
+		const dir = parts.join('/');
+		if (existing.has(dir)) {
+			break;
+		}
+
+		directories.push({
+			type: 'directory',
+			name: dir,
+			basename: /** @type {string} */ (parts.at(-1))
+		});
+	}
+
+	return directories;
 }

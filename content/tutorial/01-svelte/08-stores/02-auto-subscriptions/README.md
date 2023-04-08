@@ -7,18 +7,20 @@ The app in the previous example works, but there's a subtle bug — the store is
 Start by declaring `unsubscribe` in `App.svelte`:
 
 ```js
-const unsubscribe = count.subscribe((value) => {
+/// file: App.svelte
++++const unsubscribe =+++ count.subscribe((value) => {
 	count_value = value;
 });
 ```
 
 > Calling a `subscribe` method returns an `unsubscribe` function.
 
-You now declared `unsubscribe`, but it still needs to be called, for example through the `onDestroy` [lifecycle hook](/tutorial/ondestroy):
+You now declared `unsubscribe`, but it still needs to be called, for example through the `onDestroy` lifecycle hook:
 
 ```svelte
+/// file: App.svelte
 <script>
-	import { onDestroy } from 'svelte';
+	+++import { onDestroy } from 'svelte';+++
 	import { count } from './stores.js';
 	import Incrementer from './Incrementer.svelte';
 	import Decrementer from './Decrementer.svelte';
@@ -30,7 +32,7 @@ You now declared `unsubscribe`, but it still needs to be called, for example thr
 		count_value = value;
 	});
 
-	onDestroy(unsubscribe);
+	+++onDestroy(unsubscribe);+++
 </script>
 
 <h1>The count is {count_value}</h1>
@@ -39,14 +41,24 @@ You now declared `unsubscribe`, but it still needs to be called, for example thr
 It starts to get a bit boilerplatey though, especially if your component subscribes to multiple stores. Instead, Svelte has a trick up its sleeve — you can reference a store value by prefixing the store name with `$`:
 
 ```svelte
+/// file: App.svelte
 <script>
+	---import { onDestroy } from 'svelte';---
 	import { count } from './stores.js';
 	import Incrementer from './Incrementer.svelte';
 	import Decrementer from './Decrementer.svelte';
 	import Resetter from './Resetter.svelte';
+
+	---let count_value;---
+
+	---const unsubscribe = count.subscribe(value => {
+		count_value = value;
+	});---
+
+	---onDestroy(unsubscribe);---
 </script>
 
-<h1>The count is {$count}</h1>
+<h1>The count is {+++$count+++}</h1>
 ```
 
 > Auto-subscription only works with store variables that are declared (or imported) at the top-level scope of a component.

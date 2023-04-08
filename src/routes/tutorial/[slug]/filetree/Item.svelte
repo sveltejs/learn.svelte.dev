@@ -204,7 +204,8 @@
 		z-index: 2;
 	}
 
-	[aria-current='true']:has(:focus-visible)::after {
+	[aria-current='true']:has(:focus-visible)::after,
+	:global(.mobile-filetree) [aria-current='true']::after {
 		display: none;
 	}
 </style>

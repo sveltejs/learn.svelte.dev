@@ -7,7 +7,8 @@
 		['.jpg', 'image/jpeg'],
 		['.jpeg', 'image/jpeg'],
 		['.png', 'image/png'],
-		['.gif', 'image/gif']
+		['.gif', 'image/gif'],
+		['.webp', 'image/webp']
 	]);
 
 	$: ext = selected?.basename.slice(selected.basename.lastIndexOf('.'));

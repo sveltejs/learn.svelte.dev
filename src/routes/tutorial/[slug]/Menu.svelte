@@ -1,11 +1,10 @@
 <script>
 	import { page } from '$app/stores';
-	import { slide } from 'svelte/transition';
 	import arrow from '$lib/icons/arrow.svg';
-
-	import Icon from '@sveltejs/site-kit/components/Icon.svelte';
+	import { slide } from 'svelte/transition';
 	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
+	import { Icon } from '@sveltejs/site-kit/components';
 	import { tick } from 'svelte';
 
 	/** @type {import('$lib/types').PartStub[]}*/
@@ -25,7 +24,8 @@
 	$: expanded_part = current.part.slug;
 	$: expanded_chapter = current.chapter.slug;
 
-	$: regex = new RegExp(`\\b${search.length >= 2 ? search : ''}`, 'i');
+	$: escaped = search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+	$: regex = new RegExp(`\\b${search.length >= 2 ? escaped : ''}`, 'i');
 
 	$: filtered = index
 		.map((part) => {
@@ -147,6 +147,8 @@
 							</ul>
 						{/if}
 					</li>
+				{:else}
+					<li>No search results!</li>
 				{/each}
 			</ul>
 		</div>

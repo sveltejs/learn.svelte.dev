@@ -6,6 +6,10 @@
 	height: 100%;
 }
 
+.cm-editor ::selection {
+	color: revert;
+}
+
 .cm-editor .cm-scroller {
 	font-family: var(--font-mono);
 	font-size: 1.3rem;
@@ -32,6 +36,10 @@
 	width: 1rem;
 }
 
+.cm-focused .cm-cursor {
+	border-left-color: var(--sk-text-3);
+}
+
 .cm-editor .cm-content {
 	padding: 1rem 0;
 }
@@ -49,12 +57,57 @@
 	color: var(--sk-text-2);
 }
 
+.cm-editor .cm-tooltip {
+	border: none;
+	border-radius: 2px;
+	overflow: hidden;
+	margin: 0.4rem 0;
+	filter: drop-shadow(1px 2px 5px rgba(0,0,0,0.1));
+}
+.cm-editor .cm-tooltip-hover {}
+.cm-editor .cm-tooltip-below {}
+.cm-editor .cm-tooltip-lint {}
+.cm-editor .cm-tooltip-section {}
+.cm-editor .cm-diagnostic {
+	border: none;
+	padding: 0.2rem 0.8rem;
+}
+.cm-editor .cm-diagnostic-warning {
+	background: hsl(39, 100%, 70%);
+}
+.cm-editor .cm-diagnosticText {}
+
+.cm-editor .cm-tooltip.cm-tooltip-autocomplete > ul {
+	font-family: var(--font-mono);
+	font-size: 1.3rem;
+}
+
+
 @media (prefers-color-scheme: dark) {
 	.cm-editor .cm-activeLineGutter {
 		background-color: var(--sk-back-3);
 	}
 
 	.cm-editor .cm-activeLine {
-		background-color: var(--sk-back-2);
+		background-color: hsl(0, 0%, 40%, 0.2);
+	}
+
+	.cm-editor .cm-diagnostic-warning {
+		background: hsl(39, 100%, 20%);
+	}
+
+	.cm-editor .cm-diagnostic-warning {
+		background: hsl(39, 100%, 10%);
+	}
+
+	.cm-editor.cm-focused .cm-selectionBackground,
+	.cm-editor .cm-selectionBackground,
+	.cm-editor .cm-content ::selection {
+		background: var(--sk-theme-3);
+		opacity: .3;
+	}
+
+	.cm-editor .cm-selectionMatch {
+		background: rgba(255, 255, 255, 0.2);
 	}
 }

@@ -5,7 +5,7 @@
 	import Item from './Item.svelte';
 	import folder_closed from '$lib/icons/folder.svg';
 	import folder_open from '$lib/icons/folder-open.svg';
-	import { files, solution } from '../state.js';
+	import { files, solution, creating } from '../state.js';
 
 	/** @type {import('$lib/types').DirectoryStub} */
 	export let directory;
@@ -19,10 +19,9 @@
 	/** @type {Array<import('$lib/types').Stub>} */
 	export let contents;
 
-	/** @type {'idle' | 'add_file' | 'add_directory' | 'renaming'} */
-	let mode = 'idle';
+	let renaming = false;
 
-	const { collapsed, rename, add, remove, readonly } = context.get();
+	const { collapsed, rename, add, remove } = context.get();
 
 	$: segments = get_depth(prefix);
 
@@ -44,35 +43,33 @@
 		can_create.file = false;
 		can_create.directory = false;
 
-		if (!$readonly) {
-			const child_prefixes = [];
+		const child_prefixes = [];
 
-			for (const file of $files) {
-				if (
-					file.type === 'directory' &&
-					file.name.startsWith(prefix) &&
-					get_depth(file.name) === depth + 1
-				) {
-					child_prefixes.push(file.name + '/');
-				}
+		for (const file of $files) {
+			if (
+				file.type === 'directory' &&
+				file.name.startsWith(prefix) &&
+				get_depth(file.name) === depth + 1
+			) {
+				child_prefixes.push(file.name + '/');
 			}
+		}
 
-			for (const file of Object.values($solution)) {
-				if (!file.name.startsWith(prefix)) continue;
+		for (const file of Object.values($solution)) {
+			if (!file.name.startsWith(prefix)) continue;
 
-				// if already exists in $files, bail
-				if ($files.find((f) => f.name === file.name)) continue;
+			// if already exists in $files, bail
+			if ($files.find((f) => f.name === file.name)) continue;
 
-				// if intermediate directory exists, bail
-				if (child_prefixes.some((prefix) => file.name.startsWith(prefix))) continue;
+			// if intermediate directory exists, bail
+			if (child_prefixes.some((prefix) => file.name.startsWith(prefix))) continue;
 
-				can_create[file.type] = true;
-			}
+			can_create[file.type] = true;
 		}
 	}
 
 	// fake root directory has no name
-	$: can_remove = !$readonly && directory.name ? !$solution[directory.name] : false;
+	$: can_remove = directory.name ? !$solution[directory.name] : false;
 
 	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
 	$: actions = [
@@ -80,21 +77,27 @@
 			icon: 'file-new',
 			label: 'New file',
 			fn: () => {
-				mode = 'add_file';
+				creating.set({
+					parent: directory.name,
+					type: 'file'
+				});
 			}
 		},
 		can_create.directory && {
 			icon: 'folder-new',
 			label: 'New folder',
 			fn: () => {
-				mode = 'add_directory';
+				creating.set({
+					parent: directory.name,
+					type: 'directory'
+				});
 			}
 		},
 		can_remove && {
 			icon: 'rename',
 			label: 'Rename',
 			fn: () => {
-				mode = 'renaming';
+				renaming = true;
 			}
 		},
 		can_remove && {
@@ -112,19 +115,19 @@
 	basename={directory.basename}
 	icon={$collapsed[directory.name] ? folder_closed : folder_open}
 	can_rename={can_remove}
-	renaming={mode === 'renaming'}
+	{renaming}
 	{actions}
 	on:click={() => {
 		$collapsed[directory.name] = !$collapsed[directory.name];
 	}}
 	on:edit={() => {
-		mode = 'renaming';
+		renaming = true;
 	}}
 	on:rename={(e) => {
 		rename(directory, e.detail.basename);
 	}}
 	on:cancel={() => {
-		mode = 'idle';
+		renaming = false;
 	}}
 	on:keydown={(e) => {
 		if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
@@ -134,7 +137,7 @@
 />
 
 {#if !$collapsed[directory.name]}
-	{#if mode === 'add_directory'}
+	{#if $creating?.parent === directory.name && $creating.type === 'directory'}
 		<Item
 			depth={depth + 1}
 			renaming
@@ -142,7 +145,7 @@
 				add(prefix + e.detail.basename, 'directory');
 			}}
 			on:cancel={() => {
-				mode = 'idle';
+				creating.set(null);
 			}}
 		/>
 	{/if}
@@ -151,7 +154,7 @@
 		<svelte:self {directory} prefix={directory.name + '/'} depth={depth + 1} contents={children} />
 	{/each}
 
-	{#if mode === 'add_file'}
+	{#if $creating?.parent === directory.name && $creating.type === 'file'}
 		<Item
 			depth={depth + 1}
 			renaming
@@ -159,7 +162,7 @@
 				add(prefix + e.detail.basename, 'file');
 			}}
 			on:cancel={() => {
-				mode = 'idle';
+				creating.set(null);
 			}}
 		/>
 	{/if}

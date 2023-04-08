@@ -2,17 +2,14 @@
 title: Else blocks
 ---
 
-Since the two conditions — `if user.loggedIn` and `if !user.loggedIn` — are mutually exclusive, we can simplify this component slightly by using an `else` block:
+Just like in JavaScript, an `if` block can have an `else` block:
 
 ```svelte
-{#if user.loggedIn}
-	<button on:click={toggle}>
-		Log out
-	</button>
-+++{:else}+++
-	<button on:click={toggle}>
-		Log in
-	</button>
+/// file: App.svelte
+{#if count > 10}
+	<p>{count} is greater than 10</p>
++++{:else}
+	<p>{count} is between 0 and 10</p>+++
 {/if}
 ```
 
