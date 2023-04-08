@@ -1,5 +1,7 @@
 ---
 title: Rest parameters
+path: /how
+focus: /src/routes/[path]/+page.svelte
 ---
 
 To match an unknown number of path segments, use a `[...rest]` parameter, so named for its resemblance to [rest parameters in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters).
@@ -20,3 +22,5 @@ Rename `src/routes/[path]` to `src/routes/[...path]`. The route now matches any 
 > ```
 >
 > Inside the `+page.server.js` file, `throw error(404)` inside `load`.
+
+Rest parameters do _not_ need to go at the end — a route like `/items/[...path]/edit` or `/items/[...path].json` is totally valid.

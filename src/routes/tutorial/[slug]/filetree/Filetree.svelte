@@ -14,7 +14,7 @@
 
 	const dispatch = createEventDispatcher();
 
-	const hidden = new Set(['__client.js', 'node_modules']);
+	const hidden = new Set(['__client.js', 'node_modules', '__delete']);
 
 	let modal_text = '';
 
@@ -122,6 +122,14 @@
 			dispatch('select', { name });
 		}
 	});
+
+	/** @param {import('$lib/types').Stub} file */
+	function is_deleted(file) {
+		if (file.type === 'directory') return `${file.name}/__delete` in exercise.a;
+		if (file.text) return file.contents.startsWith('__delete');
+
+		return false;
+	}
 </script>
 
 <ul
@@ -147,7 +155,7 @@
 			name: '',
 			basename: exercise.scope.name
 		}}
-		contents={$files.filter((file) => !hidden.has(file.basename))}
+		contents={$files.filter((file) => !hidden.has(file.basename) && !is_deleted(file))}
 	/>
 </ul>
 
