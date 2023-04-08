@@ -8,6 +8,7 @@ specifiers:
   '@codemirror/lang-javascript': ^6.1.4
   '@codemirror/language': ^6.6.0
   '@codemirror/lint': ^6.2.0
+  '@codemirror/search': ^6.3.0
   '@codemirror/state': ^6.2.0
   '@codemirror/view': ^6.9.2
   '@fontsource/roboto-mono': ^4.5.10
@@ -17,6 +18,7 @@ specifiers:
   '@lezer/lr': ^1.3.3
   '@playwright/test': ^1.31.2
   '@replit/codemirror-lang-svelte': ^6.0.0
+  '@replit/codemirror-vim': ^6.0.9
   '@rich_harris/svelte-split-pane': ^1.1.0
   '@sveltejs/adapter-vercel': 2.3.1
   '@sveltejs/kit': ^1.15.0
@@ -54,6 +56,7 @@ dependencies:
   '@codemirror/lang-javascript': 6.1.4
   '@codemirror/language': 6.6.0
   '@codemirror/lint': 6.2.0
+  '@codemirror/search': 6.3.0
   '@codemirror/state': 6.2.0
   '@codemirror/view': 6.9.2
   '@fontsource/roboto-mono': 4.5.10
@@ -62,6 +65,7 @@ dependencies:
   '@lezer/javascript': 1.4.1
   '@lezer/lr': 1.3.3
   '@replit/codemirror-lang-svelte': 6.0.0_ybny7xhlf2ysg4majw54z4nkly
+  '@replit/codemirror-vim': 6.0.11_43oovqgcdaxzhub7wnzsdexoq4
   '@rich_harris/svelte-split-pane': 1.1.0_svelte@3.57.0
   '@webcontainer/api': 1.1.0
   adm-zip: 0.5.10
@@ -730,6 +734,22 @@ packages:
       '@lezer/highlight': 1.1.3
       '@lezer/javascript': 1.4.1
       '@lezer/lr': 1.3.3
+    dev: false
+
+  /@replit/codemirror-vim/6.0.11_43oovqgcdaxzhub7wnzsdexoq4:
+    resolution: {integrity: sha512-b3umG+3DR9LfNjrPBk1849Cp8WHgFbYFhlFvGg62br03NdVquVKxaQonK7xA8WGurzQeQOpBW+hhr7mzZxWksA==}
+    peerDependencies:
+      '@codemirror/commands': ^6.0.0
+      '@codemirror/language': ^6.1.0
+      '@codemirror/search': ^6.2.0
+      '@codemirror/state': ^6.0.1
+      '@codemirror/view': ^6.0.3
+    dependencies:
+      '@codemirror/commands': 6.2.2
+      '@codemirror/language': 6.6.0
+      '@codemirror/search': 6.3.0
+      '@codemirror/state': 6.2.0
+      '@codemirror/view': 6.9.2
     dev: false
 
   /@rich_harris/svelte-split-pane/1.1.0_svelte@3.57.0:

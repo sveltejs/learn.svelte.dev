@@ -78,9 +78,25 @@
 		}
 	}
 
+	let installed_vim = false;
+
 	/** @param {import('$lib/types').Stub[]} $files */
-	function reset($files) {
+	async function reset($files) {
 		if (skip_reset) return;
+
+		let should_install_vim = localStorage.getItem('vim') === 'true';
+
+		const q = new URLSearchParams(location.search);
+		if (q.has('vim')) {
+			should_install_vim = q.get('vim') === 'true';
+			localStorage.setItem('vim', should_install_vim.toString());
+		}
+
+		if (!installed_vim && should_install_vim) {
+			installed_vim = true;
+			const { vim } = await import('@replit/codemirror-vim');
+			extensions.push(vim());
+		}
 
 		for (const file of $files) {
 			if (file.type !== 'file') continue;
@@ -174,11 +190,11 @@
 		skip_reset = true;
 	});
 
-	afterNavigate(() => {
+	afterNavigate(async () => {
 		skip_reset = false;
 
 		editor_states.clear();
-		reset($files);
+		await reset($files);
 
 		if (editor_view) {
 			// could be false if onMount returned early
