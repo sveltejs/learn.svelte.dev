@@ -2,12 +2,23 @@ function post(data) {
 	parent.postMessage(data, '*');
 }
 
+function ping() {
+	post({
+		type: 'ping',
+		path: location.pathname + location.search + location.hash
+	});
+}
+
+function pause() {
+	post({ type: 'ping-pause' });
+}
+
 // Hack into the alert that's used in some tutorials and send a message prior to the alert,
 // else the parent thinks we lost contact and wrongfully reloads the page.
 // The drawback is that alert is no longer blocking, but no tutorial relies on this.
 const alert = window.alert;
 window.alert = (message) => {
-	post({ type: 'ping-pause' });
+	pause();
 
 	setTimeout(() => {
 		alert(message);
@@ -16,21 +27,10 @@ window.alert = (message) => {
 
 let can_focus = false;
 
-window.addEventListener('pointerdown', (e) => {
-	can_focus = true;
-});
-
-window.addEventListener('pointerup', (e) => {
-	can_focus = false;
-});
-
-window.addEventListener('keydown', (e) => {
-	can_focus = true;
-});
-
-window.addEventListener('keyup', (e) => {
-	can_focus = false;
-});
+window.addEventListener('pointerdown', (e) => can_focus = true);
+window.addEventListener('pointerup', (e) => can_focus = false);
+window.addEventListener('keydown', (e) => can_focus = true);
+window.addEventListener('keyup', (e) => can_focus = false);
 
 /**
  * The iframe sometimes takes focus control in ways we can't prevent
@@ -64,14 +64,13 @@ window.addEventListener('click', (e) => {
 	}
 });
 
-function ping() {
-	post({
-		type: 'ping',
-		data: {
-			path: location.pathname + location.search + location.hash
-		}
-	});
-}
+window.addEventListener('visibilitychange', () => {
+	if (document.visibilityState === 'visible') {
+		ping();
+	} else {
+		pause();
+	}
+});
 
 let previous_href = location.href;
 

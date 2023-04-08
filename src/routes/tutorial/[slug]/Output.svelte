@@ -48,12 +48,13 @@
 		if (paused) return;
 
 		if (e.data.type === 'ping') {
-			path = e.data.data.path ?? path;
+			path = e.data.path;
 			loading = false;
 
 			clearTimeout(timeout);
 			timeout = setTimeout(() => {
 				if (dev && !iframe) return;
+
 				// we lost contact, refresh the page
 				loading = true;
 				set_iframe_src($base + path);
