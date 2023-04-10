@@ -49,8 +49,6 @@ onMount(() => {
 		paint(context, t);
 	});
 
-	loop();
-
 +++	return () => {
 		cancelAnimationFrame(frame);
 	};+++
