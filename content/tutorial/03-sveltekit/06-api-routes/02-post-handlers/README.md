@@ -49,7 +49,7 @@ export async function POST({ request, cookies }) {
 }
 ```
 
-The `request` is a standard [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) object; `await request.json()` returns the data that we posted from the event handler.
+As with `load` functions and form actions, the `request` is a standard [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) object; `await request.json()` returns the data that we posted from the event handler.
 
 We're returning a response with a [201 Created](https://httpstatusdogs.com/201-created) status and the `id` of the newly generated todo in our database. Back in the event handler, we can use this to update the page:
 

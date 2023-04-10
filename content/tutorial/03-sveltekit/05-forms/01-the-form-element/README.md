@@ -41,6 +41,8 @@ export function load({ cookies }) {
 };+++
 ```
 
+The `request` is a standard [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) object; `await request.formData()` returns a [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData) instance.
+
 When we hit Enter, the database is updated and the page reloads with the new data.
 
 Notice that we haven't had to write any `fetch` code or anything like that — data updates automatically. And because we're using a `<form>` element, this app would work even if JavaScript was disabled or unavailable.
