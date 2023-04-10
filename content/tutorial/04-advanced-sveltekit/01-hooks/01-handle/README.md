@@ -4,7 +4,7 @@ title: handle
 
 SvelteKit provides several _hooks_ — ways to intercept and override the framework's default behaviour.
 
-The most elementary hook is `handle`, which lives in `src/hooks.server.js`. It receives an `event` — an instance of [`RequestEvent`](https://kit.svelte.dev/docs/types#public-types-requestevent) — along with a `resolve` function, and returns a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+The most elementary hook is `handle`, which lives in `src/hooks.server.js`. It receives an `event` object along with a `resolve` function, and returns a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response).
 
 `resolve` is where the magic happens: SvelteKit matches the incoming request URL to a route of your app, imports the relevant code (`+page.server.js` and `+page.svelte` files and so on), loads the data needed by the route, and generates the response.
 
