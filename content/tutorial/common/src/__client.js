@@ -2,11 +2,8 @@ function post(data) {
 	parent.postMessage(data, '*');
 }
 
-function ping() {
-	post({
-		type: 'ping',
-		path: location.pathname + location.search + location.hash
-	});
+function ping(path = location.pathname + location.search + location.hash) {
+	post({ type: 'ping', path });
 }
 
 function pause() {
@@ -58,6 +55,8 @@ window.addEventListener('click', (e) => {
 			if (url.origin !== location.origin) {
 				e.preventDefault();
 				window.open(url, '_blank');
+			} else {
+				ping(url.pathname + url.search + url.hash);
 			}
 		}
 		node = node.parent;
