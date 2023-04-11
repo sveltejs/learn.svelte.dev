@@ -9,6 +9,8 @@ const config = {
 
 	vitePlugin: {
 		experimental: {
+			// This feature enables compile-time warnings to be
+			// visible in the learn.svelte.dev editor
 			sendWarningsToBrowser: true
 		}
 	}
