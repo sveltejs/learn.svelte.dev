@@ -121,6 +121,8 @@ export async function create(base, error, progress, logs) {
 
 				const force_delete = [];
 
+				let include_server_files = false;
+
 				for (const stub of stubs) {
 					if (stub.name.endsWith('/__delete')) {
 						force_delete.push(stub.name.slice(0, -9));
@@ -136,6 +138,10 @@ export async function create(base, error, progress, logs) {
 
 						if (current?.contents !== stub.contents) {
 							to_write.push(stub);
+			
+							if (!include_server_files || stub.basename.endsWith('server.js')) {
+								include_server_files = true;
+							}
 						}
 					} else {
 						// always add directories, otherwise convert_stubs_to_tree will fail
@@ -189,7 +195,7 @@ export async function create(base, error, progress, logs) {
 
 				// Also trigger a reload of the iframe in case new files were added / old ones deleted,
 				// because that can result in a broken UI state
-				const should_reload = !launched || will_restart || to_delete.length > 0;
+				const should_reload = !launched || will_restart || to_delete.length > 0 || include_server_files;
 
 				await launch();
 
