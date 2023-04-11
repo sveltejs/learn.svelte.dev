@@ -156,7 +156,7 @@
 </div>
 
 <header>
-	<a href={current.prev ? `/tutorial/${current.prev.slug}` : undefined} aria-label="Previous">
+	<a href={current.prev ? `/tutorial/${current.prev.slug}` : undefined} aria-label={current.prev && 'Previous'}>
 		<Icon name="arrow-left" size={16} />
 	</a>
 
