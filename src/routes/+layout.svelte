@@ -5,9 +5,9 @@
 </script>
 
 <Shell>
-	<Nav slot="top-nav" logo="/svelte-logo.svg">
-		<svelte:fragment slot="nav-center">
-			<span>learn.svelte.dev</span>
+	<Nav slot="top-nav">
+		<svelte:fragment slot="home">
+			<strong>learn</strong>.svelte.dev
 		</svelte:fragment>
 
 		<svelte:fragment slot="nav-right">
