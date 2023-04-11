@@ -1,0 +1,23 @@
+{
+	"short_name": "Learn Svelte",
+	"name": "learn.svelte.dev",
+	"description": "An interactive Svelte/SvelteKit tutorial",
+	"icons": [
+		{
+			"src": "/svelte-logo-square.svg",
+			"type": "image/svg+xml",
+			"sizes": "512x512"
+		},
+		{
+			"src": "/svelte-logo-square.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "any maskable"
+		}
+	],
+	"start_url": "/",
+	"background_color": "#383838",
+	"theme_color": "#383838",
+	"display": "minimal-ui",
+	"scope": "/"
+}
