@@ -52,7 +52,7 @@ export async function create(base, error, progress, logs) {
 					// clear screen
 					logs.set([]);
 				} else {
-					const log = converter.toHtml(escape_html(chunk));
+					const log = converter.toHtml(escape_html(chunk)).replace(/\n/g, '<br>');
 					logs.update(($logs) => [...$logs, log]);
 				}
 			}
