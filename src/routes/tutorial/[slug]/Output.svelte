@@ -167,6 +167,7 @@
 		transform: translate(0, 100%);
 		transition: transform 0.3s;
 		backdrop-filter: blur(3px);
+		overflow-y: auto;
 	}
 
 	.terminal::after {
