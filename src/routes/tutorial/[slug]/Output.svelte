@@ -47,8 +47,9 @@
 
 		if (paused) return;
 
-		if (e.data.type === 'ping') {
+		if (e.data.type === 'path') {
 			path = e.data.path;
+		} else if (e.data.type === 'ping') {
 			loading = false;
 
 			clearTimeout(timeout);

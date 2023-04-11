@@ -2,8 +2,12 @@ function post(data) {
 	parent.postMessage(data, '*');
 }
 
-function ping(path = location.pathname + location.search + location.hash) {
-	post({ type: 'ping', path });
+function update_path(path) {
+	post({ type: 'path', path });
+}
+
+function ping() {
+	post({ type: 'ping' });
 }
 
 function pause() {
@@ -56,7 +60,7 @@ window.addEventListener('click', (e) => {
 				e.preventDefault();
 				window.open(url, '_blank');
 			} else {
-				ping(url.pathname + url.search + url.hash);
+				update_path(url.pathname + url.search + url.hash);
 			}
 		}
 		node = node.parent;
@@ -76,7 +80,7 @@ let previous_href = location.href;
 const url_observer = new MutationObserver(() => {
 	if (location.href !== previous_href) {
 		previous_href = location.href;
-		ping();
+		update_path(location.pathname + location.search + location.hash);
 	}
 });
 
