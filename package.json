@@ -15,7 +15,7 @@
 	"devDependencies": {
 		"@playwright/test": "^1.31.2",
 		"@sveltejs/adapter-vercel": "2.3.1",
-		"@sveltejs/kit": "^1.15.0",
+		"@sveltejs/kit": "^1.15.4",
 		"@sveltejs/site-kit": "^3.3.6",
 		"@types/diff": "^5.0.2",
 		"@types/marked": "^4.0.8",
