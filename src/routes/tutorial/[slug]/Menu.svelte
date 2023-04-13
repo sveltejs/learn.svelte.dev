@@ -156,7 +156,7 @@
 </div>
 
 <header>
-	<a href={current.prev ? `/tutorial/${current.prev.slug}` : undefined} aria-label="Previous">
+	<a href={current.prev ? `/tutorial/${current.prev.slug}` : undefined} aria-label={current.prev && 'Previous'}>
 		<Icon name="arrow-left" size={16} />
 	</a>
 
@@ -349,6 +349,14 @@
 		font-variant-numeric: tabular-nums;
 		border: 2px solid transparent;
 		box-sizing: border-box;
+	}
+
+	header a {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 1rem;
 	}
 
 	a:focus-visible,
