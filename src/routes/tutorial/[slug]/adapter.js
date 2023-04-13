@@ -74,14 +74,47 @@ export async function reset(files) {
 	}
 }
 
+/** @type {Map<string, Array<import('$lib/types').FileStub>>} */
+const queues = new Map();
+
 /**
  * @param {import('$lib/types').FileStub} file
  */
 export async function update(file) {
+	const queue = queues.get(file.name);
+	if (queue) {
+		queue.push(file);
+	} else {
+		queues.set(file.name, [file]);
+		setTimeout(() => flash(file.name), 0);
+	}
+}
+
+/**
+ * @param {string} filename
+ */
+async function flash(filename) {
 	const adapter = await ready;
+
+	const queue = queues.get(filename);
+	if (!queue || !queue.length) {
+		queues.delete(filename)
+		return;
+	}
+
+	const file = /** @type {import('$lib/types').FileStub} */ (queue.pop());
+	queue.length = 0
+
 	const should_reload = await adapter.update(file);
+
+	if (queue.length > 0) {
+		setTimeout(() => flash(filename), 0);
+		return;
+	}
 
 	if (should_reload) {
 		publish('reload');
 	}
+
+	setTimeout(() => flash(filename), 0);
 }
