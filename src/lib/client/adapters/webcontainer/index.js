@@ -159,25 +159,9 @@ export async function create(base, error, progress, logs) {
 				// For some reason, server-ready is fired again when the vite dev server is restarted.
 				// We need to wait for it to finish before we can continue, else we might
 				// request files from Vite before it's ready, leading to a timeout.
-				const will_restart = launched && to_write.some(will_restart_vite_dev_server);
-				const promise = will_restart
-					? new Promise((fulfil, reject) => {
-							const error_unsub = vm.on('error', (error) => {
-								error_unsub();
-								reject(new Error(error.message));
-							});
-
-							const ready_unsub = vm.on('server-ready', (port, base) => {
-								ready_unsub();
-								console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
-								fulfil(undefined);
-							});
-
-							setTimeout(() => {
-								reject(new Error('Timed out resetting WebContainer'));
-							}, 10000);
-					  })
-					: Promise.resolve();
+				const will_restart = launched &&
+					(to_write.some(is_config) || to_delete.some(is_config_path));
+				const promise = will_restart ? wait_for_restart_vite() : Promise.resolve();
 
 				for (const file of to_delete) {
 					await vm.fs.rm(file, { force: true, recursive: true });
@@ -219,9 +203,13 @@ export async function create(base, error, progress, logs) {
 					tree = /** @type {import('@webcontainer/api').DirectoryNode} */ (tree[part]).directory;
 				}
 
+				const will_restart = is_config(file);
+				const promise = will_restart ? wait_for_restart_vite() : Promise.resolve();
+
 				tree[basename] = to_file(file);
 
 				await vm.mount(root);
+				await promise;
 
 				current_stubs.set(file.name, file);
 
@@ -230,7 +218,7 @@ export async function create(base, error, progress, logs) {
 				// to avoid glitches without noticeably affecting update speed
 				await new Promise((f) => setTimeout(f, 50));
 
-				return will_restart_vite_dev_server(file);
+				return will_restart;
 			});
 		}
 	};
@@ -239,11 +227,34 @@ export async function create(base, error, progress, logs) {
 /**
  * @param {import('$lib/types').Stub} file
  */
-function will_restart_vite_dev_server(file) {
-	return (
-		file.type === 'file' &&
-		(file.name === '/vite.config.js' || file.name === '/svelte.config.js' || file.name === '/.env')
-	);
+function is_config(file) {
+	return file.type === 'file' && is_config_path(file.name);
+}
+
+/**
+ * @param {string} path
+ */
+function is_config_path(path) {
+	return ['/vite.config.js', '/svelte.config.js', '/.env'].includes(path);
+}
+
+function wait_for_restart_vite() {
+	return new Promise((fulfil, reject) => {
+		const error_unsub = vm.on('error', (error) => {
+			error_unsub();
+			reject(new Error(error.message));
+		});
+
+		const ready_unsub = vm.on('server-ready', (port, base) => {
+			ready_unsub();
+			console.log(`server ready on port ${port} at ${performance.now()}: ${base}`);
+			fulfil(undefined);
+		});
+
+		setTimeout(() => {
+			reject(new Error('Timed out resetting WebContainer'));
+		}, 10000);
+	});
 }
 
 /**
