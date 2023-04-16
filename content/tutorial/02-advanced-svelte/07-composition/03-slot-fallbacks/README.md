@@ -5,7 +5,7 @@ title: Slot fallbacks
 A component can specify _fallbacks_ for any slots that are left empty, by putting content inside the `<slot>` element:
 
 ```svelte
-/// file: Box.svelte
+/// file: Card.svelte
 <div class="card">
 	<header>
 		<slot name="telephone">
