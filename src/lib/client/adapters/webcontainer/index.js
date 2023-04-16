@@ -27,6 +27,8 @@ export async function create(base, error, progress, logs) {
 	progress.set({ value: 0, text: 'loading files' });
 
 	const q = yootils.queue(1);
+	/** @type {Map<string, Array<import('$lib/types').FileStub>>} */
+	const q_per_file = new Map();
 
 	/** Paths and contents of the currently loaded file stubs */
 	let current_stubs = stubs_to_map([]);
@@ -181,6 +183,15 @@ export async function create(base, error, progress, logs) {
 			});
 		},
 		update: (file) => {
+
+			let queue = q_per_file.get(file.name);
+			if (queue) {
+				queue.push(file);
+				return Promise.resolve(false);
+			}
+
+			q_per_file.set(file.name, queue = [file]);
+
 			return q.add(async () => {
 				/** @type {import('@webcontainer/api').FileSystemTree} */
 				const root = {};
@@ -204,19 +215,28 @@ export async function create(base, error, progress, logs) {
 				}
 
 				const will_restart = is_config(file);
-				const promise = will_restart ? wait_for_restart_vite() : Promise.resolve();
 
-				tree[basename] = to_file(file);
+				while (queue && queue.length > 0) {
 
-				await vm.mount(root);
-				await promise;
+					// if the file is updated many times rapidly, get the most recently updated one
+					const file = /** @type {import('$lib/types').FileStub} */ (queue.pop());
+					queue.length = 0
 
-				current_stubs.set(file.name, file);
+					tree[basename] = to_file(file);
 
-				// we need to stagger sequential updates, just enough that the HMR
-				// wires don't get crossed. 50ms seems to be enough of a delay
-				// to avoid glitches without noticeably affecting update speed
-				await new Promise((f) => setTimeout(f, 50));
+					await vm.mount(root);
+
+					if (will_restart) await wait_for_restart_vite();
+
+					current_stubs.set(file.name, file);
+
+					// we need to stagger sequential updates, just enough that the HMR
+					// wires don't get crossed. 50ms seems to be enough of a delay
+					// to avoid glitches without noticeably affecting update speed
+					await new Promise((f) => setTimeout(f, 50));
+				}
+
+				q_per_file.delete(file.name)
 
 				return will_restart;
 			});
