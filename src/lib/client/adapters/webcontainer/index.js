@@ -4,9 +4,7 @@ import AnsiToHtml from 'ansi-to-html';
 import * as yootils from 'yootils';
 import { escape_html, get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
-import { warnings } from '../../../../routes/tutorial/[slug]/state.js';
 
-// TODO state.js and adapter.js should be moved from `routes/tutorial/[slug]` to `lib/client`?
 /**
  * @typedef {import("../../../../routes/tutorial/[slug]/state.js").CompilerWarning} CompilerWarning
  */
@@ -23,9 +21,10 @@ let vm;
  * @param {import('svelte/store').Writable<Error | null>} error
  * @param {import('svelte/store').Writable<{ value: number, text: string }>} progress
  * @param {import('svelte/store').Writable<string[]>} logs
+ * @param {import('svelte/store').Writable<Record<string, CompilerWarning[]>>} warnings
  * @returns {Promise<import('$lib/types').Adapter>}
  */
-export async function create(base, error, progress, logs) {
+export async function create(base, error, progress, logs, warnings) {
 	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
 		throw new Error('WebContainers are not supported by Safari');
 	}

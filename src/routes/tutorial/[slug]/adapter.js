@@ -15,6 +15,9 @@ export const error = writable(null);
 /** @type {import('svelte/store').Writable<string[]>} */
 export const logs = writable([]);
 
+/** @type {import('svelte/store').Writable<Record<string, import('./state').CompilerWarning[]>>} */
+export const warnings = writable({});
+
 /** @type {Promise<import('$lib/types').Adapter>} */
 let ready = new Promise(() => {});
 
@@ -22,7 +25,7 @@ if (browser) {
 	ready = new Promise(async (fulfil, reject) => {
 		try {
 			const module = await import('$lib/client/adapters/webcontainer/index.js');
-			const adapter = await module.create(base, error, progress, logs);
+			const adapter = await module.create(base, error, progress, logs, warnings);
 
 			fulfil(adapter);
 		} catch (error) {

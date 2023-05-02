@@ -15,7 +15,8 @@
 	import { HighlightStyle } from '@codemirror/language';
 	import { syntaxHighlighting } from '@codemirror/language';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
-	import { files, selected_file, selected_name, update_file, warnings } from './state.js';
+	import { files, selected_file, selected_name, update_file } from './state.js';
+	import { warnings } from './adapter.js';
 	import './codemirror.css';
 
 	/** @type {HTMLDivElement} */
