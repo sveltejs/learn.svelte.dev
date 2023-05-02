@@ -97,8 +97,4 @@ if (import.meta.hot) {
 	import.meta.hot.on('vite:beforeUpdate', (event) => {
 		post({ type: 'hmr', data: event.updates });
 	});
-
-	import.meta.hot.on('svelte:warnings', (data) => {
-		post({ type: 'warnings', data });
-	});
 }

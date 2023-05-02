@@ -4,6 +4,12 @@ import AnsiToHtml from 'ansi-to-html';
 import * as yootils from 'yootils';
 import { escape_html, get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
+import { warnings } from '../../../../routes/tutorial/[slug]/state.js';
+
+// TODO state.js and adapter.js should be moved from `routes/tutorial/[slug]` to `lib/client`?
+/**
+ * @typedef {import("../../../../routes/tutorial/[slug]/state.js").CompilerWarning} CompilerWarning
+ */
 
 const converter = new AnsiToHtml({
 	fg: 'var(--sk-text-3)'
@@ -45,12 +51,40 @@ export async function create(base, error, progress, logs) {
 		}
 	});
 
+	/** @type {Record<string, CompilerWarning[]>} */
+	let $warnings;
+	warnings.subscribe((value) => $warnings = value);
+
+	/** @type {any} */
+	let timeout;
+
+	/** @param {number} msec */
+	function schedule_to_update_warning(msec) {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => warnings.set($warnings), msec);
+	}
+
 	const log_stream = () =>
 		new WritableStream({
 			write(chunk) {
 				if (chunk === '\x1B[1;1H') {
 					// clear screen
 					logs.set([]);
+
+				} else if (chunk?.startsWith('svelte:warnings:')) {
+					/** @type {CompilerWarning} */
+					const warn = JSON.parse(chunk.slice(16));
+					const current = $warnings[warn.filename];
+
+					if (!current) {
+						$warnings[warn.filename] = [warn];
+					// the exact same warning may be given multiple times in a row
+					} else if (!current.some((s) => (s.code === warn.code && s.pos === warn.pos))) {
+						current.push(warn);
+					}
+
+					schedule_to_update_warning(100);
+
 				} else {
 					const log = converter.toHtml(escape_html(chunk)).replace(/\n/g, '<br>');
 					logs.update(($logs) => [...$logs, log]);
@@ -154,6 +188,17 @@ export async function create(base, error, progress, logs) {
 					...force_delete
 				];
 
+				// initialize warnings of written files
+				to_write
+					.filter((stub) => stub.type === 'file' && $warnings[stub.name])
+					.forEach((stub) => $warnings[stub.name] = []);
+				// remove warnings of deleted files
+				to_delete
+					.filter((stubname) => $warnings[stubname])
+					.forEach((stubname) => delete $warnings[stubname]);
+
+				warnings.set($warnings);
+
 				current_stubs = stubs_to_map(stubs);
 
 				// For some reason, server-ready is fired again when the vite dev server is restarted.
@@ -220,6 +265,10 @@ export async function create(base, error, progress, logs) {
 				}
 
 				tree[basename] = to_file(file);
+
+				// initialize warnings of this file
+				$warnings[file.name] = [];
+				schedule_to_update_warning(100);
 
 				await vm.mount(root);
 
