@@ -19,8 +19,6 @@ The default error page is somewhat bland. We can customize it by creating a `src
 </span>
 ```
 
-> We're using the `page` store, which we'll learn more about in a later chapter.
-
 Notice that the `+error.svelte` component is rendered inside the root `+layout.svelte`. We can create more granular `+error.svelte` boundaries:
 
 ```svelte
