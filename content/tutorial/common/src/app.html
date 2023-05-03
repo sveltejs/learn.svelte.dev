@@ -19,8 +19,10 @@
 				--link-hover: hsl(208, 77%, 55%);
 				--link-active: hsl(208, 77%, 40%);
 				--border-radius: 4px;
-				--font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-				--font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+				--font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+					'Open Sans', 'Helvetica Neue', sans-serif;
+				--font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas,
+					'DejaVu Sans Mono', monospace;
 				background: var(--bg-1);
 				color: var(--fg-1);
 				font-family: var(--font);
@@ -107,14 +109,17 @@
 				opacity: 0.4;
 			}
 
-			input, textarea, select {
+			input,
+			textarea,
+			select {
 				padding: 0.5rem;
 				border: 1px solid var(--bg-2);
 				border-radius: var(--border-radius);
 				box-sizing: border-box;
 			}
 
-			input, textarea {
+			input,
+			textarea {
 				background: var(--bg-1);
 			}
 
@@ -160,7 +165,7 @@
 				text-decoration: none;
 			}
 
-			nav a[aria-current="true"] {
+			nav a[aria-current='true'] {
 				border-bottom: 2px solid;
 			}
 
@@ -208,7 +213,7 @@
 				border-radius: 5px;
 				user-select: none;
 				background: var(--bg-1);
-				filter: drop-shadow(2px 3px 6px rgba(0,0,0,0.1));
+				filter: drop-shadow(2px 3px 6px rgba(0, 0, 0, 0.1));
 				transition: filter 0.2s, opacity 0.2s;
 			}
 
@@ -236,22 +241,27 @@
 				opacity: 1;
 			}
 
-			@media (prefers-color-scheme: dark) {
-				body {
-					--bg-1: hsl(0, 0%, 18%);
-					--bg-2: hsl(0, 0%, 30%);
-					--bg-3: hsl(0, 0%, 40%);
-					--fg-1: hsl(0, 0%, 90%);
-					--fg-2: hsl(0, 0%, 70%);
-					--fg-3: hsl(0, 0%, 60%);
-					--link: hsl(206, 96%, 72%);
-					--link-hover: hsl(206, 96%, 78%);
-					--link-active: hsl(206, 96%, 64%);
-				}
+			body.dark {
+				--bg-1: hsl(0, 0%, 18%);
+				--bg-2: hsl(0, 0%, 30%);
+				--bg-3: hsl(0, 0%, 40%);
+				--fg-1: hsl(0, 0%, 90%);
+				--fg-2: hsl(0, 0%, 70%);
+				--fg-3: hsl(0, 0%, 60%);
+				--link: hsl(206, 96%, 72%);
+				--link-hover: hsl(206, 96%, 78%);
+				--link-active: hsl(206, 96%, 64%);
 			}
 		</style>
 	</head>
 	<body>
 		<div style="display: contents">%sveltekit.body%</div>
+
+		<script>
+			const theme = new URL(window.location).searchParams.get('theme');
+
+			document.body.classList.remove('light', 'dark');
+			document.body.classList.add(theme || 'light');
+		</script>
 	</body>
 </html>
