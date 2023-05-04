@@ -24,7 +24,7 @@ Notice that we're _not_ showing the error message to the user. That's because er
 }
 ```
 
-In some situations you way want to customise this object. To do so, you can return an object from `handleError`:
+In some situations you may want to customise this object. To do so, you can return an object from `handleError`:
 
 ```js
 /// file: src/hooks.server.js
