@@ -5,7 +5,6 @@
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
 	import { base, error, logs, progress, subscribe } from './adapter';
-	import { warnings } from './state';
 
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
@@ -63,11 +62,6 @@
 			}, 1000);
 		} else if (e.data.type === 'ping-pause') {
 			clearTimeout(timeout);
-		} else if (e.data.type === 'warnings') {
-			warnings.update(($warnings) => ({
-				...$warnings,
-				[e.data.data.normalizedFilename]: e.data.data.allWarnings
-			}));
 		}
 	}
 
