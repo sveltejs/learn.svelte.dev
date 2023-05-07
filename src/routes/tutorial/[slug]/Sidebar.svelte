@@ -142,6 +142,10 @@
 		--color: rgba(255, 0, 0, 0.1);
 	}
 
+	:global(body.dark) .text :global(pre) :global(.highlight.remove) {
+		--color: rgba(255, 0, 0, 0.27);
+	}
+
 	/** this probably belongs in site-kit */
 	.text :global(p) :global(a) :global(code) {
 		color: var(--sk-theme-1);

@@ -8,10 +8,11 @@ const config = {
 	},
 
 	vitePlugin: {
-		experimental: {
-			// This feature enables compile-time warnings to be
-			// visible in the learn.svelte.dev editor
-			sendWarningsToBrowser: true
+		// This enables compile-time warnings to be
+		// visible in the learn.svelte.dev editor
+		onwarn: (warning, defaultHandler) => {
+			console.log('svelte:warnings:%s', JSON.stringify(warning));
+			defaultHandler(warning);
 		}
 	}
 };

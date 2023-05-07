@@ -25,9 +25,6 @@ export const files = writable([]);
 /** @type {Writable<Record<string, import('$lib/types').Stub>>} */
 export const solution = writable({});
 
-/** @type {Writable<Record<string, CompilerWarning[]>>} */
-export const warnings = writable({});
-
 /** @type {Writable<{ parent: string, type: 'file' | 'directory' } | null>} */
 export const creating = writable(null);
 

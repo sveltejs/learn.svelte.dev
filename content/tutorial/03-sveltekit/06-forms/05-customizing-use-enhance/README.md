@@ -67,7 +67,7 @@ When we create or delete items, it now takes a full second before the UI updates
 We can then show a message while we're saving data:
 
 ```svelte
-/// file: App.svelte
+/// file: src/routes/+page.svelte
 <ul class="todos">
 	<!-- ... -->
 </ul>

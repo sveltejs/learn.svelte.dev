@@ -24,3 +24,5 @@ Let's use `doubled` in our markup:
 ```
 
 Of course, you could just write `{count * 2}` in the markup instead — you don't have to use reactive values. Reactive values become particularly valuable (no pun intended) when you need to reference them multiple times, or you have values that depend on _other_ reactive values.
+
+> Note that reactive declarations and statements will run after other script code and before component markup is rendered.
