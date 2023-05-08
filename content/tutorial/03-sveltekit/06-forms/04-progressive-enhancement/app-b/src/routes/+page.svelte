@@ -56,7 +56,14 @@
 		flex: 1;
 	}
 
-	.saving {
+	button {
+		border: none;
+		background: url(./remove.svg) no-repeat 50% 50%;
+		background-size: 1rem 1rem;
+		cursor: pointer;
+		height: 100%;
+		aspect-ratio: 1;
 		opacity: 0.5;
+		transition: opacity 0.2s;
 	}
 </style>
