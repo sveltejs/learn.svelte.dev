@@ -24,7 +24,7 @@ export async function DELETE({ params, cookies }) {
 }
 ```
 
-Since we don't need to return any actual data to the browser, we're returning an empty [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) with a [204 No Content](https://httpstatusdogs.com/204-no-content) status.
+Since we don't need to return any actual data to the browser, we're returning an empty [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) with a [204 No Content](https://http.dog/204) status.
 
 We can now interact with this endpoint inside our event handlers:
 
