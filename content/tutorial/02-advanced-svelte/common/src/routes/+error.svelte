@@ -11,7 +11,7 @@
 		code
 		<a
 			target="_blank"
-			href="https://httpstatusdogs.com/{$page.status}"
+			href="https://http.dog/{$page.status}"
 			>{$page.status}</a
 		>
 	</p>
