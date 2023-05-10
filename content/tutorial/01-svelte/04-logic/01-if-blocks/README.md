@@ -18,4 +18,4 @@ To conditionally render some markup, we wrap it in an `if` block. Let's add some
 {/if}+++
 ```
 
-Try it — update the component, and click on the buttons.
+Try it — update the component, and click on the button.
