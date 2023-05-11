@@ -1,4 +1,6 @@
 <script>
+	import { isWebContainerSupported } from "$lib/client/adapters/webcontainer/utils.js";
+
 	/** @type {boolean} */
 	export let initial;
 
@@ -14,7 +16,7 @@
 
 <div class="loading" class:error>
 	{#if error}
-		{#if /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)}
+		{#if !isWebContainerSupported()}
 			<p>This app requires modern web platform features. Please use a browser other than Safari.</p>
 		{:else}
 			<small>{error.message}</small>
