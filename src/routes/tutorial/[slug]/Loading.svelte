@@ -10,16 +10,11 @@
 
 	/** @type {string} */
 	export let status;
-
-	function webcontainer_is_supported() {
-		// @ts-ignore
-		return 'function' === typeof Atomics.waitAsync;
-	}
 </script>
 
 <div class="loading" class:error>
 	{#if error}
-		{#if /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent) && !webcontainer_is_supported()}
+		{#if /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)}
 			<p>This app requires modern web platform features. Please use a browser other than Safari.</p>
 		{:else}
 			<small>{error.message}</small>

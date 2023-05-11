@@ -16,11 +16,6 @@ const converter = new AnsiToHtml({
 /** @type {import('@webcontainer/api').WebContainer} Web container singleton */
 let vm;
 
-function webcontainer_is_supported() {
-	// @ts-ignore
-	return 'function' === typeof Atomics.waitAsync;
-}
-
 /**
  * @param {import('svelte/store').Writable<string | null>} base
  * @param {import('svelte/store').Writable<Error | null>} error
@@ -30,8 +25,8 @@ function webcontainer_is_supported() {
  * @returns {Promise<import('$lib/types').Adapter>}
  */
 export async function create(base, error, progress, logs, warnings) {
-	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent) && !webcontainer_is_supported()) {
-		throw new Error('WebContainers are not supported by Safari 16.3 or earlier');
+	if (/safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent)) {
+		throw new Error('WebContainers are not supported by Safari');
 	}
 
 	progress.set({ value: 0, text: 'loading files' });
