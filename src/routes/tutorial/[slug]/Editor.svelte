@@ -17,6 +17,7 @@
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { files, selected_file, selected_name, update_file } from './state.js';
 	import { warnings } from './adapter.js';
+	import { autocomplete_for_svelte } from './autocompletion.js';
 	import './codemirror.css';
 
 	/** @type {HTMLDivElement} */
@@ -127,16 +128,16 @@
 				let lang;
 
 				if (file.name.endsWith('.js') || file.name.endsWith('.json')) {
-					lang = javascript();
+					lang = [javascript()];
 				} else if (file.name.endsWith('.html')) {
-					lang = html();
+					lang = [html()];
 				} else if (file.name.endsWith('.svelte')) {
-					lang = svelte();
+					lang = [svelte(), ...autocomplete_for_svelte()];
 				}
 
 				state = EditorState.create({
 					doc: file.contents,
-					extensions: lang ? [...extensions, lang] : extensions
+					extensions: lang ? [...extensions, ...lang] : extensions
 				});
 
 				editor_states.set(file.name, state);
