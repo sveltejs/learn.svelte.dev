@@ -19,7 +19,7 @@
 
 <div class="player" class:paused>
 	<audio
-		src={src}
+		{src}
 		bind:currentTime={time}
 		bind:duration
 		bind:paused
