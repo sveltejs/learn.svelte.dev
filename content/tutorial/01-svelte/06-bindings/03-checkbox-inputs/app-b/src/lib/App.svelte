@@ -1,13 +1,13 @@
 <script>
-	let checked = false;
+	let yes = false;
 </script>
 
 <label>
-	<input type="checkbox" bind:checked />
+	<input type="checkbox" bind:checked={yes} />
 	Yes! Send me regular email spam
 </label>
 
-{#if checked}
+{#if yes}
 	<p>
 		Thank you. We will bombard your inbox and sell
 		your personal details.
@@ -19,4 +19,4 @@
 	</p>
 {/if}
 
-<button disabled={!checked}>Subscribe</button>
+<button disabled={!yes}>Subscribe</button>
