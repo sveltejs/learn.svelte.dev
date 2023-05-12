@@ -11,9 +11,15 @@
 </script>
 
 <div class="keypad">
-	{#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as i}
-		<button on:click={select(i)}>{i}</button>
-	{/each}
+	<button on:click={select(1)}>1</button>
+	<button on:click={select(2)}>2</button>
+	<button on:click={select(3)}>3</button>
+	<button on:click={select(4)}>4</button>
+	<button on:click={select(5)}>5</button>
+	<button on:click={select(6)}>6</button>
+	<button on:click={select(7)}>7</button>
+	<button on:click={select(8)}>8</button>
+	<button on:click={select(9)}>9</button>
 
 	<button disabled={!value} on:click={clear}
 		>clear</button
