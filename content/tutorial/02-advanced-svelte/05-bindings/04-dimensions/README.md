@@ -7,7 +7,8 @@ Every block-level element has `clientWidth`, `clientHeight`, `offsetWidth` and `
 ```svelte
 /// file: App.svelte
 <div +++bind:clientWidth={w} bind:clientHeight={h}+++>
-	<span style="font-size: {size}px">{text}</span>
+	<span style="font-size: {size}px" contenteditable>{text}</span>
+	<span class="size">{w} x {h}px</span>
 </div>
 ```
 

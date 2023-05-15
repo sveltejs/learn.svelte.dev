@@ -4,13 +4,13 @@ title: Media elements
 
 You can bind to properties of `<audio>` and `<video>` elements, making it easy to (for example) build custom player UI, like `AudioPlayer.svelte`.
 
-First, add the `<audio>` element along with its bindings (we'll use the shorthand form for `duration` and `paused`):
+First, add the `<audio>` element along with its bindings (we'll use the shorthand form for `src`, `duration` and `paused`):
 
 ```svelte
 /// file: AudioPlayer.svelte
 <div class="player" class:paused>
 +++	<audio
-		src={src}
+		{src}
 		bind:currentTime={time}
 		bind:duration
 		bind:paused
@@ -53,7 +53,7 @@ When the track ends, be kind — rewind:
 ```svelte
 /// file: AudioPlayer.svelte
 <audio
-	src={src}
+	{src}
 	bind:currentTime={time}
 	bind:duration
 	bind:paused
