@@ -4,7 +4,7 @@ import AnsiToHtml from 'ansi-to-html';
 import * as yootils from 'yootils';
 import { escape_html, get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
-import { isWebContainerSupported } from './utils.js';
+import { is_webcontainer_supported, is_ios_device } from './utils.js';
 
 /**
  * @typedef {import("../../../../routes/tutorial/[slug]/state.js").CompilerWarning} CompilerWarning
@@ -23,11 +23,14 @@ let vm;
  * @param {import('svelte/store').Writable<{ value: number, text: string }>} progress
  * @param {import('svelte/store').Writable<string[]>} logs
  * @param {import('svelte/store').Writable<Record<string, CompilerWarning[]>>} warnings
+ * @param {boolean} force
  * @returns {Promise<import('$lib/types').Adapter>}
  */
-export async function create(base, error, progress, logs, warnings) {
-	if (!isWebContainerSupported()) {
+export async function create(base, error, progress, logs, warnings, force) {
+	if (!is_webcontainer_supported()) {
 		throw new Error('WebContainers are not supported by Safari 16.3 or earlier');
+	} else if (is_ios_device() && !force) {
+		throw new Error('maybe cause out of memory');
 	}
 
 	progress.set({ value: 0, text: 'loading files' });

@@ -4,7 +4,8 @@
 	import { browser, dev } from '$app/environment';
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
-	import { base, error, logs, progress, subscribe } from './adapter';
+	import { files } from './state.js';
+	import { base, create_adapter, error, logs, progress, reset, subscribe } from './adapter.js';
 
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
@@ -89,6 +90,15 @@
 			iframe.style.visibility = 'visible';
 		}
 	}
+
+	let forced_booted = false;
+
+	function force_boot_adapter() {
+		$error = null;
+		forced_booted = true;
+		create_adapter(true);
+		reset($files);
+	}
 </script>
 
 <svelte:window on:message={handle_message} />
@@ -117,7 +127,14 @@
 	{/if}
 
 	{#if paused || loading || $error}
-		<Loading {initial} error={$error} progress={$progress.value} status={$progress.text} />
+		<Loading
+			{initial}
+			error={$error}
+			progress={$progress.value}
+			status={$progress.text}
+			{forced_booted}
+			on:force_boot={() => force_boot_adapter()}
+		/>
 	{/if}
 
 	<div class="terminal" class:visible={terminal_visible}>

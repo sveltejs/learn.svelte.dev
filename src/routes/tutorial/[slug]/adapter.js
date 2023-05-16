@@ -21,17 +21,21 @@ export const warnings = writable({});
 /** @type {Promise<import('$lib/types').Adapter>} */
 let ready = new Promise(() => {});
 
-if (browser) {
+export function create_adapter(force = false) {
 	ready = new Promise(async (fulfil, reject) => {
 		try {
 			const module = await import('$lib/client/adapters/webcontainer/index.js');
-			const adapter = await module.create(base, error, progress, logs, warnings);
+			const adapter = await module.create(base, error, progress, logs, warnings, force);
 
 			fulfil(adapter);
 		} catch (error) {
 			reject(error);
 		}
 	});
+}
+
+if (browser) {
+	create_adapter();
 }
 
 /** @typedef {'reload'} EventName */

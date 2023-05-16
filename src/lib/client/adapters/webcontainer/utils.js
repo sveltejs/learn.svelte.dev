@@ -2,7 +2,7 @@
  * Checks if WebContainer is supported on the current browser.
  * This function is borrowed from [stackblitz/webcontainer-docs](https://github.com/stackblitz/webcontainer-docs/blob/369dd58b2749b085ed7642f22108a9bcbcd68fc4/docs/.vitepress/theme/components/Examples/WCEmbed/utils.ts#L4-L29)
  */
-export function isWebContainerSupported() {
+export function is_webcontainer_supported() {
 	const hasSharedArrayBuffer = 'SharedArrayBuffer' in window;
 	const looksLikeChrome = navigator.userAgent.toLowerCase().includes('chrome');
 	const looksLikeFirefox = navigator.userAgent.includes('Firefox');
@@ -27,4 +27,11 @@ export function isWebContainerSupported() {
 	} catch {
 		return false;
 	}
+}
+
+export function is_ios_device() {
+	return (
+		/iPad|iPhone/.test(window.navigator.userAgent) ||
+		(window.navigator.userAgent.includes('Macintosh') && window.navigator.maxTouchPoints > 1)
+	);
 }

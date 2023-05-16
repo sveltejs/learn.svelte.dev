@@ -1,5 +1,9 @@
 <script>
-	import { isWebContainerSupported } from "$lib/client/adapters/webcontainer/utils.js";
+	import { createEventDispatcher } from 'svelte';
+	import {
+		is_webcontainer_supported,
+		is_ios_device
+	} from '$lib/client/adapters/webcontainer/utils.js';
 
 	/** @type {boolean} */
 	export let initial;
@@ -12,12 +16,20 @@
 
 	/** @type {string} */
 	export let status;
+
+	/** @type {boolean} */
+	export let forced_booted;
+
+	const dispatch = createEventDispatcher();
 </script>
 
 <div class="loading" class:error>
 	{#if error}
-		{#if !isWebContainerSupported()}
+		{#if !is_webcontainer_supported()}
 			<p>This app requires modern web platform features. Please use a browser other than Safari.</p>
+		{:else if is_ios_device() && !forced_booted}
+			<p>On iOS devices, your browser may run out of memory.</p>
+			<button on:click={() => dispatch('force_boot')}>Run the tutorial knowing that</button>
 		{:else}
 			<small>{error.message}</small>
 			<h2>Yikes!</h2>
@@ -143,6 +155,13 @@
 	svg {
 		width: 10rem;
 		height: 10rem;
+	}
+
+	button {
+		background: var(--sk-theme-1);
+		color: white;
+		padding: 0.5rem;
+		height: 4rem;
 	}
 
 	@media (prefers-color-scheme: dark) {
