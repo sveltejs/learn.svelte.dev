@@ -30,7 +30,7 @@ export async function create(base, error, progress, logs, warnings, force) {
 	if (!is_webcontainer_supported()) {
 		throw new Error('WebContainers are not supported by Safari 16.3 or earlier');
 	} else if (is_ios_device() && !force) {
-		throw new Error('maybe cause out of memory');
+		throw new Error('On iOS devices, your browser may run out of memory');
 	}
 
 	progress.set({ value: 0, text: 'loading files' });
