@@ -29,7 +29,7 @@
 			<p>This app requires modern web platform features. Please use a browser other than Safari.</p>
 		{:else if is_ios_device() && !forced_booted}
 			<p>On iOS devices, your browser may run out of memory.</p>
-			<button on:click={() => dispatch('force_boot')}>Run the tutorial knowing that</button>
+			<button on:click={() => dispatch('force_boot')}>Run the tutorial</button>
 		{:else}
 			<small>{error.message}</small>
 			<h2>Yikes!</h2>
