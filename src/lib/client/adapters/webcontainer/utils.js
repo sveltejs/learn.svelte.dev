@@ -32,6 +32,7 @@ export function is_webcontainer_supported() {
 export function is_ios_device() {
 	return (
 		/iPad|iPhone/.test(window.navigator.userAgent) ||
+		// on iPadOS 13 or later, UserAgent is the same as Safari on MacOS, so maxTouchPoints is used to detect it
 		(window.navigator.userAgent.includes('Macintosh') && window.navigator.maxTouchPoints > 1)
 	);
 }
