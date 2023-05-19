@@ -49,6 +49,8 @@ window.addEventListener('focusin', (e) => {
 	post({ type: 'iframe_took_focus' });
 });
 
+let previous_href = location.href;
+
 window.addEventListener('click', (e) => {
 	let node = e.target;
 	while (node) {
@@ -60,7 +62,10 @@ window.addEventListener('click', (e) => {
 				e.preventDefault();
 				window.open(url, '_blank');
 			} else {
-				update_path(url.pathname + url.search + url.hash);
+				if (location.href !== url.href) {
+					previous_href = url.href;
+					update_path(url.pathname + url.search + url.hash);
+				}
 			}
 		}
 		node = node.parent;
@@ -74,8 +79,6 @@ window.addEventListener('visibilitychange', () => {
 		pause();
 	}
 });
-
-let previous_href = location.href;
 
 const url_observer = new MutationObserver(() => {
 	if (location.href !== previous_href) {
