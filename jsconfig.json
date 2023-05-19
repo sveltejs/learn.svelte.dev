@@ -6,7 +6,7 @@
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"lib": ["es2020", "DOM"],
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"module": "es2022",
 		"resolveJsonModule": true,
 		"skipLibCheck": true,

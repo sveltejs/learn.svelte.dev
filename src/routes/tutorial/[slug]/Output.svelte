@@ -1,7 +1,8 @@
 <script>
-	import { afterNavigate } from '$app/navigation';
-	import { onMount } from 'svelte';
 	import { browser, dev } from '$app/environment';
+	import { afterNavigate } from '$app/navigation';
+	import { theme } from '@sveltejs/site-kit/components';
+	import { onMount } from 'svelte';
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
 	import { base, error, logs, progress, subscribe } from './adapter';
@@ -36,6 +37,21 @@
 	afterNavigate(() => {
 		clearTimeout(timeout);
 	});
+
+	/** @param {typeof $theme} $theme */
+	function change_theme($theme) {
+		if (!iframe) return;
+
+		try {
+			const url = new URL(iframe.src);
+
+			url.searchParams.set('theme', $theme.current);
+
+			iframe.src = url.href;
+		} catch {}
+	}
+
+	$: change_theme($theme);
 
 	/** @type {any} */
 	let timeout;
@@ -80,7 +96,11 @@
 		// would make back/forward traversal very annoying
 		const parentNode = /** @type {HTMLElement} */ (iframe.parentNode);
 		parentNode?.removeChild(iframe);
-		iframe.src = src;
+
+		const url = new URL(src);
+		url.searchParams.set('theme', $theme.current);
+
+		iframe.src = url.href;
 		parentNode?.appendChild(iframe);
 	}
 
@@ -95,7 +115,7 @@
 <Chrome
 	{path}
 	{loading}
-	href={$base && ($base + path)}
+	href={$base && $base + path}
 	on:refresh={() => {
 		set_iframe_src($base + path);
 	}}
@@ -158,7 +178,7 @@
 		font-family: var(--font-mono);
 		font-size: var(--sk-text-xs);
 		padding: 1rem;
-		background: rgba(255,255,255,0.5);
+		background: rgba(255, 255, 255, 0.5);
 		transform: translate(0, 100%);
 		transition: transform 0.3s;
 		backdrop-filter: blur(3px);
@@ -189,7 +209,7 @@
 
 	@media (prefers-color-scheme: dark) {
 		.terminal {
-			background: rgba(0,0,0,0.5);
+			background: rgba(0, 0, 0, 0.5);
 		}
 	}
 </style>
