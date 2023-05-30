@@ -11,7 +11,7 @@ Instead of laboriously copying, pasting and editing, we can get rid of all but t
 <div>
 	+++{#each colors as color}+++
 		<button
-			aria-current="{selected === 'red' ? 'true' : undefined}"
+			aria-current={selected === 'red'}
 			aria-label="red"
 			style="background: red"
 			on:click={() => selected = 'red'}
@@ -29,7 +29,7 @@ Now we need to use the `color` variable in place of `"red"`:
 <div>
 	{#each colors as color}
 		<button
-			aria-current="{selected === +++color+++ ? 'true' : undefined}"
+			aria-current={selected === +++color+++}
 			aria-label=+++{color}+++
 			style="background: +++{color}+++"
 			on:click={() => selected = +++color+++}
@@ -45,7 +45,7 @@ You can get the current _index_ as a second argument, like so:
 <div>
 	{#each colors as color, +++i}+++
 		<button
-			aria-current="{selected === color ? 'true' : undefined}"
+			aria-current={selected === color}
 			aria-label={color}
 			style="background: {color}"
 			on:click={() => selected = color}
