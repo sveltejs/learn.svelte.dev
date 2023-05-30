@@ -4,7 +4,6 @@ import AnsiToHtml from 'ansi-to-html';
 import * as yootils from 'yootils';
 import { escape_html, get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
-import { isWebContainerSupported } from './utils.js';
 
 /**
  * @typedef {import("../../../../routes/tutorial/[slug]/state.js").CompilerWarning} CompilerWarning
@@ -26,10 +25,6 @@ let vm;
  * @returns {Promise<import('$lib/types').Adapter>}
  */
 export async function create(base, error, progress, logs, warnings) {
-	if (!isWebContainerSupported()) {
-		throw new Error('WebContainers are not supported by Safari 16.3 or earlier');
-	}
-
 	progress.set({ value: 0, text: 'loading files' });
 
 	const q = yootils.queue(1);
