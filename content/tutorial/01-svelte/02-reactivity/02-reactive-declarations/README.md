@@ -12,6 +12,8 @@ let count = 0;
 +++$: doubled = count * 2;+++
 ```
 
+If a reactive statement consists entirely of an assignment to an undeclared variable, Svelte will inject a `let` declaration on your behalf.
+
 > Don't worry if this looks a little alien. It's [valid](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/label) (if unconventional) JavaScript, which Svelte interprets to mean 're-run this code whenever any of the referenced values change'. Once you get used to it, there's no going back.
 
 Let's use `doubled` in our markup:
