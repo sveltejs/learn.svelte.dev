@@ -2,9 +2,9 @@
 title: Keyed each blocks
 ---
 
-By default, when you modify the value of an `each` block, it will add and remove items at the _end_ of the block, and update any values that have changed. That might not be what you want.
+By default, when you modify the value of an `each` block, such as adding or removing items, it will apply such modifications at the _end_ of the block, and then update any values that have changed. That might not be what you want.
 
-It's easier to show why than to explain. Click the 'Remove first thing' button a few times, and notice what happens: It removes the first `<Thing>` component, but the _last_ DOM node. Then it updates the `name` value in the remaining DOM nodes, but not the emoji, which in `Thing.svelte` is fixed when the component is created.
+It's easier to show why than to explain. Click the 'Remove first thing' button a few times, and notice what happens: It doesn't actually remove the first `<Thing>` component, but rather the _last_ DOM node. Then it updates the `name` value in the remaining DOM nodes, but not the emoji, which in `Thing.svelte` is fixed when the component is created.
 
 Instead, we'd like to remove only the first `<Thing>` component and its DOM node, and leave the others unaffected.
 
