@@ -4,7 +4,7 @@ title: Sharing code
 
 In all the examples we've seen so far, the `<script>` block contains code that runs when each component instance is initialised. For the vast majority of components, that's all you'll ever need.
 
-Very occasionally, you'll need to run some code outside of an individual component instance. For example: returning to our custom audio player from a [previous exercise](media-elements), you can play all five tracks simultaneously. It would be better if playing one stopped all the others.
+Very occasionally, you'll need to run some code outside of an individual component instance. For example: returning to our custom audio player from a [previous exercise](media-elements), you can play all four tracks simultaneously. It would be better if playing one stopped all the others.
 
 We can do that by declaring a `<script context="module">` block. Code contained inside it will run once, when the module first evaluates, rather than when a component is instantiated. Place this at the top of `AudioPlayer.svelte`:
 
