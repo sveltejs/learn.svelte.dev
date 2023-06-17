@@ -1,4 +1,8 @@
 <script>
+	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { Icon } from '@sveltejs/site-kit/components';
+
 	/** @type {boolean} */
 	export let initial;
 
@@ -10,6 +14,12 @@
 
 	/** @type {string} */
 	export let status;
+
+	$: is_svelte = /Part (1|2)/.test($page.data.exercise.part.title);
+
+	afterNavigate(() => {
+		console.log(error, status);
+	});
 </script>
 
 <div class="loading">
@@ -60,6 +70,12 @@
 					<p>
 						We couldn't start the app. Please ensure third party cookies are enabled for this site.
 					</p>
+				{/if}
+
+				{#if is_svelte}
+					<a href="https://svelte.dev/tutorial/{$page.data.exercise.slug}">
+						Go to the svelte tutorial <Icon name="arrow-right" />
+					</a>
 				{/if}
 			</div>
 
