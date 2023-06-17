@@ -16,10 +16,6 @@
 	export let status;
 
 	$: is_svelte = /Part (1|2)/.test($page.data.exercise.part.title);
-
-	afterNavigate(() => {
-		console.log(error, status);
-	});
 </script>
 
 <div class="loading">
