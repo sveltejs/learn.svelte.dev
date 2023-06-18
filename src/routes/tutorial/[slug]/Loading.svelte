@@ -70,7 +70,7 @@
 
 				{#if is_svelte}
 					<a href="https://svelte.dev/tutorial/{$page.data.exercise.slug}">
-						Go to the svelte tutorial <Icon name="arrow-right" />
+						Go to the legacy svelte tutorial instead <Icon name="arrow-right" />
 					</a>
 				{/if}
 			</div>
