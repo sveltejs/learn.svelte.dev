@@ -9,7 +9,8 @@ Instead, we'd like transitions to not only play when individual items are added 
 We can achieve this with a _global_ transition, which plays when _any_ block containing the transitions is added or removed:
 
 ```svelte
-<div transition:slide|global>
+/// file: App.svelte
+<div transition:slide+++|global+++>
 	{item}
 </div>
 ```
