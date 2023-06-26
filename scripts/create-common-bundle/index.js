@@ -21,7 +21,7 @@ const ignored_basenames = ['.DS_Store', 'LICENSE'];
 const ignored_extensions = ['.d.ts', '.map'];
 const ignored_directories = ['.svelte-kit', 'node_modules/.bin', 'node_modules/rollup/dist/shared'];
 
-const ignored_files = new Set(['node_modules/svelte/compiler.js']);
+const ignored_files = new Set(['node_modules/svelte/compiler.cjs']);
 
 for (const file of glob('**', { cwd, filesOnly: true, dot: true }).map((file) =>
 	file.replaceAll('\\', '/')

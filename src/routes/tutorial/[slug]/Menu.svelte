@@ -99,7 +99,7 @@
 						class="part"
 						class:expanded={part.slug === expanded_part}
 						aria-current={part.slug === current.part.slug ? 'step' : undefined}
-						transition:slide|local={{ duration }}
+						transition:slide={{ duration }}
 					>
 						<button
 							on:click={() => {
@@ -113,7 +113,7 @@
 						</button>
 
 						{#if search.length >= 2 || part.slug === expanded_part}
-							<ul class="chapter" transition:slide|local={{ duration }}>
+							<ul class="chapter" transition:slide={{ duration }}>
 								{#each part.chapters as chapter (chapter.slug)}
 									<li
 										class="chapter"
@@ -126,10 +126,10 @@
 										</button>
 
 										{#if search.length >= 2 || chapter.slug === expanded_chapter}
-											<ul transition:slide|local={{ duration }}>
+											<ul transition:slide={{ duration }}>
 												{#each chapter.exercises as exercise (exercise.slug)}
 													<li
-														transition:slide|local={{ duration }}
+														transition:slide={{ duration }}
 														class="exercise"
 														aria-current={$page.url.pathname === `/tutorial/${exercise.slug}`
 															? 'page'
