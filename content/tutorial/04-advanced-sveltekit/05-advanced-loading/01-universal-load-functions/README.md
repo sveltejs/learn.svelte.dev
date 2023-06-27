@@ -34,4 +34,4 @@ We can now use the `component` returned from these `load` functions like any oth
 </nav>
 ```
 
-Read the [documentation](https://kit.svelte.dev/docs/load#shared-vs-server) to learn more about the distinction between server `load` functions and universal `load` functions, and when to use which.
+Read the [documentation](https://kit.svelte.dev/docs/load#universal-vs-server) to learn more about the distinction between server `load` functions and universal `load` functions, and when to use which.
