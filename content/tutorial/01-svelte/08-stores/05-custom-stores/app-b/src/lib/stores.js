@@ -5,8 +5,8 @@ function createCount() {
 
 	return {
 		subscribe,
-		increment: () => update((n) => n + 1),
-		decrement: () => update((n) => n - 1),
+		increment: () => update(x => ++x),
+		decrement: () => update(x => --x),
 		reset: () => set(0)
 	};
 }
