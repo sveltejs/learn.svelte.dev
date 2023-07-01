@@ -8,7 +8,7 @@ This repo uses [pnpm](https://pnpm.io/).
 
 ## Developing the app
 
-First, run `node scripts/create-common-bundle`. This packages up everything that's needed to run a SvelteKit app (Vite, Esbuild, SvelteKit, Svelte compiler etc) which can subsequently be unpacked on a server to create and run and instance of a SvelteKit application (which powers the output window of the tutorial). Then, run `dev`:
+First, run `node scripts/create-common-bundle`. This packages up everything that's needed to run a SvelteKit app (Vite, esbuild, SvelteKit, Svelte compiler, etc.) which can subsequently be unpacked on a server to create and run an instance of a SvelteKit application (which powers the output window of the tutorial). Then, run `dev`:
 
 ```bash
 node scripts/create-common-bundle
