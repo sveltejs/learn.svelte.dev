@@ -188,7 +188,23 @@
 	}
 
 	[aria-current='true'] {
-		color: hsl(15, 100%, 50%);
+		color: var(--sk-theme-1);
 	}
 
+	[aria-current='true']::after {
+		content: '';
+		position: absolute;
+		width: 1rem;
+		height: 1rem;
+		top: 0.3rem;
+		right: calc(-0.6rem - 2px);
+		background-color: var(--sk-back-3);
+		border: 1px solid var(--sk-back-4);
+		transform: translate(0, 0.2rem) rotate(45deg);
+		z-index: 2;
+	}
+	[aria-current='true']:has(:focus-visible)::after,
+	:global(.mobile-filetree) [aria-current='true']::after {
+		display: none;
+	}
 </style>
