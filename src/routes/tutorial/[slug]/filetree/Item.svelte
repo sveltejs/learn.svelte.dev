@@ -188,7 +188,7 @@
 	}
 
 	[aria-current='true'] {
-		color: var(--prime);
+		color: var(--sk-theme-1);
 	}
 
 	[aria-current='true']::after {
