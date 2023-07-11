@@ -47,4 +47,4 @@ Now, add a sidebar in the layout for the post page:
 
 The layout (and the page below it) inherits `data.summaries` from the parent `+layout.server.js`.
 
-When we navigate from one post to another, we only need to load the data for the post itself — the layout data is still valid. See the documentation on [invalidation](https://kit.svelte.dev/docs/load#rerunning-load-functions-manual-invalidation) to learn more.
+When we navigate from one post to another, we only need to load the data for the post itself — the layout data is still valid. See the documentation on [invalidation](https://kit.svelte.dev/docs/load#rerunning-load-functions) to learn more.
