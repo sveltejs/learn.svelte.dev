@@ -23,6 +23,7 @@
 		bind:currentTime={time}
 		bind:duration
 		bind:paused
+		preload="none"
 		on:ended={() => {
 			time = 0;
 		}}
