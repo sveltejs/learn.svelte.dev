@@ -2,7 +2,7 @@
 title: Basics
 ---
 
-In the chapter on [loading data](/tutorial/page-data), we saw how you can export `load` functions from `+page.js`, `+page.server.js`, `+layout.js` and `+layout.server.js` files. We can also export various **page options** from these modules:
+In the chapter on [loading data](/tutorial/page-data), we saw how you can export `load` functions from `+page.server.js` and `+layout.server.js` files. We can also export them from their client side alternatives - '+page.js' and '+layout.js'. We can also export various **page options** from these modules:
 
 - `ssr` — whether or not pages should be server-rendered
 - `csr` — whether to load the SvelteKit client
