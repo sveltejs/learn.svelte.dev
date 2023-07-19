@@ -4,7 +4,7 @@ title: onMount
 
 Every component has a _lifecycle_ that starts when it is created, and ends when it is destroyed. There are a handful of functions that allow you to run code at key moments during that lifecycle. The one you'll use most frequently is `onMount`, which runs after the component is first rendered to the DOM.
 
-In this exercise, we have a `<canvas>` that we'd like to animate, using the `paint` function in `gradient.js`. Begin by importing the function from `svelte`:
+In this exercise, we have a `<canvas>` that we'd like to animate, using the `paint` function in `gradient.js`. Begin by importing the `onMount` function from `svelte`:
 
 ```svelte
 /// file: App.svelte
@@ -14,7 +14,7 @@ In this exercise, we have a `<canvas>` that we'd like to animate, using the `pai
 </script>
 ```
 
-Then, add a function that runs when the component mounts:
+Then, pass a function to the `onMount` call that runs when the component mounts:
 
 ```svelte
 /// file: App.svelte
@@ -36,7 +36,7 @@ Then, add a function that runs when the component mounts:
 
 > In a [later exercise](bind-this), we'll learn how to get an element reference without using `document.querySelector`.
 
-So far so good — you should see gently undulating colours in the shape of the Svelte logo. But there's one problem — the loop will continue even after the component has been destroyed. To fix that, we need to return a cleanup function from `onMount`:
+So far so good — you should see gently undulating colors in the shape of the Svelte logo. But there's one problem — the loop will continue even after the component has been destroyed. To fix that, we need to return a cleanup function from `onMount`:
 
 ```js
 /// file: App.svelte
