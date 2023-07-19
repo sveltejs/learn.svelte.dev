@@ -55,12 +55,16 @@
 	ul {
 		margin: 0;
 		padding: 0;
+		background-color: var(--sk-theme-1);
 	}
 
 	li {
 		display: block;
 		list-style-type: none;
 		width: 1fr;
+	}
+	li:hover {
+		background-color: var(--sk-theme-1-variant);
 	}
 
 	button {
