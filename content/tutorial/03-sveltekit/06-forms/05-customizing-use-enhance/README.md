@@ -8,12 +8,12 @@ With `use:enhance`, we can go further than just emulating the browser's native b
 /// file: src/routes/+page.server.js
 export const actions = {
 	create: async ({ cookies, request }) => {
-		+++await new Promise((fulfil) => setTimeout(fulfil, 1000));+++
+		+++await new Promise((fulfill) => setTimeout(fulfill, 1000));+++
 		...
 	},
 
 	delete: async ({ cookies, request }) => {
-		+++await new Promise((fulfil) => setTimeout(fulfil, 1000));+++
+		+++await new Promise((fulfill) => setTimeout(fulfill, 1000));+++
 		...
 	}
 };
