@@ -16,10 +16,10 @@
 	<input
 		placeholder="what needs to be done?"
 		on:keydown={(e) => {
-			if (e.key === 'Enter') {
-				todos.add(e.currentTarget.value);
-				e.currentTarget.value = '';
-			}
+			if (e.key !== 'Enter') return;
+
+			todos.add(e.currentTarget.value);
+			e.currentTarget.value = '';
 		}}
 	/>
 

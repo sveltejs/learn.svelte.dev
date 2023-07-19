@@ -24,10 +24,10 @@
 			dispatch('change', { value: e.currentTarget.value });
 		}}
 		on:keydown={(e) => {
-			if (e.key === 'Enter') {
-				dispatch('change', { value: e.currentTarget.value });
-				e.currentTarget.blur();
-			}
+			if (e.key !== 'Enter') return;
+
+			dispatch('change', { value: e.currentTarget.value });
+			e.currentTarget.blur();
 		}}
 	/>
 
