@@ -13,3 +13,5 @@ export const elapsed = derived(
 ```
 
 > It's possible to derive a store from multiple input stores, and to explicitly `set` a value instead of returning it (which is useful for deriving values asynchronously). Consult the [API reference](https://svelte.dev/docs#run-time-svelte-store-derived) for more information.
+
+> Make sure all definitions from the stores a store derives from are **before** your derived store definition. Otherwise you might end up with a `ReferenceError: Cannot access uninitialized variable.`
