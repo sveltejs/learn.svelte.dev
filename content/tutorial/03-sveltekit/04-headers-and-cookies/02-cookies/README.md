@@ -17,7 +17,7 @@ export function load(+++{ cookies }+++) {
 }
 ```
 
-To set a cookie, you `cookies.set(name, value, options)`. It's strongly recommended that you explicitly configure the `path` when setting a cookie, since browsers' default behaviour — somewhat uselessly — is to set the cookie on the parent of the current path.
+To set a cookie, use `cookies.set(name, value, options)`. It's strongly recommended that you explicitly configure the `path` when setting a cookie, since browsers' default behaviour — somewhat uselessly — is to set the cookie on the parent of the current path.
 
 ```js
 /// file: src/routes/+page.server.js
