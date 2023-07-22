@@ -13,7 +13,7 @@ In this example we're exporting a writable store `name` and a derived store `gre
 
 Changing the input value will now update `name` and all its dependents.
 
-We can also assign directly to store values inside a component. Add a `<button>` element after the `<input>`:
+We can also assign directly to store values inside a component. Update the `<button>` element in `App.svelte`:
 
 ```svelte
 /// file: App.svelte
