@@ -25,11 +25,6 @@ Import the `enhance` function from `$app/forms`...
 <form method="POST" action="?/create" +++use:enhance+++>
 ```
 
-```svelte
-/// file: src/routes/+page.svelte
-<form method="POST" action="?/delete" +++use:enhance+++>
-```
-
 And that's all it takes! Now, when JavaScript is enabled, `use:enhance` will emulate the browser-native behaviour except for the full-page reloads. It will:
 
 - update the `form` prop
