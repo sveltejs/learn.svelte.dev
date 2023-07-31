@@ -2,11 +2,11 @@
 	let count = 0;
 
 	function increment() {
-		// event handler code goes here
+		// le code de la fonction vient ici
 	}
 </script>
 
 <button>
-	Clicked {count}
-	{count === 1 ? 'time' : 'times'}
+	Il y a eu {count}
+	{count === 1 ? 'clic' : 'clics'}
 </button>

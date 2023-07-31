@@ -1,1 +1,1 @@
-<h1>Hello world!</h1>
+<h1>Bonjour tout le monde !</h1>
