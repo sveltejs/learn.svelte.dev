@@ -2,29 +2,29 @@
 title: Bienvenue dans le monde de Svelte !
 ---
 
-Welcome to the Svelte tutorial! This will teach you everything you need to know to easily build web applications of all sizes, with high performance and a small footprint.
+Bienvenue dans le tutoriel Svelte ! Vous y apprendrez tout ce qu'il y a savoir pour développer en toute simplicité des applications web de toutes tailles, rapides et légères.
 
-You can also consult the [API docs](https://svelte.dev/docs) and the [examples](https://svelte.dev/examples), or — if you're impatient to start hacking on your machine locally — create a project with `npm init svelte`.
+Vous pouvez aussi consulter la [documentation de l'API](https://svelte.dev/docs) ainsi que les [exemples](https://svelte.dev/examples), ou — si vous êtes pressé•e•s de jouer sur votre machine en local — vous pouvez [créer un projet de base en 60 secondes avec `npm init svelte`](https://svelte.dev/docs/introduction#start-a-new-project).
 
-## What is Svelte?
+## C'est quoi Svelte ?
 
-Svelte is a tool for building web applications. Like other user interface frameworks, it allows you to build your app _declaratively_ out of components that combine markup, styles and behaviours.
+Svelte est un outil pour développer des applications web. Comme d'autre frameworks de composants, il permet de construire votre application de manière _déclarative_, à partir de composants : composition de HTML, styles et comportements.
 
-These components are _compiled_ into small, efficient JavaScript modules that eliminate overhead traditionally associated with UI frameworks.
+Ces composants sont _compilés_ en petits modules JavaScript efficaces qui éliminent les inconvénients traditionnellement associés aux frameworks UI.
 
-You can build your entire app with Svelte (for example, using an application framework like [SvelteKit](https://kit.svelte.dev), which this tutorial will cover), or you can add it incrementally to an existing codebase. You can also ship components as standalone packages that work anywhere.
+Vous pouvez construire votre application entièrement avec Svelte (par exemple, en utilisant le framework d'applications [SvelteKit] (https://kit.svelte.dev), également couvert par ce tutoriel), ou l'ajouter au fur et à mesure à une base de code existante. Vous pouvez aussi générer des composants en tant que modules autonomes (<span class='vo'>_web components_</span>) utilisables n'importe où, sans la contrainte d'une dépendance à un <span class='vo'>_framework_</span> traditionnel.
 
-## How to use this tutorial
+## Comment se servir de ce tutoriel ?
 
-> You'll need to have basic familiarity with HTML, CSS and JavaScript to understand Svelte.
+> Vous aurez besoin de connaissances de base en HTML, CSS et JavaScript pour comprendre Svelte.
 
-This tutorial is split into four main parts:
+Ce tutoriel est découpé en 4 parties :
 
-- [Basic Svelte](/tutorial/welcome-to-svelte) (you are here)
-- [Advanced Svelte](/tutorial/tweens)
-- [Basic SvelteKit](/tutorial/introducing-sveltekit)
-- [Advanced SvelteKit](/tutorial/optional-params)
+- [Les basiques de Svelte](/tutorial/welcome-to-svelte) (you are here)
+- [Svelte avancé](/tutorial/tweens)
+- [Les basiques SvelteKit](/tutorial/introducing-sveltekit)
+- [SvelteKit avancé](/tutorial/optional-params)
 
-Each section will present an exercise designed to illustrate a feature. Later exercises build on the knowledge gained in earlier ones, so it's recommended that you go from start to finish. If necessary, you can navigate via the menu above.
+À mesure que vous progresserez dans le tutorial, vous serez amené•e•s à faire à des mini exercices pensés pour illustrer de nouvelles fonctionnalités. Chaque chapitre se base sur ce que vous avez appris dans les chapitres précédents, de sorte qu'il est recommandé de suivre le tutoriel dans l'ordre, en commençant par le début. Si besoin, vous pouvez naviguer entre les chapitres à l'aide du menu déroulant ci-dessous (cliquez sur 'Introduction / Bases').
 
-If you get stuck, you can click the `solve` button <span class="desktop">to the left of the editor</span><span class="mobile">in the top right of the editor view</span>. (<span class="mobile">Use the toggle below to switch between tutorial and editor views. </span>The `solve` button is disabled on sections like this one that don't include an exercise.) Try not to rely on it too much; you will learn faster by figuring out where to put each suggested code block and manually typing it in to the editor.
+Chaque chapitre de ce tutoriel vous présente un bouton `Je veux voir` <span class="desktop">à gauche</span><span class="mobile">en haut à droite</span> de l'éditeur sur lequel vous pouvez cliquer si vous bloquez malgré les instructions. (<span class="mobile">Utilisez le toggle en bas pour changer de vue entre le tutoriel et l'éditeur. </span>Le bouton `Je veux voir` est désactivé sur les sections comme celles-ci qui n'incluent pas d'exercice.) Essayez de ne pas trop vous en servir ; vous apprendrez plus vite en trouvant vous-même où placer les blocs de code suggérés et en les tapant manuellement dans l'éditeur.

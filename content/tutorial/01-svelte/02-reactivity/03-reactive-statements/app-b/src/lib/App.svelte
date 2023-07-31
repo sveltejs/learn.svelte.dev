@@ -2,7 +2,7 @@
 	let count = 0;
 
 	$: if (count >= 10) {
-		alert('count is dangerously high!');
+		alert('le compteur est dangereusement élevé !');
 		count = 0;
 	}
 
@@ -12,6 +12,6 @@
 </script>
 
 <button on:click={handleClick}>
-	Clicked {count}
-	{count === 1 ? 'time' : 'times'}
+	Il y a eu {count}
+	{count === 1 ? 'clic' : 'clics'}
 </button>
