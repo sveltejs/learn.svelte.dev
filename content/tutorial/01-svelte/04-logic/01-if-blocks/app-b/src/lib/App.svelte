@@ -7,10 +7,10 @@
 </script>
 
 <button on:click={increment}>
-	Clicked {count}
-	{count === 1 ? 'time' : 'times'}
+	Il y a eu {count}
+	{count === 1 ? 'clic' : 'clics'}
 </button>
 
 {#if count > 10}
-	<p>{count} is greater than 10</p>
+	<p>{count} est supérieur à 10</p>
 {/if}

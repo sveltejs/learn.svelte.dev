@@ -9,13 +9,13 @@
 </script>
 
 <button on:click={handleClick}>
-	generate random number
+	générer un nombre aléatoire
 </button>
 
 {#await promise}
-	<p>...waiting</p>
+	<p>...en attente</p>
 {:then number}
-	<p>The number is {number}</p>
+	<p>Le nombre est {number}</p>
 {:catch error}
 	<p style="color: red">{error.message}</p>
 {/await}
