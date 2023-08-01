@@ -27,7 +27,7 @@ function addNumber() {
 
 La même règle s'applique aux méthodes de tableaux telles que `pop`, `shift`, et `splice`, ainsi qu'aux méthodes d'objets comme `Map.set`, `Set.add`, etc.
 
-Les assignations aux **propriétés** de tableaux ou d'objets, — par ex. `obj.foo += 1` ou `array[i] = x` — fonctionnent de la même façon que des assignations à des variables.
+Les assignations aux _propriétés_ de tableaux ou d'objets, — par ex. `obj.foo += 1` ou `array[i] = x` — fonctionnent de la même façon que des assignations à des variables.
 
 ```js
 /// file: App.svelte

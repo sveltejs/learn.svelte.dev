@@ -2,7 +2,7 @@
 title: Votre premier composant
 ---
 
-En Svelte, une application est composé d'un ou plusieurs _composants_. Un composant est un 
+En Svelte, une application est composée d'un ou plusieurs _composants_. Un composant est un 
 In Svelte, an application is composed from one or more _components_. Un composant est un bloc de code autonome réutilisable qui encapsule du HTML, du CSS et du JavaScript qui vont ensemble, écrit dans un fichier `.svelte`. Le fichier `App.svelte`, ouvert dans l'éditeur de code à droite, est un composant simple.
 
 ## Ajouter de la donnée
