@@ -20,9 +20,9 @@ Vous pouvez construire votre application entièrement avec Svelte (par exemple, 
 
 Ce tutoriel est découpé en 4 parties :
 
-- [Les basiques de Svelte](/tutorial/welcome-to-svelte) (you are here)
+- [Les bases de Svelte](/tutorial/welcome-to-svelte) (vous êtes ici)
 - [Svelte avancé](/tutorial/tweens)
-- [Les basiques SvelteKit](/tutorial/introducing-sveltekit)
+- [Les bases de SvelteKit](/tutorial/introducing-sveltekit)
 - [SvelteKit avancé](/tutorial/optional-params)
 
 À mesure que vous progresserez dans le tutorial, vous serez amené•e•s à faire à des mini exercices pensés pour illustrer de nouvelles fonctionnalités. Chaque chapitre se base sur ce que vous avez appris dans les chapitres précédents, de sorte qu'il est recommandé de suivre le tutoriel dans l'ordre, en commençant par le début. Si besoin, vous pouvez naviguer entre les chapitres à l'aide du menu déroulant ci-dessous (cliquez sur 'Introduction / Bases').
