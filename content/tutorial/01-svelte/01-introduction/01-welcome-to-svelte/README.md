@@ -1,5 +1,5 @@
 ---
-title: Welcome to Svelte
+title: Bienvenue dans le monde de Svelte !
 ---
 
 Welcome to the Svelte tutorial! This will teach you everything you need to know to easily build web applications of all sizes, with high performance and a small footprint.
