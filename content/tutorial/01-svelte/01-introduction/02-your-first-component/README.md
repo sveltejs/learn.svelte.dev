@@ -7,7 +7,7 @@ In Svelte, an application is composed from one or more _components_. Un composan
 
 ## Ajouter de la donnée
 
-Un composant qui se contente d'afficher du <span class='vo'>_markup_</span> statique n'est pas très intéressant. Ajoutons-lui de la donnée.
+Un composant qui se contente d'afficher du <span class="vo">[markup](SITE_SVELTE/docs/web#markup)</span> statique n'est pas très intéressant. Ajoutons-lui de la donnée.
 
 D'abord, ajoutez une balise `<script>` à votre composant, et déclarez une variable `name` :
 
@@ -20,7 +20,7 @@ D'abord, ajoutez une balise `<script>` à votre composant, et déclarez une vari
 <h1>Bonjour tout le monde !</h1>
 ```
 
-Puis, vous pouvez utilisez `name` dans le <span class='vo'>_markup_</span> :
+Puis, vous pouvez utilisez `name` dans le <span class="vo">[markup](SITE_SVELTE/docs/web#markup)</span> :
 
 ```svelte
 /// file: App.svelte
