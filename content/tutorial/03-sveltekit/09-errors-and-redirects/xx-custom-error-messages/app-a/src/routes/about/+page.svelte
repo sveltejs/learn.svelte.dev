@@ -1,4 +1,4 @@
 <p>
-	This is the best about page of all time. Sad
-	that you'll never see it because of the error.
+	Ceci est la meilleure page À propos de tous les temps.
+  Dommage, vous ne pourrez jamais l'afficher à cause de l'erreur.
 </p>

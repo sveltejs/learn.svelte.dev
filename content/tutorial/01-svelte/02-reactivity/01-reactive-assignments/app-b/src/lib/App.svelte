@@ -7,6 +7,6 @@
 </script>
 
 <button on:click={increment}>
-	Clicked {count}
-	{count === 1 ? 'time' : 'times'}
+	Il y a eu {count}
+	{count === 1 ? 'clic' : 'clics'}
 </button>

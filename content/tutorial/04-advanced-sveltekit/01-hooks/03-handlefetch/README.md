@@ -2,13 +2,13 @@
 title: handleFetch
 ---
 
-The `event` object has a `fetch` method that behaves like the standard [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), but with superpowers:
+L'objet `event` a une méthode `fetch` qui se comporte comme l'[API Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) standard, mais avec des super pouvoirs :
 
-- it can be used to make credentialed requests on the server, as it inherits the `cookie` and `authorization` headers from the incoming request
-- it can make relative requests on the server (ordinarily, `fetch` requires a URL with an origin when used in a server context)
-- internal requests (e.g. for `+server.js` routes) go directly to the handler function when running on the server, without the overhead of an HTTP call
+- elle peut être utilisée pour effectuer des requêtes authentifiées sur le serveur, puisqu'elle hérite des <span class="vo">[headers](PUBLIC_SVELTE_SITE_URL/docs/web/header)</span> `cookie` et `authorization` de la requête entrante
+- elle peut être utilisée pour effectuer des requêtes relatives sur le serveur (normalement `fetch` impose une URL avec une origine lorsqu'utilisée dans un contexte serveur)
+- les requêtes internes (par ex. pour les routes `+server.js`) sont directement consommées par les fonctions adéquates sur le serveur, sans avoir besoin de faire un appel HTTP supplémentaire
 
-Its behaviour can be modified with the `handleFetch` hook, which by default looks like this:
+Son comportement peut être modifié avec le <span class="vo">[hook](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#hook)</span> `handleFetch`, qui par défaut ressemble à ceci :
 
 ```js
 /// file: src/hooks.server.js
@@ -17,7 +17,7 @@ export async function handleFetch({ event, request, fetch }) {
 }
 ```
 
-For example, we could respond to requests for `src/routes/a/+server.js` with responses from `src/routes/b/+server.js` instead:
+Par exemple, nous pourrions répondre aux requêtes vers `src/routes/a/+server.js` avec des réponses de `src/routes/b/+server.js` à la place :
 
 ```js
 /// file: src/hooks.server.js
@@ -31,4 +31,4 @@ export async function handleFetch({ event, request, fetch }) {
 }
 ```
 
-Later, when we cover [universal `load` functions](universal-load-functions), we'll see that `event.fetch` can also be called from the browser. In that scenario, `handleFetch` is useful if you have requests to a public URL like `https://api.yourapp.com` from the browser, that should be redirected to an internal URL (bypassing whatever proxies and load balancers sit between the API server and the public internet) when running on the server.
+Lorsque nous étudierons les [fonctions `load` universelles](universal-load-functions), nous verrons que `event.fetch` peut aussi être appelée depuis le navigateur. Dans ce cas, `handleFetch` est utile si vous avez des requêtes partant du navigateur vers une URL publique comme `https://api.yourapp.com`, mais qui doit être redirigée vers une URL interne (en court-circuitant les éventuels <span class="vo">[proxies](PUBLIC_SVELTE_SITE_URL/docs/web#proxy)</span> ou <span class="vo">[load balancers](PUBLIC_SVELTE_SITE_URL/docs/web#load-balancer)</span> qui se trouvent entre le serveur d'<span class="vo">[API](PUBLIC_SVELTE_SITE_URL/docs/development#api)</span> et l'internet public) lorsqu'elle est exécutée sur votre serveur.

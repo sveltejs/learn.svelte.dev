@@ -15,10 +15,10 @@
 </script>
 
 <nav>
-	<a href="/">home</a>
-	<a href="/about">about</a>
+	<a href="/">accueil</a>
+	<a href="/about">à propos</a>
 </nav>
 
 <slot />
 
-<p>the page has been open for {seconds} seconds</p>
+<p>la page est ouverte depuis {seconds} secondes</p>

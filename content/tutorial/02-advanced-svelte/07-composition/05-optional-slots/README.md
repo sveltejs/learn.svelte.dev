@@ -1,14 +1,14 @@
 ---
-title: Checking for slot content
+title: Vérifier le contenu des slots
 ---
 
-In some cases, you may want to control parts of your component based on whether slotted content was passed in. For example, if we remove the `<header>` from `App.svelte`...
+Vous avez besoin de contrôler chaque partie de votre composant en fonction de si du contenu <span class="vo">[slotté](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#slot)</span> est fourni. Par exemple, si nous enlevons le `<header>` de `App.svelte`...
 
 ```svelte
 /// file: App.svelte
 ---<header slot="header" class="row">
 	<span class="color" />
-	<span class="name">name</span>
+	<span class="name">nome</span>
 	<span class="hex">hex</span>
 	<span class="rgb">rgb</span>
 	<span class="hsl">hsl</span>
@@ -23,9 +23,9 @@ In some cases, you may want to control parts of your component based on whether 
 </div>
 ```
 
-...we're left with an ugly double border because `FilterableList.svelte` is still rendering the `<div class="header">`.
+...nous nous retrouvons avec une double bordure affreuse parce que `FilterableList.svelte` continue d'afficher le `<div class="header">`.
 
-We can fix that by using the special `$$slots` variable in `FilterableList.svelte`:
+Nous pouvons régler cela en utilisant la variable spéciale `$$slots` dans `FilterableList.svelte` :
 
 ```svelte
 /// file: FilterableList.svelte

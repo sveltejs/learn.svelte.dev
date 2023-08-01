@@ -2,21 +2,21 @@
 title: prerender
 ---
 
-Prerendering means generating HTML for a page once, at build time, rather than dynamically for each request.
+Le pré-rendu (ou <span class="vo">[prerendering](PUBLIC_SVELTE_SITE_URL/docs/web#prerendering)</span>) signifie générer du HTML pour une page une seule fois, au moment de la compilation, plutôt que dynamiquement à chaque requête.
 
-The advantage is that serving static data is extremely cheap and performant, allowing you to easily serve large numbers of users without worrying about cache-control headers (which are easy to get wrong).
+L'avantage est que servir des pages affichant de la donnée statique est extrêmement peu cher et très performant, ce qui vous permet facilement de servir un grand nombre d'utilisateurs et d'utilisatrices sans vous soucier des <span class="vo">[headers](PUBLIC_SVELTE_SITE_URL/docs/web#header)</span> `cache-control` (qu'il est facile de mal utiliser).
 
-The tradeoff is that the build process takes longer, and prerendered content can only be updated by building and deploying a new version of the application.
+La contrepartie est que le processus de compilation est plus long, et que le contenu peut seulement être mis-à-jour en recompilant puis déployant une nouvelle version de l'application.
 
-To prerender a page, set `prerender` to `true`:
+Pour pré-rendre une page, mettez `prerender` à `true` :
 
 ```js
 /// file: src/routes/+page.server.js
 export const prerender = true;
 ```
 
-Here in the tutorial, this won't have any observable effect, since the application is running in `dev` mode.
+Dans ce tutoriel, ceci n'aura aucun effet observable, puisque l'application est exécutée en mode de dévelopement (`dev` mode).
 
-Not all pages can be prerendered. The basic rule is this: for content to be prerenderable, any two users hitting it directly must get the same content from the server, and the page must not contain form actions. Pages with dynamic route parameters can be prerendered as long as they are specified in the [`prerender.entries`](https://kit.svelte.dev/docs/configuration#prerender) configuration or can be reached by following links from pages that _are_ in `prerender.entries`.
+Toutes les pages ne peuvent pas être pré-rendues. La règle de base est la suivante : pour que le contenu puisse être pré-rendu, deux personnes accédant à la page directement doivent voir le même contenu arriver du serveur, et la page ne doit pas contenir d'action de formulaire. Les pages avec des paramètres de route dynamiques peuvent être pré-rendues tant qu'elles sont déclarées avec l'option de configuration [`prerender.entries`](PUBLIC_KIT_SITE_URL/docs/configuration#prerender) ou qu'elles sont accessibles en suivant des liens depuis des pages qui _sont_ dans `prerender.entries`.
 
-> Setting `prerender` to `true` inside your root `+layout.server.js` effectively turns SvelteKit into a static site generator (SSG).
+> Mettre `prerender` à `true` dans votre `+layout.server.js` racine transforme l'intégralité de votre application en un générateur de site statique (<span class="vo">[Static Site Generator](PUBLIC_SVELTE_SITE_URL/docs/web#ssg)</span>).

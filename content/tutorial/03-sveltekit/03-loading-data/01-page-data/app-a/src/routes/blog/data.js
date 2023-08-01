@@ -1,21 +1,22 @@
 export const posts = [
 	{
-		slug: 'welcome',
-		title: 'Welcome to the Aperture Science computer-aided enrichment center',
+		slug: 'bienvenue',
+		title:
+			"Bienvenue au centre d'enrichissement assisté par ordinateur Aperture Science",
 		content:
-			'<p>We hope your brief detention in the relaxation vault has been a pleasant one.</p><p>Your specimen has been processed and we are now ready to begin the test proper.</p>'
+			"<p>Nous espérons que votre détention provisoire dans l'arche de relaxation a été plaisante.</p><p>Votre spécimen a été processé et nous sommes maintenant prêts à démarrer le test en bonne et dûe forme</p>"
 	},
 
 	{
-		slug: 'safety',
-		title: 'Safety notice',
+		slug: 'securite',
+		title: 'Note de sécurité',
 		content:
-			'<p>While safety is one of many Enrichment Center Goals, the Aperture Science High Energy Pellet, seen to the left of the chamber, can and has caused permanent disabilities, such as vaporization. Please be careful.</p>'
+			"<p>Bien que la sécurité est un des nombreux objectifs du centre d'enrichissement, la Pilule Haute Énergie d'Aperture Science, à droite de la chambre, peut et a déjà causé des handicaps permanents, comme la vaporisation. Agissez avec prudence.</p>"
 	},
 
 	{
-		slug: 'cake',
-		title: 'This was a triumph',
-		content: "<p>I'm making a note here: HUGE SUCCESS.</p>"
+		slug: 'gateau',
+		title: 'Ceci fut un triomphe',
+		content: '<p>Je prends note : ÉNORME SUCCÈS.</p>'
 	}
 ];

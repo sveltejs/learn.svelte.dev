@@ -1,1 +1,1 @@
-<h2>Page options</h2>
+<h2>Options de page</h2>

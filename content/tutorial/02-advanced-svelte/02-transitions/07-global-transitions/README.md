@@ -1,12 +1,12 @@
 ---
-title: Global transitions
+title: Transitions globales
 ---
 
-Ordinarily, transitions will only play on elements when their direct containing block is added or destroyed. In the example here, toggling the visibility of the entire list does not apply transitions to individual list elements.
+En règle générale, les transitions ne s'appliquent aux éléments que lorsque le bloc qui les contient directement est ajouté ou détruit. Dans l'exemple présenté ici, le fait de changer la visibilité de la liste entière n'applique pas les transitions aux éléments individuels de la liste.
 
-Instead, we'd like transitions to not only play when individual items are added and removed with the slider but also when we toggle the checkbox.
+Au lieu de cela, nous aimerions que les transitions soient jouées non seulement lorsque des éléments individuels sont ajoutés et supprimés à l'aide du curseur, mais aussi lorsque nous basculons la case à cocher.
 
-We can achieve this with a _global_ transition, which plays when _any_ block containing the transitions is added or removed:
+Nous pouvons y parvenir avec une transition _globale_, qui se déclenche lorsque _n'importe quel_ bloc contenant les transitions est ajouté ou supprimé :
 
 ```svelte
 /// file: App.svelte
@@ -15,4 +15,4 @@ We can achieve this with a _global_ transition, which plays when _any_ block con
 </div>
 ```
 
-> In Svelte 3, transitions were global by default and you had to use the `|local` modifier to make them local.
+> Dans Svelte 3, les transitions étaient globales par défaut et il fallait utiliser le modificateur `|local` pour les rendre locales.

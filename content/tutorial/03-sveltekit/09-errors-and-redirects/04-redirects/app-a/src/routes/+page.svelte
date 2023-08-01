@@ -1,1 +1,1 @@
-<p>home</p>
+<p>accueil</p>

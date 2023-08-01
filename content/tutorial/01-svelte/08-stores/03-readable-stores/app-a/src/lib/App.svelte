@@ -12,4 +12,4 @@
 	);
 </script>
 
-<h1>The time is {formatter.format($time)}</h1>
+<h1>Il est {formatter.format($time)}</h1>

@@ -4,8 +4,8 @@
 </script>
 
 {#if !online}
-	<h1>you're offline</h1>
+	<h1>Vous êtes hors ligne</h1>
 {:else}
-	<h1>oops!</h1>
-	<p>Something went wrong</p>
+	<h1>Oups !</h1>
+	<p>Quelque chose s'est mal passé</p>
 {/if}

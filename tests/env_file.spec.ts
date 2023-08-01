@@ -28,7 +28,7 @@ test('.env file: no timeout error occurs when switching a tutorials without a .e
 	const iframe_locator = page.frameLocator(iframe_selector);
 
 	// wait for the iframe to load
-	await iframe_locator.getByText('Welcome!').waitFor();
+	await iframe_locator.getByText('Bienvenue !').waitFor();
 
 	// switch to another tutorial with a .env file
 	await page.click('header > button > h1', { delay: 200 });
@@ -61,7 +61,7 @@ test('.env file: environment variables are available when switching a tutorial w
 	const iframe_locator = page.frameLocator(iframe_selector);
 
 	// wait for the iframe to load
-	await iframe_locator.getByText('Welcome!').waitFor();
+	await iframe_locator.getByText('Bienvenue !').waitFor();
 
 	// switch to another tutorial with a .env file
 	await page.click('header > button > h1', { delay: 200 });

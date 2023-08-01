@@ -1,5 +1,5 @@
 <button>
-	Push
+	Cliquez moi
 </button>
 
 <style>

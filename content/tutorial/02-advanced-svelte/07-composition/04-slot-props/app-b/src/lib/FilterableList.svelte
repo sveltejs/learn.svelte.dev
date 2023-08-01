@@ -10,13 +10,13 @@
 
 <div class="list">
 	<label>
-		Filter: <input bind:value={search} />
+		Filtrer : <input bind:value={search} />
 	</label>
 
 	<div class="header">
 		<slot name="header"/>
 	</div>
-	
+
 	<div class="content">
 		{#each data.filter(matches) as item}
 			<slot {item} />

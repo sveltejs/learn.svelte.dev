@@ -7,7 +7,7 @@
 		m = { x: e.clientX, y: e.clientY };
 	}}
 >
-	The pointer is at {m.x} x {m.y}
+	Le curseur se trouve à la position ({m.x} ; {m.y})
 </div>
 
 <style>

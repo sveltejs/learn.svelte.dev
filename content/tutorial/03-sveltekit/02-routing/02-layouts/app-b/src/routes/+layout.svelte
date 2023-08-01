@@ -1,6 +1,6 @@
 <nav>
-	<a href="/">home</a>
-	<a href="/about">about</a>
+	<a href="/">Accueil</a>
+	<a href="/about">À propos</a>
 </nav>
 
 <slot />

@@ -29,3 +29,9 @@ Tutorials live inside `content`. Each tutorial consists of a `README.md`, which 
 ## Bumping tutorial dependencies
 
 Bump the dependency (for example Svelte) in both the root and the `content/common` `package.json`. In the root do `pnpm i` (to update `pnpm-lock.yaml`), in `content/common` do `npm i` (to update `package-lock.json`).
+
+## Translating this project
+
+This is the french version of the Svelte tutorial.
+
+Read more about this was done [here](i18n.md).

@@ -22,7 +22,7 @@
 
 <div class="controls">
 	<label>
-		<h3>stiffness ({coords.stiffness})</h3>
+		<h3>raideur ({coords.stiffness})</h3>
 		<input
 			bind:value={coords.stiffness}
 			type="range"
@@ -33,7 +33,7 @@
 	</label>
 
 	<label>
-		<h3>damping ({coords.damping})</h3>
+		<h3>amortissement ({coords.damping})</h3>
 		<input
 			bind:value={coords.damping}
 			type="range"

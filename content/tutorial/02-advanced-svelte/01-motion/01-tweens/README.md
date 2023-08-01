@@ -1,12 +1,12 @@
 ---
-title: Tweens
+title: Interpolation
 ---
 
-Now that we've covered the basics, it's time to learn some advanced Svelte techniques, starting with _motion_.
+Maintenant que nous avons couvert les bases, il est temps d'apprendre quelques techniques avancées de Svelte, en commençant par la gestion du _mouvement_.
 
-Setting values and watching the DOM update automatically is cool. Know what's even cooler? Tweening those values. Svelte includes tools to help you build slick user interfaces that use animation to communicate changes.
+Mettre à jour des valeurs et regarder le <span class="vo">[DOM](PUBLIC_SVELTE_SITE_URL/docs/web#dom)</span> s'actualiser automatiquement, c'est plutôt stylé. Vous savez ce qui est encore plus stylé ? _Interpoler_ (<span class="vo">[tween](PUBLIC_SVELTE_SITE_URL/docs/svelte-motion#tweened)</span>) entre ces valeurs. Svelte contient des outils pour vous aider à construire des interfaces utilisateur qui utilisent des animations pour mettre en valeur ce qui change.
 
-Let's start by changing the `progress` store to a `tweened` store:
+Commençons par changer le <span class="vo">[store](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#store)</span> `progress` en un store de type `tweened` :
 
 ```svelte
 /// file: App.svelte
@@ -17,7 +17,7 @@ Let's start by changing the `progress` store to a `tweened` store:
 </script>
 ```
 
-Clicking the buttons causes the progress bar to animate to its new value. It's a bit robotic and unsatisfying though. We need to add an easing function:
+Cliquer sur les boutons va animer la barre de progression vers sa nouvelle valeur. Mais c'est encore un peu robotique et pas vraiment satisfaisant. Nous pouvons ajouter à l'animation une fonction de lissage :
 
 ```svelte
 /// file: App.svelte
@@ -32,13 +32,13 @@ Clicking the buttons causes the progress bar to animate to its new value. It's a
 </script>
 ```
 
-> The `svelte/easing` module contains the [Penner easing equations](https://web.archive.org/web/20190805215728/http://robertpenner.com/easing/), or you can supply your own `p => t` function where `p` and `t` are both values between 0 and 1.
+> Le module `svelte/easing` contient les [équations de lissage de Penner](https://web.archive.org/web/20190805215728/http://robertpenner.com/easing/), mais vous pouvez aussi créer votre propre fonction `p => t` où `p` et `t` sont toutes les deux des valeurs entre 0 et 1.
 
-The full set of options available to `tweened`:
+Voici la liste complète des options disponibles pour `tweened` :
 
-- `delay` — milliseconds before the tween starts
-- `duration` — either the duration of the tween in milliseconds, or a `(from, to) => milliseconds` function allowing you to (e.g.) specify longer tweens for larger changes in value
-- `easing` — a `p => t` function
-- `interpolate` — a custom `(from, to) => t => value` function for interpolating between arbitrary values. By default, Svelte will interpolate between numbers, dates, and identically-shaped arrays and objects (as long as they only contain numbers and dates or other valid arrays and objects). If you want to interpolate (for example) colour strings or transformation matrices, supply a custom interpolator
+* `delay` — durée en millisecondes avant le début de l'animation
+* `duration` — soit la durée de l'animation en millisecondes, soit une fonction `(from, to) => milliseconds` vous permettant (par ex.) de créer des animations plus longues dans le cas de changements de valeurs plus larges
+* `easing` — une fonction de lissage `p => t`
+* `interpolate` — une fonction personnalisée `(from, to) => t => value` pour interpoler entre des valeurs arbitraires. Par défaut, Svelte interpole entre des nombres, des dates, et des tableaux ou objets de même forme (tant qu'ils contiennent uniquement des nombres et des dates ou d'autres tableaux ou objets valides). Si vous souhaitez interpoler (par ex.) entre des codes de couleurs ou des matrices de transformation, vous pouvez fournir un interpolateur personnalisé
 
-You can also pass these options to `progress.set` and `progress.update` as a second argument, in which case they will override the defaults. The `set` and `update` methods both return a promise that resolves when the tween completes.
+Vous pouvez aussi passer ces options à `progress.set` et `progress.update` en tant que deuxième argument, auquel cas elles remplaceront les options par défaut. Les méthodes `set` et `update` retournent toutes les deux une promesse qui se résout quand l'animation se termine.

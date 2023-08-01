@@ -7,14 +7,14 @@
 
 <label>
 	<input bind:value={user.firstname} />
-	first name
+	prénom
 </label>
 
 <label>
 	<input bind:value={user.lastname} />
-	last name
+	nom
 </label>
 
 {@debug user}
 
-<h1>Hello {user.firstname}!</h1>
+<h1>Bonjour {user.firstname}!</h1>

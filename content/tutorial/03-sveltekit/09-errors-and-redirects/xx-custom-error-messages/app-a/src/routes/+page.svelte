@@ -1,1 +1,1 @@
-<p>Welcome</p>
+<p>Bienvenue</p>

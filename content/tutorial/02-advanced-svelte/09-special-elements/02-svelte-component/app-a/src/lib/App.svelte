@@ -21,5 +21,5 @@
 {#if selected.color === 'red'}
 	<RedThing />
 {:else}
-	<p>TODO others</p>
+	<p>TODO autres</p>
 {/if}

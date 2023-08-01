@@ -1,8 +1,8 @@
 ---
-title: Inline handlers
+title: Gestionnaires en ligne
 ---
 
-You can also declare event handlers inline:
+Vous pouvez aussi déclarer les gestionnaires d'évènement en ligne :
 
 ```svelte
 /// file: App.svelte
@@ -20,8 +20,8 @@ You can also declare event handlers inline:
 		m = { x: e.clientX, y: e.clientY };
 	}+++}
 >
-	The pointer is at {m.x} x {m.y}
+	Le curseur se trouve à la position ({m.x} ; {m.y})
 </div>
 ```
 
-> In some frameworks you may see recommendations to avoid inline event handlers for performance reasons, particularly inside loops. That advice doesn't apply to Svelte — the compiler will always do the right thing, whichever form you choose.
+> Certains <span class='vo'>[frameworks](PUBLIC_SVELTE_SITE_URL/docs/development#framework)</span> recommendent d'éviter les gestionnaires d'évènements en ligne pour des raisons de performance, particulièrement au sein de boucles. Ce conseil ne s'applique pas pour Svelte — le compilateur prendra toujours la bonne décision, peu importe la forme que vous choisissez.

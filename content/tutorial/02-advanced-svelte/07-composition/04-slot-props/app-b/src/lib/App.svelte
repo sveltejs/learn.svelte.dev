@@ -10,7 +10,7 @@
 >
 	<header slot="header" class="row">
 		<span class="color" />
-		<span class="name">name</span>
+		<span class="name">nom</span>
 		<span class="hex">hex</span>
 		<span class="rgb">rgb</span>
 		<span class="hsl">hsl</span>

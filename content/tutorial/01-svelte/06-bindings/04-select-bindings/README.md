@@ -1,8 +1,8 @@
 ---
-title: Select bindings
+title: Liaison de select
 ---
 
-We can also use `bind:value` with `<select>` elements:
+Nous pouvons également utiliser `bind:value` avec les éléments `<select>`. Changez la ligne 20 :
 
 ```svelte
 /// file: App.svelte
@@ -12,6 +12,6 @@ We can also use `bind:value` with `<select>` elements:
 >
 ```
 
-Note that the `<option>` values are objects rather than strings. Svelte doesn't mind.
+Notez que les valeur de `<option>` sont des objets plutôt que des chaînes de caractères. Svelte ne s'en offusque pas.
 
-> Because we haven't set an initial value of `selected`, the binding will set it to the default value (the first in the list) automatically. Be careful though — until the binding is initialised, `selected` remains undefined, so we can't blindly reference e.g. `selected.id` in the template.
+> Puisque nous n'avons pas fourni à `selected` une valeur initiale, la liaison va lui assigner automatiquement la valeur par défaut (la première dans la liste). Soyez tout de même vigilant•e — tant que la liaison n'est pas initialisée, `selected` vaut `undefined`, de sorte que nous ne pouvons pas référencer à l'aveugle `selected.id` (par ex.) dans le template. Si votre situation le permet, vous pourriez aussi lui assigner une valeur initiale pour contourner ce problème.

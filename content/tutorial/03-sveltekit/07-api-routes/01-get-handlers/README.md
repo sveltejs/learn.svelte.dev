@@ -1,10 +1,10 @@
 ---
-title: GET handlers
+title: Fonctions GET
 ---
 
-SvelteKit allows you to create more than just pages. We can also create _API routes_ by adding a `+server.js` file that exports functions corresponding to HTTP methods: `GET`, `PUT`, `POST`, `PATCH` and `DELETE`.
+SvelteKit vous permet de créer plus que des simples pages. Nous pouvons aussi créer des _routes d'<span class="vo">[API](PUBLIC_SVELTE_SITE_URL/docs/development#api)</span>_ en ajoutant un fichier `+server.js` qui exporte des fonctions correspondant aux méthodes HTTP : `GET`, `PUT`, `POST`, `PATCH`, `DELETE`.
 
-This app fetches data from a `/roll` API route when you click the button. Create that route by adding a `src/routes/roll/+server.js` file:
+Cette application requête de la donnée depuis une route d'<span class="vo">[API](PUBLIC_SVELTE_SITE_URL/docs/development#api)</span> lorsque vous cliquez sur le bouton. Créez cette route en ajoutant un fichier `src/routes/roll/+server.js` :
 
 ```js
 /// file: src/routes/roll/+server.js
@@ -19,9 +19,9 @@ export function GET() {
 }
 ```
 
-Clicking the button now works.
+Désormais, le clic sur le bouton fonctionne correctement.
 
-Request handlers must return a [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response/Response) object. Since it's common to return JSON from an API route, SvelteKit provides a convenience function for generating these responses:
+Les gestionnaires de requêtes doivent renvoyer un objet [Response](https://developer.mozilla.org/fr/docs/Web/API/Response/Response). Puisqu'il est courant de renvoyer du <span class="vo">[JSON](PUBLIC_SVELTE_SITE_URL/docs/web#json)</span> depuis une route d'<span class="vo">[API](PUBLIC_SVELTE_SITE_URL/docs/development#api)</span>, SvelteKit fournit une fonction utilitaire pour générer de telles réponses :
 
 ```js
 /// file: src/routes/roll/+server.js

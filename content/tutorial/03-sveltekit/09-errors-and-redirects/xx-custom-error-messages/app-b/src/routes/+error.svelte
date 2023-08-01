@@ -6,10 +6,10 @@
 </script>
 
 {#if $page.status === 404}
-	<h1>Not found</h1>
+	<h1>Page non trouvée</h1>
 {:else if !online}
-	<h1>You're offline</h1>
+	<h1>Vous être hors ligne</h1>
 {:else}
-	<h1>Oops!</h1>
+	<h1>Oups !</h1>
 	<p>{$page.error.message}</p>
 {/if}

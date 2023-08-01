@@ -1,1 +1,1 @@
-<p>This is another paragraph.</p>
+<p>Ceci est un autre paragraphe.</p>

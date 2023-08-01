@@ -1,2 +1,2 @@
-<h1>hello world</h1>
+<h1>bonjour tout le monde</h1>
 <a href="/ping">ping</a>

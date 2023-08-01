@@ -1,10 +1,10 @@
 ---
-title: Setting headers
+title: Définir les headers
 ---
 
-Inside a `load` function (as well as in [form actions](the-form-element), [hooks](handle) and [API routes](get-handlers), which we'll learn about later) you have access to a `setHeaders` function, which — unsurprisingly — can be used to set headers on the response.
+Dans une fonction `load` (ainsi que dans les [actions de formulaire](the-form-element), les [hooks](handle) et les [routes d'API](get-handlers), que nous étudierons plus tard), vous avez accès à une fonction `setHeaders`, qui — sans grande surprise — permet de définir les <span class="vo">[headers](PUBLIC_SVELTE_SITE_URL/docs/web#header)</span> de réponse.
 
-Most commonly, you'd use it to customise caching behaviour with the [`Cache-Control`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control) response header, but for the sake of this tutorial we'll do something less advisable and more dramatic:
+Le plus souvent, vous vous en servirez pour personnaliser le comportement de cache avec le <span class="vo">[header](PUBLIC_SVELTE_SITE_URL/docs/web#header)</span> de réponse [`Cache-Control`](https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Cache-Control), mais dans le cadre de ce tutoriel, nous allons faire quelque chose de moins recommandé et donc plus dramatique :
 
 ```js
 /// file: src/routes/+page.server.js
@@ -15,4 +15,4 @@ export function load(+++{ setHeaders }+++) {
 }
 ```
 
-(You may need to reload the iframe to see the effect.)
+(Il se peut que vous deviez recharger l'<span class="vo">[iframe](PUBLIC_SVELTE_SITE_URL/docs/web#iframe)</span> pour en voir l'effet.)

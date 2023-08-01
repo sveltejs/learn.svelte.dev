@@ -1,21 +1,21 @@
 <div class="card">
 	<header>
 		<slot name="telephone">
-			<i>(telephone)</i>
+			<i>(téléphone)</i>
 		</slot>
-		
+
 		<slot name="company">
-			<i>(company name)</i>
+			<i>(npm de la société)</i>
 		</slot>
 	</header>
 
 	<slot>
-		<i>(name)</i>
+		<i>(nom)</i>
 	</slot>
-		
+
 	<footer>
 		<slot name="address">
-			<i>(address)</i>
+			<i>(adresse)</i>
 		</slot>
 	</footer>
 </div>

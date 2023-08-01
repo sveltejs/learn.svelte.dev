@@ -1,8 +1,8 @@
 ---
-title: Other handlers
+title: Autres fonctions
 ---
 
-Similarly, we can add handlers for other HTTP verbs. Add a `/todo/[id]` route by creating a `src/routes/todo/[id]/+server.js` file with `PUT` and `DELETE` handlers for toggling and removing todos, using the `toggleTodo` and `deleteTodo` functions in `src/lib/server/database.js`:
+De même, nous pouvons ajouter des gestionnaires pour d'autres verbes HTTP. Ajoutez une route `/todo/[id]` en créant un fichier `src/routes/todo/[id]/+server.js` avec des fonctions `PUT` et `DELETE` pour activer et supprimer les tâches, en utilisant les fonctions `toggleTodo` et `deleteTodo` dans `src/lib/server/database.js` :
 
 ```js
 /// file: src/routes/todo/[id]/+server.js
@@ -24,9 +24,9 @@ export async function DELETE({ params, cookies }) {
 }
 ```
 
-Since we don't need to return any actual data to the browser, we're returning an empty [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) with a [204 No Content](https://http.dog/204) status.
+Puisque nous n'avons pas besoin de renvoyer de la donnée au navigateur, nous renvoyons un objet [Response](https://developer.mozilla.org/fr/docs/Web/API/Response) vide avec un statut [204 No Content](https://httpstatusdogs.com/204-no-content) (en anglais).
 
-We can now interact with this endpoint inside our event handlers:
+Nous pouvons maintenant interagir avec ce [endpoint](PUBLIC_SVELTE_SITE_URL/docs/web#endpoint) dans notre gestionnaire d'évènement :
 
 ```svelte
 /// file: src/routes/+page.svelte
@@ -48,7 +48,7 @@ We can now interact with this endpoint inside our event handlers:
 	/>
 	<span>{todo.description}</span>
 	<button
-		aria-label="Mark as complete"
+		aria-label="Marquer comme terminée"
 		on:click={async (e) => {
 +++			await fetch(`/todo/${todo.id}`, {
 				method: 'DELETE'

@@ -10,6 +10,6 @@
 
 {#if visible}
 	<p in:fly={{ y: 200, duration: 2000 }} out:fade>
-		Flies in, fades out
+		Entre en volant, sort en s'estompant
 	</p>
 {/if}

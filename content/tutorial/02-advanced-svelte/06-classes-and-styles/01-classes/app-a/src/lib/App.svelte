@@ -3,7 +3,7 @@
 </script>
 
 <div class="container">
-	Flip the card
+	Retourner la carte
 	<button
 		class="card"
 		on:click={() => flipped = !flipped}

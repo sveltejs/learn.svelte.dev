@@ -1,20 +1,20 @@
 ---
-title: Assignments
+title: Assignations
 ---
 
-At the heart of Svelte is a powerful system of _reactivity_ for keeping the DOM in sync with your application state — for example, in response to an event.
+Au coeur de Svelte se trouve un système efficace de **réactivité** qui permet de garder le <span class="vo">[DOM](PUBLIC_SVELTE_SITE_URL/docs/web#dom)</span> en phase avec l'état de votre application — par exemple en réaction à un évènement.
 
-To demonstrate it, we first need to wire up an event handler (we'll learn more about these [later](/tutorial/dom-events)):
+Pour le mettre en valeur, nous devons d'abord mettre en place un gestionnaire d'évènement (nous en apprendrons plus [plus tard](/tutorial/dom-events)):
 
 ```svelte
 /// file: App.svelte
 <button +++on:click={increment}+++>
-	Clicked {count}
-	{count === 1 ? 'time' : 'times'}
+	Il y a eu {count}
+	{count === 1 ? 'clic' : 'clics'}
 </button>
 ```
 
-Inside the `increment` function, all we need to do is change the value of `count`:
+À l'intérieur de la fonction `increment`, nous devons changer la valeur de `count` :
 
 ```js
 /// file: App.svelte
@@ -23,4 +23,4 @@ function increment() {
 }
 ```
 
-Svelte 'instruments' this assignment with some code that tells it the DOM will need to be updated.
+Svelte "instrumente" cette assignation avec du code qui va informer le <span class="vo">[DOM](PUBLIC_SVELTE_SITE_URL/docs/web#dom)</span> de ce qui a besoin d'être mis à jour.

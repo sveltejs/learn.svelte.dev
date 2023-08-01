@@ -1,7 +1,7 @@
 <nav>
-	<a href="/">home</a>
-	<a href="/the-good-place">the good place</a>
-	<a href="/the-bad-place">the bad place</a>
+	<a href="/">accueil</a>
+	<a href="/the-good-place">l'endroit chouette</a>
+	<a href="/the-bad-place">l'endroit nul</a>
 </nav>
 
 <slot />

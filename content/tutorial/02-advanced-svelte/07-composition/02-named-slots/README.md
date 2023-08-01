@@ -1,10 +1,10 @@
 ---
-title: Named slots
+title: Slots nommés
 ---
 
-The previous example contained a _default slot_, which renders the direct children of a component. Sometimes you will need more control over placement. In those cases, we can use _named slots_.
+L'exemple précédent contenait un <span class="vo">[slot](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#slot)</span> par défaut, qui affiche l'enfant direct d'une instance de composant. Parfois vous aurez besoin de plus de contrôle sur le positionnement. Dans ces cas-là, nous pouvons utiliser des _slots nommés_.
 
-Inside `App.svelte`, we're rendering a `<Card>` component that contains `<span slot="telephone">` and others for `company` and `address`. Let's add the corresponding named slots in `Card.svelte`:
+Dans `App.svelte`, nous affichons un composant `<Card>` qui contient un `<span slot="telephone">` et d'autres pour `company` et `address`. Ajoutons les <span class="vo">[slots](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#slot)</span> nommés correspondants dans `Card.svelte` :
 
 ```svelte
 /// file: Card.svelte
@@ -15,14 +15,14 @@ Inside `App.svelte`, we're rendering a `<Card>` component that contains `<span s
 	</header>+++
 
 	<slot />
-		
+
 +++	<footer>
 		<slot name="address" />
 	</footer>+++
 </div>
 ```
 
-We need to add some styles to the `<small>` element in `App.svelte` so that it occupies its own line. The contents of `<Card>` inherit styles from `Card.svelte`, such as `font-family` (the lettering is something called ['Silian Rail'](https://www.youtube.com/watch?v=aZVkW9p-cCU)), but normal scoping rules apply — we need to add the styles to `App.svelte` because that's where the element is:
+Nous avons besoin d'ajouter un peu de style à l'élément `<small>` dans `App.svelte` afin qu'il occupe sa propre ligne. Le contenu de `<Card>` hérite des styles de `Card.svelte`, comme `font-family` (le lettrage s'appelle apparemment ['Silian Rail'](https://www.youtube.com/watch?v=aZVkW9p-cCU)),  mais les règles normales de <span class="vo">[scope](PUBLIC_SVELTE_SITE_URL/docs/development#scope)</span> s'appliquent — nous avons besoin d'ajouter les styles dans `App.svelte` car c'est là que l'élément est défini :
 
 ```svelte
 /// file: App.svelte
@@ -42,12 +42,12 @@ We need to add some styles to the `<small>` element in `App.svelte` so that it o
 </style>
 ```
 
-Alternatively, we could use the `:global` modifier inside `Card.svelte` to target all `small` elements inside `.card`:
+Une alternative serait d'ajouter le modificateur `:global` dans `Card.svelte` pour cibler tous les éléments `small` dans `.card` :
 
 ```svelte
 /// file: Card.svelte
 <style>
-	/* ... */ 
+	/* ... */
 
 	+++.card :global(small) {
 		display: block;

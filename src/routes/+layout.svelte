@@ -8,6 +8,8 @@
 	import '@sveltejs/site-kit/styles/index.css';
 	import '../app.css';
 
+	import { PUBLIC_SVELTE_SITE_URL, PUBLIC_KIT_SITE_URL } from '$env/static/public';
+
 	export let data;
 </script>
 
@@ -23,18 +25,18 @@
 
 		<svelte:fragment slot="search">
 			{#if $page.url.pathname !== '/search'}
-				<Search />
+				<Search label="Recherche" />
 			{/if}
 		</svelte:fragment>
 
 		<svelte:fragment slot="external-links">
-			<a href="https://svelte.dev">Svelte</a>
+			<a href={PUBLIC_SVELTE_SITE_URL}>Svelte</a>
 
-			<a href="https://kit.svelte.dev">SvelteKit</a>
+			<a href={PUBLIC_KIT_SITE_URL}>SvelteKit</a>
 
 			<Separator />
 
-			<a href="https://svelte.dev/chat" title="Discord Chat">
+			<a href="{PUBLIC_SVELTE_SITE_URL}/chat" title="Discord Chat">
 				<span class="small">Discord</span>
 				<span class="large"><Icon name="discord" /></span>
 			</a>
@@ -50,7 +52,15 @@
 </Shell>
 
 {#if browser}
-	<SearchBox />
+	<SearchBox placeholder="Recherche">
+		<svelte:fragment slot="search-description">
+			Les résultats se mettent à jour quand vous écrivez
+		</svelte:fragment>
+		<svelte:fragment slot="idle" let:has_recent_searches>
+			{has_recent_searches ? 'Recherches récentes' : 'Aucune recherche récente'}
+		</svelte:fragment>
+		<svelte:fragment slot="no-results">Aucun résultat</svelte:fragment>
+	</SearchBox>
 {/if}
 
 <style>
@@ -62,6 +72,17 @@
 
 	span {
 		display: none;
+	}
+
+	:global(.text .vo a) {
+		color: var(--sk-text-1);
+		box-shadow: inset 0 -1px 0 0 var(--sk-text-4);
+		transition: color 0.2s ease-in-out;
+	}
+
+	:global(.text .vo a:hover) {
+		color: var(--sk-text-3);
+		box-shadow: inset 0 -1px 0 0 var(--sk-text-4);
 	}
 
 	@media (min-width: 800px) {

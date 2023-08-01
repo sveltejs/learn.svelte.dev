@@ -1,10 +1,10 @@
 <nav>
 	<a href="/">
-		home
+		accueil
 	</a>
 
 	<a href="/about">
-		about
+		à propos
 	</a>
 </nav>
 

@@ -1,18 +1,18 @@
 ---
-title: Transition events
+title: Évènements de transition
 ---
 
-It can be useful to know when transitions are beginning and ending. Svelte dispatches events that you can listen to like any other DOM event:
+Il peut être utile de savoir quand les transitions commencent ou finissent. Svelte génère des évènements que vous pouvez écouter comme n'importe quel évènement <span class="vo">[DOM](PUBLIC_SVELTE_SITE_URL/docs/web#dom)</span> :
 
 ```svelte
 /// file: App.svelte
 <p
 	transition:fly={{ y: 200, duration: 2000 }}
-	+++on:introstart={() => status = 'intro started'}
-	on:outrostart={() => status = 'outro started'}
-	on:introend={() => status = 'intro ended'}
-	on:outroend={() => status = 'outro ended'}+++
+	+++on:introstart={() => status = `début de l'entrée`}
+	on:outrostart={() => status = 'début de la sortie'}
+	on:introend={() => status = `fin de l'entrée`}
+	on:outroend={() => status = 'fin de la sortie'}+++
 >
-	Flies in and out
+	Entre et sort en volant
 </p>
 ```

@@ -2,23 +2,23 @@
 title: Pages
 ---
 
-SvelteKit uses filesystem-based routing, which means that the _routes_ of your app — in other words, what the app should do when a user navigates to a particular URL — are defined by the directories in your codebase.
+SvelteKit utilise un <span class='vo'>[routing](PUBLIC_SVELTE_SITE_URL/docs/web#routing)</span> basé sur l’arborescence de fichiers. Cela signifie que chaque _route_ (page affichée pour une URL donnée) de votre application seront définies par les répertoires de votre code.
 
-Every `+page.svelte` file inside `src/routes` creates a page in your app. In this app we currently have one page — `src/routes/+page.svelte`, which maps to `/`. If we navigate to `/about`, we'll see a 404 Not Found error.
+Chaque fichier `+page.svelte` dans le dossier `src/routes` crée une page de votre application. Dans cette application, nous avons actuellement une page — `src/routes/+page.svelte`, qui correspond à `/`. Si nous naviguons sur `/about`, nous verrons une erreur "404 Not Found".
 
-Let's fix that. Add a second page, `src/routes/about/+page.svelte`, copy the contents of `src/routes/+page.svelte`, and update it:
+Corrigeons cela. Ajoutez une seconde page, `src/routes/about/+page.svelte`, copiez le contenu de `src/routes/+page.svelte`, et mettez-la à jour :
 
 ```svelte
 /// file: src/routes/about/+page.svelte
 <nav>
-	<a href="/">home</a>
-	<a href="/about">about</a>
+	<a href="/">Accueil</a>
+	<a href="/about">À propos</a>
 </nav>
 
-<h1>+++about+++</h1>
-<p>this is the +++about+++ page.</p>
+<h1>+++À propos+++</h1>
+<p>Cette page est la page +++à propos+++.</p>
 ```
 
-We can now navigate between `/` and `/about`.
+Nous pouvons maintenant naviguer entre `/` et `/about`.
 
-> Unlike traditional multi-page apps, navigating to `/about` and back updates the contents of the current page, like a single-page app. This gives us the best of both worlds — fast server-rendered startup, then instant navigation. (This behaviour can be [configured](https://kit.svelte.dev/docs/page-options).)
+> Contrairement aux applications multi-pages traditionnelles, naviguer vers `/about` et revenir met à jour le contenu de la page actuelle, comme une application à page unique. Cela nous donne le meilleur des deux mondes - un démarrage rapide avec le rendu côté serveur, puis une navigation instantanée (ce comportement peut être [configuré](https://kit.svelte.dev/docs/page-options)).

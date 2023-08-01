@@ -2,9 +2,9 @@
 title: Layouts
 ---
 
-Different routes of your app will often share common UI. Instead of repeating it in each `+page.svelte` component, we can use a `+layout.svelte` component that applies to all routes in the same directory.
+Les différentes routes de votre application partageront souvent une interface utilisateur commune. Au lieu de la répéter dans chaque composant `+page.svelte`, nous pouvons utiliser un composant `+layout.svelte` qui s'applique à toutes les routes dans le même répertoire.
 
-In this app we have two routes, `src/routes/+page.svelte` and `src/routes/about/+page.svelte`, that contain the same navigation UI. Let's create a new file, `src/routes/+layout.svelte`...
+Dans cette application, nous avons deux routes, `src/routes/+page.svelte` et `src/routes/about/+page.svelte`, qui contiennent la même interface de navigation. Créons un nouveau fichier, `src/routes/+layout.svelte`...
 
 ```
 src/routes/
@@ -14,16 +14,16 @@ src/routes/
 └ +page.svelte
 ```
 
-...and move the duplicated content from the `+page.svelte` files into the new `+layout.svelte` file. The `<slot />` element is where the page content will be rendered:
+...et déplacez le contenu dupliqué des fichiers `+page.svelte` dans le nouveau fichier `+layout.svelte`. L'élément `<slot />` est l'endroit où le contenu de la page sera rendu :
 
 ```svelte
 /// file: src/routes/+layout.svelte
 <nav>
-	<a href="/">home</a>
-	<a href="/about">about</a>
+	<a href="/">Accueil</a>
+	<a href="/about">À propos</a>
 </nav>
 
 <slot />
 ```
 
-A `+layout.svelte` file applies to every child route, including the sibling `+page.svelte` (if it exists). You can nest layouts to arbitrary depth.
+Un fichier `+layout.svelte` s'applique à chaque route enfant, y compris la `+page.svelte` sœur (si elle existe). Vous pouvez imbriquer autant de layouts que vous le souhaitez.

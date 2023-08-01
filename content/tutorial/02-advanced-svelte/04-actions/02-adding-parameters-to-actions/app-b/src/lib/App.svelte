@@ -3,7 +3,7 @@
 	import 'tippy.js/dist/tippy.css';
 	import 'tippy.js/themes/material.css';
 
-	let content = 'Hello!';
+	let content = 'Salut !';
 
 	function tooltip(node, options) {
 		const tooltip = tippy(node, options);
@@ -22,5 +22,5 @@
 <input bind:value={content} />
 
 <button use:tooltip={{ content, theme: 'material' }}>
-	Hover me
+	Survolez-moi
 </button>

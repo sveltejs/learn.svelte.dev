@@ -2,10 +2,10 @@
 	let scoops = 1;
 	let flavours = [];
 
-	const formatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
+	const formatter = new Intl.ListFormat('fr', { style: 'long', type: 'conjunction' });
 </script>
 
-<h2>Size</h2>
+<h2>Nombre de boules</h2>
 
 {#each [1, 2, 3] as number}
 	<label>
@@ -15,13 +15,13 @@
 			value={number}
 		/>
 
-		{number} {number === 1 ? 'scoop' : 'scoops'}
+		{number} {number === 1 ? 'boule' : 'boules'}
 	</label>
 {/each}
 
-<h2>Flavours</h2>
+<h2>Parfums</h2>
 
-{#each ['cookies and cream', 'mint choc chip', 'raspberry ripple'] as flavour}
+{#each ['Cookie crémeux', 'Éclats de menthe', 'Vague à la fraise'] as flavour}
 	<label>
 		<input
 			type="checkbox"
@@ -34,12 +34,12 @@
 {/each}
 
 {#if flavours.length === 0}
-	<p>Please select at least one flavour</p>
+	<p>Veuillez choisir au moins un parfum</p>
 {:else if flavours.length > scoops}
-	<p>Can't order more flavours than scoops!</p>
+	<p>Vous ne pouvez pas choisir plus de parfums que de boules !</p>
 {:else}
 	<p>
-		You ordered {scoops} {scoops === 1 ? 'scoop' : 'scoops'}
-		of {formatter.format(flavours)}
+		Vous avez commandé {scoops} {scoops === 1 ? 'boule' : 'boules'}
+		de {formatter.format(flavours)}
 	</p>
 {/if}
