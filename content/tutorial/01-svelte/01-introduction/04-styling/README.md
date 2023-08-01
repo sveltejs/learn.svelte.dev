@@ -17,4 +17,4 @@ Comme en HTML, vous pouvez ajouter une balise `<style>` à votre composant. Donn
 </style>
 ```
 
-Il est important de comprendre que ces règles CSS sont **restreintes (ou <span class='vo'>_scopées_</span>) au composant**. Vous ne modifierez pas accidentellement le style des éléments `<p>` du reste de votre application, comme nous le verrons dans l'étape suivante.
+Il est important de comprendre que ces règles CSS sont **restreintes (ou <span class='vo'>[scopées](SITE_SVELTE/docs/development#scope)</span>) au composant**. Vous ne modifierez pas accidentellement le style des éléments `<p>` du reste de votre application, comme nous le verrons dans l'étape suivante.

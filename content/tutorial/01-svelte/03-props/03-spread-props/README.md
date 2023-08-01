@@ -23,4 +23,4 @@ Nous _pourrions_ corriger cela en ajoutant la propriété `version`...
 <PackageInfo +++{...pkg}+++ />
 ```
 
-> Inversement, si vous avez besoin de référencer toutes les <span class="vo">props</span> qui ont été passées à un composant, y compris celles non spécifiées avec le mot clé `export`, vous pouvez le faire avec l'objet `$$props` directement. Ce n'est pas recommandé, car cela rend difficile l'optimisation pour Svelte, mais peut être très pratique dans de rares cas.
+> Inversement, si vous avez besoin de référencer toutes les <span class="vo">[props](SITE_SVELTE/docs/sveltejs#props)</span> qui ont été passées à un composant, y compris celles non spécifiées avec le mot clé `export`, vous pouvez le faire avec l'objet `$$props` directement. Ce n'est pas recommandé, car cela rend difficile l'optimisation pour Svelte, mais peut être très pratique dans de rares cas.
