@@ -8,7 +8,7 @@
 </script>
 
 <div on:pointermove={handleMove}>
-	The pointer is at {m.x} x {m.y}
+	Le curseur se trouve à la position ({m.x} ; {m.y})
 </div>
 
 <style>

@@ -1,25 +1,25 @@
 ---
-title: Event modifiers
+title: Modificateurs d'évènement
 ---
 
-DOM event handlers can have _modifiers_ that alter their behaviour. For example, a handler with a `once` modifier will only run a single time:
+Les gestionnaires d'évènements <span class="vo">[DOM](SITE_SVELTE/docs/web#dom)</span> peuvent utiliser des **modificateurs** qui changent leur comportement. Par exemple, un gestionnaire avec le modificateur `once` ne s'exécutera qu'une seule fois :
 
 ```svelte
 /// file: App.svelte
-<button on:click+++|once+++={() => alert('clicked')}>
-	Click me
+<button on:click+++|once+++={() => alert('cliqué')}>
+	Cliquez moi
 </button>
 ```
 
-The full list of modifiers:
+La liste complète des modificateurs se trouve ici :
 
-- `preventDefault` — calls `event.preventDefault()` before running the handler. Useful for client-side form handling, for example.
-- `stopPropagation` — calls `event.stopPropagation()`, preventing the event reaching the next element
-- `passive` — improves scrolling performance on touch/wheel events (Svelte will add it automatically where it's safe to do so)
-- `nonpassive` — explicitly set `passive: false`
-- `capture` — fires the handler during the [_capture_](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#event_capture) phase instead of the [_bubbling_](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#event_bubbling) phase
-- `once` — remove the handler after the first time it runs
-- `self` — only trigger handler if event.target is the element itself
-- `trusted` — only trigger handler if `event.isTrusted` is `true`, meaning the event was triggered by a user action rather than because some JavaScript called `element.dispatchEvent(...)`
+* `preventDefault` — appelle `event.preventDefault()` avant d'exécuter le gestionnaire. Utile, par exemple, pour la gestion de formulaire côté client.
+* `stopPropagation` — appelle `event.stopPropagation()`, et empêche ainsi l'évènement d'atteindre le prochain élément
+* `passive` — améliore la performance du défilement pour les évènements `touch`/`wheel` (Svelte l'ajoutera automatiquement aux endroits où ça ne pose pas de problème)
+* `nonpassive` — déclare explicitement `passive: false`
+* `capture` — déclenche le gestionnaire pendant la phase de <span class="vo">[capture](SITE_SVELTE/docs/javascript#bubble-capture)</span> plutôt que pendant la phase de <span class="vo">[bubbling](SITE_SVELTE/docs/javascript#bubble-capture)</span> ([MDN docs](https://developer.mozilla.org/fr/docs/Learn/JavaScript/Building_blocks/Events#Event_bubbling_and_capture))
+* `once` — supprime le gestionnaire après qu'il ait été exécuté la première fois
+* `self` — déclenche le gestionnaire uniquement si `event.target` est l'élément lui-même
+* `trusted` — déclenche le gestionnaire uniquement si `event.isTrusted` est `true`, c'est-à-dire si l'évènement est généré par une action de l'utilisateur
 
-You can chain modifiers together, e.g. `on:click|once|capture={...}`.
+Vous pouvez cumuler les modificateurs, par ex. `on:click|once|capture={...}`.

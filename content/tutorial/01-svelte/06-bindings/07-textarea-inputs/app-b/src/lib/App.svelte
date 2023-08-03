@@ -1,13 +1,13 @@
 <script>
 	import { marked } from 'marked';
-	let value = `Some words are *italic*, some are **bold**\n\n- lists\n- are\n- cool`;
+	let value = `Certains mots sont en *italique*, d'autres sont en **gras**`;
 </script>
 
 <div class="grid">
 	input
 	<textarea bind:value></textarea>
 
-	output
+	valeur saisie
 	<div>{@html marked(value)}</div>
 </div>
 
