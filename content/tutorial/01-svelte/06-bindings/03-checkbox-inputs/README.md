@@ -1,8 +1,8 @@
 ---
-title: Checkbox inputs
+title: Inputs checkbox 
 ---
 
-Checkboxes are used for toggling between states. Instead of binding to `input.value`, we bind to `input.checked`:
+Les checkbox servent à inverser des états. Au lieu de créer une liaison sur `input.value`, nous en créons une sur `input.checked` :
 
 ```svelte
 /// file: App.svelte

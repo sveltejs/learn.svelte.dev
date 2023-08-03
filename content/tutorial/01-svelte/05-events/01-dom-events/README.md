@@ -1,12 +1,12 @@
 ---
-title: DOM events
+title: Évènements DOM
 ---
 
-As we've briefly seen already, you can listen to any DOM event on an element (such as click or [pointermove](https://developer.mozilla.org/en-US/docs/Web/API/Element/pointermove_event)) with the `on:` directive:
+Nous avons déjà rapidement évoqué qu'il était possible d'écouter n'importe quel évènement du <span class="vo">[DOM](SITE_SVELTE/docs/web#dom)</span> sur un élément (tel que `click` ou encore [`pointermove``](https://developer.mozilla.org/en-US/docs/Web/API/Element/pointermove_event)) avec la directive `on:` :
 
 ```svelte
 /// file: App.svelte
 <div +++on:pointermove={handleMove}+++>
-	The pointer is at {m.x} x {m.y}
+	Le curseur se trouve à la position ({m.x} ; {m.y})
 </div>
 ```

@@ -1,5 +1,5 @@
 <button on:click>
-	Push
+	Cliquez moi
 </button>
 
 <style>

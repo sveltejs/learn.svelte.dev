@@ -1,5 +1,5 @@
 <script>
-	let text = `Select some text and hit the tab key to toggle uppercase`;
+	let text = `Sélectionnez du texte et appuyez sur Tab pour mettre en majuscules`;
 
 	async function handleKeydown(event) {
 		if (event.key !== 'Tab') return;
@@ -18,7 +18,7 @@
 			replacement +
 			value.slice(selectionEnd);
 
-		// this has no effect, because the DOM hasn't updated yet
+		// ceci n'a aucun effet, car le DOM n'est pas encore à jour
 		this.selectionStart = selectionStart;
 		this.selectionEnd = selectionEnd;
 	}
