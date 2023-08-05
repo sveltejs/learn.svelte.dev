@@ -66,4 +66,12 @@
 		opacity: 0.5;
 		transition: opacity 0.2s;
 	}
+
+	button:hover {
+		opacity: 1;
+	}
+
+	.saving {
+		opacity: 0.5;
+	}
 </style>
