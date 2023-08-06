@@ -1,4 +1,4 @@
-<p>This is a paragraph.</p>
+<p>Ceci est un paragraphe.</p>
 
 <style>
 	/* Write your CSS here */

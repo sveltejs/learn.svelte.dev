@@ -1,10 +1,12 @@
 ---
-title: Updating arrays and objects
+title: Mise à jour de tableaux et d'objets
 ---
 
-Because Svelte's reactivity is triggered by assignments, using array methods like `push` and `splice` won't automatically cause updates. For example, clicking the 'Add a number' button doesn't currently do anything, even though we're calling `numbers.push(...)` inside `addNumber`.
+Parce que la réactivité de Svelte est uniquement déclenchée par les assignations, utiliser des méthodes sur les tableaux tels que `push` ou `splice` ne déclenchera pas de mise à jour automatiquement.
 
-One way to fix that is to add an assignment that would otherwise be redundant:
+Because Svelte's reactivity is triggered by assignments, using array methods like `push` and `splice` won't automatically cause updates. Par exemple, cliquer sur le bouton "Ajouter un nombre" ne fait rien pour l'instant, même si nous appelons `numbers.push(...)` à l'intérieur de `addNumber`.
+
+Une façon d'y remédier est d'ajouter une affectation qui serait autrement redondante :
 
 ```js
 /// file: App.svelte
@@ -14,7 +16,7 @@ function addNumber() {
 }
 ```
 
-But there's a more idiomatic solution:
+Mais il existe une solution plus simple :
 
 ```js
 /// file: App.svelte
@@ -23,9 +25,9 @@ function addNumber() {
 }
 ```
 
-You can use similar patterns to replace `pop`, `shift`, `unshift` and `splice`.
+La même règle s'applique aux méthodes de tableaux telles que `pop`, `shift`, et `splice`, ainsi qu'aux méthodes d'objets comme `Map.set`, `Set.add`, etc.
 
-Assignments to _properties_ of arrays and objects — e.g. `obj.foo += 1` or `array[i] = x` — work the same way as assignments to the values themselves.
+Les assignations aux _propriétés_ de tableaux ou d'objets, — par ex. `obj.foo += 1` ou `array[i] = x` — fonctionnent de la même façon que des assignations à des variables.
 
 ```js
 /// file: App.svelte
@@ -34,7 +36,7 @@ function addNumber() {
 }
 ```
 
-A simple rule of thumb: the name of the updated variable must appear on the left hand side of the assignment. For example this...
+Une règle simple : le nom de la variable mise à jour doit apparaître dans la partie gauche de l'affectation. Par exemple, ceci...
 
 ```js
 /// no-file
@@ -42,4 +44,4 @@ const foo = obj.foo;
 foo.bar = 'baz';
 ```
 
-...won't trigger reactivity on `obj.foo.bar`, unless you follow it up with `obj = obj`.
+...ne déclenchera pas de réactivité sur `obj.foo.bar`, à moins que vous ne le fassiez suivre de `obj = obj`.

@@ -1,16 +1,16 @@
 ---
-title: HTML tags
+title: tag HTML
 ---
 
-Ordinarily, strings are inserted as plain text, meaning that characters like `<` and `>` have no special meaning.
+En règle générale, les chaînes de caractères sont insérées en tant que texte brut, ce qui signifie que les caractères tels que `<` et `>` n'ont pas de signification particulière.
 
-But sometimes you need to render HTML directly into a component. For example, the words you're reading right now exist in a markdown file that gets included on this page as a blob of HTML.
+Mais il est parfois nécessaire de rendre du HTML directement dans un composant. Par exemple, les mots que vous êtes en train de lire existent dans un fichier markdown qui est inclus dans cette page sous la forme d'un bloc HTML.
 
-In Svelte, you do this with the special `{@html ...}` tag:
+Dans Svelte, vous le faites avec la balise spéciale `{@html ...}` :
 
 ```svelte
 /// file: App.svelte
 <p>{+++@html+++ string}</p>
 ```
 
-> **Warning!** Svelte doesn't perform any sanitization of the expression inside `{@html ...}` before it gets inserted into the DOM. This isn't an issue if the content is something you trust like an article you wrote yourself. However if it's some untrusted user content, e.g. a comment on an article, then it's critical that you manually escape it, otherwise you risk exposing your users to <a href="https://owasp.org/www-community/attacks/xss/" target="_blank">Cross-Site Scripting</a> (XSS) attacks.
+> **Attention!** Svelte n'effectue pas de nettoyage de l'expression à l'intérieur de `{@html ...}` avant qu'elle ne soit insérée dans le <span class='vo'>[DOM](SVELTE_SITE_URL/docs/web#dom)</span>. Ce n'est pas un problème si le contenu est quelque chose de fiable comme un article que vous avez écrit vous-même. Cependant, s'il s'agit d'un contenu utilisateur non fiable, par exemple un commentaire sur un article, il est essentiel que vous l'échappiez manuellement, sinon vous risquez d'exposer vos utilisateurs à des attaques de type <a href="https://owasp.org/www-community/attacks/xss/" target="_blank">Cross-Site Scripting</a> (XSS).

@@ -2,7 +2,7 @@
 	import Nested from './Nested.svelte';
 </script>
 
-<p>This is a paragraph.</p>
+<p>Ceci est un paragraphe.</p>
 <Nested />
 
 <style>
