@@ -13,7 +13,7 @@ Ajoutons une balise `<script>` à `App.svelte` pour importer le fichier (notre c
 </script>+++
 ```
 
-... puis utilisons le composant `Nested` dans le <span class="vo">[markup](SITE_SVELTE/docs/web#markup)</span> de l'application :
+... puis utilisons le composant `Nested` dans le <span class="vo">[markup](SVELTE_SITE_URL/docs/web#markup)</span> de l'application :
 
 ```svelte
 /// file: App.svelte

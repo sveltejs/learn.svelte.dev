@@ -4,15 +4,15 @@ title: Bienvenue dans le monde de Svelte !
 
 Bienvenue dans le tutoriel Svelte ! Vous y apprendrez tout ce qu'il y a savoir pour développer en toute simplicité des applications web de toutes tailles, rapides et légères.
 
-Vous pouvez aussi consulter la [documentation de l'API](SITE_SVELTE/docs) ainsi que les [exemples](SITE_SVELTE/examples), ou — si vous êtes pressé•e•s de jouer sur votre machine en local — vous pouvez [créer un projet de base en 60 secondes avec `npm init svelte`](SITE_SVELTE/docs/introduction#start-a-new-project).
+<!-- Vous pouvez aussi consulter la [documentation de l'API](SVELTE_SITE_URL/docs) ainsi que les [exemples](SVELTE_SITE_URL/examples), ou — si vous êtes pressé•e•s de jouer sur votre machine en local — vous pouvez [créer un projet de base en 60 secondes avec `npm init svelte`](SVELTE_SITE_URL/docs/introduction#start-a-new-project). -->
 
 ## C'est quoi Svelte ?
 
-Svelte est un outil pour développer des applications web. Comme d'autre <span class="vo">[frameworks](SITE_SVELTE/docs/web#framework)</span> de composants, il permet de construire votre application de manière _déclarative_, à partir de composants : composition de HTML, styles et comportements.
+Svelte est un outil pour développer des applications web. Comme d'autre <span class="vo">[frameworks](SVELTE_SITE_URL/docs/web#framework)</span> de composants, il permet de construire votre application de manière _déclarative_, à partir de composants : composition de HTML, styles et comportements.
 
 Ces composants sont _compilés_ en petits modules JavaScript efficaces qui éliminent les inconvénients traditionnellement associés aux frameworks UI.
 
-Vous pouvez construire votre application entièrement avec Svelte (par exemple, en utilisant le <span class="vo">[framework](SITE_SVELTE/docs/web#framework)</span> d'applications [SvelteKit](https://kit.svelte.dev), également couvert par ce tutoriel), ou l'ajouter au fur et à mesure à une base de code existante. Vous pouvez aussi générer des composants en tant que modules autonomes (<span class="vo">[web components](SITE_SVELTE/docs/web#web-component)</span>) utilisables n'importe où, sans la contrainte d'une dépendance à un <span class="vo">[framework](SITE_SVELTE/docs/web#framework)</span> traditionnel.
+Vous pouvez construire votre application entièrement avec Svelte (par exemple, en utilisant le <span class="vo">[framework](SVELTE_SITE_URL/docs/web#framework)</span> d'applications [SvelteKit](https://kit.svelte.dev), également couvert par ce tutoriel), ou l'ajouter au fur et à mesure à une base de code existante. Vous pouvez aussi générer des composants en tant que modules autonomes (<span class="vo">[web components](SVELTE_SITE_URL/docs/web#web-component)</span>) utilisables n'importe où, sans la contrainte d'une dépendance à un <span class="vo">[framework](SVELTE_SITE_URL/docs/web#framework)</span> traditionnel.
 
 ## Comment se servir de ce tutoriel ?
 
