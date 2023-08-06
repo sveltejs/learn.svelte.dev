@@ -2,9 +2,9 @@
 title: Déclarations
 ---
 
-Svelte met automatiquement à jour le <span class="vo">[DOM](SITE_SVELTE/docs/web#dom)</span> lorsque l'état de votre composant change. Certaines parties de l'état d'un composant doivent être calculées à partir d'autres variables et doivent être recalculées à chaque fois que ces dernières changent (comme un `nomComplet` dérivé d'un `prenom` et d'un `nom`), 
+Svelte met automatiquement à jour le <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span> lorsque l'état de votre composant change. Certaines parties de l'état d'un composant doivent être calculées à partir d'autres variables et doivent être recalculées à chaque fois que ces dernières changent (comme un `nomComplet` dérivé d'un `prenom` et d'un `nom`),
 
-Pour ces cas, nous avons les **déclarations réactives**. Elles se présentent comme suit :
+Pour ces cas, nous avons les _déclarations réactives_. Elles se présentent comme suit :
 
 ```js
 /// file: App.svelte
@@ -16,7 +16,7 @@ Si une déclaration réactive consiste entièrement en une affectation à une va
 
 > Ne vous inquiétez pas si cela semble un peu étrange. Cette syntaxe est du JavaScript [valide](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Statements/label), même si peu conventionnel, que Svelte interprète ainsi : "ré-exécute ce code dès qu'une des variables référencées change". Une fois l'habitude prise, vous ne pourrez plus vous en passer.
 
-Utilisons `doubled` dans notre <span class="vo">[markup](SITE_SVELTE/docs/web#markup)</span> :
+Utilisons `doubled` dans notre <span class="vo">[markup](SVELTE_SITE_URL/docs/web#markup)</span> :
 
 ```svelte
 /// file: App.svelte
@@ -25,6 +25,6 @@ Utilisons `doubled` dans notre <span class="vo">[markup](SITE_SVELTE/docs/web#ma
 <p>{count} fois 2 vaut {doubled}</p>
 ```
 
-Bien sûr, vous pourriez très bien vous contenter d'écrire `{count * 2}` dans le <span class="vo">[markup](SITE_SVELTE/docs/web#markup)</span> — vous n'êtes pas obligé•e•s d'utiliser des valeurs réactives. Les valeurs réactives deviennent particulièrement utiles lorsque vous avez besoin de les référencer plusieurs fois, ou lorsque vous avez des valeurs qui dépendent d'_autres_ valeurs réactives.
+Bien sûr, vous pourriez très bien vous contenter d'écrire `{count * 2}` dans le <span class="vo">[markup](SVELTE_SITE_URL/docs/web#markup)</span> — vous n'êtes pas obligé•e•s d'utiliser des valeurs réactives. Les valeurs réactives deviennent particulièrement utiles lorsque vous avez besoin de les référencer plusieurs fois, ou lorsque vous avez des valeurs qui dépendent d'_autres_ valeurs réactives.
 
-> Notez que les déclarations et les instructions réactives seront exécutées après les autres parties du script et avant que le <span class="vo">[markup](SITE_SVELTE/docs/web#markup)</span> du composant ne soit rendu.
+> Notez que les déclarations et les instructions réactives seront exécutées après les autres parties du script et avant que le <span class="vo">[markup](SVELTE_SITE_URL/docs/web#markup)</span> du composant ne soit rendu.
