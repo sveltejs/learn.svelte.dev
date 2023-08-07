@@ -1,5 +1,5 @@
 ---
-title: Numeric inputs
+title: Inputs numériques
 ---
 
 Dans le <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>, tout est une chaîne de caractères. Cela est particulièrement peu pratique lorsque vous avez à faire à des `<input>` numériques — `type=number` et `type=range` — puisque vous devez vous rappeler de transformer `input.value` avant de vous en servir.

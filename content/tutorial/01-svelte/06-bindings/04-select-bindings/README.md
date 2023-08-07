@@ -1,5 +1,5 @@
 ---
-title: Liaisons des select
+title: Liaison de select
 ---
 
 Nous pouvons également utiliser `bind:value` avec les éléments `<select>`. Changez la ligne 20 :

@@ -6,7 +6,7 @@ La fonction `tick` est différente des autres fonctions de cycle de vie : vous p
 
 Lorsque vous mettez à jour l'état d'un composant en Svelte, au lieu de mettre le <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span> à jour immédiatement, Svelte va attendre la prochaine _microtâche_ pour vérifier s'il n'y a pas d'autres changements à appliquer, même dans d'autres composants. Cela permet d'éviter du travail inutile en permettant au navigateur de regrouper plus efficacement les modifications.
 
-Vous pouvez constater ce comportement dans cet exemple. Sélectionner un morceau de texte et appuyez sur <kbd>Tab</kbd>. Comme la valeur du `<textarea>` change, la sélection courante est effacée et le curseur se décale à la fin, ce qui est pénible. Nous pouvons résoudre cela en important `tick`...
+Vous pouvez constater ce comportement dans cet exemple. Sélectionner un morceau de texte et appuyez sur la touche Tab. Comme la valeur du `<textarea>` change, la sélection courante est effacée et le curseur se décale à la fin, ce qui est pénible. Nous pouvons résoudre cela en important `tick`...
 
 ```js
 /// file: App.svelte
