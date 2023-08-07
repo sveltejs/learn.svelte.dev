@@ -6,5 +6,5 @@
 <input value={$name} />
 
 <button>
-	Add exclamation mark!
+	Ajoutez un point d'exclamation !
 </button>

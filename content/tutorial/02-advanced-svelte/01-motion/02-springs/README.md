@@ -1,10 +1,10 @@
 ---
-title: Springs
+title: Ressorts
 ---
 
-The `spring` function is an alternative to `tweened` that often works better for values that are frequently changing.
+La fonction `spring` ("ressort" en français) est une alternative à `tweened` qui fonctionne en général mieux pour des valeurs qui changent souvent.
 
-In this example we have two stores — one representing the circle's coordinates, and one representing its size. Let's convert them to springs:
+Dans cet exemple, nous avons deux <span class="vo">[stores](SVELTE_SITE_URL/docs/sveltejs#store)</span> — le premier représente les coordonnées du cercle, le deuxième représente sa taille. Transformons-les en ressorts :
 
 ```svelte
 /// file: App.svelte
@@ -16,7 +16,7 @@ In this example we have two stores — one representing the circle's coordinates
 </script>
 ```
 
-Both springs have default `stiffness` and `damping` values, which control the spring's, well... springiness. We can specify our own initial values:
+Les deux ressorts ont des valeurs de raideur (`stiffness`) et d'amortissement (`damping`), qui contrôlent le caractère "élastique" du ressort. Nous pouvons préciser nos propres valeurs initiales :
 
 ```js
 /// file: App.svelte
@@ -26,4 +26,5 @@ let coords = spring({ x: 50, y: 50 }, +++{
 }+++);
 ```
 
-Waggle your mouse around, and try dragging the sliders to get a feel for how they affect the spring's behaviour. Notice that you can adjust the values while the spring is still in motion.
+Faites bouger votre souris, et essayez de changer les curseurs pour avoir une idée de comment chaque paramètre affecte le comportement du ressort. Notez que vous pouvez ajuster les valeurs pendant que le ressort est encore en mouvement.
+

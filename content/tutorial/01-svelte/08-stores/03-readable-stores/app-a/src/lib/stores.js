@@ -1,9 +1,9 @@
 import { readable } from 'svelte/store';
 
 export const time = readable(null, function start(set) {
-	// setup code goes here
+	// le code lié à l'initialisation vient ici
 
 	return function stop() {
-		// teardown code goes here
+		// le code lié au nettoyage vient là
 	};
 });
