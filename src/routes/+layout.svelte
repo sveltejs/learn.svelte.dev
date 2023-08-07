@@ -31,7 +31,7 @@
 
 			<a href="https://kit.svelte.dev">SvelteKit</a>
 
-			<a href="/chat" title="Discord Chat">
+			<a href="https://svelte.dev/chat" title="Discord Chat">
 				<span class="small">Discord</span>
 				<span class="large"><Icon name="discord" /></span>
 			</a>
