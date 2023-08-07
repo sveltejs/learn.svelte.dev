@@ -5,12 +5,12 @@ export async function GET(req) {
 	min = +min;
 	max = +max;
 
-	// simulate a long delay
+	// simule un long temps de chargement
 	await new Promise((res) => setTimeout(res, 1000));
 
-	// fail sometimes
+	// échoue parfois
 	if (Math.random() < 0.333) {
-		return new Response(`Failed to generate random number. Please try again`, {
+		return new Response(`Échec de génération du nombre aléatoire. Merci de réessayer`, {
 			status: 400,
 			headers: { 'Access-Control-Allow-Origin': '*' }
 		});
