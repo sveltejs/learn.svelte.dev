@@ -84,7 +84,7 @@
 		<div class="controls">
 			<input
 				type="search"
-				placeholder="Search"
+				placeholder="Recherche"
 				bind:this={search_input}
 				bind:value={search}
 				aria-hidden={!is_open ? 'true' : null}
@@ -109,7 +109,7 @@
 								}
 							}}
 						>
-							Part {i + 1}: {part.title}
+							Partie {i + 1}: {part.title}
 						</button>
 
 						{#if search.length >= 2 || part.slug === expanded_part}
@@ -148,7 +148,7 @@
 						{/if}
 					</li>
 				{:else}
-					<li>No search results!</li>
+					<li>Aucun résultat !</li>
 				{/each}
 			</ul>
 		</div>
@@ -156,7 +156,10 @@
 </div>
 
 <header>
-	<a href={current.prev ? `/tutorial/${current.prev.slug}` : undefined} aria-label={current.prev && 'Previous'}>
+	<a
+		href={current.prev ? `/tutorial/${current.prev.slug}` : undefined}
+		aria-label={current.prev && 'Précédent'}
+	>
 		<Icon name="arrow-left" size={16} />
 	</a>
 

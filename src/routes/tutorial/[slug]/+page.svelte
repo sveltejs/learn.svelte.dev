@@ -208,9 +208,9 @@
 									}}
 								>
 									{#if completed && data.exercise.has_solution}
-										reset
+										réinitialiser
 									{:else}
-										solve <Icon name="arrow-right" />
+										résoudre <Icon name="arrow-right" />
 									{/if}
 								</button>
 							</section>
