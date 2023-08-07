@@ -1,14 +1,14 @@
 ---
-title: Keyed each blocks
+title: Blocs each à clé
 ---
 
-By default, when you modify the value of an `each` block, it will add and remove items at the _end_ of the block, and update any values that have changed. That might not be what you want.
+Par défaut, quand vous modifiez la valeur d'un bloc `each`, celui-ci va ajouter et enlever les éléments à la _fin_ du bloc, et mettre à jour les valeurs qui ont changé. cela n'est peut-être pas ce que vous souhaitez.
 
-It's easier to show why than to explain. Click the 'Remove first thing' button a few times, and notice what happens: it does not remove the first `<Thing>` component, but rather the _last_ DOM node. Then it updates the `name` value in the remaining DOM nodes, but not the emoji, which is fixed when each `<Thing>` is created.
+Ce cas est plus simple à montrer qu'à expliquer. Ouvrez la console du <span class="vo">[REPL](SVELTE_SITE_URL/docs/web#repl)</span> en cliquant sur "Console", puis cliquez sur "Supprimer le premier élément" quelques fois, et notez ce qu'il se passe : le premier composant `<Thing>` n'est pas supprimé, mais plutôt le _dernier_ noeud du <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>. Puis la valeur `name` dans les noeuds DOM restants est mise à jour, mais pas l'emoji correspondant.
 
-Instead, we'd like to remove only the first `<Thing>` component and its DOM node, and leave the others unaffected.
+Nous aimerions plutôt supprimer unniquement le premier composant `<Thing>` ainsi que son noeud <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span> associé, et laisser les autres inchangés.
 
-To do that, we specify a unique identifier (or "key") for the `each` block:
+Pour faire cela, nous allons spécifier un identifiant unique (une "clé") pour le bloc `each` :
 
 ```svelte
 /// file: App.svelte
@@ -17,6 +17,6 @@ To do that, we specify a unique identifier (or "key") for the `each` block:
 {/each}
 ```
 
-Here, `(thing.id)` is the _key_, which tells Svelte how to figure out which DOM node to change when the component updates.
+Ici, `(thing.id)` est la _clé_, et aide Svelte à déterminer quel noeud <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span> changer lorsque le composant se met à jour.
 
-> You can use any object as the key, as Svelte uses a `Map` internally — in other words you could do `(thing)` instead of `(thing.id)`. Using a string or number is generally safer, however, since it means identity persists without referential equality, for example when updating with fresh data from an API server.
+> Vous pouvez utiliser n'importe quel objet en tant que clé, puisque Svelte utilise une [`Map`](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Map) en interne — en d'autres termes, vous pourriez utiliser `(thing)` au lieu de `(thing.id)`. Cependant, utiliser une <span class="vo">[string](SVELTE_SITE_URL/docs/development#string)</span> ou un <span class="vo">[number](SVELTE_SITE_URL/docs/development#number)</span> est généralement plus sécurisé, car l'identité sera persistée sans avoir à vérifier l'identité par référence, par exemple lorsque vous rafraîchissez de la donnée depuis une <span class="vo">[API](SVELTE_SITE_URL/docs/development#api)</span>.

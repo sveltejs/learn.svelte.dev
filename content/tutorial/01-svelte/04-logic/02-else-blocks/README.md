@@ -1,16 +1,16 @@
 ---
-title: Else blocks
+title: Blocs else
 ---
 
-Just like in JavaScript, an `if` block can have an `else` block:
+Comme en JavaScript, un bloc `if` peut être suivi d'un bloc `else` :
 
 ```svelte
 /// file: App.svelte
 {#if count > 10}
-	<p>{count} is greater than 10</p>
+	<p>{count} est supérieur à 10</p>
 +++{:else}
-	<p>{count} is between 0 and 10</p>+++
+	<p>{count} est compris entre 0 et 10</p>+++
 {/if}
 ```
 
-> A `#` character always indicates a _block opening_ tag. A `/` character always indicates a _block closing_ tag. A `:` character, as in `{:else}`, indicates a _block continuation_ tag. Don't worry — you've already learned almost all the syntax Svelte adds to HTML.
+> Un caractère `#` indique toujours une baliste d'_ouverture de bloc_. Un caractère `/` indique toujours une balise de _fermeture de bloc_. Un caractère `:`, comme dans `{:else}`, indique une balise de _continuité de bloc_. Ne vous en faites pas — vous avez déjà appris presque toute la syntaxe que Svelte ajoute au HTML.
