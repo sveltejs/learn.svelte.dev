@@ -2,9 +2,9 @@
 title: Relais d'évènement
 ---
 
-À la différence des évènements DOM, les évènements de composant ne <span class="vo">[bubblent](SITE_SVELTE/docs/javascript#bubble-capture)</span> pas. Si vous souhaitez écouter un évènement provenant d'un composant profondément imbriqué, les composants intermédiaires doivent _relayer_ l'évènement.
+À la différence des évènements DOM, les évènements de composant ne <span class="vo">[bubblent](SVELTE_SITE_URL/docs/javascript#bubble-capture)</span> pas. Si vous souhaitez écouter un évènement provenant d'un composant profondément imbriqué, les composants intermédiaires doivent _relayer_ l'évènement.
 
-À l'inverse des événements du <span class="vo">[DOM](SITE_SVELTE/docs/web#dom)</span>, les événements des composants ne <span class="vo">[bubblent](SITE_SVELTE/docs/javascript#bubble-capture)</span> pas. Si vous voulez écouter un événement sur un composant profond, les composants intermédiaires devront transmettre l'événement.
+À l'inverse des événements du <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>, les événements des composants ne <span class="vo">[bubblent](SVELTE_SITE_URL/docs/javascript#bubble-capture)</span> pas. Si vous voulez écouter un événement sur un composant profond, les composants intermédiaires devront transmettre l'événement.
 
 Ici, nous avons les mêmes `App.svelte` et `Inner.svelte` que dans le [chapitre précédent](/tutorial/component-events), mais il y a également le composant `Outer.svelte` qui instancie `<Inner/>`.
 
