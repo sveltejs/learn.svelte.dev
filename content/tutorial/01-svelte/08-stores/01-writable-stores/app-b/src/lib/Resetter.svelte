@@ -7,5 +7,5 @@
 </script>
 
 <button on:click={reset}>
-	reset
+	remettre à zéro
 </button>

@@ -1,25 +1,25 @@
 ---
-title: Store bindings
+title: Liaisons de store
 ---
 
-If a store is writable — i.e. it has a `set` method — you can bind to its value, just as you can bind to local component state.
+Si un <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span> est défini comme <span class="vo">[writable](SVELTE_SITE_URL/docs/development#writable)</span> — c'est-à-dire qu'il a une méthode `set` — vous pouvez créer une liaison avec sa valeur, comme vous le feriez avec n'importe quel état local de composant.
 
-In this example we're exporting a writable store `name` and a derived store `greeting` from `stores.js`. Update the `<input>` element in `App.svelte`:
+Dans cet exemple, nous avons un <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span> d'écriture `name` et un store dérivé `greeting`. Modifiez l'élément `<input>` dans le fichier `App.svelte` :
 
 ```svelte
 /// file: App.svelte
 <input +++bind:+++value={$name}>
 ```
 
-Changing the input value will now update `name` and all its dependents.
+La modification de la valeur de l'`<input>` va maintenant mettre à jour `name` ainsi que toutes ces dépendances.
 
-We can also assign directly to store values inside a component. Add a `<button>` element after the `<input>`:
+Nous pouvons aussi assigner directement la valeur d'un <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span> à l'intérieur d'un composant. Ajoutez un élément `<button>` après l'élément `<input>` :
 
 ```svelte
 /// file: App.svelte
 <button +++on:click={() => $name += '!'}+++>
-	Add exclamation mark!
+	Ajoutez un point d'exclamation !
 </button>
 ```
 
-The `$name += '!'` assignment is equivalent to `name.set($name + '!')`.
+L'assignation `$name += '!'` est équivalente à `name.set($name + '!')`.

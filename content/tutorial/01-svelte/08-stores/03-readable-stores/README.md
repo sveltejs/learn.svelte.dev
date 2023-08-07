@@ -1,10 +1,13 @@
 ---
-title: Readable stores
+title: Stores de lecture
 ---
 
-Not all stores should be writable by whoever has a reference to them. For example, you might have a store representing the mouse position or the user's geolocation, and it doesn't make sense to be able to set those values from 'outside'. For those cases, we have _readable_ stores.
+Tous les
+<span class="vo">[stores](SVELTE_SITE_URL/docs/sveltejs#store)</span> ne devraient pas être modifiables par n'importe quel module qui en possède la référence. Par exemple, vous pourriez avoir un store qui représente la position du curseur ou la géolocalisation de l'utilisateur, et cela n'aurait pas de sens de pouvoir changer ces valeurs de l'"extérieur". Pour ces cas-là, nous pouvons utiliser des stores _de lecture_.
 
-Open `stores.js`. The first argument to `readable` is an initial value, which can be `null` or `undefined` if you don't have one yet. The second argument is a `start` function that takes a `set` callback and returns a `stop` function. The `start` function is called when the store gets its first subscriber; `stop` is called when the last subscriber unsubscribes.
+Cliquez sur l'onglet `stores.js`. Le premier argument d'un `readable` est une valeur initiale, qui peut être `null` ou `undefined` si vous n'en avez pas encore. Le deuxième argument est une fonction `start` qui prend un
+<span class="vo">[callback](SVELTE_SITE_URL/docs/development#callback)</span> `set` et renvoie une fonction `stop`. La fonction `start` est exécutée quand le
+<span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span> a son premier abonné ; `stop` est appelée lorsque le store perd son dernier abonné.
 
 ```js
 /// file: stores.js

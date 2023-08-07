@@ -1,10 +1,10 @@
 ---
-title: Auto-subscriptions
+title: Abonnements automatiques
 ---
 
-The app in the previous example works, but there's a subtle bug — the store is subscribed to, but never unsubscribed. If the component was instantiated and destroyed many times, this would result in a _memory leak_.
+L'application de l'exemple précédent fonctionne, mais il y a un bug subtil — on s'abonne bien au <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span>, mais on ne s'en désabonne jamais. Si le composant était instancié et détruit plusieurs fois, cela conduirait à une _fuite de mémoire_.
 
-Start by declaring `unsubscribe` in `App.svelte`:
+Commençons par déclarer `unsubscribe` dans `App.svelte` :
 
 ```js
 /// file: App.svelte
@@ -13,9 +13,9 @@ Start by declaring `unsubscribe` in `App.svelte`:
 });
 ```
 
-> Calling a `subscribe` method returns an `unsubscribe` function.
+> La méthode `subscribe` retourne une fonction `unsubscribe` quand on l'exécute.
 
-You now declared `unsubscribe`, but it still needs to be called, for example through the `onDestroy` lifecycle hook:
+Vous avez maintenant déclaré `unsubscribe`, mais vous avez toujours besoin de l'exécuter, par exemple grâce à la méthode de cycle de vie `onDestroy` :
 
 ```svelte
 /// file: App.svelte
@@ -35,10 +35,11 @@ You now declared `unsubscribe`, but it still needs to be called, for example thr
 	+++onDestroy(unsubscribe);+++
 </script>
 
-<h1>The count is {count_value}</h1>
+<h1>Le compteur vaut {count_value}</h1>
 ```
 
-It starts to get a bit boilerplatey though, especially if your component subscribes to multiple stores. Instead, Svelte has a trick up its sleeve — you can reference a store value by prefixing the store name with `$`:
+Mais le code commence à devenir complexe, particulièrement si votre composant s'abonne à plusieurs <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span>.
+Heureusement, Svelte a un atout dans sa manche — vous pouvez référencer la valeur d'un store en préfixant le nom du store avec `$` :
 
 ```svelte
 /// file: App.svelte
@@ -58,11 +59,11 @@ It starts to get a bit boilerplatey though, especially if your component subscri
 	---onDestroy(unsubscribe);---
 </script>
 
-<h1>The count is {+++$count+++}</h1>
+<h1>Le compteur vaut {+++$count+++}</h1>
 ```
 
-> Auto-subscription only works with store variables that are declared (or imported) at the top-level scope of a component.
+> Les abonnements automatiques ne marchent qu'avec des variables de <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span> déclarées (ou importées) au niveau racine d'un composant.
 
-You're not limited to using `$count` inside the markup, either — you can use it anywhere in the `<script>` as well, such as in event handlers or reactive declarations.
+Vous n'êtes pas non plus limité•e•s à utiliser `$count` dans le <span class="vo">[markup](SVELTE_SITE_URL/docs/web#markup)</span> — vous pouvez également vous servir n'importe où dans le `<script>`, par exemple dans des gestionnaires d'évènement ou des déclarations réactives.
 
-> Any name beginning with `$` is assumed to refer to a store value. It's effectively a reserved character — Svelte will prevent you from declaring your own variables with a `$` prefix.
+> Les noms commençant par `$` sont supposés faire référence à une valeur de store. C'est un caractère réservé — Svelte vous empêchera de déclarer vos propres variables avec le préfixe `$`.
