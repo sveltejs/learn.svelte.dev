@@ -2,7 +2,7 @@
 title: onMount
 ---
 
-Chaque instance de composant possède un _cycle de vie_ qui débute lorsqu'elle est créée, et qui se termine lorsqu'elle est détruite. Il existe plusieurs fonctions qui vous permettent d'exécuter du code à des moments clés de ce cycle de vie. Celle que vous utiliserez le plus souvent est `onMount`, qui s'exécute après le tout premier rendu de l'instance dans le <span class="vo">[DOM](SITE_SVELTE/docs/web#dom)</span>.
+Chaque instance de composant possède un _cycle de vie_ qui débute lorsqu'elle est créée, et qui se termine lorsqu'elle est détruite. Il existe plusieurs fonctions qui vous permettent d'exécuter du code à des moments clés de ce cycle de vie. Celle que vous utiliserez le plus souvent est `onMount`, qui s'exécute après le tout premier rendu de l'instance dans le <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>.
 
 Dans cet exercice, nous avons un `<canvas>` que nous aimerions animer, en utilisant la fonction `paint` dans `gradient.js`. Commencez par importer la fonction depuis `svelte` :
 
