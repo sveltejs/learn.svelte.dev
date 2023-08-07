@@ -1,8 +1,8 @@
 ---
-title: Component events
+title: Évènements de composant
 ---
 
-Components can also dispatch events. To do so, they must create an event dispatcher. Update `Inner.svelte`:
+Les composants peuvent aussi générer des évènements. Pour cela, ils doivent créer un générateur d'évènements (<span class="vo">[event dispatcher](SVELTE_SITE_URL/docs/javascript#event-dispatcher)</span>). Modifiez `Inner.svelte` de la façon suivante :
 
 ```svelte
 /// file: Inner.svelte
@@ -13,19 +13,19 @@ Components can also dispatch events. To do so, they must create an event dispatc
 
 	function sayHello() {
 		dispatch('message', {
-			text: 'Hello!'
+			text: 'Bonjour !'
 		});
 	}
 </script>
 ```
 
-> `createEventDispatcher` must be called when the component is first instantiated — you can't do it later inside e.g. a `setTimeout` callback. This links `dispatch` to the component instance.
+> `createEventDispatcher` doit être appelé quand le composant est instancié la première fois — vous ne pouvez pas le faire plus tard, par ex. dans le <span class="vo">[callback](SVELTE_SITE_URL/docs/development#callback)</span> d'un `setTimeout`. Cela permet de lier `dispatch` à l'instance du composant.
 
-Then, add an `on:message` handler in `App.svelte`:
+Puis ajouter `on:message` dans `App.svelte`:
 
 ```svelte
 /// file: App.svelte
 <Inner +++on:message={handleMessage}+++ />
 ```
 
-> You can also try changing the event name to something else. For instance, change `dispatch('message', {...})` to `dispatch('greet', {...})` in `Inner.svelte` and change the attribute name from `on:message` to `on:greet` in `App.svelte`.
+> Vous pouvez aussi essayer de changer le nom de l'évènement. Par exemple, changer `dispatch('message', {...})` en `dispatch('greet', {...})` dans `Inner.svelte`, puis changez le nom de l'attribut `on:message` en `'on:greet` dans le composant `App.svelte`.

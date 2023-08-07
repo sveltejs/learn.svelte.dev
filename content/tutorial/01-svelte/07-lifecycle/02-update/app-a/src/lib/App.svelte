@@ -8,12 +8,12 @@
 	let div;
 
 	beforeUpdate(() => {
-		// determine whether we should auto-scroll
-		// once the DOM is updated...
+		// détermine si nous devrions auto-défiler
+		// dès que le DOM est mis à jour...
 	});
 
 	afterUpdate(() => {
-		// ...the DOM is now in sync with the data
+		// ...le DOM est maintenant synchronisé avec la donnée
 	});
 
 	const eliza = new Eliza();

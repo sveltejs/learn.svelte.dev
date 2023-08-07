@@ -1,10 +1,10 @@
 ---
-title: Numeric inputs
+title: Inputs numériques
 ---
 
-In the DOM, everything is a string. That's unhelpful when you're dealing with numeric inputs — `type="number"` and `type="range"` — as it means you have to remember to coerce `input.value` before using it.
+Dans le <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>, tout est une chaîne de caractères. Cela est particulièrement peu pratique lorsque vous avez à faire à des `<input>` numériques — `type=number` et `type=range` — puisque vous devez vous rappeler de transformer `input.value` avant de vous en servir.
 
-With `bind:value`, Svelte takes care of it for you:
+Avec `bind:value`, Svelte s'en occupe pour vous :
 
 ```svelte
 /// file: App.svelte

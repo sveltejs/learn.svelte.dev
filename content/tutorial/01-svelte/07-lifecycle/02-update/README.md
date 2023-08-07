@@ -1,12 +1,12 @@
 ---
-title: beforeUpdate and afterUpdate
+title: beforeUpdate et afterUpdate
 ---
 
-The `beforeUpdate` function schedules work to happen immediately before the DOM is updated. `afterUpdate` is its counterpart, used for running code once the DOM is in sync with your data.
+La fonction `beforeUpdate` permet de prévoir une fonction à exécuter juste avant la mise à jour du <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>. `afterUpdate` est son alter-ego, utile pour exécuter du code une fois que le DOM est synchronisé avec votre donnée.
 
-Together, they're useful for doing things imperatively that are difficult to achieve in a purely state-driven way, like updating the scroll position of an element.
+Ensemble, elles permettent d'effectuer des actions de manière impérative, notamment des actions qu'il serait difficile de réaliser avec des méthodes se basant uniquement sur l'état, comme mettre à jour la position de défilement d'un élément.
 
-This [Eliza](https://en.wikipedia.org/wiki/ELIZA) chatbot is annoying to use, because you have to keep scrolling the chat window. Let's fix that.
+Ce robot conversationnel [Eliza](https://fr.wikipedia.org/wiki/ELIZA) (qui ne parle qu'anglais), est pénible à utiliser, parce que vous devez en permanence faire défiler la fenêtre. Corrigeons cela.
 
 ```js
 /// file: App.svelte
@@ -27,4 +27,4 @@ afterUpdate(() => {
 });
 ```
 
-Note that `beforeUpdate` will first run before the component has mounted, so we need to check for the existence of `div` before reading its properties.
+Notez que `beforeUpdate` sera exécuté la première fois avant le montage du composant, nous devons donc d'abord vérifier l'existence de `div` avant d'en lire les propriétés.
