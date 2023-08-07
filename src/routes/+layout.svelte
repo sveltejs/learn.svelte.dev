@@ -41,6 +41,17 @@
 		display: none;
 	}
 
+	:global(.text .vo a) {
+		color: var(--sk-text-1);
+		box-shadow: inset 0 -1px 0 0 var(--sk-text-4);
+		transition: color 0.2s ease-in-out;
+	}
+
+	:global(.text .vo a:hover) {
+		color: var(--sk-text-3);
+		box-shadow: inset 0 -1px 0 0 var(--sk-text-4);
+	}
+
 	@media (min-width: 800px) {
 		span {
 			height: 100%;
