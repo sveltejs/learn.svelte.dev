@@ -1,8 +1,8 @@
 ---
-title: Adding parameters
+title: Ajout de paramètres
 ---
 
-Transition functions can accept parameters. Replace the `fade` transition with `fly`...
+Les fonctions de transition acceptent des arguments. Remplacez la transition `fade` par `fly`...
 
 ```svelte
 /// file: App.svelte
@@ -12,7 +12,7 @@ Transition functions can accept parameters. Replace the `fade` transition with `
 </script>
 ```
 
-...and apply it to the `<p>` along with some options:
+... et appliquez-là au `<p>` avec quelques options :
 
 ```svelte
 /// file: App.svelte
@@ -21,4 +21,4 @@ Transition functions can accept parameters. Replace the `fade` transition with `
 </p>
 ```
 
-Note that the transition is _reversible_ — if you toggle the checkbox while the transition is ongoing, it transitions from the current point, rather than the beginning or the end.
+Notez que la transition est _réversible_ — si vous cliquez sur la <span class="vo">[checkbox](SVELTE_SITE_URL/docs/web#checkbox)</span> pendant que la transition est en cours, l'élément transitionne dans l'autre sens à partir de son état courant, plutôt que de reprendre au début ou à la fin.
