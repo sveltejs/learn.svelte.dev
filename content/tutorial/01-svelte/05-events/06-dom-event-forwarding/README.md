@@ -1,5 +1,5 @@
 ---
-title: Relais d'évènements DOM
+title: Relais d'évènement DOM
 ---
 
 Le relais d'évènement fonctionne également pour les évènements <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>.
