@@ -31,7 +31,7 @@
 				squares = Array(9).fill('');
 				next = 'x';
 			}}>
-				Reset
+				Réinitialiser
 			</button>
 		</div>
 	</Board>
