@@ -3,7 +3,7 @@
 </script>
 
 <div class="centered">
-	<h1>todos</h1>
+	<h1>Todos</h1>
 
 	<form method="POST">
 		<label>
