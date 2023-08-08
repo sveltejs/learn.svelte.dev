@@ -7,7 +7,7 @@ const config = {
 		adapter: adapter({ runtime: 'edge' }),
 
 		prerender: {
-			concurrency: 7
+			concurrency: 4
 		},
 
 		version: {
@@ -16,10 +16,8 @@ const config = {
 	},
 
 	vitePlugin: {
-		experimental: {
-			inspector: {
-				holdMode: true
-			}
+		inspector: {
+			holdMode: true
 		}
 	}
 };
