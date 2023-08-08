@@ -21,15 +21,17 @@ async function get_nav_list() {
 			sections: index
 				.map(({ chapters }) => chapters)
 				.flat()
-				.map(({ title, exercises, slug }, index) => ({
-					title: title,
+				.map(({ title, exercises, slug }) => ({
+					title: title.includes('Introduction')
+						? slug.includes('introduction')
+							? 'Introduction to Svelte'
+							: 'Introduction to SvelteKit'
+						: title,
 					sections: exercises
-						.map(({ slug, title }) => {
-							return {
-								title,
-								path: `/tutorial/${slug}`
-							};
-						})
+						.map(({ slug, title }) => ({
+							title,
+							path: `/tutorial/${slug}`
+						}))
 						.flat()
 				}))
 		}
