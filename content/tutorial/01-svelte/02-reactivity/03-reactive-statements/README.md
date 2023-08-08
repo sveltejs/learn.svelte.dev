@@ -8,7 +8,7 @@ We're not limited to declaring reactive _values_ — we can also run arbitrary _
 /// file: App.svelte
 let count = 0;
 
-+++$: console.log(`the count is', {count});+++
++++$: console.log(`the count is`, {count});+++
 ```
 
 You can easily group statements together with a block:
@@ -16,7 +16,7 @@ You can easily group statements together with a block:
 ```js
 /// file: App.svelte
 $: +++{+++
-	console.log(`the count is', {count});
+	console.log(`the count is`, {count});
 	console.log(`this will also be logged whenever count changes`);
 +++}+++
 ```
