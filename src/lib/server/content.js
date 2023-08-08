@@ -145,7 +145,7 @@ export async function get_exercise(slug) {
 			};
 
 			for (const dir of chain) {
-				Object.assign(a, walk(dir));
+				Object.assign(a, await walk(dir));
 			}
 
 			const b = await walk(`${dir}/app-b`);
@@ -358,7 +358,7 @@ async function walk(cwd, options = {}) {
 					basename
 				};
 
-				walk_dir(name + '/', depth + 1);
+				await walk_dir(name + '/', depth + 1);
 			} else {
 				const text = text_files.has(path.extname(name) || path.basename(name));
 				const contents = await readFile(resolved, text ? 'utf-8' : 'base64');
@@ -374,5 +374,5 @@ async function walk(cwd, options = {}) {
 		}
 	}
 
-	return walk_dir('/', 1), result;
+	return await walk_dir('/', 1), result;
 }
