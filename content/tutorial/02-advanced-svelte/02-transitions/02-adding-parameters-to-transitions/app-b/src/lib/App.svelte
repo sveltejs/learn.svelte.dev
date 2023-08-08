@@ -10,6 +10,6 @@
 
 {#if visible}
 	<p transition:fly={{ y: 200, duration: 2000 }}>
-		Flies in and out
+		Entre et sort en volant
 	</p>
 {/if}

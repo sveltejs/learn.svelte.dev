@@ -1,12 +1,12 @@
 ---
-title: The animate directive
+title: La directive animate
 ---
 
-In the [previous chapter](/tutorial/deferred-transitions), we used deferred transitions to create the illusion of motion as elements move from one todo list to the other.
+Dans le [chapitre précédent](/tutorial/deferred-transitions), nous avons utilisé des transitions retardées pour créer l'illusion du mouvement lorsque des éléments se déplacent d'une liste vers une autre.
 
-To complete the illusion, we also need to apply motion to the elements that _aren't_ transitioning. For this, we use the `animate` directive.
+Pour parfaire l'illusion, nous avons aussi besoin d'appliquer du mouvement sur les éléments qui ne transitionnent _pas_. Pour cela, il faut utiliser la directive `animate`.
 
-First, import the `flip` function — flip stands for ['First, Last, Invert, Play'](https://aerotwist.com/blog/flip-your-animations/) — from `svelte/animate` into `TodoList.svelte`:
+D'abord, importez la fonction `flip` — "flip" est l'acronyme de ['First, Last, Invert, Play'](https://aerotwist.com/blog/flip-your-animations/) — depuis `svelte/animate` :
 
 ```svelte
 /// file: TodoList.svelte
@@ -19,7 +19,7 @@ First, import the `flip` function — flip stands for ['First, Last, Invert, Pla
 </script>
 ```
 
-Then add it to the `<li>` elements:
+Puis ajoutez le aux éléments `<li>` :
 
 ```svelte
 /// file: TodoList.svelte
@@ -31,7 +31,7 @@ Then add it to the `<li>` elements:
 >
 ```
 
-The movement is a little slow in this case, so we can add a `duration` parameter:
+Le mouvement est un peu lent dans ce cas, nous allons donc ajouter un paramètre `duration` :
 
 ```svelte
 /// file: TodoList.svelte
@@ -43,6 +43,6 @@ The movement is a little slow in this case, so we can add a `duration` parameter
 >
 ```
 
-> `duration` can also be a `d => milliseconds` function, where `d` is the number of pixels the element has to travel
+> `duration` peut aussi être une fonction `d => milliseconds`, où `d` est le nombre de pixels que l'élément a à parcourir.
 
-Note that all the transitions and animations are being applied with CSS, rather than JavaScript, meaning they won't block (or be blocked by) the main thread.
+Notez que toutes les transitions et animations sont appliquées en CSS, plutôt qu'en JavaScript, ce qui veut dire qu'elles ne bloquent pas (ou ne sont pas bloquées par) le <span class="vo">[thread](SVELTE_SITE_URL/docs/development#thread)</span> principal.
