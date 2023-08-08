@@ -2,7 +2,7 @@
 	import Canvas from './Canvas.svelte';
 	import { trapFocus } from './actions.js';
 
-	const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'white', 'black'];
+	const colors = ["rouge", "orange", "jaune", "vert", "bleu", "indigo", "violet", "blanc", "noir"].;
 	let selected = colors[0];
 	let size = 10;
 
@@ -36,9 +36,9 @@
 				</div>
 
 				<label>
-					small
+					petit
 					<input type="range" bind:value={size} min="1" max="50" />
-					large
+					grand
 				</label>
 			</div>
 		</div>
@@ -46,7 +46,7 @@
 
 	<div class="controls">
 		<button class="show-menu" on:click={() => showMenu = !showMenu}>
-			{showMenu ? 'close' : 'menu'}
+			{showMenu ? 'fermer' : 'menu'}
 		</button>
 	</div>
 </div>

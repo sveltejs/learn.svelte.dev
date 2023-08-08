@@ -1,12 +1,12 @@
 ---
-title: Adding parameters
+title: Ajouter des paramètres
 ---
 
-Like transitions and animations, an action can take an argument, which the action function will be called with alongside the element it belongs to.
+À l'instar des transitions et des animations, une action peut prendre un argument de paramètres ; la fonction d'action sera alors appelée avec deux arguments : l'élément sur lequel cette fonction est appliquée (comme vu précédemment), et l'argument de paramètres.
 
-In this exercise, we want to add a tooltip to the `<button>` using the [`Tippy.js`](https://atomiks.github.io/tippyjs/) library. The action is already wired up with `use:tooltip`, but if you hover over the button (or focus it with the keyboard) the tooltip contains no content.
+Dans cet exercice, nous voulons ajouter une infobulle au `<button>` en utilisant la bibliothèque [`Tippy.js`] (https://atomiks.github.io/tippyjs/). L'action est déjà liée avec `use:tooltip`, mais si vous survolez le bouton (ou si vous le sélectionnez avec le clavier), l'infobulle n'a pas de contenu.
 
-First, the action needs to accept some options and pass them to Tippy:
+Tout d'abord, l'action doit accepter certaines options et les transmettre à Tippy :
 
 ```js
 /// file: App.svelte
@@ -21,16 +21,16 @@ function tooltip(node, +++options+++) {
 }
 ```
 
-Then, we need to pass some options into the action:
+Ensuite, nous devons passer quelques options dans l'action :
 
 ```svelte
 /// file: App.svelte
 <button use:tooltip+++={{ content, theme: 'material' }}+++>
-	Hover me
+	Survolez-moi
 </button>
 ```
 
-The tooltip now works — almost. If we change the text in the `<input>`, the tooltip will not reflect the new content. We can fix that by adding an `update` method to the returned object.
+La bulle d'aide fonctionne maintenant — presque. Si nous changeons le texte dans l'élément `<input>`, l'infobulle ne sera pas mis à jour avec le nouveau contenu. Nous pouvons corriger ça en ajoutant une méthode `update` à l'objet retourné :
 
 ```js
 /// file: App.svelte

@@ -1,17 +1,17 @@
 ---
-title: The use directive
+title: La directive use
 ---
 
-Actions are essentially element-level lifecycle functions. They're useful for things like:
+Les actions sont des fonctions de cycle de vie pour les éléments du <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>. Elles sont utiles dans différents cas, par exemple :
 
-- interfacing with third-party libraries
-- lazy-loaded images
-- tooltips
-- adding custom event handlers
+- s'interfacer avec des librairies tierces
+- gérer le chargement retardé (<span class="vo">[lazy loading](SVELTE_SITE_URL/docs/web#lazy-loading)</span>) des images
+- créer des info-bulles (<span class="vo">[tooltip](SVELTE_SITE_URL/docs/development#tooltip)</span>)
+- ajouter des gestionnaires d'évènements personnalisés
 
-In this app, you can scribble on the `<canvas>`, and change colours and brush size via the menu. But if you open the menu and cycle through the options with the Tab key, you'll soon find that the focus isn't _trapped_ inside the modal.
+Dans cette application, vous pouvez gribouiller sur le `<canvas>`, et changer les couleurs et la taille du pinceau via le menu. Mais si vous ouvrez le menu et faites défiler les options avec la touche Tab, vous vous apercevrez rapidement que le focus _n'est pas conservé_ à l'intérieur de la modale.
 
-We can fix that with an action. Import `trapFocus` from `actions.js`...
+Nous pouvons y remédier avec une action. Importer `trapFocus` de `actions.js` :
 
 ```svelte
 /// file: App.svelte
@@ -19,7 +19,7 @@ We can fix that with an action. Import `trapFocus` from `actions.js`...
 	import Canvas from './Canvas.svelte';
 	+++import { trapFocus } from './actions.js';+++
 
-	const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'white', 'black'];
+	const colors = ["rouge", "orange", "jaune", "vert", "bleu", "indigo", "violet", "blanc", "noir"].;
 	let selected = colors[0];
 	let size = 10;
 
@@ -27,16 +27,16 @@ We can fix that with an action. Import `trapFocus` from `actions.js`...
 </script>
 ```
 
-...then add it to the menu with the `use:` directive:
+...puis ajoutez-là au menu avec la directive `use:` :
 
 ```svelte
 /// file: App.svelte
 <div class="menu" +++use:trapFocus+++>
 ```
 
-Let's take a look at the `trapFocus` function in `actions.js`. An action function is called with a `node` — the `<div class="menu">` in our case — when the node is mounted to the DOM, and can return an action object with a `destroy` method.
+Jetons un coup d'oeil à la fonction `trapFocus` dans `actions.js`. Une fonction d'action est appelée avec un noeud `node` - le `<div class="menu">` dans notre cas - lorsque le noeud est monté dans le <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>, et peut retourner un objet d'action avec une méthode `destroy`.
 
-First, we need to add an event listener that intercepts Tab key presses:
+Tout d'abord, nous devons ajouter un récepteur d'événements qui intercepte les pressions sur les touches de tabulation :
 
 ```js
 /// file: actions.js
@@ -45,7 +45,7 @@ focusable()[0]?.focus();
 +++node.addEventListener('keydown', handleKeydown);+++
 ```
 
-Second, we need to do some cleanup when the node is unmounted — removing the event listener, and restoring focus to where it was before the element mounted:
+Enfin, nous devons faire un peu de nettoyage lorsque le nœud est démonté - en supprimant l'écouteur d'événement et en rétablissant le focus à l'endroit où il se trouvait avant que l'élément ne soit monté :
 
 ```js
 /// file: actions.js
@@ -61,4 +61,4 @@ node.addEventListener('keydown', handleKeydown);
 };+++
 ```
 
-Now, when you open the menu, you can cycle through the options with the Tab key.
+Désormais, lorsque vous ouvrez le menu, vous pouvez faire défiler les options à l'aide de la touche Tab.

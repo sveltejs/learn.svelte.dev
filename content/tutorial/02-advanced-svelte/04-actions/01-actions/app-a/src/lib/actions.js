@@ -27,5 +27,5 @@ export function trapFocus(node) {
 
 	focusable()[0]?.focus();
 
-	// TODO finish writing the action
+	// TODO finir d'écrire le code de l'action
 }
