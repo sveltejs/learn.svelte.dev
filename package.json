@@ -50,6 +50,7 @@
 		"@replit/codemirror-lang-svelte": "^6.0.0",
 		"@replit/codemirror-vim": "^6.0.14",
 		"@rich_harris/svelte-split-pane": "^1.1.1",
+		"@sveltejs/repl": "^0.5.0",
 		"@webcontainer/api": "^1.1.5",
 		"adm-zip": "^0.5.10",
 		"ansi-to-html": "^0.7.2",
