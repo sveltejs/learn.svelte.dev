@@ -6,6 +6,10 @@ const config = {
 	kit: {
 		adapter: adapter({ runtime: 'edge' }),
 
+		prerender: {
+			concurrency: 7
+		},
+
 		version: {
 			name: child_process.execSync('git rev-parse HEAD').toString().trim()
 		}

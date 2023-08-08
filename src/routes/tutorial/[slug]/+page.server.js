@@ -1,4 +1,4 @@
-import { get_exercise } from '$lib/server/content';
+import { get_exercise } from '$lib/server/content.js';
 import { error, redirect } from '@sveltejs/kit';
 
 export function entries() {

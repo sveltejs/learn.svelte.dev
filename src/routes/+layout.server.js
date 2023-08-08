@@ -14,10 +14,6 @@ export const load = () => {
 async function get_nav_list() {
 	const index = await get_index();
 
-	// console.log(index);
-
-	console.log(index.map(({ chapters }) => chapters).flat());
-
 	return [
 		{
 			title: 'Tutorial',
