@@ -86,5 +86,5 @@ import { getContext } from 'svelte';
 
 const { count } = getContext('my-context');
 
-$: console.log({ count });
+$: console.log({ count: $count });
 ```
