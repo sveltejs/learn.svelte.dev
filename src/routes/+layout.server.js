@@ -12,9 +12,11 @@ export const load = () => {
  * @returns {Promise<import('@sveltejs/site-kit').NavigationLink[]>}
  */
 async function get_nav_list() {
-	const index = get_index();
+	const index = await get_index();
 
-	// console.log(index.map(({ chapters }) => chapters).flat());
+	// console.log(index);
+
+	console.log(index.map(({ chapters }) => chapters).flat());
 
 	return [
 		{
