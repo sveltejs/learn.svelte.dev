@@ -1,8 +1,8 @@
 ---
-title: Custom JS transitions
+title: Transitions JS personnalisées
 ---
 
-While you should generally use CSS for transitions as much as possible, there are some effects that can't be achieved without JavaScript, such as a typewriter effect:
+Même si vous devriez en général utiliser les transitions CSS autant que possible, il y a certains effets qui ne peuvent pas être réalisés sans JavaScript, comme l'effet machine à écrire :
 
 ```js
 /// file: App.svelte
@@ -10,7 +10,7 @@ function typewriter(node, { speed = 1 }) {
 	const valid = node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE;
 
 	if (!valid) {
-		throw new Error(`This transition only works on elements with a single text node child`);
+		throw new Error(`Cette transition ne fonctionne que sur les éléments qui n'ont qu'un seul noeud enfant de type texte`);
 	}
 
 	+++const text = node.textContent;
