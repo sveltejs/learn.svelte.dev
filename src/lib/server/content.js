@@ -47,12 +47,7 @@ async function exists(path) {
  * @param {string} dir
  */
 async function exists_readme(part, chapter, dir) {
-	try {
-		await stat(`content/tutorial/${part}/${chapter}/${dir}/README.md`);
-		return true;
-	} catch {
-		return false;
-	}
+	return exists(`content/tutorial/${part}/${chapter}/${dir}/README.md`);
 }
 
 /**
