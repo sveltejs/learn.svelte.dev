@@ -1,13 +1,22 @@
-import path from 'path';
 import { sveltekit } from '@sveltejs/kit/vite';
+import browserslist from 'browserslist';
+import { browserslistToTargets } from 'lightningcss';
+import path from 'path';
 
 /** @type {import('vite').UserConfig} */
 export default {
-	build: {
-		target: 'esnext'
-	},
-
 	logLevel: 'info',
+
+	css: {
+		transformer: 'lightningcss',
+		lightningcss: {
+			targets: browserslistToTargets(browserslist(['>0.2%', 'not dead']))
+		}
+	},
+	build: {
+		target: 'esnext',
+		cssMinify: 'lightningcss'
+	},
 
 	plugins: [
 		// apply cross-origin isolation headers when previewing locally
