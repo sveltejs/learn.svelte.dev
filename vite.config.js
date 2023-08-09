@@ -1,7 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
-import path from 'path';
+import path from 'node:path';
 
 /** @type {import('vite').UserConfig} */
 export default {
