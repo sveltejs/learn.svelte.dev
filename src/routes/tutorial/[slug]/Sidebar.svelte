@@ -208,7 +208,7 @@
 
 	.modal-contents button {
 		display: block;
-		background: var(--prime);
+		background-color: var(--sk-theme-1);
 		color: white;
 		padding: 1rem;
 		width: 10em;
