@@ -1,5 +1,5 @@
 ---
-title: tag HTML
+title: Balises HTML
 ---
 
 En règle générale, les chaînes de caractères sont insérées en tant que texte brut, ce qui signifie que les caractères tels que `<` et `>` n'ont pas de signification particulière.

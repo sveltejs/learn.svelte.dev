@@ -9,7 +9,7 @@
 	{/each}
 
 	<button on:click={stopAll}>
-		stop all
+		tout arrêter
 	</button>
 </div>
 

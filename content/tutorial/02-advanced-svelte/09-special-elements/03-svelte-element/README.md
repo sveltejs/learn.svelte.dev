@@ -2,7 +2,8 @@
 title: <svelte:element>
 ---
 
-Similarly, we don't always know in advance what kind of DOM element to render. `<svelte:element>` comes in handy here. As with the [previous exercise](svelte-component), we can replace a long sequence of `if` blocks with a single dynamic element:
+De même, nous ne savons pas toujours à l'avance quel type d'élément du <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span> afficher. `<svelte:element>` sert dans ces situations.
+Comme dans l'[exercice précédent](svelte-component), nous pouvons remplacer une longue séquence de blocs `if` avec un seul élément dynamique :
 
 ```svelte
 /// file: App.svelte
@@ -17,4 +18,4 @@ Similarly, we don't always know in advance what kind of DOM element to render. `
 </svelte:element>+++
 ```
 
-The `this` value can be any string, or a falsy value — if it's falsy, no element is rendered.
+La valeur `this` peut être n'importe quelle chaîne de caractères, ou une valeur <span class="vo">[falsy](SVELTE_SITE_URL/docs/javascript#falsy-truthy-falsy)</span> — si la valeur est falsy, aucun composant n'est rendu.
