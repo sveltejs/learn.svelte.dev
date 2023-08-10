@@ -2,7 +2,7 @@
 title: Slots
 ---
 
-Just like elements can have children...
+Tout comme les éléments peuvent avoir des enfants...
 
 ```html
 /// no-file
@@ -11,7 +11,7 @@ Just like elements can have children...
 </div>
 ```
 
-...so can components. Before a component can accept children, though, it needs to know where to put them. We do this with the `<slot>` element. Put this inside `Card.svelte`:
+...les instances de composants aussi. Toutefois, avant qu'il puisse accepter des enfants, l'instance a besoin de savoir où les positionner. Nous pouvons faire cela avec l'élément `<slot>`. Faites ceci dans `Card.svelte` :
 
 ```svelte
 /// file: Card.svelte
@@ -20,7 +20,7 @@ Just like elements can have children...
 </div>
 ```
 
-You can now put things on the card:
+Vous pouvez maintenant mettre des choses dans la carte :
 
 ```svelte
 /// file: App.svelte

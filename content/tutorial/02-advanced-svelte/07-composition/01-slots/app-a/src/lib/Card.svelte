@@ -1,5 +1,5 @@
 <div class="card">
-	<!-- slot goes here -->
+	<!-- le slot vient ici -->
 </div>
 
 <style>
