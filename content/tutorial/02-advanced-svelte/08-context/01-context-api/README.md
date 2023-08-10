@@ -1,10 +1,10 @@
 ---
-title: setContext and getContext
+title: setContext et getContext
 ---
 
-The context API provides a mechanism for components to 'talk' to each other without passing around data and functions as props, or dispatching lots of events. It's an advanced feature, but a useful one. In this exercise, we're going to recreate [Schotter](https://collections.vam.ac.uk/item/O221321/schotter-print-nees-georg/) by George Nees — one of the pioneers of generative art — using the context API.
+L'<span class="vo">[API](SVELTE_SITE_URL/docs/development#api)</span> de contexte fournit un mécanisme permettant aux composants de communiquer entre eux sans avoir besoin de faire "voyager" la donnée ou les fonctions en tant que props ou générer beaucoup d'évènements. C'est une fonctionnalité avancée, mais utile. Dans cet exercice, nous allons recréer [Schotter] (https://collections.vam.ac.uk/item/O221321/schotter-print-nees-georg/) par George Nees — un des pioniers de l'art génératif — en utilisant l'API de contexte.
 
-Inside `Canvas.svelte`, there's an `addItem` function that adds an item to the canvas. We can make it available to components inside `<Canvas>`, like `<Square>`, with `setContext`:
+Dans `Canvas.svelte`, il y a une fonction `addItem` qui ajoute un élément au canvas. Nous pouvons la rendre accessible aux composants à l'intérieur de `<Canvas>`, comme `<Square>`, avec `setContext` :
 
 ```svelte
 /// file: Canvas.svelte
@@ -27,7 +27,7 @@ Inside `Canvas.svelte`, there's an `addItem` function that adds an item to the c
 </script>
 ```
 
-Inside child components, we can now get the context with, well, `getContext`:
+À l'intérieur des composants enfants, nous pouvons maintenant récupérer le contexte avec `getContext`:
 
 ```svelte
 /// file: Square.svelte
@@ -45,7 +45,7 @@ Inside child components, we can now get the context with, well, `getContext`:
 </script>
 ```
 
-So far, so... boring. Let's add some randomness to the grid:
+Jusque là, c'est plutôt... ennuyeux. Ajoutons un peu d'aléatoire à la grille :
 
 ```svelte
 /// file: App.svelte
@@ -65,13 +65,13 @@ So far, so... boring. Let's add some randomness to the grid:
 </div>
 ```
 
-Like [lifecycle functions](/tutorial/onmount), `setContext` and `getContext` must be called during component initialisation. (The context key (`'canvas'` in this case) can be anything you like, including non-strings, which is useful for controlling who can access the context.)
+Comme pour les [fonctions de cycle de vie](/tutorial/onmount), `setContext` et `getContext` doivent être appelées pendant l'initialisation du composant. La clé de contexte (`'canvas'` dans ce cas) peut être n'importe quoi, même autre chose qu'une <span class="vo">[string](SVELTE_SITE_URL/docs/development#string)</span>, ce qui est pratique pour contrôler qui a le droit d'accéder au contexte.
 
-Your context object can include anything, including stores. This allows you to pass values that change over time to child components:
+Votre objet de contexte peut inclure n'importe quoi, y compris des <span class="vo">[stores](SVELTE_SITE_URL/docs/sveltejs#store)</span>. Cela vous permet de passer aux composants enfants des valeurs qui peuvent changer au cours du temps :
 
 ```js
 /// no-file
-// in a parent component
+// dans un composant parent
 import { setContext } from 'svelte';
 import { writable } from 'svelte/store';
 
@@ -81,7 +81,7 @@ setContext('my-context', {
 ```
 ```js
 /// no-file
-// in a child component
+// dans un composant enfant
 import { getContext } from 'svelte';
 
 const { count } = getContext('my-context');
