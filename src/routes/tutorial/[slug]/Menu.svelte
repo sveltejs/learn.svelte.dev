@@ -1,11 +1,9 @@
 <script>
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import arrow from '$lib/icons/arrow.svg';
-	import { slide } from 'svelte/transition';
-	import { browser } from '$app/environment';
-	import { afterNavigate } from '$app/navigation';
 	import { Icon } from '@sveltejs/site-kit/components';
-	import { tick } from 'svelte';
+	import { slide } from 'svelte/transition';
 
 	/** @type {import('$lib/types').PartStub[]}*/
 	export let index;
@@ -16,38 +14,9 @@
 	const duration = browser && matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
 
 	let is_open = false;
-	let search = '';
-
-	/** @type {HTMLInputElement} */
-	let search_input;
 
 	$: expanded_part = current.part.slug;
 	$: expanded_chapter = current.chapter.slug;
-
-	$: escaped = search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-	$: regex = new RegExp(`\\b${search.length >= 2 ? escaped : ''}`, 'i');
-
-	$: filtered = index
-		.map((part) => {
-			return {
-				slug: part.slug,
-				title: part.title,
-				chapters: part.chapters
-					.map((chapter) => ({
-						slug: chapter.slug,
-						title: chapter.title,
-						exercises: regex.test(chapter.title)
-							? chapter.exercises
-							: chapter.exercises.filter((exercise) => regex.test(exercise.title))
-					}))
-					.filter((chapter) => chapter.exercises.length > 0)
-			};
-		})
-		.filter((part) => part.chapters.length > 0 || regex.test(part.title));
-
-	afterNavigate(() => {
-		search = '';
-	});
 
 	/**
 	 * @param {HTMLElement} node
@@ -81,20 +50,9 @@
 	</div>
 
 	<nav class:open={is_open} aria-label="tutorial exercises">
-		<div class="controls">
-			<input
-				type="search"
-				placeholder="Search"
-				bind:this={search_input}
-				bind:value={search}
-				aria-hidden={!is_open ? 'true' : null}
-				tabindex={!is_open ? -1 : null}
-			/>
-		</div>
-
 		<div class="exercises">
 			<ul>
-				{#each filtered as part, i (part.slug)}
+				{#each index as part, i (part.slug)}
 					<li
 						class="part"
 						class:expanded={part.slug === expanded_part}
@@ -112,7 +70,7 @@
 							Part {i + 1}: {part.title}
 						</button>
 
-						{#if search.length >= 2 || part.slug === expanded_part}
+						{#if part.slug === expanded_part}
 							<ul class="chapter" transition:slide={{ duration }}>
 								{#each part.chapters as chapter (chapter.slug)}
 									<li
@@ -125,7 +83,7 @@
 											{chapter.title}
 										</button>
 
-										{#if search.length >= 2 || chapter.slug === expanded_chapter}
+										{#if chapter.slug === expanded_chapter}
 											<ul transition:slide={{ duration }}>
 												{#each chapter.exercises as exercise (exercise.slug)}
 													<li
@@ -156,19 +114,17 @@
 </div>
 
 <header>
-	<a href={current.prev ? `/tutorial/${current.prev.slug}` : undefined} aria-label={current.prev && 'Previous'}>
+	<a
+		href={current.prev ? `/tutorial/${current.prev.slug}` : undefined}
+		aria-label={current.prev && 'Previous'}
+	>
 		<Icon name="arrow-left" size={16} />
 	</a>
 
 	<!-- we don't want this to be keyboard-navigable, because the menu button to the left does that job better -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<h1
-		on:click={async () => {
-			is_open = true;
-			await tick();
-			search_input.focus();
-		}}
-	>
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+	<h1 on:click={async () => (is_open = true)}>
 		{current.part.title} <span class="separator">/</span>
 		{current.chapter.title} <span class="separator">/</span>
 		<strong>{current.title}</strong>
@@ -249,24 +205,6 @@
 		transition: var(--transform-transition);
 	}
 
-	.controls {
-		height: var(--menu-width);
-		display: flex;
-		border-bottom: 1px solid var(--sk-back-4);
-		padding: 0 0 0 var(--menu-width);
-	}
-
-	.controls input {
-		flex: 1;
-		border: none;
-		padding: 0.8rem 1rem 0.4rem 1rem;
-		font-family: inherit;
-		font-size: inherit;
-		background: var(--sk-back-2);
-		border: 2px solid transparent;
-		color: var(--sk-text-2);
-	}
-
 	.menu-toggle-container {
 		position: absolute;
 		left: 0;
@@ -288,6 +226,7 @@
 	}
 
 	.exercises {
+		margin-top: 4rem;
 		padding: 2rem 0;
 		flex: 1;
 		overflow: auto;

@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import '@fontsource/roboto-mono';
 	import { Icon, Shell } from '@sveltejs/site-kit/components';
-	import { Nav } from '@sveltejs/site-kit/nav';
+	import { Nav, Separator } from '@sveltejs/site-kit/nav';
 	import { Search, SearchBox } from '@sveltejs/site-kit/search';
 	import '@sveltejs/site-kit/styles/index.css';
 	import '../app.css';
@@ -31,6 +31,8 @@
 			<a href="https://svelte.dev">Svelte</a>
 
 			<a href="https://kit.svelte.dev">SvelteKit</a>
+
+			<Separator />
 
 			<a href="https://svelte.dev/chat" title="Discord Chat">
 				<span class="small">Discord</span>

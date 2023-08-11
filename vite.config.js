@@ -37,7 +37,8 @@ export default {
 
 	server: {
 		fs: {
-			allow: [path.resolve('.apps')]
+			allow: [path.resolve('.apps')],
+			strict: false
 		},
 		watch: {
 			ignored: ['**/.apps/**']
