@@ -310,7 +310,7 @@
 
 	li[aria-current='page'] a,
 	li[aria-current='step']:not(.expanded) > button {
-		color: var(--prime);
+		color: var(--sk-theme-1);
 	}
 
 	li img {
