@@ -44,6 +44,7 @@ export interface Exercise {
 	slug: string;
 	prev: { slug: string } | null;
 	next: { slug: string; title: string } | null;
+	markdown: string;
 	html: string;
 	dir: string;
 	editing_constraints: {

@@ -277,6 +277,7 @@ export async function get_exercise(slug) {
 				next,
 				dir,
 				editing_constraints,
+				markdown,
 				html: transform(markdown, {
 					codespan: (text) =>
 						filenames.size > 1 && filenames.has(text)
