@@ -1,6 +1,7 @@
 <script>
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
+	import '@fontsource/roboto-mono';
 	import { Icon, Shell } from '@sveltejs/site-kit/components';
 	import { Nav } from '@sveltejs/site-kit/nav';
 	import { Search, SearchBox } from '@sveltejs/site-kit/search';
