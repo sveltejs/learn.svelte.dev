@@ -4,7 +4,7 @@ title: Mise à jour de tableaux et d'objets
 
 Parce que la réactivité de Svelte est uniquement déclenchée par les assignations, utiliser des méthodes sur les tableaux tels que `push` ou `splice` ne déclenchera pas de mise à jour automatiquement.
 
-Because Svelte's reactivity is triggered by assignments, using array methods like `push` and `splice` won't automatically cause updates. Par exemple, cliquer sur le bouton "Ajouter un nombre" ne fait rien pour l'instant, même si nous appelons `numbers.push(...)` à l'intérieur de `addNumber`.
+Par exemple, cliquer sur le bouton "Ajouter un nombre" ne fait rien pour l'instant, même si nous appelons `numbers.push(...)` à l'intérieur de `addNumber`.
 
 Une façon d'y remédier est d'ajouter une affectation qui serait autrement redondante :
 
