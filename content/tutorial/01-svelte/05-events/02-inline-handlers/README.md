@@ -20,7 +20,7 @@ You can also declare event handlers inline:
 		m = { x: e.clientX, y: e.clientY };
 	}+++}
 >
-	The mouse position is {m.x} x {m.y}
+	The pointer is at {m.x} x {m.y}
 </div>
 ```
 
