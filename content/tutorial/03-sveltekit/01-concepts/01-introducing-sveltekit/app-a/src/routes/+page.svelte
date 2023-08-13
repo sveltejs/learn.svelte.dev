@@ -1,1 +1,1 @@
-<h1>Welcome to SvelteKit</h1>
+<h1>Bienvenue dans le monde de SvelteKit</h1>
