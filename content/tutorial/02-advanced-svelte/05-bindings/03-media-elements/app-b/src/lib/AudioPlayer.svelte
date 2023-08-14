@@ -23,7 +23,7 @@
 		bind:currentTime={time}
 		bind:duration
 		bind:paused
-		preload="none"
+		preload="metadata"
 		on:ended={() => {
 			time = 0;
 		}}

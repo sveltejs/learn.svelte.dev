@@ -1,8 +1,10 @@
 <script>
-	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import arrow from '$lib/icons/arrow.svg';
+	import { click_outside, focus_outside } from '@sveltejs/site-kit/actions';
 	import { Icon } from '@sveltejs/site-kit/components';
+	import { reduced_motion, theme } from '@sveltejs/site-kit/stores';
+	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 
 	/** @type {import('$lib/types').PartStub[]}*/
@@ -11,160 +13,248 @@
 	/** @type {import('$lib/types').Exercise} */
 	export let current;
 
-	const duration = browser && matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200;
+	const duration = $reduced_motion ? 0 : 200;
 
 	let is_open = false;
 
 	$: expanded_part = current.part.slug;
 	$: expanded_chapter = current.chapter.slug;
-
-	/**
-	 * @param {HTMLElement} node
-	 */
-	function close_when_focus_leaves(node) {
-		function handle_focus_in() {
-			if (!node.contains(document.activeElement)) {
-				is_open = false;
-			}
-		}
-		document.addEventListener('focusin', handle_focus_in);
-
-		return {
-			destroy: () => {
-				document.removeEventListener('focusin', handle_focus_in);
-			}
-		};
-	}
 </script>
 
-<div use:close_when_focus_leaves>
-	<div class="menu-toggle-container">
-		<button
-			class="menu-toggle"
-			on:click={() => (is_open = !is_open)}
-			aria-label="Toggle menu"
-			aria-expanded={is_open}
+<div
+	class="container"
+	class:dark={$theme.current === 'dark'}
+	use:focus_outside={() => (is_open = false)}
+	use:click_outside={() => (is_open = false)}
+>
+	<header>
+		<a
+			class="prev-button"
+			href={current.prev ? `/tutorial/${current.prev.slug}` : undefined}
+			aria-label={current.prev && 'Previous'}
 		>
-			<Icon name={is_open ? 'close' : 'menu'} />
-		</button>
-	</div>
+			<Icon name="arrow-left" size={16} />
+		</a>
 
-	<nav class:open={is_open} aria-label="tutorial exercises">
-		<div class="exercises">
-			<ul>
-				{#each index as part, i (part.slug)}
-					<li
-						class="part"
-						class:expanded={part.slug === expanded_part}
-						aria-current={part.slug === current.part.slug ? 'step' : undefined}
-						transition:slide={{ duration }}
-					>
-						<button
-							on:click={() => {
-								if (expanded_part !== part.slug) {
-									expanded_part = part.slug;
-									expanded_chapter = part.chapters[0].slug;
-								}
-							}}
-						>
-							Part {i + 1}: {part.title}
-						</button>
+		<!-- we don't want this to be keyboard-navigable, because the menu button to the left does that job better -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+		<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+		<div
+			class="heading"
+			role="button"
+			tabindex="0"
+			on:click={() => (is_open = !is_open)}
+			class:open={is_open}
+		>
+			<h1>
+				{current.part.title} <span class="separator">/</span>
+				{current.chapter.title} <span class="separator">/</span>
+				<strong>{current.title}</strong>
 
-						{#if part.slug === expanded_part}
-							<ul class="chapter" transition:slide={{ duration }}>
-								{#each part.chapters as chapter (chapter.slug)}
-									<li
-										class="chapter"
-										class:expanded={chapter.slug === expanded_chapter}
-										aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
+				<span style="flex: 1 1 auto" />
+
+				<span class="expand-icon" class:inverted={is_open}>
+					<Icon name="chevron-down" />
+				</span>
+			</h1>
+
+			{#if is_open}
+				<nav
+					aria-label="tutorial exercises"
+					transition:slide={{ axis: 'y', easing: expoOut, duration: $reduced_motion ? 0 : 400 }}
+				>
+					<div class="exercises">
+						<ul>
+							{#each index as part, i (part.slug)}
+								<li
+									class="part"
+									class:expanded={part.slug === expanded_part}
+									aria-current={part.slug === current.part.slug ? 'step' : undefined}
+									transition:slide={{ duration }}
+								>
+									<button
+										on:click|stopPropagation={() => {
+											if (expanded_part !== part.slug) {
+												expanded_part = part.slug;
+												expanded_chapter = part.chapters[0].slug;
+											}
+										}}
 									>
-										<button on:click={() => (expanded_chapter = chapter.slug)}>
-											<img src={arrow} alt="Arrow icon" />
-											{chapter.title}
-										</button>
+										Part {i + 1}: {part.title}
+									</button>
 
-										{#if chapter.slug === expanded_chapter}
-											<ul transition:slide={{ duration }}>
-												{#each chapter.exercises as exercise (exercise.slug)}
-													<li
-														transition:slide={{ duration }}
-														class="exercise"
-														aria-current={$page.url.pathname === `/tutorial/${exercise.slug}`
-															? 'page'
-															: undefined}
+									{#if part.slug === expanded_part}
+										<ul class="chapter" transition:slide={{ duration }}>
+											{#each part.chapters as chapter (chapter.slug)}
+												<li
+													class="chapter"
+													class:expanded={chapter.slug === expanded_chapter}
+													aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
+												>
+													<button
+														on:click|stopPropagation={() => (expanded_chapter = chapter.slug)}
 													>
-														<a href="/tutorial/{exercise.slug}" on:click={() => (is_open = false)}>
-															{exercise.title}
-														</a>
-													</li>
-												{/each}
-											</ul>
-										{/if}
-									</li>
-								{/each}
-							</ul>
-						{/if}
-					</li>
-				{:else}
-					<li>No search results!</li>
-				{/each}
-			</ul>
+														<img src={arrow} alt="Arrow icon" />
+														{chapter.title}
+													</button>
+
+													{#if chapter.slug === expanded_chapter}
+														<ul transition:slide={{ duration }}>
+															{#each chapter.exercises as exercise (exercise.slug)}
+																<li
+																	transition:slide={{ duration }}
+																	class="exercise"
+																	aria-current={$page.url.pathname === `/tutorial/${exercise.slug}`
+																		? 'page'
+																		: undefined}
+																>
+																	<a
+																		href="/tutorial/{exercise.slug}"
+																		on:click={() => (is_open = false)}
+																	>
+																		{exercise.title}
+																	</a>
+																</li>
+															{/each}
+														</ul>
+													{/if}
+												</li>
+											{/each}
+										</ul>
+									{/if}
+								</li>
+							{/each}
+						</ul>
+					</div>
+				</nav>
+			{/if}
 		</div>
-	</nav>
+
+		<a
+			class="next-button"
+			href={current.next ? `/tutorial/${current.next.slug}` : undefined}
+			aria-label="Next"
+		>
+			<Icon name="arrow-right" size={16} />
+		</a>
+	</header>
 </div>
 
-<header>
-	<a
-		href={current.prev ? `/tutorial/${current.prev.slug}` : undefined}
-		aria-label={current.prev && 'Previous'}
-	>
-		<Icon name="arrow-left" size={16} />
-	</a>
-
-	<!-- we don't want this to be keyboard-navigable, because the menu button to the left does that job better -->
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-	<h1 on:click={async () => (is_open = true)}>
-		{current.part.title} <span class="separator">/</span>
-		{current.chapter.title} <span class="separator">/</span>
-		<strong>{current.title}</strong>
-	</h1>
-
-	<a href={current.next ? `/tutorial/${current.next.slug}` : undefined} aria-label="Next">
-		<Icon name="arrow-right" size={16} />
-	</a>
-</header>
-
 <style>
-	header {
+	.container {
+		--shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
+
+		position: relative;
+
 		display: flex;
+		justify-content: center;
+
+		border-right: 1px solid var(--sk-back-4);
+
+		width: 100%;
+		padding-top: 1.4rem;
+
+		background-color: transparent;
+
+		isolation: isolate;
+		z-index: 4;
+	}
+
+	.container.dark {
+		--shadow: 0 0 0 1px var(--sk-back-4);
+	}
+
+	header {
+		position: relative;
+		z-index: 2;
+
+		display: grid;
+		grid-template-columns: 4rem minmax(0, 1fr) 4rem;
 		gap: 0.5rem;
 		align-items: center;
-		background: var(--sk-back-3);
-		border-bottom: 1px solid var(--sk-back-4);
-		border-right: 1px solid var(--sk-back-4);
-		padding: 0 0 0 var(--menu-width);
+
+		padding: 0;
+		padding-right: 4px;
 		height: var(--menu-width);
-		align-items: center;
+		width: 100%;
+	}
+
+	.heading.open h1 {
+		border-radius: var(--sk-border-radius) var(--sk-border-radius) 0 0;
 	}
 
 	header strong,
-	header h1 {
-		font-size: 1.4rem;
+	h1 {
+		font-size: var(--sk-text-xs);
+	}
+
+	.heading {
+		font-size: var(--sk-text-s);
 	}
 
 	header strong {
 		color: var(--sk-theme-1);
 	}
 
-	header h1 {
-		color: var(--sk-text-2);
+	header .heading {
+		flex: 1;
+
+		position: relative;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.4ch;
+
+		top: 0.15rem;
+		height: 100%;
+		min-width: 0;
+		width: 100%;
+		max-width: 100%;
+
+		cursor: pointer;
+	}
+
+	h1 {
+		display: flex;
+		align-items: center;
+
+		padding: 0 1.5rem;
+
+		width: 100%;
+		height: 100%;
+
+		z-index: 3;
+
+		transition: 0.4s var(--quint-out);
+		transition-property: background, box-shadow;
+
+		background-color: var(--sk-back-2);
+
+		border-radius: var(--sk-border-radius);
+		box-shadow: var(--shadow);
+
+		overflow-x: hidden;
+
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		overflow: hidden;
+		text-align: center;
+		color: var(--sk-text-2);
 		font-weight: 400;
-		flex: 1;
-		top: 0.15rem;
+	}
+
+	/* .expand-icon {
+		padding: 0.5rem;
+	} */
+
+	.expand-icon :global(svg) {
+		transition: transform 0.4s var(--quint-out);
+		transform-origin: center;
+	}
+
+	.expand-icon.inverted :global(svg) {
+		transform: rotate3d(0, 0, 1, 180deg);
 	}
 
 	.separator {
@@ -181,52 +271,30 @@
 	}
 
 	nav {
-		--menu-width: 5.4rem;
 		--transform-transition: transform 0.2s;
 		position: absolute;
+		top: var(--menu-width);
+		left: 0;
 		width: 100%;
-		height: 100%;
+		height: 60vh;
 		/* when the nav is closing, wait to change visibility until the slide out completes */
-		transition: var(--transform-transition), visibility 0s 0.2s;
-		transform: translate(-100%, 0);
-		background: var(--sk-back-3);
-		z-index: 2;
+		/* transition: var(--transform-transition), visibility 0s 0.2s;
+		transform: translate(-100%, 0); */
+		background: var(--sk-back-2);
+		z-index: 0;
 		/* filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.1)); */
-		border-right: 1px solid var(--sk-back-4);
+		box-shadow: var(--shadow);
+		border-radius: 0 0 var(--sk-border-radius) var(--sk-border-radius);
 		display: flex;
 		flex-direction: column;
-		visibility: hidden;
+		/* visibility: hidden; */
 	}
 
-	nav.open {
-		transform: none;
-		visibility: visible;
-		/* when the nav starts opening, don't transition visibility - set it right away */
-		transition: var(--transform-transition);
-	}
-
-	.menu-toggle-container {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: var(--menu-width);
-		height: var(--menu-width);
-		z-index: 3;
-		border-right: 1px solid var(--sk-back-4);
-		border-bottom: 1px solid var(--sk-back-4);
-	}
-
-	.menu-toggle {
-		width: 100%;
-		height: 100%;
-		background: var(--sk-back-3);
-		border: 2px solid transparent;
-		box-sizing: border-box;
-		padding: 0.2rem 0 0 0;
+	nav a {
+		justify-content: start !important;
 	}
 
 	.exercises {
-		margin-top: 4rem;
 		padding: 2rem 0;
 		flex: 1;
 		overflow: auto;
@@ -290,12 +358,18 @@
 		box-sizing: border-box;
 	}
 
-	header a {
+	header > a {
 		height: 100%;
+		width: 100%;
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0 1rem;
+
+		padding: 0;
+		padding: 0;
+		margin: 0;
+		border: 0;
 	}
 
 	a:focus-visible,

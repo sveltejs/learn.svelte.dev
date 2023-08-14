@@ -152,7 +152,8 @@
 		background: rgba(255, 62, 0, 0.1);
 	}
 
-	.text :global([data-file]), .text :global(.filename) {
+	.text :global([data-file]),
+	.text :global(.filename) {
 		cursor: pointer;
 		background-image: url($lib/icons/file-edit.svg);
 		background-repeat: no-repeat;
@@ -171,7 +172,8 @@
 	}
 
 	@media (prefers-color-scheme: dark) {
-		.text :global([data-file]), .text :global(.filename) {
+		.text :global([data-file]),
+		.text :global(.filename) {
 			background-image: url($lib/icons/file-edit-inline-dark.svg);
 		}
 	}
