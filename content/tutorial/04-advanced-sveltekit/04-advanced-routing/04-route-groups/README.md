@@ -27,9 +27,9 @@ We can also add some UI to these two routes by adding a `src/routes/(authed)/+la
 
 ```svelte
 /// file: src/routes/(authed)/+layout.svelte
-<form method="POST" action="/logout">
-	<button>Log out</button>
-</form>
-
 <slot />
+
+<form method="POST" action="/logout">
+	<button>log out</button>
+</form>
 ```
