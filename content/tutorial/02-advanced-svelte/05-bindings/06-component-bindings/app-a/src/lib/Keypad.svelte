@@ -22,11 +22,11 @@
 	<button on:click={select(9)}>9</button>
 
 	<button disabled={!value} on:click={clear}
-		>clear</button
+		>effacer</button
 	>
 	<button on:click={select(0)}>0</button>
 	<button disabled={!value} on:click={submit}
-		>submit</button
+		>valider</button
 	>
 </div>
 

@@ -2,7 +2,7 @@
 title: Dimensions
 ---
 
-Every block-level element has `clientWidth`, `clientHeight`, `offsetWidth` and `offsetHeight` bindings:
+Chaque élément de type bloc (`display: block`) a des liaisons `clientWidth`, `clientHeight`, `offsetWidth` et `offsetHeight` possibles :
 
 ```svelte
 /// file: App.svelte
@@ -12,8 +12,8 @@ Every block-level element has `clientWidth`, `clientHeight`, `offsetWidth` and `
 </div>
 ```
 
-These bindings are readonly — changing the values of `w` and `h` won't have any effect on the element.
+Ces liaisons sont en lecture seule — changer les valeurs de `w` et `h` n'aura pas d'effet sur l'élément.
 
-> Elements are measured using a technique similar to [this one](http://www.backalleycoder.com/2013/03/18/cross-browser-event-based-element-resize-detection/). There is some overhead involved, so it's not recommended to use this for large numbers of elements.
+> Les éléments sont mesurés en utilisant une technique proche de [celle-ci](http://www.backalleycoder.com/2013/03/18/cross-browser-event-based-element-resize-detection/). Elle implique un certain surcoût, il n'est donc pas recommandé de se servir de ces liaisons sur un grand nombre d'éléments.
 >
-> `display: inline` elements cannot be measured with this approach; nor can elements that can't contain other elements (such as `<canvas>`). In these cases you will need to measure a wrapper element instead.
+> Les éléments `display: inline` ne peuvent pas être mesurés avec cette approche ; les éléments qui ne peuvent pas contenir d'autres éléments non plus (`<canvas>` par exemple). Dans ces cas-là, vous devrez mesurer les dimensions d'un élément contenant à la place.

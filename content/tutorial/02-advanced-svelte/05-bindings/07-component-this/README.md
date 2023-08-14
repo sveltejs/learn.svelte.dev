@@ -1,12 +1,12 @@
 ---
-title: Binding to component instances
+title: Liaisons d'instance de composant
 ---
 
-Just as you can bind to DOM elements, you can bind to component instances themselves with `bind:this`.
+De la même façon que vous pouvez créer des liaisons avec les éléments <span class="vo">[DOM](SVELTE_SITE_URL/docs/web#dom)</span>, vous pouvez créer des liaisons avec les instances de composants elles-mêmes en utilisant `bind:this`.
 
-This is useful in the rare cases that you need to interact with a component programmatically (rather than by providing it with updated props). Revisiting our canvas app from [a few exercises ago](actions), it would be nice to add a button to clear the screen.
+Cela est pratique dans les rares cas où vous avez besoin d'interagir avec un composant programmatiquement (plutôt qu'en lui fournissant de nouvelles <span class="vo">[props](SVELTE_SITE_URL/docs/sveltejs#props)</span>). Revenons à notre application de canvas croisée [il y a quelques exercices](actions). Une fonctionnalité sympa pourrait être d'ajouter un bouton pour effacer l'écran.
 
-First, let's export a function from `Canvas.svelte`:
+D'abord, exportons une fonction depuis `Canvas.svelte` :
 
 ```svelte
 /// file: Canvas.svelte
@@ -18,7 +18,7 @@ export let size;
 }+++
 ```
 
-Then, create a reference to the component instance:
+Ensuite, créez une référence à l'instance du composant :
 
 ```svelte
 /// file: App.svelte
@@ -26,7 +26,7 @@ Then, create a reference to the component instance:
 	import Canvas from './Canvas.svelte';
 	import { trapFocus } from './actions.js';
 
-	const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'white', 'black'];
+	const colors = ["rouge", "orange", "jaune", "vert", "bleu", "indigo", "violet", "blanc", "noir"];
 	let selected = colors[0];
 	let size = 10;
 
@@ -38,17 +38,17 @@ Then, create a reference to the component instance:
 	<Canvas +++bind:this={canvas}+++ color={selected} size={size} />
 ```
 
-Finally, add a button that calls the `clear` function:
+Enfin, ajoutez un bouton qui appelle la fonction `clear` :
 
 ```svelte
 /// file: App.svelte
 <div class="controls">
 	<button class="show-menu" on:click={() => showMenu = !showMenu}>
-		{showMenu ? 'close' : 'menu'}
+		{showMenu ? 'fermer' : 'menu'}
 	</button>
 
 +++	<button on:click={() => canvas.clear()}>
-		clear
+		effacer
 	</button>+++
 </div>
 ```

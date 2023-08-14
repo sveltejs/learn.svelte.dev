@@ -1,7 +1,7 @@
 <script>
 	import Canvas from './Canvas.svelte';
 
-	const colors = ["rouge", "orange", "jaune", "vert", "bleu", "indigo", "violet", "blanc", "noir"].;
+	const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet', 'white', 'black'];
 	let selected = colors[0];
 	let size = 10;
 
@@ -35,9 +35,9 @@
 				</div>
 
 				<label>
-					petit
+					fin
 					<input type="range" bind:value={size} min="1" max="50" />
-					grand
+					épais
 				</label>
 			</div>
 		</div>

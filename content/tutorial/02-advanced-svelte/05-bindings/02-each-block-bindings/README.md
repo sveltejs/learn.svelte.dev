@@ -1,8 +1,8 @@
 ---
-title: Each block bindings
+title: Liaisons de bloc each
 ---
 
-You can even bind to properties inside an `each` block.
+Vous pouvez aussi mettre en place des liaisons sur les propriétés à l'intérieur d'un bloc `each`.
 
 ```svelte
 /// file: App.svelte
@@ -15,11 +15,11 @@ You can even bind to properties inside an `each` block.
 
 		<input
 			type="text"
-			placeholder="What needs to be done?"
+			placeholder="Qu'avez-vous besoin de faire ?"
 			+++bind:+++value={todo.text}
 		/>
 	</li>
 {/each}
 ```
 
-> Note that interacting with these `<input>` elements will mutate the array. If you prefer to work with immutable data, you should avoid these bindings and use event handlers instead.
+> Notez que l'interaction avec ces éléments `<input>` va muter le tableau. Si vous préférez travailler avec des données immutables, il est préférable d'éviter ces liaisons et d'utiliser des gestionnaires d'évènements à la place.

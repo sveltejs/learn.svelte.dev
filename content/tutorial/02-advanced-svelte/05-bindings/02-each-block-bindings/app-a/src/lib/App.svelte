@@ -1,8 +1,8 @@
 <script>
 	let todos = [
-		{ done: false, text: 'finish Svelte tutorial' },
-		{ done: false, text: 'build an app' },
-		{ done: false, text: 'world domination' }
+		{ done: false, text: 'finir le tutoriel Svelte' },
+		{ done: false, text: 'construire une app' },
+		{ done: false, text: 'dominer le monde' }
 	];
 
 	function add() {
@@ -20,7 +20,7 @@
 </script>
 
 <div class="centered">
-	<h1>todos</h1>
+	<h1>À faire</h1>
 
 	<ul class="todos">
 		{#each todos as todo}
@@ -32,21 +32,21 @@
 
 				<input
 					type="text"
-					placeholder="What needs to be done?"
+					placeholder="Qu'avez-vous besoin de faire ?"
 					value={todo.text}
 				/>
 			</li>
 		{/each}
 	</ul>
 
-	<p>{remaining} remaining</p>
+	<p>Encore {remaining} tâches</p>
 
 	<button on:click={add}>
-		Add new
+		Ajouter
 	</button>
 
 	<button on:click={clear}>
-		Clear completed
+		Effacer les tâches complétées
 	</button>
 </div>
 

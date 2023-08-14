@@ -1,8 +1,8 @@
 ---
-title: Contenteditable bindings
+title: Liaisons contenteditable
 ---
 
-Elements with a `contenteditable` attribute support `textContent` and `innerHTML` bindings:
+Les éléments avec l'attribut `contenteditable` permettent les liaisons avec [`innerHTML`](https://developer.mozilla.org/fr/docs/Web/API/Element/innerHTML), [`innerText`](https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/innerText) et [`textContent`](https://developer.mozilla.org/fr/docs/Web/API/Node/textContent) :
 
 ```svelte
 /// file: App.svelte
