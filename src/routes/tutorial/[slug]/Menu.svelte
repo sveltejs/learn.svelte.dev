@@ -53,11 +53,11 @@
 				<strong>{current.title}</strong>
 
 				<span style="flex: 1 1 auto" />
-
-				<span class="expand-icon" class:inverted={is_open}>
-					<Icon name="chevron-down" />
-				</span>
 			</h1>
+
+			<span class="expand-icon" class:inverted={is_open}>
+				<Icon name="chevron-down" />
+			</span>
 
 			{#if is_open}
 				<nav
@@ -213,19 +213,7 @@
 		width: 100%;
 		max-width: 100%;
 
-		cursor: pointer;
-	}
-
-	h1 {
-		display: flex;
-		align-items: center;
-
 		padding: 0 1.5rem;
-
-		width: 100%;
-		height: 100%;
-
-		z-index: 3;
 
 		transition: 0.4s var(--quint-out);
 		transition-property: background, box-shadow;
@@ -235,7 +223,20 @@
 		border-radius: var(--sk-border-radius);
 		box-shadow: var(--shadow);
 
-		overflow-x: hidden;
+		cursor: pointer;
+	}
+
+	h1 {
+		display: flex;
+		align-items: center;
+		gap: 0.5ch;
+
+		width: 100%;
+		height: 100%;
+
+		z-index: 3;
+
+		overflow: hidden;
 
 		white-space: nowrap;
 		text-overflow: ellipsis;
