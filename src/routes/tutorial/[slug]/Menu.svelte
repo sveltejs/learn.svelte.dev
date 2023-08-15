@@ -277,7 +277,7 @@
 		top: var(--menu-width);
 		left: 0;
 		width: 100%;
-		height: 60vh;
+		height: auto;
 		/* when the nav is closing, wait to change visibility until the slide out completes */
 		/* transition: var(--transform-transition), visibility 0s 0.2s;
 		transform: translate(-100%, 0); */
