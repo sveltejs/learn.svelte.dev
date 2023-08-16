@@ -94,6 +94,7 @@
 												>
 													<button
 														on:click|stopPropagation={() => (expanded_chapter = chapter.slug)}
+														style="width: 100%; text-align: start;"
 													>
 														<img src={arrow} alt="Arrow icon" />
 														{chapter.title}
@@ -278,17 +279,12 @@
 		left: 0;
 		width: 100%;
 		height: auto;
-		/* when the nav is closing, wait to change visibility until the slide out completes */
-		/* transition: var(--transform-transition), visibility 0s 0.2s;
-		transform: translate(-100%, 0); */
 		background: var(--sk-back-2);
 		z-index: -1;
-		/* filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.1)); */
 		box-shadow: var(--shadow);
 		border-radius: 0 0 var(--sk-border-radius) var(--sk-border-radius);
 		display: flex;
 		flex-direction: column;
-		/* visibility: hidden; */
 	}
 
 	nav a {
