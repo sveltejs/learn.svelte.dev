@@ -26,67 +26,74 @@
 		// so for now just always reset sidebar scroll
 		sidebar.scrollTop = 0;
 	});
+
+	/** @param {MouseEvent | KeyboardEvent} e */
+	function handle_copy(e) {
+		const node = /** @type {HTMLElement} */ (e.target);
+
+		if (node.nodeName === 'CODE') {
+			const { file } = node.dataset;
+			if (file) {
+				dispatch('select', { file });
+			}
+		}
+
+		if (node.nodeName === 'SPAN' && node.classList.contains('filename')) {
+			const file = exercise.scope.prefix + node.textContent;
+			dispatch('select', { file });
+		}
+	}
 </script>
 
 <Menu {index} current={exercise} />
 
-<div
-	bind:this={sidebar}
-	class="text"
-	on:copy={(e) => {
-		if (sessionStorage[copy_enabled]) return;
-
-		/** @type {HTMLElement | null} */
-		let node = /** @type {HTMLElement} */ (e.target);
-
-		while (node && node !== e.currentTarget) {
-			if (node.nodeName === 'PRE') {
-				show_modal = true;
-
-				e.preventDefault();
-				return;
-			}
-
-			node = /** @type {HTMLElement | null} */ (node.parentNode);
-		}
-	}}
->
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
+<section>
 	<div
-		on:click={(e) => {
-			const node = /** @type {HTMLElement} */ (e.target);
+		bind:this={sidebar}
+		class="text"
+		on:copy={(e) => {
+			if (sessionStorage[copy_enabled]) return;
 
-			if (node.nodeName === 'CODE') {
-				const { file } = node.dataset;
-				if (file) {
-					dispatch('select', { file });
+			/** @type {HTMLElement | null} */
+			let node = /** @type {HTMLElement} */ (e.target);
+
+			while (node && node !== e.currentTarget) {
+				if (node.nodeName === 'PRE') {
+					show_modal = true;
+
+					e.preventDefault();
+					return;
 				}
-			}
 
-			if (node.nodeName === 'SPAN' && node.classList.contains('filename')) {
-				const file = exercise.scope.prefix + node.textContent;
-				dispatch('select', { file });
+				node = /** @type {HTMLElement | null} */ (node.parentNode);
 			}
 		}}
 	>
-		{@html exercise.html}
+		<div
+			role="button"
+			tabindex="0"
+			on:click={handle_copy}
+			on:keyup={(e) => e.key === 'Enter' && handle_copy(e)}
+		>
+			{@html exercise.html}
+		</div>
+
+		{#if exercise.next}
+			<p><a href="/tutorial/{exercise.next.slug}">Next: {exercise.next.title}</a></p>
+		{/if}
 	</div>
 
-	{#if exercise.next}
-		<p><a href="/tutorial/{exercise.next.slug}">Next: {exercise.next.title}</a></p>
-	{/if}
-</div>
-
-<footer>
-	<a
-		target="_blank"
-		rel="noreferrer"
-		class="edit"
-		href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{exercise.dir}"
-	>
-		Edit this page
-	</a>
-</footer>
+	<footer>
+		<a
+			target="_blank"
+			rel="noreferrer"
+			class="edit"
+			href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{exercise.dir}"
+		>
+			Edit this page
+		</a>
+	</footer>
+</section>
 
 {#if show_modal}
 	<Modal on:close={() => (show_modal = false)}>
@@ -113,9 +120,12 @@
 {/if}
 
 <style>
+	section {
+		overflow-y: auto;
+	}
+
 	.text {
 		flex: 1 1;
-		overflow-y: auto;
 		padding: 2.2rem 3rem;
 		border-right: 1px solid var(--sk-back-4);
 		background: var(--sk-back-3);
