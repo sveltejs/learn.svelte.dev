@@ -26,23 +26,6 @@
 		// so for now just always reset sidebar scroll
 		sidebar.scrollTop = 0;
 	});
-
-	/** @param {MouseEvent | KeyboardEvent} e */
-	function handle_copy(e) {
-		const node = /** @type {HTMLElement} */ (e.target);
-
-		if (node.nodeName === 'CODE') {
-			const { file } = node.dataset;
-			if (file) {
-				dispatch('select', { file });
-			}
-		}
-
-		if (node.nodeName === 'SPAN' && node.classList.contains('filename')) {
-			const file = exercise.scope.prefix + node.textContent;
-			dispatch('select', { file });
-		}
-	}
 </script>
 
 <Menu {index} current={exercise} />
@@ -69,11 +52,23 @@
 			}
 		}}
 	>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			role="button"
-			tabindex="0"
-			on:click={handle_copy}
-			on:keyup={(e) => e.key === 'Enter' && handle_copy(e)}
+			on:click={(e) => {
+				const node = /** @type {HTMLElement} */ (e.target);
+
+				if (node.nodeName === 'CODE') {
+					const { file } = node.dataset;
+					if (file) {
+						dispatch('select', { file });
+					}
+				}
+
+				if (node.nodeName === 'SPAN' && node.classList.contains('filename')) {
+					const file = exercise.scope.prefix + node.textContent;
+					dispatch('select', { file });
+				}
+			}}
 		>
 			{@html exercise.html}
 		</div>
