@@ -278,7 +278,7 @@ export async function get_exercise(slug) {
 				dir,
 				editing_constraints,
 				markdown,
-				html: transform(markdown, {
+				html: await transform(markdown, {
 					codespan: (text) =>
 						filenames.size > 1 && filenames.has(text)
 							? `<code data-file="${scope.prefix + text}">${text}</code>`

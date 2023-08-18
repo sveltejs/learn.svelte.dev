@@ -116,7 +116,7 @@ marked.use({
  * @param {string} markdown
  * @param {Partial<import('marked').Renderer>} options
  */
-export function transform(markdown, options) {
+export async function transform(markdown, options) {
 	marked.use({
 		renderer: {
 			...default_renderer,
@@ -124,5 +124,5 @@ export function transform(markdown, options) {
 		}
 	});
 
-	return marked(markdown);
+	return await marked(markdown);
 }
