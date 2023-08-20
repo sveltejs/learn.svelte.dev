@@ -1,1 +1,1 @@
-<h1>This page will never be rendered</h1>
+<h1>Cette page ne sera jamais affichée</h1>

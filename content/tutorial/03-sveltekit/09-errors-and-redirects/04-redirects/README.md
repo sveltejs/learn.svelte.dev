@@ -1,10 +1,10 @@
 ---
-title: Redirects
+title: Redirections
 ---
 
-We can also use the `throw` mechanism to redirect from one page to another.
+Nous pouvons aussi utiliser la mécanique de `throw` pour rediriger d'une page vers une autre.
 
-Create a new `load` function in `src/routes/a/+page.server.js`:
+Créez une nouvelle fonction `load` dans `src/routes/a/+page.server.js` :
 
 ```js
 /// file: src/routes/a/+page.server.js
@@ -15,12 +15,12 @@ export function load() {
 }
 ```
 
-Navigating to `/a` will now take us straight to `/b`.
+Naviguer vers la route `/a` nous emmènera maintenant directement vers la route `/b`.
 
-You can `throw redirect(...)` inside `load` functions, form actions, API routes and the `handle` hook, which we'll discuss in a later chapter.
+Vous pouvez `throw redirect(...)` dans les fonctions `load`, les actions de formulaire, les routes d'<span class="vo">[API](SVELTE_SITE_URL/docs/development#api)</span> et le <span class="vo">[hook](SVELTE_SITE_URL/docs/sveltejs#hook)</span> `handle`, que nous verrons dans un prochain chapitre.
 
-The most common status codes you'll use:
+Les codes de statut les plus courants sont :
 
-- `303` — for form actions, following a successful submission
-- `307` — for temporary redirects
-- `308` — for permanent redirects
+- `303` — pour les action de formulaire, à la suite d'une soumission réussie
+- `307` — pour les redirections temporaires
+- `308` — pour les redirections permanentes
