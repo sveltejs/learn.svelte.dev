@@ -1,10 +1,10 @@
 ---
-title: Reading and writing cookies
+title: Lire et écrire les cookies
 ---
 
-The [`setHeaders`](headers) function can't be used with the `Set-Cookie` header. Instead, you should use the `cookies` API.
+La fonction [`setHeaders`](headers) ne peut pas être utilisée avec le <span class="vo">[header](SVELTE_SITE_URL/docs/web#header)</span> `Set-Cookie`. Vous devez à la place utiliser l'<span class="vo">[API](SVELTE_SITE_URL/docs/development#api)</span> `cookies`.
 
-In your `load` functions, you can read a cookie with `cookies.get(name, options)`:
+Dans vos fonctions `load`, vous pouvez lire un cookie avec `cookies.get(name, options)` :
 
 ```js
 /// file: src/routes/+page.server.js
@@ -17,7 +17,7 @@ export function load(+++{ cookies }+++) {
 }
 ```
 
-To set a cookie, use `cookies.set(name, value, options)`. It's strongly recommended that you explicitly configure the `path` when setting a cookie, since browsers' default behaviour — somewhat uselessly — is to set the cookie on the parent of the current path.
+Pour définir un cookie, utilisez `cookies.set(name, value, options)`. Il est fortement recommandé que vous configuriez explicitement le `path` lorsque vous définissez un cookie, car les navigateurs définissent par défaut — et sans réelle raison — les cookies sur le chemin parent du chemin actuel.
 
 ```js
 /// file: src/routes/+page.server.js
@@ -32,9 +32,9 @@ export function load({ cookies }) {
 }
 ```
 
-Now, if you reload the iframe, `Hello stranger!` becomes `Hello friend!`.
+Si maintenant vous rechargez l'<span class="vo">[iframe](SVELTE_SITE_URL/docs/web#iframe)</span>, `Bonjour étranger !` devient `Bonjour mon ami !`.
 
-Calling `cookies.set(name, ...)` causes a `Set-Cookie` header to be written, but it _also_ updates the internal map of cookies, meaning any subsequent calls to `cookies.get(name)` during the same request will return the updated value. Under the hood, the `cookies` API uses the popular `cookie` package — the options passed to `cookies.get` and `cookies.set` correspond to the `parse` and `serialize` options from the `cookie` [documentation](https://github.com/jshttp/cookie#api). SvelteKit sets the following defaults to make your cookies more secure:
+Appeler `cookies.set(name, ...)` implique que le <span class="vo">[header](SVELTE_SITE_URL/docs/web#header)</span> `Set-Cookie` est modifié, mais cela met _également_ à jour le dictionnaire interne de cookies, signifiant que les appels suivants à `cookies.get(name)` durant la même requête renverront la valeur à jour. Sous le capot, l'<span class="vo">[API](SVELTE_SITE_URL/docs/development#api)</span> `cookies` utilise la libraire populaire `cookie` — les options passées à `cookies.get` et `cookies.set` correspondent aux options de `parse` et `serialize` définies dans la [documentation de la libraire `cookie`](https://github.com/jshttp/cookie#api). SvelteKit utilise les valeurs par défaut suivantes pour rendre vos cookies plus sécurisés :
 
 ```js
 /// no-file

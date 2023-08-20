@@ -1,15 +1,15 @@
 ---
-title: Layout data
+title: Données de layout
 path: /blog
 ---
 
-Just as `+layout.svelte` files create UI for every child route, `+layout.server.js` files load data for every child route.
+De la même manière que les fichiers `+layout.svelte` créent une partie de l'interface pour chaque route enfant, les fichiers `+layout.server.js` chargent de la donnée pour chaque route enfant.
 
-Suppose we'd like to add a 'more posts' sidebar to our blog post page. We _could_ return `summaries` from the `load` function in `src/routes/blog/[slug]/+page.server.js`, like we do in `src/routes/blog/+page.server.js`, but that would be repetitive.
+Supposez que nous voulions ajouter une barre latérale "plus de billets" à notre page de billet de blog. Nous _pourrions_ renvoyer `summaries` depuis la fonction `load` de `src/routes/blog/[slug]/+page.server.js`, comme nous le faisons dans `src/routes/blog/+page.server.js`, mais cela serait répétitif.
 
-Instead, let's rename `src/routes/blog/+page.server.js` to `src/routes/blog/+layout.server.js`. Notice that the `/blog` route continues to work — `data.summaries` is still available to the page.
+Renommons plutôt `src/routes/blog/+page.server.js` en `src/routes/blog/+layout.server.js`. Notez que la route `/blog` continue de fonctionner — `data.summaries` est toujours disponible dans la page.
 
-Now, add a sidebar in the layout for the post page:
+Ajoutons maintenant une barre latérale dans notre page de billet :
 
 ```svelte
 /// file: src/routes/blog/[slug]/+layout.svelte
@@ -23,7 +23,7 @@ Now, add a sidebar in the layout for the post page:
 	</main>
 
 +++	<aside>
-		<h2>More posts</h2>
+		<h2>Plus de billets</h2>
 		<ul>
 			{#each data.summaries as { slug, title }}
 				<li>
@@ -45,6 +45,6 @@ Now, add a sidebar in the layout for the post page:
 </style>
 ```
 
-The layout (and the page below it) inherits `data.summaries` from the parent `+layout.server.js`.
+Le <span class="vo">[layout](SVELTE_SITE_URL/docs/web#layout)</span> (et les pages en dessous) héritent `data.summaries` du fichier parent `+layout.server.js`.
 
-When we navigate from one post to another, we only need to load the data for the post itself — the layout data is still valid. See the documentation on [invalidation](https://kit.svelte.dev/docs/load#rerunning-load-functions) to learn more.
+Lorsque nous naviguons d'un billet à l'autre, nous avons uniquement besoin de charger la donnée pour le billet lui-même — la donnée de <span class="vo">[layout](SVELTE_SITE_URL/docs/web#layout)</span> est toujours valide. Voir la documentation sur l'[invalidation](KIT_SITE_URL/docs/load#rerunning-load-functions) pour en apprendre plus.

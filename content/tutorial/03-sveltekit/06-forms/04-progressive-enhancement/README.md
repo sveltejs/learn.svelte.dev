@@ -1,12 +1,12 @@
 ---
-title: Progressive enhancement
+title: Amélioration progressive
 ---
 
-Because we're using `<form>`, our app works even if the user doesn't have JavaScript ([which happens more often than you probably think](https://kryogenix.org/code/browser/everyonehasjs.html)). That's great, because it means our app is resilient.
+Parce que nous utilisons des éléments `<form>`, notre application fonctionne même si les utilisateurs et utilisatrices n'ont pas JavaScript, [ce qui arrive plus souvent que vous ne le pensez](https://kryogenix.org/code/browser/everyonehasjs.html) (en anglais). C'est super, car cela signifie que notre application est résiliente.
 
-Most of the time, users _do_ have JavaScript. In those cases, we can _progressively enhance_ the experience, the same way SvelteKit progressively enhances `<a>` elements by using client-side routing.
+La plupart du temps, les gens _ont_ JavaScript. Dans ce cas-là, nous pouvons _améliorer progressivement_ l'expérience de la même façon que SvelteKit améliore progressivement l'expérience des éléments `<a>` en utilisant la navigation côté client.
 
-Import the `enhance` function from `$app/forms`...
+Importez la fonction `enhance` depuis `$app/forms`...
 
 ```svelte
 /// file: src/routes/+page.svelte
@@ -18,7 +18,7 @@ Import the `enhance` function from `$app/forms`...
 </script>
 ```
 
-...and add the `use:enhance` directive to the `<form>` elements:
+...et ajoutez la directive `use:enhance` aux éléments `<form>` :
 
 ```svelte
 /// file: src/routes/+page.svelte
@@ -30,14 +30,14 @@ Import the `enhance` function from `$app/forms`...
 <form method="POST" action="?/delete" +++use:enhance+++>
 ```
 
-And that's all it takes! Now, when JavaScript is enabled, `use:enhance` will emulate the browser-native behaviour except for the full-page reloads. It will:
+Et c'est tout ! Désormais, lorsque JavaScript est disponible, `use:enhance` va émuler le comportement natif du navigateur sauf pour le rechargement complet de la page. Il va donc :
 
-- update the `form` prop
-- invalidate all data on a successful response, causing `load` functions to re-run
-- navigate to the new page on a redirect response
-- render the nearest error page if an error occurs
+- mettre à jour la <span class="vo">[prop](SVELTE_SITE_URL/docs/sveltejs#props)</span> `form`
+- invalider toute la donnée si la soumission est réussie, ce qui va rejouer la fonction `load`
+- naviguer vers la nouvelle page si la réponse est une redirection
+- afficher la page d'erreur la plus proche si une erreur se produit
 
-Now that we're updating the page rather than reloading it, we can get fancy with things like transitions:
+Maintenant que nous mettons la page à jour plutôt que la recharger, nous pouvons faire des choses rigolotes comme des transitions :
 
 ```svelte
 /// file: src/routes/+page.svelte

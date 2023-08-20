@@ -3,10 +3,10 @@
 </script>
 
 <div class="centered">
-	<h1>todos</h1>
+	<h1>à faire</h1>
 
 	<label>
-		add a todo:
+		ajouter une tâche :
 		<input
 			type="text"
 			autocomplete="off"
@@ -14,8 +14,8 @@
 				if (e.key === 'Enter') {
 					const input = e.currentTarget;
 					const description = input.value;
-					
-					// TODO handle submit
+
+					// TODO gérer la soumission
 
 					input.value = '';
 				}
@@ -33,14 +33,14 @@
 						on:change={async (e) => {
 							const done = e.currentTarget.checked;
 
-							// TODO handle change
+							// TODO gérer la modification
 						}}
 					/>
 					<span>{todo.description}</span>
 					<button
-						aria-label="Mark as complete"
+						aria-label="Marquer comme terminée"
 						on:click={async (e) => {
-							// TODO handle delete
+							// TODO gérer la suppression
 						}}
 					/>
 				</label>
@@ -83,4 +83,3 @@
 		opacity: 1;
 	}
 </style>
-	

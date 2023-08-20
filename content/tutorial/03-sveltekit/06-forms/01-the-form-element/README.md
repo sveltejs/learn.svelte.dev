@@ -1,18 +1,18 @@
 ---
-title: The <form> element
+title: L'élément <form>
 ---
 
-In the [chapter on loading](page-data), we saw how to get data from the server to the browser. Sometimes you need to send data in the opposite direction, and that's where `<form>` — the web platform's way of submitting data — comes in.
+Dans le [chapitre sur le chargement](page-data), nous avons vu comment charger de la donnée depuis le serveur vers le navigateur. Parfois, il est nécessaire d'envoyer de la donnée dans l'autre direction, et c'est là que les éléments de formulaires `<form>` — la méthode standard du web pour soumettre de la donnée — entrent en jeu.
 
-Let's build a todo app. We've already got an in-memory database set up in `src/lib/server/database.js`, and our `load` function in `src/routes/+page.server.js` uses the [`cookies`](https://kit.svelte.dev/docs/load#cookies-and-headers) API so that we can have a per-user todo list, but we need to add a `<form>` to create new todos:
+Construisons une application de tâches à faire. Nous avons déjà une base de données en mémoire en place dans `src/lib/server/database.js`, et notre fonction `load` dans `src/routes/+page.server.js` utilise l'<span class="vo">[API](SVELTE_SITE_URL/docs/development#api)</span> <span class="vo">[`cookies`](KIT_SITE_URL/docs/load#cookies-and-headers)</span> afin d'avoir une liste de tâches à faire par personne, mais nous avons besoin d'un `<form>` pour créer de nouvelles tâches :
 
 ```svelte
 /// file: src/routes/+page.svelte
-<h1>todos</h1>
+<h1>à faire</h1>
 
 +++<form method="POST">
 	<label>
-		add a todo:
+		ajouter une tâche:
 		<input
 			name="description"
 			autocomplete="off"
@@ -23,7 +23,7 @@ Let's build a todo app. We've already got an in-memory database set up in `src/l
 <ul class="todos">
 ```
 
-If we type something into the `<input>` and hit Enter, the browser makes a POST request (because of the `method="POST"` attribute) to the current page. But that results in an error, because we haven't created a server-side _action_ to handle the POST request. Let's do that now:
+Si nous saisissons quelque chose dans l'`<input>` et que nous appuyons sur Entrée, le navigateur fait une requête POST (grâce à l'attribut `method="POST"`) sur la page actuelle. Mais cela renvoie une erreur, car nous n'avons pas créé d'_action_ côté serveur pour gérer la requête POST. Faisons cela maintenant :
 
 ```js
 /// file: src/routes/+page.server.js
@@ -41,8 +41,9 @@ export function load({ cookies }) {
 };+++
 ```
 
-The `request` is a standard [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) object; `await request.formData()` returns a [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData) instance.
+La variable `request` est un objet [Request](https://developer.mozilla.org/fr/docs/Web/API/Request) standard ; `await request.formData()` renvoie une instance de [`FormData`](https://developer.mozilla.org/fr/docs/Web/API/FormData).
 
-When we hit Enter, the database is updated and the page reloads with the new data.
+Lorsque nous appuyons sur Entrée, la base de données est mise à jour et la page se recharge avec la nouvelle donnée.
 
-Notice that we haven't had to write any `fetch` code or anything like that — data updates automatically. And because we're using a `<form>` element, this app would work even if JavaScript was disabled or unavailable.
+Notez que nous n'avons pas eu besoin d'écrire de code utilisant `fetch`, ou quelque chose similaire — la donnée est mise à jour automatiquement. Et parce que nous utilisons un élément `<form>`, cette application fonctionne également si JavaScript est désactivé ou indisponbile.
+

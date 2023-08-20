@@ -7,7 +7,7 @@
 </script>
 
 <div class="centered">
-	<h1>todos</h1>
+	<h1>à faire</h1>
 
 	{#if form?.error}
 		<p class="error">{form.error}</p>
@@ -15,7 +15,7 @@
 
 	<form method="POST" action="?/create" use:enhance>
 		<label>
-			add a todo:
+			ajouter une tâche :
 			<input
 				name="description"
 				value={form?.description ?? ''}
@@ -31,7 +31,7 @@
 				<form method="POST" action="?/delete" use:enhance>
 					<input type="hidden" name="id" value={todo.id} />
 					<span>{todo.description}</span>
-					<button aria-label="Mark as complete" />
+					<button aria-label="Marquer comme terminée" />
 				</form>
 			</li>
 		{/each}

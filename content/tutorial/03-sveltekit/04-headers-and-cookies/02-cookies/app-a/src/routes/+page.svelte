@@ -2,4 +2,4 @@
 	export let data;
 </script>
 
-<h1>Hello {data.visited ? 'friend' : 'stranger'}!</h1>
+<h1>Bonjour {data.visited ? 'mon ami' : 'étranger'} !</h1>
