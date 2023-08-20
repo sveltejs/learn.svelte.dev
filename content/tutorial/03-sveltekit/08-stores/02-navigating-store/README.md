@@ -2,14 +2,14 @@
 title: navigating
 ---
 
-The `navigating` store represents the current navigation. When a navigation starts — because of a link click, or a back/forward navigation, or a programmatic `goto` — the value of `navigation` will become an object with the following properties:
+Le <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span> `navigating` représente la navigation courante. Lorsqu'une navigation commence — suite au clic sur un lien, une navigation vers l'arrière ou l'avant, ou un `goto` programmatique — la valeur de `navigation` devient un objet avec les propriétés suivantes :
 
-- `from` and `to` — objects with `params`, `route` and `url` properties
-- `type` — the type of navigation, e.g. `link`, `popstate` or `goto`
+- `from` et `to` — des objets avec les propriétés `params`, `route` et `url`
+- `type` — le type de navigation, par ex. `link`, `popstate` ou `goto`
 
-> For complete type information visit the [`Navigation`](https://kit.svelte.dev/docs/types#public-types-navigation) documentation.
+> Vous trouverez plus d'informations sur le type de navigation en vous rendant sur la documentation de [`Navigation`](KIT_SITE_URL/docs/types#public-types-navigation).
 
-It can be used to show a loading indicator for long-running navigations. In this exercise, `src/routes/+page.server.js` and `src/routes/about/+page.server.js` both have an artificial delay. Inside `src/routes/+layout.svelte`, import the `navigating` store and add a message to the nav bar:
+On peut s'en servir pour afficher un indicateur de chargement pour les navigations qui prennent du temps. Dans cet exercice, les pages `src/routes/+page.server.js` et `src/routes/about/+page.server.js` ont toutes les deux une latence articifielle. Dans `src/routes/+layout.svelte`, importez le <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span> `navigating` et ajouter un message à la barre de navigation :
 
 ```svelte
 /// file: src/routes/+layout.svelte
@@ -19,15 +19,15 @@ It can be used to show a loading indicator for long-running navigations. In this
 
 <nav>
 	<a href="/" aria-current={$page.url.pathname === '/'}>
-		home
+		accueil
 	</a>
 
 	<a href="/about" aria-current={$page.url.pathname === '/about'}>
-		about
+		à propos
 	</a>
 
 +++	{#if $navigating}
-		navigating to {$navigating.to.url.pathname}
+		en cours de navigation vers {$navigating.to.url.pathname}
 	{/if}+++
 </nav>
 

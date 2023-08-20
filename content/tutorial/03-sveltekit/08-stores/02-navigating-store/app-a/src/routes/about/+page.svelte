@@ -1,2 +1,2 @@
-<h1>about</h1>
-<p>this is the about page.</p>
+<h1>à propos</h1>
+<p>ceci est la page À propos.</p>

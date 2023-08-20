@@ -1,18 +1,18 @@
 <script>
-	import { page, navigating, updated } from '$app/stores';
+	import { page, navigating } from '$app/stores';
 </script>
 
 <nav>
 	<a href="/" aria-current={$page.url.pathname === '/'}>
-		home
+		accueil
 	</a>
 
 	<a href="/about" aria-current={$page.url.pathname === '/about'}>
-		about
+		à propos
 	</a>
 
 	{#if $navigating}
-		navigating to {$navigating.to.url.pathname}
+		en cours de navigation vers {$navigating.to.url.pathname}
 	{/if}
 </nav>
 
@@ -20,10 +20,10 @@
 
 {#if $updated}
 	<p class="toast">
-		A new version of the app is available
+		Une nouvelle version de l'application est disponible
 
 		<button on:click={() => location.reload()}>
-			reload the page
+			rechargez la page
 		</button>
 	</p>
 {/if}

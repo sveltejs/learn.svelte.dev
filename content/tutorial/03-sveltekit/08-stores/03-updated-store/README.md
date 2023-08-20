@@ -2,11 +2,11 @@
 title: updated
 ---
 
-The `updated` store contains `true` or `false` depending on whether a new version of the app has been deployed since the page was first opened. For this to work, your `svelte.config.js` must specify `kit.version.pollInterval`.
+Le <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span> `updated` contient `true` ou `false` selon si une nouvelle version de l'application a été déployée depuis que la page a été affiché la première fois. Pour que ceci fonctionne, votre `svelte.config.js` doit spécifier `kit.version.pollInterval`.
 
-Version changes only happens in production, not during development. For that reason, `$updated` will always be `false` in this tutorial.
+Les changements de version se produisent uniquement en production, pas en développement. Pour cette raison, `$updated` sera toujours `false` dans le cadre de ce tutoriel.
 
-You can manually check for new versions, regardless of `pollInterval`, by calling `updated.check()`.
+Vous pouvez vérifier manuellement si une nouvelle version est disponible, sans utiliser `pollInterval`, en appelant `updated.check()`.
 
 ```svelte
 /// file: src/routes/+layout.svelte
@@ -16,15 +16,15 @@ You can manually check for new versions, regardless of `pollInterval`, by callin
 
 <nav>
 	<a href="/" aria-current={$page.url.pathname === '/'}>
-		home
+		accueil
 	</a>
 
 	<a href="/about" aria-current={$page.url.pathname === '/about'}>
-		about
+		à propose
 	</a>
 
 	{#if $navigating}
-		navigating to {$navigating.to.url.pathname}
+		en cours de navigation vers {$navigating.to.url.pathname}
 	{/if}
 </nav>
 
@@ -32,10 +32,10 @@ You can manually check for new versions, regardless of `pollInterval`, by callin
 
 +++{#if $updated}
 	<p class="toast">
-		A new version of the app is available
+		Une nouvelle version de l'application est disponible
 
 		<button on:click={() => location.reload()}>
-			reload the page
+			recharger la page
 		</button>
 	</p>
 {/if}+++

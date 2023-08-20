@@ -2,19 +2,19 @@
 title: page
 ---
 
-As we learned [earlier](writable-stores), Svelte stores are a place to put data that doesn't belong to an individual component.
+Comme nous l'avons appris [précédemment](writable-stores), les <span class="vo">[stores](SVELTE_SITE_URL/docs/sveltejs#store)</span> Svelte sont un endroit pour stocker de la donnée qui n'appartient pas à un composant particulier.
 
-SvelteKit makes three readonly stores available via the `$app/stores` module — `page`, `navigating` and `updated`. The one you'll use most often is [`page`](https://kit.svelte.dev/docs/types#public-types-page), which provides information about the current page:
+SvelteKit met à disposition trois <span class="vo">[stores](SVELTE_SITE_URL/docs/sveltejs#store)</span> en lecture seule via le module `$app/stores` — `page`, `navigating` et `updated`. Celui que vous utiliserez le plus souvent est [`page`](KIT_SITE_URL/docs/types#public-types-page), qui fournit de l'information à propos de la page courante :
 
-* `url` — the [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) of the current page
-* `params` — the current page's [parameters](params)
-* `route` — an object with an `id` property representing the current route
-* `status` — the HTTP status code of the current page
-* `error` — the error object of the current page, if any (you'll learn more about error handling in [later](error-basics) [exercises](handleerror))
-* `data` — the data for the current page, combining the return values of all `load` functions
-* `form` — the data returned from a [form action](the-form-element)
+* `url` — l'[URL](https://developer.mozilla.org/fr/docs/Web/API/URL) de la page courante
+* `params` — les [paramètres](params) de la page courante
+* `route` — un objet avec une propriété `id` représentant la route courante
+* `status` — le code de statut HTTP de la page courante
+* `error` — l'objet d'erreur de la page courante, s'il existe (vous en saurez plus sur la gestion d'erreur dans de [futurs](error-basics) [exercices](handleerror))
+* `data` — la donnée de la page courante, combinant les valeurs de retour de toutes les fonctions `load`
+* `form` — la donnée renvoyée depuis une [action de formulaire](the-form-element)
 
-As with any other store, you can reference its value in a component by prefixing its name with the `$` symbol. For example, we can access the current pathname as `$page.url.pathname`:
+Comme avec n'importe quel <span class="vo">[store](SVELTE_SITE_URL/docs/sveltejs#store)</span>, vous pouvez référencer sa valeur dans un composant en préfixant son nom avec le symbole `$`. Par exemple, nous pouvons accéder au chemin courant avec `$page.url.pathname` :
 
 ```svelte
 /// file: src/routes/+layout.svelte
@@ -24,11 +24,11 @@ As with any other store, you can reference its value in a component by prefixing
 
 <nav>
 	<a href="/" +++aria-current={$page.url.pathname === '/'}+++>
-		home
+		accueil
 	</a>
 
 	<a href="/about" +++aria-current={$page.url.pathname === '/about'}+++>
-		about
+		à propos
 	</a>
 </nav>
 
