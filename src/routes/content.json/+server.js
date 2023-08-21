@@ -19,12 +19,11 @@ async function content() {
 
 				if (exercise_content) {
 					exercise_content.markdown = exercise_content.markdown.replace(/(\+\+\+|---|:::)/g, '');
-					// exercises.push(exercise_content);
 
 					blocks.push({
 						href: `/tutorial/${slug}`,
 						breadcrumbs: [title],
-						content: plaintext(exercise_content.markdown),
+						content: await plaintext(exercise_content.markdown),
 						rank: 0
 					});
 				}
@@ -36,37 +35,39 @@ async function content() {
 }
 
 /** @param {string} markdown */
-function plaintext(markdown) {
+async function plaintext(markdown) {
 	/** @param {unknown} text */
 	const block = (text) => `${text}\n`;
 
 	/** @param {string} text */
 	const inline = (text) => text;
 
-	return markedTransform(markdown, {
-		code: (source) => source.split('// ---cut---\n').pop() ?? '',
-		blockquote: block,
-		html: () => '\n',
-		heading: (text) => `${text}\n`,
-		hr: () => '',
-		list: block,
-		listitem: block,
-		checkbox: block,
-		paragraph: (text) => `${text}\n\n`,
-		table: block,
-		tablerow: block,
-		tablecell: (text, opts) => {
-			return text + ' ';
-		},
-		strong: inline,
-		em: inline,
-		codespan: inline,
-		br: () => '',
-		del: inline,
-		link: (href, title, text) => text,
-		image: (href, title, text) => text,
-		text: inline
-	})
+	return (
+		await markedTransform(markdown, {
+			code: (source) => source.split('// ---cut---\n').pop() ?? '',
+			blockquote: block,
+			html: () => '\n',
+			heading: (text) => `${text}\n`,
+			hr: () => '',
+			list: block,
+			listitem: block,
+			checkbox: block,
+			paragraph: (text) => `${text}\n\n`,
+			table: block,
+			tablerow: block,
+			tablecell: (text, opts) => {
+				return text + ' ';
+			},
+			strong: inline,
+			em: inline,
+			codespan: inline,
+			br: () => '',
+			del: inline,
+			link: (href, title, text) => text,
+			image: (href, title, text) => text,
+			text: inline
+		})
+	)
 		.replace(/&lt;/g, '<')
 		.replace(/&gt;/g, '>')
 		.replace(/&#(\d+);/g, (match, code) => {
