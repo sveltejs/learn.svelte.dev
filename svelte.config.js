@@ -9,14 +9,6 @@ const config = {
 		version: {
 			name: child_process.execSync('git rev-parse HEAD').toString().trim()
 		}
-	},
-
-	vitePlugin: {
-		experimental: {
-			inspector: {
-				holdMode: true
-			}
-		}
 	}
 };
 
