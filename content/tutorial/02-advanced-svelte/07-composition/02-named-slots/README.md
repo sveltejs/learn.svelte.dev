@@ -4,7 +4,7 @@ title: Named slots
 
 The previous example contained a _default slot_, which renders the direct children of a component. Sometimes you will need more control over placement. In those cases, we can use _named slots_.
 
-Inside the `<Card>` component, we've got `<span slot="telephone">` and others for `company` and `address`. Let's add the corresponding named slots in `Card.svelte`:
+Inside `App.svelte`, we're rendering a `<Card>` component that contains `<span slot="telephone">` and others for `company` and `address`. Let's add the corresponding named slots in `Card.svelte`:
 
 ```svelte
 /// file: Card.svelte
