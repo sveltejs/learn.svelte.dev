@@ -9,7 +9,7 @@ Let's create that file:
 
 ```svelte
 /// file: src/routes/blog/[slug]/+page.svelte
-<h1>blog post</h1>
+<h1>blog post {params.slug}</h1>
 ```
 
 We can now navigate from the `/blog` page to individual blog posts. In the next chapter, we'll see how to load their content.
