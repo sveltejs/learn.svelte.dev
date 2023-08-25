@@ -31,6 +31,7 @@ export interface Exercise {
 	part: {
 		slug: string;
 		title: string;
+		label: string;
 	};
 	chapter: {
 		slug: string;

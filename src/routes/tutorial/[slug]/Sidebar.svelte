@@ -224,6 +224,12 @@
 		line-height: 1;
 	}
 
+	@media (max-width: 800px) {
+		.text {
+			border-right: none;
+		}
+	}
+
 	@media (min-width: 800px) {
 		.text :global(.mobile) {
 			display: none;

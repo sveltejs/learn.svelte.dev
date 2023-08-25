@@ -50,9 +50,22 @@
 			class:open={is_open}
 		>
 			<h1>
-				<span class="part-title">{current.part.title}</span><span class="separator">/</span>
-				<span class="chapter-title">{current.chapter.title}</span><span class="separator">/</span
-				><strong>{current.title}</strong>
+				{#if $is_mobile}
+					<div class="heading-row">
+						<span class="chapter-title">{current.chapter.title}</span><span class="separator"
+							>/</span
+						><strong>{current.title}</strong>
+					</div>
+					<div class="heading-row">
+						<span class="part-title">{current.part.title}: {current.part.label}</span>
+					</div>
+				{:else}
+					<span class="part-title"
+						>{current.part.title}{$is_mobile ? `: ${current.part.label}` : ''}</span
+					><span class="separator">/</span>
+					<span class="chapter-title">{current.chapter.title}</span><span class="separator">/</span
+					><strong>{current.title}</strong>
+				{/if}
 
 				<span style="flex: 1 1 auto" />
 			</h1>
@@ -378,6 +391,10 @@
 	}
 
 	@media screen and (max-width: 800px) {
+		.container {
+			border-right: none;
+		}
+
 		/* Remove all styles */
 		.heading {
 			box-shadow: none;
@@ -393,15 +410,20 @@
 		}
 
 		h1 {
-			display: grid;
-			grid-template-columns: repeat(3, auto);
+			display: flex;
+			flex-direction: column;
 			column-gap: 0.5ch;
-			row-gap: 0.5ch;
-			justify-items: start;
+			align-items: flex-start;
 			grid-template-rows: repeat(2, auto);
 
 			width: max-content;
 			height: max-content;
+		}
+
+		.heading-row {
+			display: flex;
+			gap: 0.5ch;
+			align-items: center;
 		}
 
 		h1 .part-title {
