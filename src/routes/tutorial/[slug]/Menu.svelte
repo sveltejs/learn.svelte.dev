@@ -3,7 +3,7 @@
 	import arrow from '$lib/icons/arrow.svg';
 	import { click_outside, focus_outside } from '@sveltejs/site-kit/actions';
 	import { Icon } from '@sveltejs/site-kit/components';
-	import { reduced_motion, theme } from '@sveltejs/site-kit/stores';
+	import { mql, nav_open, reduced_motion, theme } from '@sveltejs/site-kit/stores';
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 
@@ -12,6 +12,8 @@
 
 	/** @type {import('$lib/types').Exercise} */
 	export let current;
+
+	const is_mobile = mql('(max-width: 800px)');
 
 	const duration = $reduced_motion ? 0 : 200;
 
@@ -44,13 +46,13 @@
 			class="heading"
 			role="button"
 			tabindex="0"
-			on:click={() => (is_open = !is_open)}
+			on:click={() => ($is_mobile ? ($nav_open = true) : (is_open = !is_open))}
 			class:open={is_open}
 		>
 			<h1>
-				{current.part.title} <span class="separator">/</span>
-				{current.chapter.title} <span class="separator">/</span>
-				<strong>{current.title}</strong>
+				<span class="part-title">{current.part.title}</span><span class="separator">/</span>
+				<span class="chapter-title">{current.chapter.title}</span><span class="separator">/</span
+				><strong>{current.title}</strong>
 
 				<span style="flex: 1 1 auto" />
 			</h1>
@@ -373,5 +375,48 @@
 	.exercises button:focus-visible {
 		outline: none;
 		border: 2px solid var(--sk-theme-3);
+	}
+
+	@media screen and (max-width: 800px) {
+		/* Remove all styles */
+		.heading {
+			box-shadow: none;
+			background-color: transparent;
+
+			padding: 0;
+
+			justify-content: start;
+		}
+
+		.expand-icon {
+			display: none;
+		}
+
+		h1 {
+			display: grid;
+			grid-template-columns: repeat(3, auto);
+			column-gap: 0.5ch;
+			row-gap: 0.5ch;
+			justify-items: start;
+			grid-template-rows: repeat(2, auto);
+
+			width: max-content;
+			height: max-content;
+		}
+
+		h1 .part-title {
+			grid-row: 2 / span 1;
+			font-size: var(--sk-text-xs);
+			color: var(--sk-text-3);
+		}
+
+		h1 .part-title + .separator {
+			display: none;
+		}
+
+		h1 :where(.chapter-title, strong) {
+			font-size: var(--sk-text-s) !important;
+			line-height: 1;
+		}
 	}
 </style>

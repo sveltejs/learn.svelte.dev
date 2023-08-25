@@ -18,15 +18,10 @@ async function get_nav_list() {
 			title: 'Tutorial',
 			prefix: 'tutorial',
 			pathname: '/tutorial',
-			sections: index
-				.map(({ chapters }) => chapters)
-				.flat()
-				.map(({ title, exercises, slug }) => ({
-					title: title.includes('Introduction')
-						? slug.includes('introduction')
-							? 'Introduction to Svelte'
-							: 'Introduction to SvelteKit'
-						: title,
+			sections: index.map(({ chapters, title }) => ({
+				title,
+				sections: chapters.map(({ title, exercises }) => ({
+					title,
 					sections: exercises
 						.map(({ slug, title }) => ({
 							title,
@@ -34,6 +29,7 @@ async function get_nav_list() {
 						}))
 						.flat()
 				}))
+			}))
 		}
 	];
 }
