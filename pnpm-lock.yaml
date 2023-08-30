@@ -110,8 +110,8 @@ devDependencies:
     specifier: ^1.22.6
     version: 1.22.6(svelte@4.2.0)(vite@4.4.9)
   '@sveltejs/site-kit':
-    specifier: 6.0.0-next.32
-    version: 6.0.0-next.32(@sveltejs/kit@1.22.6)(svelte@4.2.0)
+    specifier: 6.0.0-next.37
+    version: 6.0.0-next.37(@sveltejs/kit@1.22.6)(svelte@4.2.0)
   '@types/diff':
     specifier: ^5.0.3
     version: 5.0.3
@@ -970,8 +970,8 @@ packages:
       svelte-local-storage-store: 0.4.0(svelte@4.2.0)
     dev: false
 
-  /@sveltejs/site-kit@6.0.0-next.32(@sveltejs/kit@1.22.6)(svelte@4.2.0):
-    resolution: {integrity: sha512-paWcxEnx9XRcoHRjfTpf62Rk3RT69K1nKOtVYz7bvKAiB7hPVrUBaP/ENomq/zXk7pP3yjrxezarCGZO4VGEyg==}
+  /@sveltejs/site-kit@6.0.0-next.37(@sveltejs/kit@1.22.6)(svelte@4.2.0):
+    resolution: {integrity: sha512-nOJUpxE0AFiL5XKiq11wgzJPR8Wjr3L/z/DFGSDrAwgtvGePZxOBG+CxmF/PzV/dqiTBYwwWviMfcP7ClY7Dmw==}
     peerDependencies:
       '@sveltejs/kit': ^1.20.0
       svelte: ^4.0.0
