@@ -204,6 +204,7 @@
 
 	.heading {
 		font-size: var(--sk-text-s);
+		border: none;
 	}
 
 	header strong {
@@ -301,6 +302,7 @@
 
 	nav a {
 		justify-content: start !important;
+		display: flex;
 	}
 
 	.exercises {
