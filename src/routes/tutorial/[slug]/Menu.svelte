@@ -1,4 +1,5 @@
 <script>
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import arrow from '$lib/icons/arrow.svg';
 	import { click_outside, focus_outside } from '@sveltejs/site-kit/actions';
@@ -50,21 +51,22 @@
 			class:open={is_open}
 		>
 			<h1>
-				{#if $is_mobile}
-					<div class="heading-row">
+				{#if browser}
+					{#if $is_mobile}
+						<div class="heading-row">
+							<strong>{current.title}</strong>
+						</div>
+						<div class="heading-row">
+							<span class="part-title">{current.part.title}: {current.part.label}</span>
+							<span class="separator">/</span>
+							<span class="chapter-title">{current.chapter.title}</span>
+						</div>
+					{:else}
+						<span class="part-title">{current.part.title}</span><span class="separator">/</span>
 						<span class="chapter-title">{current.chapter.title}</span><span class="separator"
 							>/</span
 						><strong>{current.title}</strong>
-					</div>
-					<div class="heading-row">
-						<span class="part-title">{current.part.title}: {current.part.label}</span>
-					</div>
-				{:else}
-					<span class="part-title"
-						>{current.part.title}{$is_mobile ? `: ${current.part.label}` : ''}</span
-					><span class="separator">/</span>
-					<span class="chapter-title">{current.chapter.title}</span><span class="separator">/</span
-					><strong>{current.title}</strong>
+					{/if}
 				{/if}
 
 				<span style="flex: 1 1 auto" />
@@ -169,7 +171,7 @@
 		border-right: 1px solid var(--sk-back-4);
 
 		width: 100%;
-		padding-top: 1.4rem;
+		padding: 1rem 0;
 
 		background-color: transparent;
 
@@ -426,17 +428,13 @@
 			align-items: center;
 		}
 
-		h1 .part-title {
+		h1 :where(.part-title, .chapter-title) {
 			grid-row: 2 / span 1;
 			font-size: var(--sk-text-xs);
 			color: var(--sk-text-3);
 		}
 
-		h1 .part-title + .separator {
-			display: none;
-		}
-
-		h1 :where(.chapter-title, strong) {
+		h1 strong {
 			font-size: var(--sk-text-s) !important;
 			line-height: 1;
 		}
