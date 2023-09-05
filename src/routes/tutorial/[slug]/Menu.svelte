@@ -1,5 +1,4 @@
 <script>
-	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import arrow from '$lib/icons/arrow.svg';
 	import { click_outside, focus_outside } from '@sveltejs/site-kit/actions';
@@ -46,23 +45,22 @@
 			class:open={is_open}
 		>
 			<h1>
-				{#if browser}
-					{#if $is_mobile}
-						<div class="heading-row">
-							<strong>{current.title}</strong>
-						</div>
-						<div class="heading-row">
-							<span class="part-title">{current.part.title}: {current.part.label}</span>
-							<span class="separator">/</span>
-							<span class="chapter-title">{current.chapter.title}</span>
-						</div>
-					{:else}
-						<span class="part-title">{current.part.title}</span><span class="separator">/</span>
-						<span class="chapter-title">{current.chapter.title}</span><span class="separator"
-							>/</span
-						><strong>{current.title}</strong>
-					{/if}
-				{/if}
+				<div class="mobile">
+					<div class="heading-row">
+						<strong>{current.title}</strong>
+					</div>
+					<div class="heading-row">
+						<span class="part-title">{current.part.title}: {current.part.label}</span>
+						<span class="separator">/</span>
+						<span class="chapter-title">{current.chapter.title}</span>
+					</div>
+				</div>
+
+				<div class="desktop">
+					<span class="part-title">{current.part.title}</span><span class="separator">/</span>
+					<span class="chapter-title">{current.chapter.title}</span><span class="separator">/</span
+					><strong>{current.title}</strong>
+				</div>
 
 				<span style="flex: 1 1 auto" />
 			</h1>
@@ -242,8 +240,6 @@
 
 	h1 {
 		display: flex;
-		align-items: center;
-		gap: 0.5ch;
 
 		width: 100%;
 		height: 100%;
@@ -257,6 +253,16 @@
 		text-align: center;
 		color: var(--sk-text-2);
 		font-weight: 400;
+	}
+
+	h1 .desktop {
+		display: flex;
+		gap: 0.5ch;
+		align-items: center;
+	}
+
+	h1 .mobile {
+		display: none;
 	}
 
 	/* .expand-icon {
@@ -417,6 +423,14 @@
 
 			width: max-content;
 			height: max-content;
+		}
+
+		h1 .mobile {
+			display: block;
+		}
+
+		h1 .desktop {
+			display: none;
 		}
 
 		.heading-row {
