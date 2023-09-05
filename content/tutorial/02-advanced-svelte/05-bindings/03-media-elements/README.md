@@ -63,7 +63,7 @@ When the track ends, be kind — rewind:
 />
 ```
 
-The complete set of bindings for `<audio>` and `<video>` is as follows — six _readonly_ bindings...
+The complete set of bindings for `<audio>` and `<video>` is as follows — seven _readonly_ bindings...
 
 - `duration` (readonly) — the total duration of the video, in seconds
 - `buffered` (readonly) — an array of `{start, end}` objects
@@ -71,6 +71,7 @@ The complete set of bindings for `<audio>` and `<video>` is as follows — six _
 - `played` (readonly) — ditto
 - `seeking` (readonly) — boolean
 - `ended` (readonly) — boolean
+- `readyState` (readonly) — number between (and including) 0 and 4
 
 ...and five _two-way_ bindings:
 
