@@ -4,7 +4,8 @@
 	import arrow from '$lib/icons/arrow.svg';
 	import { click_outside, focus_outside } from '@sveltejs/site-kit/actions';
 	import { Icon } from '@sveltejs/site-kit/components';
-	import { mql, nav_open, reduced_motion, theme } from '@sveltejs/site-kit/stores';
+	import { open_nav } from '@sveltejs/site-kit/nav';
+	import { mql, reduced_motion, theme } from '@sveltejs/site-kit/stores';
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 
@@ -39,15 +40,9 @@
 			<Icon name="arrow-left" size={16} />
 		</a>
 
-		<!-- we don't want this to be keyboard-navigable, because the menu button to the left does that job better -->
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-		<div
+		<button
 			class="heading"
-			role="button"
-			tabindex="0"
-			on:click={() => ($is_mobile ? ($nav_open = true) : (is_open = !is_open))}
+			on:click={() => ($is_mobile ? open_nav() : (is_open = !is_open))}
 			class:open={is_open}
 		>
 			<h1>
@@ -147,7 +142,7 @@
 					</div>
 				</nav>
 			{/if}
-		</div>
+		</button>
 
 		<a
 			class="next-button"
