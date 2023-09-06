@@ -53,6 +53,7 @@
 		}}
 	>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
 			on:click={(e) => {
 				const node = /** @type {HTMLElement} */ (e.target);
@@ -116,11 +117,15 @@
 
 <style>
 	section {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1 auto;
+
 		overflow-y: auto;
 	}
 
 	.text {
-		flex: 1 1;
+		flex: 1 1 auto;
 		padding: 2.2rem 3rem;
 		border-right: 1px solid var(--sk-back-4);
 		background: var(--sk-back-3);

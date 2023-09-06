@@ -50,7 +50,7 @@
 						<strong>{current.title}</strong>
 					</div>
 					<div class="heading-row">
-						<span class="part-title">{current.part.title}: {current.part.label}</span>
+						<span class="part-title">{current.part.label}</span>
 						<span class="separator">/</span>
 						<span class="chapter-title">{current.chapter.title}</span>
 					</div>
