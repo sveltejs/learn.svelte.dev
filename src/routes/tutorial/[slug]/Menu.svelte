@@ -298,6 +298,7 @@
 		left: 0;
 		width: 100%;
 		height: auto;
+		max-height: 70vh;
 		background: var(--sk-back-2);
 		z-index: -1;
 		box-shadow: var(--shadow);
