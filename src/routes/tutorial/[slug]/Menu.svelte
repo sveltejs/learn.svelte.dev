@@ -106,7 +106,8 @@
 														on:click|stopPropagation={() => (expanded_chapter = chapter.slug)}
 														style="width: 100%; text-align: start;"
 													>
-														<img src={arrow} alt="Arrow icon" />
+														<!-- <img src={arrow} alt="Arrow icon" /> -->
+														<Icon name="arrow-right-chevron" size={16} />
 														{chapter.title}
 													</button>
 
@@ -326,7 +327,7 @@
 	}
 
 	ul.chapter {
-		padding: 0 0 0 3rem;
+		padding: 0 0 0 1rem;
 	}
 
 	li {
@@ -338,20 +339,21 @@
 		color: var(--sk-theme-1);
 	}
 
-	li img {
+	li :global(svg) {
 		position: absolute;
-		left: -2rem;
+		/* left: -2rem; */
 		top: 0.1rem;
 		width: 2rem;
 		height: 2rem;
 		transition: transform 0.2s;
+		stroke-width: 0 !important;
 	}
 
 	li.expanded > button {
 		font-weight: bold;
 	}
 
-	li.expanded > button > img {
+	li.expanded > button > :global(svg) {
 		transform: rotate(90deg);
 	}
 
@@ -374,6 +376,17 @@
 		font-variant-numeric: tabular-nums;
 		border: 2px solid transparent;
 		box-sizing: border-box;
+	}
+
+	li button {
+		position: relative;
+
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	li a {
+		padding-left: 2rem;
 	}
 
 	header > a {
