@@ -56,6 +56,7 @@
 				</div>
 
 				<div class="desktop">
+					<span class="part-title">{current.part.title}</span><span class="separator">/</span>
 					<span class="chapter-title">{current.chapter.title}</span><span class="separator">/</span
 					><strong>{current.title}</strong>
 				</div>
