@@ -1,6 +1,5 @@
 <script>
 	import { page } from '$app/stores';
-	import arrow from '$lib/icons/arrow.svg';
 	import { click_outside, focus_outside } from '@sveltejs/site-kit/actions';
 	import { Icon } from '@sveltejs/site-kit/components';
 	import { open_nav } from '@sveltejs/site-kit/nav';
@@ -57,7 +56,6 @@
 				</div>
 
 				<div class="desktop">
-					<span class="part-title">{current.part.title}</span><span class="separator">/</span>
 					<span class="chapter-title">{current.chapter.title}</span><span class="separator">/</span
 					><strong>{current.title}</strong>
 				</div>
