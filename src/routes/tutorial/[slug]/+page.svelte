@@ -293,11 +293,10 @@
 		display: flex;
 		flex-direction: column;
 		position: relative;
-		min-height: 0;
+		min-height: 100%;
 		height: 100%;
-		max-height: 100%;
-		background: var(--sk-back-2);
-		--menu-width: 5.4rem;
+		background: var(--sk-back-3);
+		--menu-width: 5rem;
 	}
 
 	.navigator {

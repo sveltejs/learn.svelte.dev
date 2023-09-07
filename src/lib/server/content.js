@@ -1,7 +1,7 @@
 import { posixify } from '$lib/utils.js';
-import fs from 'node:fs';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
-import glob from 'tiny-glob/sync.js';
+import glob from 'tiny-glob';
 import { transform } from './markdown.js';
 
 const text_files = new Set([
@@ -20,8 +20,8 @@ const text_files = new Set([
 const excluded = new Set(['.DS_Store', '.gitkeep', '.svelte-kit', 'package-lock.json']);
 
 /** @param {string} file */
-function json(file) {
-	return JSON.parse(fs.readFileSync(file, 'utf-8'));
+async function json(file) {
+	return JSON.parse(await readFile(file, 'utf-8'));
 }
 
 /** @param {string} dir */
@@ -30,61 +30,91 @@ function is_valid(dir) {
 }
 
 /**
+ * @param {string} path
+ */
+async function exists(path) {
+	try {
+		await stat(path);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+/**
  * @param {string} part
  * @param {string} chapter
  * @param {string} dir
  */
-function exists_readme(part, chapter, dir) {
-	return fs.existsSync(`content/tutorial/${part}/${chapter}/${dir}/README.md`);
+async function exists_readme(part, chapter, dir) {
+	return exists(`content/tutorial/${part}/${chapter}/${dir}/README.md`);
 }
 
 /**
- * @returns {import('$lib/types').PartStub[]}
+ * @returns {Promise<import('$lib/types').PartStub[]>}
  */
-export function get_index() {
-	const parts = fs.readdirSync('content/tutorial').filter(is_valid).map(posixify);
+export async function get_index() {
+	const parts = (await readdir('content/tutorial')).filter(is_valid).map(posixify);
 
-	return parts.map((part) => {
-		const chapters = fs.readdirSync(`content/tutorial/${part}`).filter(is_valid).map(posixify);
+	/** @type {import('$lib/types').PartStub[]} */
+	const final_data = [];
 
-		return {
+	for (const part of parts) {
+		const chapters = (await readdir(`content/tutorial/${part}`)).filter(is_valid).map(posixify);
+
+		const obj = /** @type {import('$lib/types').PartStub} */ ({
 			slug: part,
-			title: json(`content/tutorial/${part}/meta.json`).title,
-			chapters: chapters.map((chapter) => {
-				const exercises = fs
-					.readdirSync(`content/tutorial/${part}/${chapter}`)
-					.filter((dir) => is_valid(dir) && exists_readme(part, chapter, dir))
-					.map(posixify);
+			title: (await json(`content/tutorial/${part}/meta.json`)).title,
+			chapters: []
+		});
 
-				return {
-					slug: chapter,
-					title: json(`content/tutorial/${part}/${chapter}/meta.json`).title,
-					exercises: exercises.map((exercise) => {
-						const dir = `content/tutorial/${part}/${chapter}/${exercise}`;
+		for (const chapter of chapters) {
+			let exercises = await readdir(`content/tutorial/${part}/${chapter}`);
+			for (const exercise of exercises) {
+				if (!(is_valid(exercise) && (await exists_readme(part, chapter, exercise)))) {
+					exercises = exercises.filter((e) => e !== exercise);
+				}
+			}
+			exercises = exercises.map(posixify);
 
-						const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
-						const { frontmatter } = extract_frontmatter(text, dir);
-						const { title } = frontmatter;
+			const chapters_obj = /** @type {import('$lib/types').ChapterStub} */ ({
+				slug: chapter,
+				title: (await json(`content/tutorial/${part}/${chapter}/meta.json`)).title,
+				exercises: []
+			});
 
-						return {
-							slug: exercise.slice(3),
-							title
-						};
-					})
-				};
-			})
-		};
-	});
+			for (const exercise of exercises) {
+				const dir = `content/tutorial/${part}/${chapter}/${exercise}`;
+
+				const text = await readFile(`${dir}/README.md`, 'utf-8');
+				const { frontmatter } = extract_frontmatter(text, dir);
+				const { title } = frontmatter;
+
+				chapters_obj.exercises.push({
+					slug: exercise.slice(3),
+					title
+				});
+			}
+
+			obj.chapters.push(chapters_obj);
+		}
+
+		final_data.push(obj);
+	}
+
+	return final_data;
 }
 
 /**
  * @param {string} slug
- * @returns {import('$lib/types').Exercise | undefined}
+ * @returns {Promise<import('$lib/types').Exercise | undefined>}
  */
-export function get_exercise(slug) {
-	const exercises = glob('[0-9][0-9]-*/[0-9][0-9]-*/[0-9][0-9]-*/README.md', {
-		cwd: 'content/tutorial'
-	}).map(posixify);
+export async function get_exercise(slug) {
+	const exercises = (
+		await glob('[0-9][0-9]-*/[0-9][0-9]-*/[0-9][0-9]-*/README.md', {
+			cwd: 'content/tutorial'
+		})
+	).map(posixify);
 
 	/** @type {string[]} */
 	const chain = [];
@@ -96,24 +126,24 @@ export function get_exercise(slug) {
 
 		const dir = `content/tutorial/${part_dir}/${chapter_dir}/${exercise_dir}`;
 
-		if (fs.existsSync(`${dir}/app-a`)) {
+		if (await exists(`${dir}/app-a`)) {
 			chain.length = 0;
 			chain.push(`${dir}/app-a`);
 		}
 
 		if (exercise_slug === slug) {
 			const a = {
-				...walk('content/tutorial/common', {
+				...(await walk('content/tutorial/common', {
 					exclude: ['node_modules', 'static/tutorial', 'static/svelte-logo-mask.svg']
-				}),
-				...walk(`content/tutorial/${part_dir}/common`)
+				})),
+				...(await walk(`content/tutorial/${part_dir}/common`))
 			};
 
 			for (const dir of chain) {
-				Object.assign(a, walk(dir));
+				Object.assign(a, await walk(dir));
 			}
 
-			const b = walk(`${dir}/app-b`);
+			const b = await walk(`${dir}/app-b`);
 			const has_solution = Object.keys(b).length > 0;
 
 			// ensure no duplicate content
@@ -129,15 +159,17 @@ export function get_exercise(slug) {
 				}
 			}
 
-			const part_meta = json(`content/tutorial/${part_dir}/meta.json`);
-			const chapter_meta = json(`content/tutorial/${part_dir}/${chapter_dir}/meta.json`);
+			const part_meta = await json(`content/tutorial/${part_dir}/meta.json`);
+			const chapter_meta = await json(`content/tutorial/${part_dir}/${chapter_dir}/meta.json`);
 
 			const exercise_meta_file = `content/tutorial/${part_dir}/${chapter_dir}/${exercise_dir}/meta.json`;
-			const exercise_meta = fs.existsSync(exercise_meta_file) ? json(exercise_meta_file) : {};
+			const exercise_meta = (await exists(exercise_meta_file))
+				? await json(exercise_meta_file)
+				: {};
 
 			const scope = chapter_meta.scope ?? part_meta.scope;
 
-			const text = fs.readFileSync(`${dir}/README.md`, 'utf-8');
+			const text = await readFile(`${dir}/README.md`, 'utf-8');
 			const { frontmatter, markdown } = extract_frontmatter(text, dir);
 			const { title, path = '/', focus } = frontmatter;
 
@@ -158,12 +190,12 @@ export function get_exercise(slug) {
 
 				const dirs = next_exercise.split('/');
 				if (dirs[0] !== part_dir) {
-					title = json(`content/tutorial/${dirs[0]}/meta.json`).title;
+					title = (await json(`content/tutorial/${dirs[0]}/meta.json`)).title;
 				} else if (dirs[1] !== chapter_dir) {
-					title = json(`content/tutorial/${dirs[0]}/${dirs[1]}/meta.json`).title;
+					title = (await json(`content/tutorial/${dirs[0]}/${dirs[1]}/meta.json`)).title;
 				} else {
 					title = extract_frontmatter(
-						fs.readFileSync(`content/tutorial/${next_exercise}`, 'utf-8'),
+						await readFile(`content/tutorial/${next_exercise}`, 'utf-8'),
 						next_exercise
 					).frontmatter.title;
 				}
@@ -230,7 +262,8 @@ export function get_exercise(slug) {
 			return {
 				part: {
 					slug: part_dir,
-					title: `Part ${part_dir.slice(1, 2)}`
+					title: `Part ${part_dir.slice(1, 2)}`,
+					label: part_meta.title
 				},
 				chapter: {
 					slug: chapter_dir,
@@ -245,7 +278,8 @@ export function get_exercise(slug) {
 				next,
 				dir,
 				editing_constraints,
-				html: transform(markdown, {
+				markdown,
+				html: await transform(markdown, {
 					codespan: (text) =>
 						filenames.size > 1 && filenames.has(text)
 							? `<code data-file="${scope.prefix + text}">${text}</code>`
@@ -291,18 +325,18 @@ function extract_frontmatter(markdown, dir) {
  *   exclude?: string[]
  * }} options
  */
-function walk(cwd, options = {}) {
+async function walk(cwd, options = {}) {
 	/** @type {Record<string, import('$lib/types').FileStub | import('$lib/types').DirectoryStub>} */
 	const result = {};
 
-	if (!fs.existsSync(cwd)) return result;
+	if (!(await exists(cwd))) return result;
 
 	/**
 	 * @param {string} dir
 	 * @param {number} depth
 	 */
-	function walk_dir(dir, depth) {
-		const files = fs.readdirSync(path.join(cwd, dir)).map(posixify);
+	async function walk_dir(dir, depth) {
+		const files = (await readdir(path.join(cwd, dir))).map(posixify);
 
 		for (const basename of files) {
 			if (excluded.has(basename)) continue;
@@ -312,7 +346,7 @@ function walk(cwd, options = {}) {
 			if (options.exclude?.some((exclude) => posixify(name).endsWith(exclude))) continue;
 
 			const resolved = path.join(cwd, name);
-			const stats = fs.statSync(resolved);
+			const stats = await stat(resolved);
 
 			if (stats.isDirectory()) {
 				result[name] = {
@@ -321,10 +355,10 @@ function walk(cwd, options = {}) {
 					basename
 				};
 
-				walk_dir(name + '/', depth + 1);
+				await walk_dir(name + '/', depth + 1);
 			} else {
 				const text = text_files.has(path.extname(name) || path.basename(name));
-				const contents = fs.readFileSync(resolved, text ? 'utf-8' : 'base64');
+				const contents = await readFile(resolved, text ? 'utf-8' : 'base64');
 
 				result[name] = {
 					type: 'file',
@@ -337,5 +371,5 @@ function walk(cwd, options = {}) {
 		}
 	}
 
-	return walk_dir('/', 1), result;
+	return await walk_dir('/', 1), result;
 }

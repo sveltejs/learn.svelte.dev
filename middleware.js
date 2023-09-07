@@ -1,5 +1,5 @@
 export const config = {
-	matcher: ['/((?!assets\/).*)'],
+	matcher: ['/((?!assets\/).*)']
 };
 
 export default function middleware(_request, _event) {

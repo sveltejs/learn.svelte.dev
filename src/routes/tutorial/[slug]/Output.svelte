@@ -1,7 +1,7 @@
 <script>
 	import { browser, dev } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
-	import { theme } from '@sveltejs/site-kit/components';
+	import { theme } from '@sveltejs/site-kit/stores';
 	import { onMount } from 'svelte';
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';

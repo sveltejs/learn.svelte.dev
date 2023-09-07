@@ -3,7 +3,7 @@ import 'prismjs/components/prism-bash.js';
 import 'prismjs/components/prism-diff.js';
 import 'prismjs/components/prism-typescript.js';
 import 'prism-svelte';
-import { marked } from 'marked';
+import { Marked } from 'marked';
 import { escape_html } from '$lib/utils';
 
 const languages = {
@@ -108,21 +108,17 @@ const default_renderer = {
 	}
 };
 
-marked.use({
-	renderer: {}
-});
-
 /**
  * @param {string} markdown
  * @param {Partial<import('marked').Renderer>} options
  */
-export function transform(markdown, options) {
-	marked.use({
+export async function transform(markdown, options) {
+	const marked = new Marked({
 		renderer: {
 			...default_renderer,
 			...options
 		}
 	});
 
-	return marked(markdown);
+	return (await marked.parse(markdown)) ?? '';
 }

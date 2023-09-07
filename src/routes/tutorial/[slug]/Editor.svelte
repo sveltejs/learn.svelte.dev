@@ -1,24 +1,22 @@
 <script>
 	import { browser } from '$app/environment';
-	import { onMount, tick } from 'svelte';
-	import { basicSetup } from 'codemirror';
-	import { EditorView, keymap } from '@codemirror/view';
-	import { EditorState } from '@codemirror/state';
-	import { indentWithTab } from '@codemirror/commands';
-	import { indentUnit } from '@codemirror/language';
-	import { acceptCompletion } from '@codemirror/autocomplete';
-	import { setDiagnostics } from '@codemirror/lint';
-	import { javascript } from '@codemirror/lang-javascript';
-	import { html } from '@codemirror/lang-html';
-	import { svelte } from '@replit/codemirror-lang-svelte';
-	import { tags } from '@lezer/highlight';
-	import { HighlightStyle } from '@codemirror/language';
-	import { syntaxHighlighting } from '@codemirror/language';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
-	import { files, selected_file, selected_name, update_file } from './state.js';
+	import { acceptCompletion } from '@codemirror/autocomplete';
+	import { indentWithTab } from '@codemirror/commands';
+	import { html } from '@codemirror/lang-html';
+	import { javascript } from '@codemirror/lang-javascript';
+	import { indentUnit } from '@codemirror/language';
+	import { setDiagnostics } from '@codemirror/lint';
+	import { EditorState } from '@codemirror/state';
+	import { EditorView, keymap } from '@codemirror/view';
+	import { svelte } from '@replit/codemirror-lang-svelte';
+	import { svelteTheme } from '@sveltejs/repl/theme';
+	import { basicSetup } from 'codemirror';
+	import { onMount, tick } from 'svelte';
 	import { warnings } from './adapter.js';
 	import { autocomplete_for_svelte } from './autocompletion.js';
 	import './codemirror.css';
+	import { files, selected_file, selected_name, update_file } from './state.js';
 
 	/** @type {HTMLDivElement} */
 	let container;
@@ -40,15 +38,7 @@
 		EditorState.tabSize.of(2),
 		keymap.of([{ key: 'Tab', run: acceptCompletion }, indentWithTab]),
 		indentUnit.of('\t'),
-		syntaxHighlighting(
-			HighlightStyle.define([
-				// TODO add more styles
-				{ tag: tags.tagName, color: '#c05726' },
-				{ tag: tags.keyword, color: 'var(--sk-code-keyword)' },
-				{ tag: tags.comment, color: 'var(--sk-code-comment)' },
-				{ tag: tags.string, color: 'var(--sk-code-string)' }
-			])
-		)
+		svelteTheme
 	];
 
 	$: reset($files);
@@ -56,7 +46,6 @@
 	$: select_state($selected_name);
 
 	$: if (editor_view) {
-
 		if ($selected_name) {
 			const current_warnings = $warnings[$selected_name];
 
