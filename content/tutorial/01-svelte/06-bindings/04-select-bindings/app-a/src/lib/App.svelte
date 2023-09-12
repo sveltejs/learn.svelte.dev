@@ -41,7 +41,7 @@
 
 	<input bind:value={answer} />
 
-	<button disabled={!answer} type="submit">
+	<button disabled={!answer || !selected} type="submit">
 		Submit
 	</button>
 </form>
