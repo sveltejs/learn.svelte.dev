@@ -1,6 +1,17 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const iframe_selector = 'iframe[src*="webcontainer.io/"]';
+
+async function disableAnimations(page: Page) {
+	await page.addStyleTag({
+		content: `
+      *, *::before, *::after {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+      }
+    `
+	});
+}
 
 test.describe.configure({ mode: 'parallel' });
 
@@ -11,15 +22,18 @@ test('.env file: no timeout error occurs when switching a tutorials without a .e
 
 	await page.goto('/tutorial/welcome-to-svelte');
 
+	// disable animations to prevent flakiness
+	await disableAnimations(page);
+
 	const iframe_locator = page.frameLocator(iframe_selector);
 
 	// wait for the iframe to load
 	await iframe_locator.getByText('Welcome!').waitFor();
 
 	// switch to another tutorial with a .env file
-	await page.click('header > h1', { delay: 200 });
-	await page.locator('button', { hasText: 'Part 4: Advanced SvelteKit' }).click({ delay: 200 });
-	await page.locator('button', { hasText: 'Environment variables' }).click({ delay: 200 });
+	await page.click('header > button > h1', { delay: 200 });
+	await page.getByRole('button', { name: 'Part 4: Advanced SvelteKit' }).click({ delay: 200 });
+	await page.getByRole('button', { name: 'Environment variables' }).click({ delay: 200 });
 	await page.locator('a', { hasText: '$env/static/private' }).click({ delay: 200 });
 
 	// wait for the iframe to load
@@ -41,15 +55,18 @@ test('.env file: environment variables are available when switching a tutorial w
 
 	await page.goto('/tutorial/welcome-to-svelte');
 
+	// disable animations to prevent flakiness
+	await disableAnimations(page);
+
 	const iframe_locator = page.frameLocator(iframe_selector);
 
 	// wait for the iframe to load
 	await iframe_locator.getByText('Welcome!').waitFor();
 
 	// switch to another tutorial with a .env file
-	await page.click('header > h1', { delay: 200 });
-	await page.locator('button', { hasText: 'Part 4: Advanced SvelteKit' }).click({ delay: 200 });
-	await page.locator('button', { hasText: 'Environment variables' }).click({ delay: 200 });
+	await page.click('header > button > h1', { delay: 200 });
+	await page.getByRole('button', { name: 'Part 4: Advanced SvelteKit' }).click({ delay: 200 });
+	await page.getByRole('button', { name: 'Environment variables' }).click({ delay: 200 });
 	await page.locator('a', { hasText: '$env/dynamic/private' }).click({ delay: 200 });
 
 	// wait for the iframe to load
