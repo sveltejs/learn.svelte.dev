@@ -2,10 +2,12 @@ import { fail } from '@sveltejs/kit';
 import * as db from '$lib/server/database.js';
 
 export function load({ cookies }) {
-	const id = cookies.get('userid');
+	let id = cookies.get('userid');
 
 	if (!id) {
-		cookies.set('userid', crypto.randomUUID(), { path: '/' });
+		const newId = crypto.randomUUID()
+		cookies.set('userid', newId, { path: '/' });
+		id = newId
 	}
 
 	return {
