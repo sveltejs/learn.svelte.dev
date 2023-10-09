@@ -12,9 +12,9 @@ Bạn cũng có thể tham khảo [API docs](https://svelte.dev/docs) và [nhữ
 
 Svelte là một công cụ để xây dụng ứng dụng web. Như bao những framework về giao diện người dùng khác, nó cho phép bạn xây dụng ứng dụng _một cách khai báo_ _(declaratively)_ từ những thành phần _(components)_ kết hợp với đánh dấu _(markup)_, định dạng _(styles)_ và hành vi _(behaviours)_.
 
-Những component này được _dịch_ _(compile)_ thành những mô-đun JavaScript nhỏ mà hiệu quả, giúp loại bỏ những gánh nặng mà những UI frameworks thường mắc phải.
+Những component này được _dịch_ _(compile)_ thành những mô-đun JavaScript nhỏ mà hiệu quả, giúp loại bỏ những gánh nặng mà những UI framework khác thường mắc phải.
 
-Bạn có thể xây dựng nguyên cả một ứng dụng với Svelte (ví dụ: sử dụng ứng dụng framework như [SvelteKit](https://kit.svelte.dev), sẽ được nói đến trong hướng dẫn này), hoặc bạn có thể thêm vào codebase có sẵn. Bạn cũng có thể ship những component thành những gói độc lập mà có thể hoạt động bất kì đâu.
+Bạn có thể xây dựng nguyên cả một ứng dụng với Svelte (ví dụ: sử dụng _ứng dụng framework_ như [SvelteKit](https://kit.svelte.dev), sẽ được nói đến trong hướng dẫn này), hoặc bạn có thể thêm vào codebase có sẵn. Bạn cũng có thể ship những component thành những gói độc lập mà có thể hoạt động ở bất kì đâu.
 
 ## Làm sao để sử dụng hướng dẫn này
 

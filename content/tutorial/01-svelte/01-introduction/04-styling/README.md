@@ -17,4 +17,4 @@ Cũng như trong HTML, bạn có thể thêm thẻ `<style>` vào component củ
 </style>
 ```
 
-Quan trọng hơn, những style này được áp dụng _trong phạm vị của component này_. Bạn sẽ không thể lỡ thay đổi cái style của những `<p>` ở những chỗ khác trong ứng dụng của bạn, như ta sẽ thấy trong phần tiếp theo.
+Quan trọng hơn, những style này được áp dụng _trong phạm vi của component này_. Bạn sẽ không thể lỡ thay đổi cái style của những `<p>` ở những chỗ khác trong ứng dụng của bạn, như ta sẽ thấy trong phần tiếp theo.
