@@ -1,14 +1,14 @@
 ---
-title: Your first component
+title: Component đầu tiên của bạn
 ---
 
-In Svelte, an application is composed from one or more _components_. A component is a reusable self-contained block of code that encapsulates HTML, CSS and JavaScript that belong together, written into a `.svelte` file. The `App.svelte` file, open in the code editor to the right, is a simple component.
+Trong Svelte, một ứng dụng bao gồm một hoặc nhiều _component_. Một component là một khối code khép kín _(self-contained)_ có thể dùng lại được, bao gồm các HTML, CSS và JavaScript được gói gọn với nhau và được viết vào tệp với đuôi `.svelte`. Tệp `App.svelte` ở editor phía bên phải, là một component đơn giản.
 
-## Adding data
+## Thêm dữ liệu
 
-A component that just renders some static markup isn't very interesting. Let's add some data.
+Một component mà chỉ có nội dung _markup_ tĩnh thì chẳng có gì thú vị. Ta hãy thêm dữ liệu vào nó nhé.
 
-First, add a script tag to your component and declare a `name` variable:
+Đầu tiên, thêm một thẻ script vào component của bạn và khai báo một biến `name`:
 
 ```svelte
 /// file: App.svelte
@@ -19,14 +19,14 @@ First, add a script tag to your component and declare a `name` variable:
 <h1>Hello world!</h1>
 ```
 
-Then, we can refer to `name` in the markup:
+Rồi, chúng ta có thể cho giá trị của `name` vào trong markup:
 
 ```svelte
 /// file: App.svelte
 <h1>Hello +++{name}+++!</h1>
 ```
 
-Inside the curly braces, we can put any JavaScript we want. Try changing `name` to `name.toUpperCase()` for a shoutier greeting.
+Ở trong dấu ngoặc nhọn, chúng ta có thể thêm bất kì lệnh JavaScript nào chúng ta muốn. Hãy thử đổi `name` thành `name.toUpperCase()` để có lời chào "lớn tiếng" hơn.
 
 ```svelte
 /// file: App.svelte

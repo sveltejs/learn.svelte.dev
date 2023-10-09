@@ -1,5 +1,5 @@
-<p>This is a paragraph.</p>
+<p>Đây là một câu văn.</p>
 
 <style>
-	/* Write your CSS here */
+	/* Viết CSS tại đây */
 </style>

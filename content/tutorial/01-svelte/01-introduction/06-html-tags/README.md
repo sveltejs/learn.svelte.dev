@@ -1,5 +1,5 @@
 ---
-title: HTML tags
+title: Thẻ HTML
 ---
 
 Ordinarily, strings are inserted as plain text, meaning that characters like `<` and `>` have no special meaning.

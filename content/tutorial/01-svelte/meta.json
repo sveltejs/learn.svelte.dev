@@ -1,5 +1,5 @@
 {
-	"title": "Basic Svelte",
+	"title": "Svelte cơ bản",
 	"scope": {
 		"prefix": "/src/lib/",
 		"name": "src"

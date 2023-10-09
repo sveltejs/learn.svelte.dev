@@ -1,12 +1,12 @@
 ---
-title: Styling
+title: Định dạng
 ---
 
-Just like in HTML, you can add a `<style>` tag to your component. Let's add some styles to the `<p>` element:
+Cũng như trong HTML, bạn có thể thêm thẻ `<style>` vào component của bạn. Ta hãy thử thêm vài style vào `<p>` nhé:
 
 ```svelte
 /// file: App.svelte
-<p>This is a paragraph.</p>
+<p>Đây là một câu văn.</p>
 
 <style>
 +++	p {
@@ -17,4 +17,4 @@ Just like in HTML, you can add a `<style>` tag to your component. Let's add some
 </style>
 ```
 
-Importantly, these rules are _scoped to the component_. You won't accidentally change the style of `<p>` elements elsewhere in your app, as we'll see in the next step.
+Quan trọng hơn, những style này được áp dụng _trong phạm vị của component này_. Bạn sẽ không thể lỡ thay đổi cái style của những `<p>` ở những chỗ khác trong ứng dụng của bạn, như ta sẽ thấy trong phần tiếp theo.
