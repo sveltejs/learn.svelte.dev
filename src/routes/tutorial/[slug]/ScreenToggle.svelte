@@ -16,9 +16,9 @@
 				pressed = false;
 				dispatch('change', { pressed });
 			}
-		}}>Tutorial</button
+		}}>Hướng dẫn</button
 	>
-	<ToggleButton label="Show editor" {pressed} on:change />
+	<ToggleButton label="Hiện editor" {pressed} on:change />
 	<button
 		aria-hidden="true"
 		on:click={() => {

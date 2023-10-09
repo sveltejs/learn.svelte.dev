@@ -12,7 +12,7 @@
 
 <div class="container">
 	{#if $page.status === 404}
-		<h1>Not found!</h1>
+		<h1>Không tìm thấy!</h1>
 	{:else if online}
 		<h1>Yikes!</h1>
 
@@ -20,17 +20,17 @@
 			<p class="error">{$page.status}: {$page.error.message}</p>
 		{/if}
 
-		<p>Please try reloading the page.</p>
+		<p>Thử reload lại trang.</p>
 
 		<p>
-			If the error persists, please drop by <a href="https://svelte.dev/chat">Discord chatroom</a>
-			and let us know, or raise an issue on
-			<a href="https://github.com/sveltejs/svelte">GitHub</a>. Thanks!
+			Nếu lỗi vẫn cứ tiếp tục, hãy báo cáo lỗi tại <a href="https://svelte.dev/chat">kênh chat của Svelte Vietnam</a>
+			, hoặc báo cáo lỗi tại 
+			<a href="https://github.com/sveltevietnam/sveltevietnam.dev/issues">GitHub</a>.
 		</p>
 	{:else}
-		<h1>It looks like you're offline</h1>
+		<h1>Có vẻ như bạn đang ngoại tuyến.</h1>
 
-		<p>Reload the page once you've found the internet.</p>
+		<p>Hãy reload trang sau khi bạn đã kết nối internet.</p>
 	{/if}
 </div>
 

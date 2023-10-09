@@ -1,15 +1,15 @@
 {
-	"short_name": "Learn Svelte",
-	"name": "learn.svelte.dev",
+	"short_name": "Học Svelte",
+	"name": "learn.sveltevietnam.dev",
 	"description": "An interactive Svelte/SvelteKit tutorial",
 	"icons": [
 		{
-			"src": "/svelte-logo-square.svg",
+			"src": "/sveltevietnam-logo.svg",
 			"type": "image/svg+xml",
 			"sizes": "512x512"
 		},
 		{
-			"src": "/svelte-logo-square.png",
+			"src": "/sveltevietnam-logo.png",
 			"type": "image/png",
 			"sizes": "512x512",
 			"purpose": "any maskable"

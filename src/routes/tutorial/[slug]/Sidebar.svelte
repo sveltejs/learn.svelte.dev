@@ -75,7 +75,7 @@
 		</div>
 
 		{#if exercise.next}
-			<p><a href="/tutorial/{exercise.next.slug}">Next: {exercise.next.title}</a></p>
+			<p><a href="/tutorial/{exercise.next.slug}">Tiếp theo: {exercise.next.title}</a></p>
 		{/if}
 	</div>
 
@@ -86,7 +86,7 @@
 			class="edit"
 			href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{exercise.dir}"
 		>
-			Edit this page
+			Chỉnh sửa trang này
 		</a>
 	</footer>
 </section>
@@ -94,11 +94,10 @@
 {#if show_modal}
 	<Modal on:close={() => (show_modal = false)}>
 		<div class="modal-contents">
-			<h2>Copy and paste is currently disabled!</h2>
+			<h2>Sao chép và dán đã bị vô hiệu hoá!</h2>
 
 			<p>
-				We recommend typing the code into the editor to complete the exercise, as this results in
-				better retention and understanding.
+				Mình khuyến khích bạn nên viết code bằng tay vào editor để hoàn thành bài tập, bằng cách này sẽ giúp bạn hiểu và ghi nhớ lâu hơn.
 			</p>
 			<label>
 				<input
@@ -107,7 +106,7 @@
 						sessionStorage[copy_enabled] = e.currentTarget.checked ? 'true' : '';
 					}}
 				/>
-				enable copy-and-paste for the duration of this session
+				Cho phép sao-và-dán trong session này.
 			</label>
 
 			<button on:click={() => (show_modal = false)}>OK</button>

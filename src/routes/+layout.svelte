@@ -14,7 +14,7 @@
 <Shell>
 	<Nav title="" links={data.links} slot="top-nav">
 		<svelte:fragment slot="home-large">
-			<strong>learn</strong>.svelte.dev
+			<strong>learn</strong>.sveltevietnam.dev
 		</svelte:fragment>
 
 		<svelte:fragment slot="home-small">

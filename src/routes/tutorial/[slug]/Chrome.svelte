@@ -31,13 +31,13 @@
 		}}
 	/>
 
-	<a {href} class="new-tab icon" target="_blank" aria-label={href ? 'open in new tab' : undefined} tabindex="0" />
+	<a {href} class="new-tab icon" target="_blank" aria-label={href ? 'mở trong tab mới' : undefined} tabindex="0" />
 
 	<button
 		disabled={loading}
 		class="terminal icon"
 		on:click={() => dispatch('toggle_terminal')}
-		aria-label="toggle terminal"
+		aria-label="đóng/mở terminal"
 	/>
 </div>
 

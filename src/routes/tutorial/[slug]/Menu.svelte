@@ -90,7 +90,7 @@
 											}
 										}}
 									>
-										Part {i + 1}: {part.title}
+										Phần {i + 1}: {part.title}
 									</button>
 
 									{#if part.slug === expanded_part}

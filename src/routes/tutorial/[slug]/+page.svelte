@@ -126,18 +126,18 @@
 </script>
 
 <svelte:head>
-	<title>{data.exercise.chapter.title} / {data.exercise.title} • Svelte Tutorial</title>
+	<title>{data.exercise.chapter.title} / {data.exercise.title} • Hướng dẫn về Svelte</title>
 
-	<meta name="twitter:title" content="{data.exercise.title} • Svelte Tutorial" />
+	<meta name="twitter:title" content="{data.exercise.title} • Hướng dẫn về Svelte" />
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:site" content="@sveltejs" />
 	<meta name="twitter:creator" content="@sveltejs" />
 	<meta name="twitter:image" content="https://svelte.dev/images/twitter-thumbnail.jpg" />
-	<meta property="twitter:domain" content="learn.svelte.dev" />
-	<meta property="twitter:url" content="https://learn.svelte.dev" />
+	<meta property="twitter:domain" content="learn.sveltevietnam.devv" />
+	<meta property="twitter:url" content="https://learn.sveltevietnam.dev" />
 
-	<meta property="og:title" content="{data.exercise.title} • Svelte Tutorial" />
-	<meta property="og:url" content="https://learn.svelte.dev" />
+	<meta property="og:title" content="{data.exercise.title} • Hướng dẫn về Svelte" />
+	<meta property="og:url" content="https://learn.sveltevietnam.dev" />
 	<meta property="og:type" content="website" />
 	<meta property="og:image" content="https://svelte.dev/images/twitter-thumbnail.jpg" />
 </svelte:head>
@@ -188,7 +188,7 @@
 										{$selected_file?.name.replace(
 											data.exercise.scope.prefix,
 											data.exercise.scope.name + '/'
-										) ?? 'Files'}
+										) ?? 'Tệp'}
 									</button>
 								{:else}
 									<Filetree
@@ -208,9 +208,9 @@
 									}}
 								>
 									{#if completed && data.exercise.has_solution}
-										reset
+										làm lại
 									{:else}
-										solve <Icon name="arrow-right" />
+										giải <Icon name="arrow-right" />
 									{/if}
 								</button>
 							</section>
