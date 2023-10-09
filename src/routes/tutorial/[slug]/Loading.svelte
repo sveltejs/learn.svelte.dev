@@ -39,9 +39,6 @@
 						</a> được kích hoạt cho trang web này, và tắt Trình chống theo dõi nâng cao.
 					</p>
 					<p>
-						If you have 'Delete cookies and site data when Firefox is closed' enabled in
-						<code>about:preferences#privacy</code>, make sure <code>learn.svelte.dev</code> is included
-						as an exception.
 						Nếu bạn có bật 'Xoá cookie và dữ liệu trang web khi Firefox đóng' trong <code>about:preferences#privacy</code>, hãy chắc chắn rằng <code>learn.svelte.dev</code> được thêm vào danh sách ngoại lệ.
 					</p>
 				{:else if /chrome/i.test(navigator.userAgent) && !/edg/i.test(navigator.userAgent)}
