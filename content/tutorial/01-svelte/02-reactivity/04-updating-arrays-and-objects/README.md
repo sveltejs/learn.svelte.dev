@@ -1,10 +1,10 @@
 ---
-title: Updating arrays and objects
+title: Cập nhật các mảng và object
 ---
 
-Because Svelte's reactivity is triggered by assignments, using array methods like `push` and `splice` won't automatically cause updates. For example, clicking the 'Add a number' button doesn't currently do anything, even though we're calling `numbers.push(...)` inside `addNumber`.
+Vì tính phản ứng của Svelte chỉ được kích hoạt bởi phép gán, sử dụng những phương thức như `push` hay `splice` thì sẽ không xảy ra việc cập nhật tự động. Ví dụ như khi bạn bấm vào nút 'Thêm một số' thì sẽ không có chuyện gì xảy ra, mặc dù chúng ta đang gọi `numbers.push(...)` ở bên trong `addNumber`.
 
-One way to fix that is to add an assignment that would otherwise be redundant:
+Một cách để sửa lỗi này là thêm một phép gán mà có thể sẽ dư thừa:
 
 ```js
 /// file: App.svelte
@@ -14,7 +14,7 @@ function addNumber() {
 }
 ```
 
-But there's a more idiomatic solution:
+Nhưng có một cách khác ngắn hơn:
 
 ```js
 /// file: App.svelte
@@ -23,9 +23,9 @@ function addNumber() {
 }
 ```
 
-You can use similar patterns to replace `pop`, `shift`, `unshift` and `splice`.
+Bạn có thể dùng những mẫu giống như trên để thay thế cho `pop`, `shift`, `unshift` và `splice`.
 
-Assignments to _properties_ of arrays and objects — e.g. `obj.foo += 1` or `array[i] = x` — work the same way as assignments to the values themselves.
+Việc gán vào _thuộc tính_ của mảng và object - ví dụ `obj.foo += 1` or `array[i] = x` - hoạt động cũng giống như việc gán vào giá trị chính nó.
 
 ```js
 /// file: App.svelte
@@ -34,7 +34,7 @@ function addNumber() {
 }
 ```
 
-A simple rule of thumb: the name of the updated variable must appear on the left hand side of the assignment. For example this...
+Có một nguyên tắc đơn giản là: tên của biến được cập nhất phải xuất hiện ở bên trái của phép gán. Ví dụ thế này...
 
 ```js
 /// no-file
@@ -42,4 +42,4 @@ const foo = obj.foo;
 foo.bar = 'baz';
 ```
 
-...won't trigger reactivity on `obj.foo.bar`, unless you follow it up with `obj = obj`.
+...sẽ không kích hoạt tính phản ứng với `obj.foo.bar`, trừ khi bạn tiếp nối với `obj = obj`.

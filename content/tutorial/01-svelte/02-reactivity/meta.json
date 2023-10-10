@@ -1,5 +1,5 @@
 {
-	"title": "Reactivity",
+	"title": "Tính phản ứng (Reactivity)",
 	"scope": {
 		"prefix": "/src/lib/",
 		"name": "src"

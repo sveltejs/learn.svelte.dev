@@ -2,7 +2,7 @@
 	let count = 0;
 
 	function increment() {
-		// event handler code goes here
+		// nhập code xử lý sự kiện vào đây
 	}
 </script>
 

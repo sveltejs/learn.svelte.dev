@@ -12,4 +12,4 @@
 	{count === 1 ? 'time' : 'times'}
 </button>
 
-<p>{count} doubled is {doubled}</p>
+<p>{count} nhân đôi là {doubled}</p>

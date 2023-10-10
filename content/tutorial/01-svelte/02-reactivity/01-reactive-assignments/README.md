@@ -1,10 +1,10 @@
 ---
-title: Assignments
+title: Phép gán
 ---
 
-At the heart of Svelte is a powerful system of _reactivity_ for keeping the DOM in sync with your application state — for example, in response to an event.
+Sâu bên trong Svelte là một hệ thống _phản ứng_ _(reactivity)_ mạnh mẽ giúp cho việc đồng bộ hoá DOM với tình trạng ứng dụng của bạn - ví dụ như, một phản hồi cho một sự kiện.
 
-To demonstrate it, we first need to wire up an event handler (we'll learn more about these [later](/tutorial/dom-events)):
+Để chứng minh, ta cần phải nối với một hệ thông xử lý sự kiện _(event handler)_ (ta sẽ được học ở những [phần sau](/tutorial/dom-events)).
 
 ```svelte
 /// file: App.svelte
@@ -14,7 +14,7 @@ To demonstrate it, we first need to wire up an event handler (we'll learn more a
 </button>
 ```
 
-Inside the `increment` function, all we need to do is change the value of `count`:
+Bên trong hàm `increment`, những gì chúng ta phải làm là thay đổi giá trị của `count`:
 
 ```js
 /// file: App.svelte
@@ -23,4 +23,4 @@ function increment() {
 }
 ```
 
-Svelte 'instruments' this assignment with some code that tells it the DOM will need to be updated.
+Svelte sẽ thêm vài cái code vào phép gán này để nó có thể báo DOM khi nào cần được cập nhật.

@@ -2,7 +2,7 @@
 	let count = 0;
 
 	$: if (count >= 10) {
-		alert('count is dangerously high!');
+		alert('giá trị quá cao!');
 		count = 0;
 	}
 

@@ -8,8 +8,8 @@
 	$: sum = numbers.reduce((total, currentNumber) => total + currentNumber, 0);
 </script>
 
-<p>{numbers.join(' + ')} = {sum}</p>
-
 <button on:click={addNumber}>
-	Add a number
+	Thêm một số
 </button>
+
+<p>{numbers.join(' + ')} = {sum}</p>

@@ -1,32 +1,34 @@
 ---
-title: Statements
+title: Câu lệnh
 ---
 
-We're not limited to declaring reactive _values_ — we can also run arbitrary _statements_ reactively. For example, we can log the value of `count` whenever it changes:
+Chúng ta không chỉ giới hạn việc khai báo _giá trị_ phản ứng - ta cũng có thể chạy bất kì _câu lệnh_ nào một cách phản ứng. Ví dụ như ta có thể ghi nhật kí giá trị của `count` mỗi khi nó thay đổi.
 
 ```js
 /// file: App.svelte
 let count = 0;
 
-+++$: console.log(`the count is ${count}`);+++
++++$: console.log(`bộ đếm là ${count}`);+++
 ```
 
-You can easily group statements together with a block:
+> Kiểm tra Console của bạn qua chức năng `Kiểm tra trang` của trình duyệt.
+
+Bạn có thể dễ dàng nhóm chúng nó lại thành một khối:
 
 ```js
 /// file: App.svelte
 $: +++{+++
-	console.log(`the count is ${count}`);
-	console.log(`this will also be logged whenever count changes`);
+	console.log(`bộ đếm là ${count}`);
+	console.log(`cái này cũng sẽ được ghi lại khi giá trị thay đổi`);
 +++}+++
 ```
 
-You can even put the `$:` in front of things like `if` blocks:
+Bạn cũng có thể thêm `$:` vào phía trước những thứ như khối `if`:
 
 ```js
 /// file: App.svelte
 $: +++if (count >= 10)+++ {
-	alert('count is dangerously high!');
+	alert('giá trị quá cao!');
 	count = 0;
 }
 ```
