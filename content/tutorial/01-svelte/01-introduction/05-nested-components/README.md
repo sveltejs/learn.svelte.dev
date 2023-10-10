@@ -2,7 +2,7 @@
 title: Component lồng nhau
 ---
 
-Sẽ khá là không thực tế nếu bạn viết nguyên một ứng dụng trong một component duy nhất. Thay vào đó, ta có thể nhập các component từ tệp khác và dùng chúng trong markup của ta.
+Sẽ khá là không thực tế nếu bạn viết nguyên một ứng dụng trong một component duy nhất. Thay vào đó, ta có thể nhập các component từ tệp khác và dùng chúng trong markup của chúng ta.
 
 Thêm một thẻ `<script>` ở trên đầu của tệp `App.svelte` để nhập `Nested.svelte`...
 
@@ -23,4 +23,4 @@ Thêm một thẻ `<script>` ở trên đầu của tệp `App.svelte` để nh�
 
 Lưu ý rằng mặc dù `Nested.svelte` có phần tử `<p>`, style từ `App.svelte` sẽ không bị trôi vào.
 
-> Tên component luôn được viết in hoa đầu chữ, để phân biệt chúng nó với những thẻ HTML.
+> Tên component luôn được viết in hoa đầu chữ, để phân biệt giữa chúng với những thẻ HTML.
