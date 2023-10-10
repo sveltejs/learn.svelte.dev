@@ -25,7 +25,7 @@
 		<p>
 			Nếu lỗi vẫn cứ tiếp tục, hãy báo cáo lỗi tại <a href="https://svelte.dev/chat">kênh chat của Svelte Vietnam</a>
 			, hoặc báo cáo lỗi tại 
-			<a href="https://github.com/sveltevietnam/sveltevietnam.dev/issues">GitHub</a>.
+			<a href="https://github.com/sveltevietnam/learn.svelte.dev/issues">GitHub</a>.
 		</p>
 	{:else}
 		<h1>Có vẻ như bạn đang ngoại tuyến.</h1>

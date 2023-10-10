@@ -6,6 +6,7 @@ Chào mừng đến với hướng dẫn về Svelte! Bạn sẽ được dạy 
 
 Bạn cũng có thể tham khảo [API docs](https://svelte.dev/docs) và [những ví dụ](https://svelte.dev/examples), hoặc - nếu bạn không thể chờ đợi để được vọc vạch trên máy của bạn - hãy tạo một dự án với `npm init svelte`.
 
+<!-- TODO: remove when appropriate -->
 > Bản dịch tiếng Việt hiện tại chưa được hoàn chỉnh, nếu có vấn đề thì bạn nên mở issue [tại đây](https://github.com/sveltevietnam/learn.svelte.dev/issues).
 
 ## Svelte là gì?

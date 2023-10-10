@@ -1,5 +1,5 @@
 ---
-title: Định dạng
+title: Định dạng (Styling)
 ---
 
 Cũng như trong HTML, bạn có thể thêm thẻ `<style>` vào component của bạn. Ta hãy thử thêm vài style vào `<p>` nhé:
