@@ -23,4 +23,4 @@ function increment() {
 }
 ```
 
-Svelte sẽ thêm vài cái code vào phép gán này để nó có thể báo DOM khi nào cần được cập nhật.
+Svelte sẽ thêm vài code vào phép gán này để nó có thể thông báo cho DOM khi nào cần được cập nhật.

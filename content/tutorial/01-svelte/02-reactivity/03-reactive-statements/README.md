@@ -23,6 +23,7 @@ $: +++{+++
 +++}+++
 ```
 
+<!-- FIXME: thứ gì cơ? -->
 Bạn cũng có thể thêm `$:` vào phía trước những thứ như khối `if`:
 
 ```js
