@@ -4,12 +4,12 @@
 	"description": "An interactive Svelte/SvelteKit tutorial",
 	"icons": [
 		{
-			"src": "/sveltevietnam-logo.svg",
+			"src": "/svelte-logo-square.svg",
 			"type": "image/svg+xml",
 			"sizes": "512x512"
 		},
 		{
-			"src": "/sveltevietnam-logo.png",
+			"src": "/svelte-logo-square.png",
 			"type": "image/png",
 			"sizes": "512x512",
 			"purpose": "any maskable"
