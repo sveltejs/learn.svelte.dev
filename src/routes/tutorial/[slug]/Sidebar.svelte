@@ -84,7 +84,7 @@
 			target="_blank"
 			rel="noreferrer"
 			class="edit"
-			href="https://github.com/sveltejs/learn.svelte.dev/tree/main/{exercise.dir}"
+			href="https://github.com/sveltevietnam/learn.svelte.dev/tree/main/{exercise.dir}"
 		>
 			Chỉnh sửa trang này
 		</a>
