@@ -1,36 +1,38 @@
 ---
-title: Dynamic attributes
+title: Thuộc tính động
 ---
 
-Just like you can use curly braces to control text, you can use them to control element attributes.
+Cũng như việc bạn sử dụng dấu ngoặc nhọn để tinh chỉnh văn bản, bạn cũng có thể dùng nó để chỉnh những thuộc tính của các phần tử.
 
-Our image is missing a `src` — let's add one:
+Ảnh của chúng ta đang bị thiếu thuộc tính `src` - ta hãy thêm nó nhé:
 
 ```svelte
 /// file: App.svelte
 <img +++src={src}+++ />
 ```
 
-That's better. But if you hover over the `<img>` in the editor, Svelte is giving us a warning:
+Nhìn được hơn rồi. Nhưng nếu bạn di chuột lên `<img>` trong editor, Svelte sẽ báo lỗi sau:
 
 > A11y: &lt;img&gt; element should have an alt attribute
+>
+> _(A11y: Phần tử &lt;img&gt; nên có thuộc tính alt)_
 
-When building web apps, it's important to make sure that they're _accessible_ to the broadest possible userbase, including people with (for example) impaired vision or motion, or people without powerful hardware or good internet connections. Accessibility (shortened to a11y) isn't always easy to get right, but Svelte will help by warning you if you write inaccessible markup.
+Khi xấy dụng một ứng dụng web, quan trọng nhất là mọi thứ _có thể truy cập_ _(accessible)_ được bởi nhiều người dùng nhất có thể, bao gồm những người với thị lực yếu, hoặc với những người không có thiết bị cấu hình mạnh hoặc kết nối internet tốt. Trợ năng (viết tắt là A11y) đôi khi sẽ không hoàn toàn đúng, nhưng Svelte sẽ giúp bằng cách cảnh báo bạn nếu bạn viết markup mà _không có sự truy cập_ _(inaccessible)_.
 
-In this case, we're missing the `alt` attribute that describes the image for people using screenreaders, or people with slow or flaky internet connections that can't download the image. Let's add one:
+Trong trường hợp này, chúng ta đang thiếu thuộc tính `alt` dùng để miêu tả bức ảnh cho những người đang sử dụng thiết bị đọc màn hình _(screenreaders)_, hoặc người với tình trạng internet yếu đến mức không thể tải ảnh về. Ta hãy thêm nó nhé:
 
 ```svelte
 /// file: App.svelte
-<img src={src} +++alt="A man dances."+++ />
+<img src={src} +++alt="Một người đang múa."+++ />
 ```
 
-We can use curly braces _inside_ attributes. Try changing it to `"{name} dances."` — remember to declare a `name` variable in the `<script>` block.
+Ta có thể dùng dấu ngoặc nhọn _ở trong_ thuộc tính. Hãy thử đổi nó thành `"{name} đang múa."` - đừng quên khai báo biến `name` trong khối `<script>` nhé!
 
-## Shorthand attributes
+## Thuộc tính viết tắt
 
-It's not uncommon to have an attribute where the name and value are the same, like `src={src}`. Svelte gives us a convenient shorthand for these cases:
+Sẽ khá phổ biến với những trường hợp mà thuộc tính sẽ có tên và giá trị giống nhau, điển hình như `src={src}`. Svelte cho bạn một cách viết tắt trong trường hợp như thế này:
 
 ```svelte
 /// file: App.svelte
-<img +++{src}+++ alt="A man dances." />
+<img +++{src}+++ alt="Một người đang múa." />
 ```

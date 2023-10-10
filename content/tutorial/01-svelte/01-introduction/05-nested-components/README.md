@@ -1,10 +1,10 @@
 ---
-title: Nested components
+title: Component lồng nhau
 ---
 
-It would be impractical to put your entire app in a single component. Instead, we can import components from other files and include them in our markup.
+Sẽ khá là không thực tế nếu bạn viết nguyên một ứng dụng trong một component duy nhất. Thay vào đó, ta có thể nhập các component từ tệp khác và dùng chúng trong markup của ta.
 
-Add a `<script>` tag to the top of `App.svelte` that imports `Nested.svelte`...
+Thêm một thẻ `<script>` ở trên đầu của tệp `App.svelte` để nhập `Nested.svelte`...
 
 ```svelte
 /// file: App.svelte
@@ -13,14 +13,14 @@ Add a `<script>` tag to the top of `App.svelte` that imports `Nested.svelte`...
 </script>+++
 ```
 
-...and include a `<Nested />` component:
+...và thêm component `<Nested />`:
 
 ```svelte
 /// file: App.svelte
-<p>This is a paragraph.</p>
+<p>Đây là một câu văn.</p>
 +++<Nested />+++
 ```
 
-Notice that even though `Nested.svelte` has a `<p>` element, the styles from `App.svelte` don't leak in.
+Lưu ý rằng mặc dù `Nested.svelte` có phần tử `<p>`, style từ `App.svelte` sẽ không bị trôi vào.
 
-> Component names are always capitalised, to distinguish them from HTML elements.
+> Tên component luôn được viết in hoa đầu chữ, để phân biệt chúng nó với những thẻ HTML.
