@@ -2,4 +2,4 @@
 	export let answer;
 </script>
 
-<p>The answer is {answer}</p>
+<p>Câu trả lời là {answer}</p>

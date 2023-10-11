@@ -1,10 +1,11 @@
 ---
-title: Declaring props
+title: Khai báo thuộc tính
 ---
 
-So far, we've dealt exclusively with internal state — that is to say, the values are only accessible within a given component.
+<!-- FIXME: dịch internal state như thế nào? -->
+Đến bây giờ, chúng ta đã làm việc với những trạng thái bên trong _(internal state)_ - phải nói là, những giá trị ấy chỉ có thể truy cập được trong mỗi component đó.
 
-In any real application, you'll need to pass data from one component down to its children. To do that, we need to declare _properties_, generally shortened to 'props'. In Svelte, we do that with the `export` keyword. Edit the `Nested.svelte` component:
+Nhưng trong các ứng dụng ngoài đời, bạn cần phải chuyển dữ liệu từ component này xuống những thành phần con của nó. Để làm thế, ta cần phải khai báo _thuộc tính_ _(properties)_, thường sẽ được viết tắt là 'props'. Trong Svelte, ta có thể làm thế với từ khoá `export`. Hãy sửa component `Nested.svelte` thành:
 
 ```svelte
 /// file: Nested.svelte
@@ -13,4 +14,4 @@ In any real application, you'll need to pass data from one component down to its
 </script>
 ```
 
-> Just like `$:`, this may feel a little weird at first. That's not how `export` normally works in JavaScript modules! Just roll with it for now — it'll soon become second nature.
+> Cứ như `$:`, cái này nhìn có vẻ lạ một chút. Bởi vì bình thường `export` không hoạt động như thế trong mô-đun JavaScript! Nhưng mà bạn cứ dùng đi - bạn sẽ quen dần thôi.
