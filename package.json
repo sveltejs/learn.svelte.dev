@@ -67,5 +67,8 @@
 		"ws": "^8.13.0",
 		"yootils": "^0.3.1"
 	},
-	"packageManager": "pnpm@7.27.0"
+	"packageManager": "pnpm@7.27.0",
+	"volta": {
+		"node": "18.18.1"
+	}
 }
