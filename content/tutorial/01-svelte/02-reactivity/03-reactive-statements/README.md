@@ -2,7 +2,7 @@
 title: Câu lệnh
 ---
 
-Chúng ta không chỉ giới hạn việc khai báo _giá trị_ phản ứng (reactive values) - ta cũng có thể chạy bất kì _câu lệnh_ nào một cách phản ứng. Ví dụ như ta có thể ghi nhật kí giá trị của `count` mỗi khi nó thay đổi.
+Chúng ta không chỉ giới hạn việc khai báo _giá trị_ phản ứng _(reactive values)_ - ta cũng có thể chạy bất kì _câu lệnh_ nào một cách phản ứng. Ví dụ như ta có thể ghi nhật kí giá trị của `count` mỗi khi nó thay đổi.
 
 ```js
 /// file: App.svelte

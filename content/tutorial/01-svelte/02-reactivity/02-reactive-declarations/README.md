@@ -25,7 +25,7 @@ Bây giờ chúng ta hãy thêm `doubled` vào cái markup nhé:
 +++<p>{count} nhân đôi là {doubled}</p>+++
 ```
 
-Tất nhiên, bạn có thể ghi đơn giản là `{count * 2}` trong cái markup - bạn không cần phải sử dụng giá trị phản ứng (reactive values). Giá trị phản ứng sẽ trở nên có giá trị (không phải chơi chữ) khi bạn cần tham chiếu nó nhiều lần, hoặc bạn có giá trị mà phải dựa trên những giá trị phản ứng _khác_.
+Tất nhiên, bạn có thể ghi đơn giản là `{count * 2}` trong cái markup - bạn không cần phải sử dụng giá trị phản ứng _(reactive values)_. Giá trị phản ứng sẽ trở nên có giá trị (không phải chơi chữ) khi bạn cần tham chiếu nó nhiều lần, hoặc bạn có giá trị mà phải dựa trên những giá trị phản ứng _khác_.
 
 <!-- FIXME: what does this even mean -->
 > Hãy lưu ý rằng khai báo và câu lệnh phản ứng sẽ được chạy sau những code _script_ khác và trước khi markup của component được xuất ra.
