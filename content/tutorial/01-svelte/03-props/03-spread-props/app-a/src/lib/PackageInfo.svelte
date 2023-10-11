@@ -8,6 +8,6 @@
 </script>
 
 <p>
-	Cái gói <code>{name}</code> này {speed} nhanh. Tải phiên bản {version} từ 
+	Cái gói <code>{name}</code> này {speed}. Tải phiên bản {version} từ 
 	<a {href}>npm</a> và <a href={website}>tìm hiểu thêm tại đây</a>.
 </p>

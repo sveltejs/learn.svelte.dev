@@ -23,5 +23,4 @@ Ta _có thể_ sửa nó bằng cách thêm thuộc tính `version`...
 <PackageInfo +++{...pkg}+++ />
 ```
 
-<!-- TODO: làm rõ phần này -->
-> Ngược lại, nếu bạn cần lấy các thuộc tính mà được chuyển vào một component, bao gồm cả những cái không được khai báo với `export`, bạn có thể truy cập thằng vào `$$props` luôn. Thường thì mình không khuyến khích việc này, vì nó làm cho Svelte khó khăn trong việc tối ưu hoá, nhưng nó sẽ hữu ích trong một vài trường hợp.
+> Ngược lại, nếu bạn cần tham chiếu tất các thuộc tính được truyền vào một component, bao gồm cả những cái không được khai báo với `export`, bạn có thể truy cập thằng vào `$$props`. Việc này thường không được khuyến khích vì khiến Svelte khó tối ưu hóa, nhưng nó sẽ hữu ích trong một vài trường hợp nhất định.
