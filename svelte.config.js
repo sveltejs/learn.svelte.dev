@@ -1,10 +1,15 @@
 import * as child_process from 'node:child_process';
-import adapter from '@sveltejs/adapter-vercel';
+import adapter from '@sveltejs/adapter-cloudflare';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
-		adapter: adapter({ runtime: 'edge' }),
+    adapter: adapter({
+      routes: {
+        include: ['/*'],
+        exclude: ['<all>'],
+      },
+    }),
 
 		prerender: {
 			concurrency: 4
