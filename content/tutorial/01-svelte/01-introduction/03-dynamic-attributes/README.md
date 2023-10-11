@@ -32,5 +32,5 @@ It's not uncommon to have an attribute where the name and value are the same, li
 
 ```svelte
 /// file: App.svelte
-<img +++{src}+++ alt="A man dances." />
+<img +++{src}+++ alt="{name} dances." />
 ```
