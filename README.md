@@ -1,3 +1,8 @@
+> [!NOTE]
+> Please find the [original docs here](https://github.com/sveltejs/learn.svelte.dev#readme)
+
+---
+
 # learn.svelte.dev
 
 Hướng dẫn tất tần tật & thực hành để xây dụng một ứng dụng web với Svelte, phiên bản tiếng Việt cho cộng đồng Việt.
@@ -35,5 +40,3 @@ Mình khuyến khích nên dịch `README.md` và cả các file trong `app-a` &
 ## Bumping dependencies
 
 Nhảy gói dependency (vd. Svelte) ở trong thư mục gốc và `content/common` `package.json`. Trong thư mục gốc, bấm `pnpm i` (để cập nhất `pnpm-lock.yaml`), trong `content/common` bấm `npm i` (để cập nhật `package-lock.json`).
-
-[README gốc](https://github.com/sveltejs/learn.svelte.dev#readme)
