@@ -2,7 +2,7 @@
 title: Giá trị mặc định
 ---
 
-Ta có thể dễ dàng cho vào một giá trị mặc định cho thuộc tính trong `Nested.svelte`:
+Ta có thể dễ dàng cho vào một giá trị mặc định cho property trong `Nested.svelte`:
 
 ```svelte
 /// file: Nested.svelte
