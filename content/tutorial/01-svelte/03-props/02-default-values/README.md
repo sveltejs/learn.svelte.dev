@@ -1,17 +1,17 @@
 ---
-title: Default values
+title: Giá trị mặc định
 ---
 
-We can easily specify default values for props in `Nested.svelte`:
+Ta có thể dễ dàng cho vào một giá trị mặc định cho thuộc tính trong `Nested.svelte`:
 
 ```svelte
 /// file: Nested.svelte
 <script>
-	export let answer +++= 'a mystery'+++;
+	export let answer +++= 'một bí mật'+++;
 </script>
 ```
 
-If we now add a second component _without_ an `answer` prop, it will fall back to the default:
+Nếu bây giờ bạn thử thêm component thứ hai mà _không có_ thuộc tính `answer`, nó sẽ tự rơi về giá trị mặc định:
 
 ```svelte
 /// file: App.svelte

@@ -1,5 +1,5 @@
 <script>
-	export let answer = 'a mystery';
+	export let answer = 'một bí mật';
 </script>
 
-<p>The answer is {answer}</p>
+<p>Câu trả lời là {answer}</p>
