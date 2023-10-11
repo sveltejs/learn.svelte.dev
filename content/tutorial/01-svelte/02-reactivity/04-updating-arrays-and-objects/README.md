@@ -2,7 +2,7 @@
 title: Cập nhật các mảng và object
 ---
 
-Vì tính phản ứng của Svelte chỉ được kích hoạt bởi phép gán, sử dụng những phương thức như `push` hay `splice` thì sẽ không xảy ra việc cập nhật tự động. Ví dụ như khi bạn bấm vào nút 'Thêm một số' thì sẽ không có chuyện gì xảy ra, mặc dù chúng ta đang gọi `numbers.push(...)` ở bên trong `addNumber`.
+Vì tính phản ứng (reactivity) của Svelte chỉ được kích hoạt bởi phép gán, sử dụng những phương thức như `push` hay `splice` thì sẽ không xảy ra việc cập nhật tự động. Ví dụ như khi bạn bấm vào nút 'Thêm một số' thì sẽ không có chuyện gì xảy ra, mặc dù chúng ta đang gọi `numbers.push(...)` ở bên trong `addNumber`.
 
 Một cách để sửa lỗi này là thêm một phép gán mà có lẽ sẽ dư thừa:
 
@@ -42,4 +42,4 @@ const foo = obj.foo;
 foo.bar = 'baz';
 ```
 <!-- FIXME: dùng từ khác cho "tiếp nối" (follow up) -->
-...sẽ không kích hoạt tính phản ứng với `obj.foo.bar`, trừ khi bạn tiếp nối với `obj = obj`.
+...sẽ không kích hoạt tính phản ứng (reactivity) với `obj.foo.bar`, trừ khi bạn tiếp nối với `obj = obj`.
