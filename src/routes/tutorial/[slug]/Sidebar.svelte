@@ -24,7 +24,7 @@
 		// TODO ideally we would associate scroll state with
 		// history. That's a little tricky to do right now,
 		// so for now just always reset sidebar scroll
-		sidebar.scrollTop = 0;
+		sidebar.scrollIntoView();
 	});
 </script>
 
