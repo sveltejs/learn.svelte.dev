@@ -23,6 +23,9 @@ button:focus-visible {
 pre.language-diff code {
 	color: rgba(0, 0, 0, 0.4);
 }
+.dark pre.language-diff code {
+	color: rgba(255, 255, 255, 0.4);
+}
 
 .language-diff .inserted,
 .language-diff .deleted {
