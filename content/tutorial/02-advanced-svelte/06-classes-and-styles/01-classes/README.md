@@ -25,4 +25,4 @@ We can make it nicer though. Adding or removing a class based on some condition 
 >
 ```
 
-This directive means 'add the `flipped` class whenever `flipped` is truthy'.
+This directive means 'add the `flipped` class whenever `flipped` is true'.
