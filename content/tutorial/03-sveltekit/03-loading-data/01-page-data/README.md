@@ -7,7 +7,7 @@ At its core, SvelteKit's job boils down to three things:
 
 1. **Routing** — figure out which route matches an incoming request
 2. **Loading** — get the data needed by the route
-3. **Rendering** - generate some HTML (on the server) or update the DOM (in the browser)
+3. **Rendering** — generate some HTML (on the server) or update the DOM (in the browser)
 
 We've seen how routing and rendering work. Let's talk about the middle part — loading.
 
