@@ -25,14 +25,14 @@
 		// history. That's a little tricky to do right now,
 		// so for now just always reset sidebar scroll
 		sidebar.scrollTop = 0;
+		console.log(sidebar);
 	});
 </script>
 
 <Menu {index} current={exercise} />
 
-<section>
+<section bind:this={sidebar}>
 	<div
-		bind:this={sidebar}
 		class="text"
 		on:copy={(e) => {
 			if (sessionStorage[copy_enabled]) return;
