@@ -11,27 +11,27 @@
 			type="text"
 			autocomplete="off"
 			on:keydown={async (e) => {
-				if (e.key === 'Enter') {
-					const input = e.currentTarget;
-					const description = input.value;
-					
-					const response = await fetch('/todo', {
-						method: 'POST',
-						body: JSON.stringify({ description }),
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					});
+				if (e.key !== 'Enter') return;
 
-					const { id } = await response.json();
+				const input = e.currentTarget;
+				const description = input.value;
+				
+				const response = await fetch('/todo', {
+					method: 'POST',
+					body: JSON.stringify({ description }),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
 
-					data.todos = [...data.todos, {
-						id,
-						description
-					}];
+				const { id } = await response.json();
 
-					input.value = '';
-				}
+				data.todos = [...data.todos, {
+					id,
+					description
+				}];
+
+				input.value = '';
 			}}
 		/>
 	</label>

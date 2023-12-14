@@ -12,20 +12,20 @@ Inside the `keydown` event handler of the 'add a todo' `<input>`, let's post som
 	type="text"
 	autocomplete="off"
 	on:keydown={async (e) => {
-		if (e.key === 'Enter') {
-			const input = e.currentTarget;
-			const description = input.value;
+		if (e.key !== 'Enter') return;
 
-+++			const response = await fetch('/todo', {
-				method: 'POST',
-				body: JSON.stringify({ description }),
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});+++
+		const input = e.currentTarget;
+		const description = input.value;
 
-			input.value = '';
-		}
++++		const response = await fetch('/todo', {
+			method: 'POST',
+			body: JSON.stringify({ description }),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});+++
+
+		input.value = '';
 	}}
 />
 ```
@@ -59,27 +59,27 @@ We're returning a response with a [201 Created](https://http.dog/201) status and
 	type="text"
 	autocomplete="off"
 	on:keydown={async (e) => {
-		if (e.key === 'Enter') {
-			const input = e.currentTarget;
-			const description = input.value;
+		if (e.key !== 'Enter') return;
 
-			const response = await fetch('/todo', {
-				method: 'POST',
-				body: JSON.stringify({ description }),
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
+		const input = e.currentTarget;
+		const description = input.value;
 
-+++			const { id } = await response.json();
+		const response = await fetch('/todo', {
+			method: 'POST',
+			body: JSON.stringify({ description }),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
 
-			data.todos = [...data.todos, {
-				id,
-				description
-			}];+++
++++		const { id } = await response.json();
 
-			input.value = '';
-		}
+		data.todos = [...data.todos, {
+			id,
+			description
+		}];+++
+
+		input.value = '';
 	}}
 />
 ```
