@@ -82,23 +82,24 @@ In `src/routes/+page.svelte`, we can access the returned value via the `form` pr
 	+++export let form;+++
 </script>
 
-<h1>todos</h1>
-
-+++{#if form?.error}
-	<p class="error">{form.error}</p>
-{/if}+++
-
-<form method="POST" action="?/create">
-	<label>
-		add a todo:
-		<input
-			name="description"
-			+++value={form?.description ?? ''}+++
-			autocomplete="off"
-			required
-		/>
-	</label>
-</form>
+<div class="centered">
+	<h1>todos</h1>
+	
+	+++{#if form?.error}
+		<p class="error">{form.error}</p>
+	{/if}+++
+	
+	<form method="POST" action="?/create">
+		<label>
+			add a todo:
+			<input
+				name="description"
+				+++value={form?.description ?? ''}+++
+				autocomplete="off"
+				required
+			/>
+		</label>
+	</form>
 ```
 
 > You can also return data from an action _without_ wrapping it in `fail` — for example to show a 'success!' message when data was saved — and it will be available via the `form` prop.
