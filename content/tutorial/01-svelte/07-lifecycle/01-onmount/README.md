@@ -14,7 +14,7 @@ In this exercise, we have a `<canvas>` that we'd like to animate, using the `pai
 </script>
 ```
 
-Then, pass a function to the `onMount` call that runs when the component mounts:
+Then, add a callback that runs when the component mounts:
 
 ```svelte
 /// file: App.svelte
