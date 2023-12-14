@@ -1,7 +1,7 @@
 export function load() {
-	const visited = false;
+	const visited = 'false';
 
 	return {
-		visited
+		visited: visited === 'true'
 	};
 }

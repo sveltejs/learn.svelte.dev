@@ -12,7 +12,7 @@ export function load(+++{ cookies }+++) {
 	+++const visited = cookies.get('visited');+++
 
 	return {
-		visited
+		visited: visited === 'true'
 	};
 }
 ```
@@ -27,7 +27,7 @@ export function load({ cookies }) {
 	+++cookies.set('visited', 'true', { path: '/' });+++
 
 	return {
-		visited
+		visited: visited === 'true'
 	};
 }
 ```
