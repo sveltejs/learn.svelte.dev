@@ -11,7 +11,7 @@
 	}}
 	on:mousedown={() => size.set(30)}
 	on:mouseup={() => size.set(10)}
-	role="none"
+	role="presentation"
 >
 	<circle
 		cx={$coords.x}
