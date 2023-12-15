@@ -1,6 +1,5 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import { afterNavigate } from '$app/navigation';
 	import Modal from '$lib/components/Modal.svelte';
 	import Menu from './Menu.svelte';
 
@@ -10,22 +9,15 @@
 	/** @type {import('$lib/types').Exercise} */
 	export let exercise;
 
+	/** @type {HTMLElement} */
+	export let sidebar;
+
 	const dispatch = createEventDispatcher();
 
 	const namespace = 'learn.svelte.dev';
 	const copy_enabled = `${namespace}:copy_enabled`;
 
-	/** @type {HTMLElement} */
-	let sidebar;
-
 	let show_modal = false;
-
-	afterNavigate(async () => {
-		// TODO ideally we would associate scroll state with
-		// history. That's a little tricky to do right now,
-		// so for now just always reset sidebar scroll
-		sidebar.scrollTop = 0;
-	});
 </script>
 
 <Menu {index} current={exercise} />
