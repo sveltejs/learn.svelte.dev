@@ -4,10 +4,11 @@ export function load({ cookies }) {
 	const id = cookies.get('userid');
 
 	if (!id) {
-		cookies.set('userid', crypto.randomUUID(), { path: '/' });
+		id = crypto.randomUUID();
+		cookies.set('userid', id, { path: '/' });
 	}
 
 	return {
-		todos: db.getTodos(id) ?? []
+		todos: db.getTodos(id)
 	};
 }
