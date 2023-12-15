@@ -6,6 +6,7 @@
 	audio.src = horn;
 
 	function handleClick() {
+		audio.load();
 		audio.play();
 	}
 </script>
