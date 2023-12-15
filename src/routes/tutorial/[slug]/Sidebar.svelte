@@ -30,9 +30,8 @@
 
 <Menu {index} current={exercise} />
 
-<section>
+<section bind:this={sidebar}>
 	<div
-		bind:this={sidebar}
 		class="text"
 		on:copy={(e) => {
 			if (sessionStorage[copy_enabled]) return;
