@@ -123,6 +123,21 @@
 			history.pushState({}, '', `?${q}`);
 		}
 	}
+
+	/** @type {HTMLElement} */
+	let sidebar;
+
+	/** @type {import('./$types').Snapshot<number>} */
+	export const snapshot = {
+		capture: () => {
+			const scroll = sidebar.scrollTop;
+			sidebar.scrollTop = 0;
+			return scroll;
+		},
+		restore: (scroll) => {
+			sidebar.scrollTop = scroll;
+		}
+	};
 </script>
 
 <svelte:head>
@@ -164,6 +179,7 @@
 		<SplitPane id="main" type="horizontal" min="360px" max="50%" pos="33%">
 			<section slot="a" class="content">
 				<Sidebar
+					bind:sidebar
 					index={data.index}
 					exercise={data.exercise}
 					on:select={(e) => {
