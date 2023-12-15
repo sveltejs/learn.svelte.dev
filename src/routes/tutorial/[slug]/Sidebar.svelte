@@ -193,7 +193,7 @@
 	}
 
 	footer {
-		padding: 1rem 3rem;
+		padding: 1rem 2.9rem;
 		display: flex;
 		justify-content: space-between;
 		background: var(--sk-back-3);
