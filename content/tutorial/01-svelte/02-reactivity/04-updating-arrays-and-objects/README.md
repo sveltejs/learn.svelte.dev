@@ -38,9 +38,9 @@ A simple rule of thumb: the name of the updated variable must appear on the left
 
 ```js
 /// no-file
-let obj = { foo: { bar: 'old' } };
+const obj = { foo: { bar: 1 } };
 const foo = obj.foo;
-foo.bar = 'baz';
+foo.bar = 2;
 ```
 
 ...won't trigger reactivity on `obj.foo.bar`, unless you follow it up with `obj = obj`.
