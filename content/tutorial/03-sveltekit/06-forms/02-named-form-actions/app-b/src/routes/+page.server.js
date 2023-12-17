@@ -1,7 +1,7 @@
 import * as db from '$lib/server/database.js';
 
 export function load({ cookies }) {
-	const id = cookies.get('userid');
+	let id = cookies.get('userid');
 
 	if (!id) {
 		id = crypto.randomUUID();
