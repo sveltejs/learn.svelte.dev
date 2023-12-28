@@ -28,6 +28,12 @@ We _could_ do this with a sequence of `if` blocks...
 </select>
 
 +++<svelte:component this={selected.component}/>+++
+
+---{#if selected.color === 'red'}
+	<RedThing />
+{:else}
+	<p>TODO others</p>
+{/if}---
 ```
 
 The `this` value can be any component constructor, or a falsy value — if it's falsy, no component is rendered.
