@@ -10,7 +10,7 @@
 	// the name is updated whenever the prop value changes...
 	export let name;
 
-	// ...but the "emoji" variable is fixed upon initialisation
+	// ...but the "emoji" variable is fixed upon initialization
 	// of the component because it uses `const` instead of `$:`
 	const emoji = emojis[name];
 </script>
