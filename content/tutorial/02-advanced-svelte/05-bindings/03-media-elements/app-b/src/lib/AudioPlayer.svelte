@@ -25,7 +25,7 @@
 		bind:paused
 		preload="metadata"
 		on:ended={() => {
-			time = 0;
+			paused = false;
 		}}
 	/>
 	
