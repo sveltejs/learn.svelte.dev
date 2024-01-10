@@ -7,107 +7,105 @@
 	import folder_open from '$lib/icons/folder-open.svg';
 	import { files, solution, creating } from '../state.js';
 
-	/** @type {import('$lib/types').DirectoryStub} */
-	export let directory;
+	/** @type {{ directory: import('$lib/types').DirectoryStub; prefix: string; depth: number; contents: Array<import('$lib/types').Stub>; }} */
+	let { directory, prefix, depth, contents } = $props();
 
-	/** @type {string} */
-	export let prefix;
-
-	/** @type {number} */
-	export let depth;
-
-	/** @type {Array<import('$lib/types').Stub>} */
-	export let contents;
-
-	let renaming = false;
+	let renaming = $state(false);
 
 	const { collapsed, rename, add, remove } = context.get();
 
-	$: segments = get_depth(prefix);
+	const segments = $derived(get_depth(prefix));
 
-	$: children = contents
-		.filter((file) => file.name.startsWith(prefix))
-		.sort((a, b) => (a.name < b.name ? -1 : 1));
-
-	$: child_directories = children.filter(
-		(child) => get_depth(child.name) === segments && child.type === 'directory'
+	const children = $derived(
+		contents
+			.filter((file) => file.name.startsWith(prefix))
+			.sort((a, b) => (a.name < b.name ? -1 : 1))
 	);
 
-	$: child_files = /** @type {import('$lib/types').FileStub[]} */ (
-		children.filter((child) => get_depth(child.name) === segments && child.type === 'file')
+	const child_directories = $derived(
+		children.filter((child) => get_depth(child.name) === segments && child.type === 'directory')
 	);
 
-	const can_create = { file: false, directory: false };
+	const child_files = $derived(
+		/** @type {import('$lib/types').FileStub[]} */ (
+			children.filter((child) => get_depth(child.name) === segments && child.type === 'file')
+		)
+	);
 
-	$: {
-		can_create.file = false;
-		can_create.directory = false;
+	const can_create = $derived(
+		(() => {
+			const can_create = { file: false, directory: false };
+			const child_prefixes = [];
 
-		const child_prefixes = [];
-
-		for (const file of $files) {
-			if (
-				file.type === 'directory' &&
-				file.name.startsWith(prefix) &&
-				get_depth(file.name) === depth + 1
-			) {
-				child_prefixes.push(file.name + '/');
+			for (const file of $files) {
+				if (
+					file.type === 'directory' &&
+					file.name.startsWith(prefix) &&
+					get_depth(file.name) === depth + 1
+				) {
+					child_prefixes.push(file.name + '/');
+				}
 			}
-		}
 
-		for (const file of Object.values($solution)) {
-			if (!file.name.startsWith(prefix)) continue;
+			for (const file of Object.values($solution)) {
+				if (!file.name.startsWith(prefix)) continue;
 
-			// if already exists in $files, bail
-			if ($files.find((f) => f.name === file.name)) continue;
+				// if already exists in $files, bail
+				if ($files.find((f) => f.name === file.name)) continue;
 
-			// if intermediate directory exists, bail
-			if (child_prefixes.some((prefix) => file.name.startsWith(prefix))) continue;
+				// if intermediate directory exists, bail
+				if (child_prefixes.some((prefix) => file.name.startsWith(prefix))) continue;
 
-			can_create[file.type] = true;
-		}
-	}
+				can_create[file.type] = true;
+			}
+
+			return can_create;
+		})()
+	);
 
 	// fake root directory has no name
-	$: can_remove = directory.name ? !$solution[directory.name] : false;
+	const can_remove = $derived(directory.name ? !$solution[directory.name] : false);
 
-	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
-	$: actions = [
-		can_create.file && {
-			icon: 'file-new',
-			label: 'New file',
-			fn: () => {
-				creating.set({
-					parent: directory.name,
-					type: 'file'
-				});
-			}
-		},
-		can_create.directory && {
-			icon: 'folder-new',
-			label: 'New folder',
-			fn: () => {
-				creating.set({
-					parent: directory.name,
-					type: 'directory'
-				});
-			}
-		},
-		can_remove && {
-			icon: 'rename',
-			label: 'Rename',
-			fn: () => {
-				renaming = true;
-			}
-		},
-		can_remove && {
-			icon: 'delete',
-			label: 'Delete',
-			fn: () => {
-				remove(directory);
-			}
-		}
-	].filter(Boolean);
+	const actions = $derived(
+		/** @type {import('./ContextMenu.svelte').MenuItem[]} */ (
+			[
+				can_create.file && {
+					icon: 'file-new',
+					label: 'New file',
+					fn: () => {
+						creating.set({
+							parent: directory.name,
+							type: 'file'
+						});
+					}
+				},
+				can_create.directory && {
+					icon: 'folder-new',
+					label: 'New folder',
+					fn: () => {
+						creating.set({
+							parent: directory.name,
+							type: 'directory'
+						});
+					}
+				},
+				can_remove && {
+					icon: 'rename',
+					label: 'Rename',
+					fn: () => {
+						renaming = true;
+					}
+				},
+				can_remove && {
+					icon: 'delete',
+					label: 'Delete',
+					fn: () => {
+						remove(directory);
+					}
+				}
+			].filter(Boolean)
+		)
+	);
 </script>
 
 <Item

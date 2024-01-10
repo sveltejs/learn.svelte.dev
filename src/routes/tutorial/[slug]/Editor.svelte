@@ -30,8 +30,7 @@
 	/** @type {Map<string, import('@codemirror/state').EditorState>} */
 	let editor_states = new Map();
 
-	/** @type {import('@codemirror/view').EditorView} */
-	let editor_view;
+	let editor_view = /** @type {import('@codemirror/view').EditorView} */ ($state());
 
 	const extensions = [
 		basicSetup,
@@ -41,33 +40,39 @@
 		svelteTheme
 	];
 
-	$: reset($files);
+	$effect.pre(() => {
+		reset($files);
+	});
 
-	$: select_state($selected_name);
+	$effect.pre(() => {
+		select_state($selected_name);
+	});
 
-	$: if (editor_view) {
-		if ($selected_name) {
-			const current_warnings = $warnings[$selected_name];
+	$effect.pre(() => {
+		if (editor_view) {
+			if ($selected_name) {
+				const current_warnings = $warnings[$selected_name];
 
-			if (current_warnings) {
-				const diagnostics = current_warnings.map((warning) => {
-					/** @type {import('@codemirror/lint').Diagnostic} */
-					const diagnostic = {
-						from: warning.start.character,
-						to: warning.end.character,
-						severity: 'warning',
-						message: warning.message
-					};
+				if (current_warnings) {
+					const diagnostics = current_warnings.map((warning) => {
+						/** @type {import('@codemirror/lint').Diagnostic} */
+						const diagnostic = {
+							from: warning.start.character,
+							to: warning.end.character,
+							severity: 'warning',
+							message: warning.message
+						};
 
-					return diagnostic;
-				});
+						return diagnostic;
+					});
 
-				const transaction = setDiagnostics(editor_view.state, diagnostics);
+					const transaction = setDiagnostics(editor_view.state, diagnostics);
 
-				editor_view.dispatch(transaction);
+					editor_view.dispatch(transaction);
+				}
 			}
 		}
-	}
+	});
 
 	let installed_vim = false;
 

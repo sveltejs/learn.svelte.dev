@@ -7,16 +7,14 @@
 	import { files, solution, reset_files, create_directories, selected_name } from '../state.js';
 	import { afterNavigate } from '$app/navigation';
 
-	/** @type {import('$lib/types').Exercise} */
-	export let exercise;
-
-	export let mobile = false;
+	/** @type {{exercise: import('$lib/types').Exercise; mobile: boolean}} */
+	let { exercise, mobile = false } = $props();
 
 	const dispatch = createEventDispatcher();
 
 	const hidden = new Set(['__client.js', 'node_modules', '__delete']);
 
-	let modal_text = '';
+	let modal_text = $state('');
 
 	/** @type {import('svelte/store').Writable<Record<string, boolean>>}*/
 	const collapsed = writable({});
@@ -32,7 +30,9 @@
 			const expected = $solution[name];
 
 			if (expected && type !== expected.type) {
-				modal_text = `${name.slice(exercise.scope.prefix.length)} should be a ${expected.type}, not a ${type}!`;
+				modal_text = `${name.slice(exercise.scope.prefix.length)} should be a ${
+					expected.type
+				}, not a ${type}!`;
 				return;
 			}
 
@@ -52,9 +52,10 @@
 			const basename = /** @type {string} */ (name.split('/').pop());
 
 			/** @type {import('$lib/types').Stub} */
-			const file = type === 'file'
-				? { type, name, basename, text: true, contents: '' }
-				: { type, name, basename };
+			const file =
+				type === 'file'
+					? { type, name, basename, text: true, contents: '' }
+					: { type, name, basename };
 
 			reset_files([...$files, ...create_directories(name, $files), file]);
 

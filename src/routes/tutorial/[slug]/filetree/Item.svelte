@@ -2,20 +2,26 @@
 	import { createEventDispatcher, tick } from 'svelte';
 	import { open } from './ContextMenu.svelte';
 
-	export let basename = '';
-	export let icon = '';
-	export let depth = 0;
-
-	export let selected = false;
-
-	/** @type {boolean} */
-	export let can_rename = false;
-
-	/** @type {boolean} */
-	export let renaming;
-
-	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
-	export let actions = [];
+	/**
+	 * @type {{
+	 * 	basename: string;
+	 * 	icon: string;
+	 * 	depth: number;
+	 * 	selected: boolean;
+	 * 	can_rename: boolean;
+	 * 	renaming: boolean;
+	 * 	actions: import('./ContextMenu.svelte').MenuItem[]
+	 * }}
+	 */
+	let {
+		basename = '',
+		icon = '',
+		depth = 0,
+		selected = false,
+		can_rename = false,
+		renaming,
+		actions = []
+	} = $props();
 
 	const dispatch = createEventDispatcher();
 

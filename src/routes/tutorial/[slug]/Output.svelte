@@ -7,22 +7,20 @@
 	import Loading from './Loading.svelte';
 	import { base, error, logs, progress, subscribe } from './adapter';
 
-	/** @type {import('$lib/types').Exercise} */
-	export let exercise;
+	/** @type {{exercise: import('$lib/types').Exercise; paused: boolean;}}*/
+	let { exercise, paused } = $props();
 
-	/** @type {boolean} */
-	export let paused;
-
-	/** @type {HTMLIFrameElement} */
-	let iframe;
-	let loading = true;
+	let iframe = /** @type {HTMLIFrameElement} */ ($state());
+	let loading = $state(true);
 	let initial = true;
-	let terminal_visible = false;
+	let terminal_visible = $state(false);
 
 	// reset `path` to `exercise.path` each time, but allow it to be controlled by the iframe
-	let path = exercise.path;
+	let path = $state(exercise.path);
 
-	$: if ($base) set_iframe_src($base + (path = exercise.path));
+	$effect.pre(() => {
+		if ($base) set_iframe_src($base + (path = exercise.path));
+	});
 
 	onMount(() => {
 		const unsubscribe = subscribe('reload', () => {
@@ -51,7 +49,7 @@
 		} catch {}
 	}
 
-	$: change_theme($theme);
+	$effect.pre(() => change_theme($theme));
 
 	/** @type {any} */
 	let timeout;

@@ -1,6 +1,6 @@
 <script>
-	/** @type {import('$lib/types').FileStub | null} */
-	export let selected;
+	/** @type {{selected: import('$lib/types').FileStub | null;}} */
+	let { selected } = $props();
 
 	const image_types = new Map([
 		// TODO add more
@@ -11,9 +11,9 @@
 		['.webp', 'image/webp']
 	]);
 
-	$: ext = selected?.basename.slice(selected.basename.lastIndexOf('.'));
-	$: image_type = ext && image_types.get(ext);
-	$: image = image_type && selected;
+	const ext = $derived(selected?.basename.slice(selected.basename.lastIndexOf('.')));
+	const image_type = $derived(ext && image_types.get(ext));
+	const image = $derived(image_type && selected);
 </script>
 
 {#if image}

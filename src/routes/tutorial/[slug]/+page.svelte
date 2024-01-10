@@ -20,22 +20,29 @@
 		solution
 	} from './state.js';
 
-	export let data;
+	let { data } = $props();
 
 	let path = data.exercise.path;
-	let show_editor = false;
-	let show_filetree = false;
-	let paused = false;
-	let w = 1000;
+	let show_editor = $state(false);
+	let show_filetree = $state(false);
+	let paused = $state(false);
+	let w = $state(1000);
 
 	/** @type {import('$lib/types').Stub[]} */
 	let previous_files = [];
 
-	$: mobile = w < 800; // for the things we can't do with media queries
-	$: files.set(Object.values(data.exercise.a));
-	$: solution.set(data.exercise.b);
-	$: selected_name.set(data.exercise.focus);
-	$: completed = is_completed($files, data.exercise.b);
+	let mobile = $derived(w < 800); // for the things we can't do with media queries
+	let completed = $derived(is_completed($files, data.exercise.b));
+
+	// meh: I have to duplicate this because $effect.pre doesn't run on the server
+	files.set(Object.values(data.exercise.a));
+	solution.set(data.exercise.b);
+	selected_name.set(data.exercise.focus);
+	$effect.pre(() => {
+		files.set(Object.values(data.exercise.a));
+		solution.set(data.exercise.b);
+		selected_name.set(data.exercise.focus);
+	});
 
 	beforeNavigate(() => {
 		previous_files = $files;

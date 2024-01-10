@@ -4,37 +4,36 @@
 	import file_icon from '$lib/icons/file.svg';
 	import { selected_name, solution } from '../state.js';
 
-	/** @type {import('$lib/types').FileStub} */
-	export let file;
-
-	/** @type {number} */
-	export let depth;
+	/** @type {{ file: import('$lib/types').FileStub; depth: number }} */
+	let { file, depth } = $props();
 
 	const { rename, remove, select } = context.get();
 
-	let renaming = false;
+	let renaming = $state(false);
 
-	$: can_remove = !$solution[file.name];
+	const can_remove = $derived(!$solution[file.name]);
 
-	/** @type {import('./ContextMenu.svelte').MenuItems} */
-	$: actions = can_remove
-		? [
-				{
-					icon: 'rename',
-					label: 'Rename',
-					fn: () => {
-						renaming = true;
+	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
+	const actions = $derived(
+		can_remove
+			? [
+					{
+						icon: 'rename',
+						label: 'Rename',
+						fn: () => {
+							renaming = true;
+						}
+					},
+					{
+						icon: 'delete',
+						label: 'Delete',
+						fn: () => {
+							remove(file);
+						}
 					}
-				},
-				{
-					icon: 'delete',
-					label: 'Delete',
-					fn: () => {
-						remove(file);
-					}
-				}
-		  ]
-		: [];
+			  ]
+			: []
+	);
 </script>
 
 <Item

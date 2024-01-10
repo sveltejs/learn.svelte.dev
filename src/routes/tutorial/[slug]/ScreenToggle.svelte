@@ -2,8 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import ToggleButton from './ToggleButton.svelte';
 
-	/** @type {boolean} */
-	export let pressed = false;
+	/** @type {{pressed: boolean}} */
+	let { pressed = false } = $props();
 
 	const dispatch = createEventDispatcher();
 </script>

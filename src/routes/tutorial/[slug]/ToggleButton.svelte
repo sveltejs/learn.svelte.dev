@@ -2,10 +2,8 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 
-	/** @type {string} */
-	export let label;
-
-	export let pressed = false;
+	/** @type {{ label: string; pressed: boolean }} */
+	let { label, pressed = false } = $props();
 
 	const dispatch = createEventDispatcher();
 </script>
@@ -72,8 +70,12 @@
 		left: 2px;
 		border-radius: 50%;
 		background: var(--fg);
-		box-shadow: 0 0px 1px rgba(0, 0, 0, 0.4), 0 4px 2px rgba(0, 0, 0, 0.1);
-		transition: background 0.2s ease-out, left 0.2s ease-out;
+		box-shadow:
+			0 0px 1px rgba(0, 0, 0, 0.4),
+			0 4px 2px rgba(0, 0, 0, 0.1);
+		transition:
+			background 0.2s ease-out,
+			left 0.2s ease-out;
 	}
 
 	button[aria-pressed='true']::after {

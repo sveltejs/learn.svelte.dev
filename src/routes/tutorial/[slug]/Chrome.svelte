@@ -1,20 +1,19 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 
-	/** @type {string} */
-	export let path;
-
-	/** @type {boolean} */
-	export let loading;
-
-	/** @type {string | null} */
-	export let href;
+	/** @type {{path: string; loading: boolean; href: string | null;}}*/
+	let { path, loading, href } = $props();
 
 	const dispatch = createEventDispatcher();
 </script>
 
 <div class="chrome" class:loading>
-	<button disabled={loading} class="reload icon" on:click={() => dispatch('refresh')} aria-label="reload" />
+	<button
+		disabled={loading}
+		class="reload icon"
+		on:click={() => dispatch('refresh')}
+		aria-label="reload"
+	/>
 
 	<input
 		disabled={loading}
@@ -31,7 +30,13 @@
 		}}
 	/>
 
-	<a {href} class="new-tab icon" target="_blank" aria-label={href ? 'open in new tab' : undefined} tabindex="0" />
+	<a
+		{href}
+		class="new-tab icon"
+		target="_blank"
+		aria-label={href ? 'open in new tab' : undefined}
+		tabindex="0"
+	/>
 
 	<button
 		disabled={loading}
@@ -69,7 +74,8 @@
 		border: 2px solid var(--sk-theme-3);
 	}
 
-	.icon, .icon::after {
+	.icon,
+	.icon::after {
 		position: relative;
 		height: 100%;
 		aspect-ratio: 1;

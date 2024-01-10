@@ -3,21 +3,15 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import Menu from './Menu.svelte';
 
-	/** @type {import('$lib/types').PartStub[]} */
-	export let index;
-
-	/** @type {import('$lib/types').Exercise} */
-	export let exercise;
-
-	/** @type {HTMLElement} */
-	export let sidebar;
+	/** @type {{ index: import('$lib/types').PartStub[]; exercise: import('$lib/types').Exercise; sidebar: HTMLElement }}*/
+	let { index, exercise, sidebar } = $props();
 
 	const dispatch = createEventDispatcher();
 
 	const namespace = 'learn.svelte.dev';
 	const copy_enabled = `${namespace}:copy_enabled`;
 
-	let show_modal = false;
+	let show_modal = $state(false);
 </script>
 
 <Menu {index} current={exercise} />

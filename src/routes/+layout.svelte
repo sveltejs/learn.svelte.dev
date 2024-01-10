@@ -8,7 +8,7 @@
 	import '@sveltejs/site-kit/styles/index.css';
 	import '../app.css';
 
-	export let data;
+	let { data } = $props();
 </script>
 
 <Shell>
