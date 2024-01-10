@@ -203,12 +203,12 @@
 </script>
 
 <svelte:window
-	on:pointerdown={(e) => {
+	onpointerdown={(e) => {
 		if (!container.contains(/** @type {HTMLElement} */ (e.target))) {
 			preserve_editor_focus = false;
 		}
 	}}
-	on:message={(e) => {
+	onmessage={(e) => {
 		if (preserve_editor_focus && e.data.type === 'iframe_took_focus') {
 			editor_view.focus();
 		}
@@ -218,11 +218,11 @@
 <div
 	class="container"
 	bind:this={container}
-	on:focusin={() => {
+	onfocusin={() => {
 		clearTimeout(remove_focus_timeout);
 		preserve_editor_focus = true;
 	}}
-	on:focusout={() => {
+	onfocusout={() => {
 		// Heuristic: user did refocus themmselves if iframe_took_focus
 		// doesn't happen in the next few miliseconds. Needed
 		// because else navigations inside the iframe refocus the editor.

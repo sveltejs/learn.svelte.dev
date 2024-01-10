@@ -1,5 +1,5 @@
 <script>
-	import { createEventDispatcher, tick } from 'svelte';
+	import { tick } from 'svelte';
 	import { open } from './ContextMenu.svelte';
 
 	/**
@@ -10,7 +10,12 @@
 	 * 	selected?: boolean;
 	 * 	can_rename?: boolean;
 	 * 	renaming: boolean;
-	 * 	actions?: import('./ContextMenu.svelte').MenuItem[]
+	 * 	actions?: import('./ContextMenu.svelte').MenuItem[];
+	 * 	on_rename?: (basename: string) => void;
+	 * 	on_cancel?: () => void;
+	 * 	on_edit?: () => void;
+	 * 	onclick?: () => void;
+	 * 	onkeydown?: (e: KeyboardEvent) => void;
 	 * }}
 	 */
 	let {
@@ -20,10 +25,13 @@
 		selected = false,
 		can_rename = false,
 		renaming,
-		actions = []
+		actions = [],
+		on_rename,
+		on_cancel,
+		on_edit,
+		onclick,
+		onkeydown
 	} = $props();
-
-	const dispatch = createEventDispatcher();
 
 	let cancelling = false;
 
@@ -31,7 +39,7 @@
 	function commit(e) {
 		const input = /** @type {HTMLInputElement} */ (e.target);
 		if (input.value && input.value !== basename) {
-			dispatch('rename', { basename: input.value });
+			on_rename?.(input.value);
 		}
 
 		cancel();
@@ -39,7 +47,7 @@
 
 	async function cancel() {
 		cancelling = true;
-		dispatch('cancel');
+		on_cancel?.();
 		await tick();
 		cancelling = false;
 	}
@@ -48,7 +56,7 @@
 <li
 	aria-current={selected ? 'true' : undefined}
 	style="--depth: {depth}; --icon: url('{icon}');"
-	on:keydown
+	{onkeydown}
 >
 	{#if renaming}
 		<!-- svelte-ignore a11y-autofocus -->
@@ -58,12 +66,12 @@
 			autocomplete="off"
 			spellcheck="false"
 			value={basename}
-			on:blur={(e) => {
+			onblur={(e) => {
 				if (!cancelling) {
 					commit(e);
 				}
 			}}
-			on:keyup={(e) => {
+			onkeyup={(e) => {
 				if (e.key === 'Enter') {
 					commit(e);
 				}
@@ -76,13 +84,14 @@
 	{:else}
 		<button
 			class="basename"
-			on:click
-			on:dblclick={() => {
+			{onclick}
+			ondblclick={() => {
 				if (can_rename) {
-					dispatch('edit');
+					on_edit?.();
 				}
 			}}
-			on:contextmenu|preventDefault={(e) => {
+			oncontextmenu={(e) => {
+				e.preventDefault();
 				open(e.clientX, e.clientY, actions);
 			}}
 		>
@@ -92,7 +101,7 @@
 		{#if actions.length > 0}
 			<div class="actions">
 				{#each actions as action}
-					<button aria-label={action.label} class="icon {action.icon}" on:click={action.fn} />
+					<button aria-label={action.label} class="icon {action.icon}" onclick={action.fn} />
 				{/each}
 			</div>
 		{/if}

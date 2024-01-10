@@ -111,7 +111,7 @@
 		show_editor = true;
 	}
 
-	/** @param {string} name */
+	/** @param {string | null} name */
 	function navigate_to_file(name) {
 		if (name === s.selected_name) return;
 
@@ -158,7 +158,7 @@
 
 <svelte:window
 	bind:innerWidth={w}
-	on:popstate={(e) => {
+	onpopstate={(e) => {
 		const q = new URLSearchParams(location.search);
 		const file = q.get('file');
 
@@ -181,8 +181,8 @@
 					bind:sidebar
 					index={data.index}
 					exercise={data.exercise}
-					on:select={(e) => {
-						navigate_to_file(e.detail.file);
+					on_select={(file) => {
+						navigate_to_file(file);
 					}}
 				/>
 			</section>
@@ -199,7 +199,7 @@
 						>
 							<section class="navigator" slot="a">
 								{#if mobile}
-									<button class="file" on:click={() => (show_filetree = !show_filetree)}>
+									<button class="file" onclick={() => (show_filetree = !show_filetree)}>
 										{s.selected_file?.name.replace(
 											data.exercise.scope.prefix,
 											data.exercise.scope.name + '/'
@@ -208,8 +208,8 @@
 								{:else}
 									<Filetree
 										exercise={data.exercise}
-										on:select={(e) => {
-											select_file(e.detail.name);
+										on_select={(name) => {
+											select_file(name);
 										}}
 									/>
 								{/if}
@@ -218,7 +218,7 @@
 									class="solve"
 									class:completed
 									disabled={!data.exercise.has_solution}
-									on:click={() => {
+									onclick={() => {
 										reset_files(Object.values(completed ? data.exercise.a : data.exercise.b));
 									}}
 								>
@@ -239,8 +239,8 @@
 										<Filetree
 											mobile
 											exercise={data.exercise}
-											on:select={(e) => {
-												navigate_to_file(e.detail.name);
+											on_select={(name) => {
+												navigate_to_file(name);
 											}}
 										/>
 									</div>
@@ -259,8 +259,8 @@
 
 	<div class="screen-toggle">
 		<ScreenToggle
-			on:change={(e) => {
-				show_editor = e.detail.pressed;
+			on_change={(pressed) => {
+				show_editor = pressed;
 
 				const url = new URL(location.origin + location.pathname);
 

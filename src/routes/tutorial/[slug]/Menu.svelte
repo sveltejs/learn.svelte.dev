@@ -44,7 +44,7 @@
 
 		<button
 			class="heading"
-			on:click={() => ($is_mobile ? open_nav() : (is_open = !is_open))}
+			onclick={() => ($is_mobile ? open_nav() : (is_open = !is_open))}
 			class:open={is_open}
 		>
 			<h1>
@@ -87,7 +87,8 @@
 									transition:slide={{ duration }}
 								>
 									<button
-										on:click|stopPropagation={() => {
+										onclick={(e) => {
+											e.stopPropagation();
 											if (expanded_part !== part.slug) {
 												expanded_part = part.slug;
 												expanded_chapter = part.chapters[0].slug;
@@ -106,7 +107,10 @@
 													aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
 												>
 													<button
-														on:click|stopPropagation={() => (expanded_chapter = chapter.slug)}
+														onclick={(e) => {
+															e.stopPropagation();
+															expanded_chapter = chapter.slug;
+														}}
 														style="width: 100%; text-align: start;"
 													>
 														<!-- <img src={arrow} alt="Arrow icon" /> -->
@@ -126,7 +130,7 @@
 																>
 																	<a
 																		href="/tutorial/{exercise.slug}"
-																		on:click={() => (is_open = false)}
+																		onclick={() => (is_open = false)}
 																	>
 																		{exercise.title}
 																	</a>

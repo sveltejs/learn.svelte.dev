@@ -85,7 +85,7 @@
 
 		// To prevent iframe flickering.
 		// Set to `visible` by calling `set_iframe_visible` function
-		// from iframe on:load or setTimeout
+		// from iframe onload or setTimeout
 		iframe.style.visibility = 'hidden';
 		setTimeout(set_iframe_visible, 1000);
 
@@ -109,20 +109,20 @@
 	}
 </script>
 
-<svelte:window on:message={handle_message} />
+<svelte:window onmessage={handle_message} />
 <Chrome
 	{path}
 	{loading}
 	href={a.base && a.base + path}
-	on:refresh={() => {
+	on_refresh={() => {
 		set_iframe_src(a.base + path);
 	}}
-	on:toggle_terminal={() => {
+	on_toggle_terminal={() => {
 		terminal_visible = !terminal_visible;
 	}}
-	on:change={(e) => {
+	on_change={(value) => {
 		if (a.base) {
-			const url = new URL(e.detail.value, a.base);
+			const url = new URL(value, a.base);
 			path = url.pathname + url.search + url.hash;
 			set_iframe_src(a.base + path);
 		}
@@ -131,7 +131,7 @@
 
 <div class="content">
 	{#if browser}
-		<iframe bind:this={iframe} title="Output" on:load={set_iframe_visible} />
+		<iframe bind:this={iframe} title="Output" onload={set_iframe_visible} />
 	{/if}
 
 	{#if paused || loading || a.error}

@@ -29,7 +29,7 @@
 			<ul>
 				{#each menu_items.items as item}
 					<li>
-						<button on:click={item.fn}>{item.label}</button>
+						<button onclick={item.fn}>{item.label}</button>
 					</li>
 				{/each}
 			</ul>
@@ -37,7 +37,7 @@
 	</nav>
 {/if}
 
-<svelte:window on:click={() => (menu_items = null)} />
+<svelte:window onclick={() => (menu_items = null)} />
 
 <style>
 	.navbar {

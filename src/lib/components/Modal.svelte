@@ -1,6 +1,9 @@
 <script>
 	import { onMount } from 'svelte';
 
+	/** @type {{ onclose?: () => void; children?: import('svelte').Snippet }}*/
+	let { onclose } = $props();
+
 	/** @type {HTMLDialogElement} */
 	let modal;
 
@@ -41,7 +44,7 @@
 
 <div class="modal-background" />
 
-<dialog class="modal" tabindex="-1" bind:this={modal} on:close>
+<dialog class="modal" tabindex="-1" bind:this={modal} {onclose}>
 	<slot />
 </dialog>
 

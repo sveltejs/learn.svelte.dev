@@ -1,30 +1,27 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
 	import ToggleButton from './ToggleButton.svelte';
 
-	/** @type {{pressed: boolean}} */
-	let { pressed = false } = $props();
-
-	const dispatch = createEventDispatcher();
+	/** @type {{pressed: boolean; on_change?: (pressed: boolean) => void}} */
+	let { pressed = false, on_change } = $props();
 </script>
 
 <div class="input-output-toggle">
 	<button
 		aria-hidden="true"
-		on:click={() => {
+		onclick={() => {
 			if (pressed) {
 				pressed = false;
-				dispatch('change', { pressed });
+				on_change?.(pressed);
 			}
 		}}>Tutorial</button
 	>
-	<ToggleButton label="Show editor" {pressed} on:change />
+	<ToggleButton label="Show editor" {pressed} {on_change} />
 	<button
 		aria-hidden="true"
-		on:click={() => {
+		onclick={() => {
 			if (!pressed) {
 				pressed = true;
-				dispatch('change', { pressed });
+				on_change?.(pressed);
 			}
 		}}>Editor</button
 	>

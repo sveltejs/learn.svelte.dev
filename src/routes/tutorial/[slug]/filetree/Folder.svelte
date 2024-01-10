@@ -115,19 +115,19 @@
 	can_rename={can_remove}
 	{renaming}
 	{actions}
-	on:click={() => {
+	onclick={() => {
 		collapsed[directory.name] = !collapsed[directory.name];
 	}}
-	on:edit={() => {
+	on_edit={() => {
 		renaming = true;
 	}}
-	on:rename={(e) => {
-		rename(directory, e.detail.basename);
+	on_rename={(basename) => {
+		rename(directory, basename);
 	}}
-	on:cancel={() => {
+	on_cancel={() => {
 		renaming = false;
 	}}
-	on:keydown={(e) => {
+	onkeydown={(e) => {
 		if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
 			collapsed[directory.name] = e.key === 'ArrowLeft';
 		}
@@ -139,10 +139,10 @@
 		<Item
 			depth={depth + 1}
 			renaming
-			on:rename={(e) => {
-				add(prefix + e.detail.basename, 'directory');
+			on_rename={(basename) => {
+				add(prefix + basename, 'directory');
 			}}
-			on:cancel={() => {
+			on_cancel={() => {
 				s.creating = null;
 			}}
 		/>
@@ -156,10 +156,10 @@
 		<Item
 			depth={depth + 1}
 			renaming
-			on:rename={(e) => {
-				add(prefix + e.detail.basename, 'file');
+			on_rename={(basename) => {
+				add(prefix + basename, 'file');
 			}}
-			on:cancel={() => {
+			on_cancel={() => {
 				s.creating = null;
 			}}
 		/>

@@ -1,15 +1,12 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
 	import Folder from './Folder.svelte';
 	import * as context from './context.js';
 	import Modal from '$lib/components/Modal.svelte';
 	import { reset_files, create_directories, s } from '../state.svelte.js';
 	import { afterNavigate } from '$app/navigation';
 
-	/** @type {{exercise: import('$lib/types').Exercise; mobile?: boolean}} */
-	let { exercise, mobile = false } = $props();
-
-	const dispatch = createEventDispatcher();
+	/** @type {{exercise: import('$lib/types').Exercise; mobile?: boolean; on_select?: (name: string | null) => void;}} */
+	let { exercise, mobile = false, on_select } = $props();
 
 	const hidden = new Set(['__client.js', 'node_modules', '__delete']);
 
@@ -53,7 +50,7 @@
 			reset_files([...s.files, ...create_directories(name, s.files), file]);
 
 			if (type === 'file') {
-				dispatch('select', { name });
+				on_select?.(name);
 			}
 		},
 
@@ -95,7 +92,7 @@
 			reset_files([...s.files, ...create_directories(new_full_name, s.files)]);
 
 			if (was_selected) {
-				dispatch('select', { name: new_full_name });
+				on_select?.(new_full_name);
 			}
 		},
 
@@ -107,7 +104,7 @@
 				return;
 			}
 
-			dispatch('select', { name: null });
+			on_select?.(null);
 
 			reset_files(
 				s.files.filter((f) => {
@@ -119,7 +116,7 @@
 		},
 
 		select: (name) => {
-			dispatch('select', { name });
+			on_select?.(name);
 		}
 	});
 
@@ -142,7 +139,7 @@
 <ul
 	class="filetree"
 	class:mobile
-	on:keydown={(e) => {
+	onkeydown={(e) => {
 		if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
 			e.preventDefault();
 			const lis = Array.from(e.currentTarget.querySelectorAll('li'));
@@ -167,11 +164,11 @@
 </ul>
 
 {#if modal_text}
-	<Modal on:close={() => (modal_text = '')}>
+	<Modal onclose={() => (modal_text = '')}>
 		<div class="modal-contents">
 			<h2>This action is not allowed</h2>
 			<p>{modal_text}</p>
-			<button on:click={() => (modal_text = '')}>OK</button>
+			<button onclick={() => (modal_text = '')}>OK</button>
 		</div>
 	</Modal>
 {/if}

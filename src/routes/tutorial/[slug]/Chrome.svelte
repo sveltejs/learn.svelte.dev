@@ -1,17 +1,20 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
-
-	/** @type {{path: string; loading: boolean; href: string | null;}}*/
-	let { path, loading, href } = $props();
-
-	const dispatch = createEventDispatcher();
+	/** @type {{
+	 * 	path: string;
+	 * 	loading: boolean;
+	 * 	href: string | null;
+	 * 	on_refresh?: () => void;
+	 * 	on_change?: (value: string) => void;
+	 * 	on_toggle_terminal?: () => void;
+	 * }}*/
+	let { path, loading, href, on_refresh, on_change, on_toggle_terminal } = $props();
 </script>
 
 <div class="chrome" class:loading>
 	<button
 		disabled={loading}
 		class="reload icon"
-		on:click={() => dispatch('refresh')}
+		onclick={() => on_refresh?.()}
 		aria-label="reload"
 	/>
 
@@ -19,13 +22,13 @@
 		disabled={loading}
 		aria-label="URL"
 		value={path}
-		on:change={(e) => {
-			dispatch('change', { value: e.currentTarget.value });
+		onchange={(e) => {
+			on_change?.(e.currentTarget.value);
 		}}
-		on:keydown={(e) => {
+		onkeydown={(e) => {
 			if (e.key !== 'Enter') return;
 
-			dispatch('change', { value: e.currentTarget.value });
+			on_change?.(e.currentTarget.value);
 			e.currentTarget.blur();
 		}}
 	/>
@@ -41,7 +44,7 @@
 	<button
 		disabled={loading}
 		class="terminal icon"
-		on:click={() => dispatch('toggle_terminal')}
+		onclick={() => on_toggle_terminal?.()}
 		aria-label="toggle terminal"
 	/>
 </div>

@@ -44,14 +44,14 @@
 	icon={file_icon}
 	selected={file.name === s.selected_name}
 	{actions}
-	on:click={() => select(file.name)}
-	on:edit={() => {
+	onclick={() => select(file.name)}
+	on_edit={() => {
 		renaming = true;
 	}}
-	on:rename={(e) => {
-		rename(file, e.detail.basename);
+	on_rename={(basename) => {
+		rename(file, basename);
 	}}
-	on:cancel={() => {
+	on_cancel={() => {
 		renaming = false;
 	}}
 />
