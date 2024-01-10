@@ -8,7 +8,7 @@
 	import '@sveltejs/site-kit/styles/index.css';
 	import '../app.css';
 
-	let { data } = $props();
+	let { data, children } = $props();
 </script>
 
 <Shell>
@@ -46,7 +46,7 @@
 		</svelte:fragment>
 	</Nav>
 
-	<slot />
+	{@render children()}
 </Shell>
 
 {#if browser}
