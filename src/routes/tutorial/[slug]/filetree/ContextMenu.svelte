@@ -2,16 +2,14 @@
      A context menu for the tutorial's file tree
 -->
 <script context="module">
-	import { writable } from 'svelte/store';
-
 	/**
 	 * @typedef {{ icon: string; label: string; fn: () => void }} MenuItem
 	 */
 
 	/**
-	 * @type {import("svelte/store").Writable<{x: number; y: number; items: MenuItem[]} | null>}
+	 * @type {{x: number; y: number; items: MenuItem[]} | null}
 	 */
-	let menu_items = writable(null);
+	let menu_items = $state(null);
 
 	/**
 	 * @param {number} x
@@ -20,16 +18,16 @@
 	 */
 	export function open(x, y, items) {
 		if (items.length > 0) {
-			menu_items.set({ x, y, items });
+			menu_items = { x, y, items };
 		}
 	}
 </script>
 
-{#if $menu_items}
-	<nav style="position: fixed; z-index: 5; top:{$menu_items.y}px; left:{$menu_items.x}px">
+{#if menu_items}
+	<nav style="position: fixed; z-index: 5; top:{menu_items.y}px; left:{menu_items.x}px">
 		<div class="navbar" id="navbar">
 			<ul>
-				{#each $menu_items.items as item}
+				{#each menu_items.items as item}
 					<li>
 						<button on:click={item.fn}>{item.label}</button>
 					</li>
@@ -39,7 +37,7 @@
 	</nav>
 {/if}
 
-<svelte:window on:click={() => menu_items.set(null)} />
+<svelte:window on:click={() => (menu_items = null)} />
 
 <style>
 	.navbar {

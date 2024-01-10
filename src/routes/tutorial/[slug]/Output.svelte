@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import Chrome from './Chrome.svelte';
 	import Loading from './Loading.svelte';
-	import { base, error, logs, progress, subscribe } from './adapter';
+	import { a, subscribe } from './adapter.svelte';
 
 	/** @type {{exercise: import('$lib/types').Exercise; paused: boolean;}}*/
 	let { exercise, paused } = $props();
@@ -19,12 +19,12 @@
 	let path = $state(exercise.path);
 
 	$effect.pre(() => {
-		if ($base) set_iframe_src($base + (path = exercise.path));
+		if (a.base) set_iframe_src(a.base + (path = exercise.path));
 	});
 
 	onMount(() => {
 		const unsubscribe = subscribe('reload', () => {
-			set_iframe_src($base + path);
+			set_iframe_src(a.base + path);
 		});
 
 		return () => {
@@ -56,7 +56,7 @@
 
 	/** @param {MessageEvent} e */
 	async function handle_message(e) {
-		if (e.origin !== $base) return;
+		if (e.origin !== a.base) return;
 
 		if (paused) return;
 
@@ -71,7 +71,7 @@
 
 				// we lost contact, refresh the page
 				loading = true;
-				set_iframe_src($base + path);
+				set_iframe_src(a.base + path);
 				loading = false;
 			}, 1000);
 		} else if (e.data.type === 'ping-pause') {
@@ -113,18 +113,18 @@
 <Chrome
 	{path}
 	{loading}
-	href={$base && $base + path}
+	href={a.base && a.base + path}
 	on:refresh={() => {
-		set_iframe_src($base + path);
+		set_iframe_src(a.base + path);
 	}}
 	on:toggle_terminal={() => {
 		terminal_visible = !terminal_visible;
 	}}
 	on:change={(e) => {
-		if ($base) {
-			const url = new URL(e.detail.value, $base);
+		if (a.base) {
+			const url = new URL(e.detail.value, a.base);
 			path = url.pathname + url.search + url.hash;
-			set_iframe_src($base + path);
+			set_iframe_src(a.base + path);
 		}
 	}}
 />
@@ -134,12 +134,12 @@
 		<iframe bind:this={iframe} title="Output" on:load={set_iframe_visible} />
 	{/if}
 
-	{#if paused || loading || $error}
-		<Loading {initial} error={$error} progress={$progress.value} status={$progress.text} />
+	{#if paused || loading || a.error}
+		<Loading {initial} error={a.error} progress={a.progress.value} status={a.progress.text} />
 	{/if}
 
 	<div class="terminal" class:visible={terminal_visible}>
-		{#each $logs as log}
+		{#each a.logs as log}
 			<div>{@html log}</div>
 		{/each}
 	</div>

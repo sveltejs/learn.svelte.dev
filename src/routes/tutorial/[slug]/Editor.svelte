@@ -13,10 +13,10 @@
 	import { svelteTheme } from '@sveltejs/repl/theme';
 	import { basicSetup } from 'codemirror';
 	import { onMount, tick } from 'svelte';
-	import { warnings } from './adapter.js';
+	import { a } from './adapter.svelte.js';
 	import { autocomplete_for_svelte } from './autocompletion.js';
 	import './codemirror.css';
-	import { files, selected_file, selected_name, update_file } from './state.js';
+	import { update_file, s } from './state.svelte.js';
 
 	/** @type {HTMLDivElement} */
 	let container;
@@ -41,17 +41,17 @@
 	];
 
 	$effect.pre(() => {
-		reset($files);
+		reset(s.files);
 	});
 
 	$effect.pre(() => {
-		select_state($selected_name);
+		select_state(s.selected_name);
 	});
 
 	$effect.pre(() => {
 		if (editor_view) {
-			if ($selected_name) {
-				const current_warnings = $warnings[$selected_name];
+			if (s.selected_name) {
+				const current_warnings = a.warnings[s.selected_name];
 
 				if (current_warnings) {
 					const diagnostics = current_warnings.map((warning) => {
@@ -76,8 +76,8 @@
 
 	let installed_vim = false;
 
-	/** @param {import('$lib/types').Stub[]} $files */
-	async function reset($files) {
+	/** @param {import('$lib/types').Stub[]} files */
+	async function reset(files) {
 		if (skip_reset) return;
 
 		let should_install_vim = localStorage.getItem('vim') === 'true';
@@ -94,7 +94,7 @@
 			extensions.push(vim());
 		}
 
-		for (const file of $files) {
+		for (const file of files) {
 			if (file.type !== 'file') continue;
 
 			let state = editor_states.get(file.name);
@@ -114,7 +114,7 @@
 					editor_states.set(file.name, transaction.state);
 					state = transaction.state;
 
-					if ($selected_name === file.name) {
+					if (s.selected_name === file.name) {
 						editor_view.setState(state);
 					}
 				}
@@ -139,12 +139,12 @@
 		}
 	}
 
-	/** @param {string | null} $selected_name */
-	function select_state($selected_name) {
+	/** @param {string | null} selected_name */
+	function select_state(selected_name) {
 		if (skip_reset) return;
 
 		const state =
-			($selected_name && editor_states.get($selected_name)) ||
+			(selected_name && editor_states.get(selected_name)) ||
 			EditorState.create({
 				doc: '',
 				extensions: [EditorState.readOnly.of(true)]
@@ -159,17 +159,17 @@
 			async dispatch(transaction) {
 				editor_view.update([transaction]);
 
-				if (transaction.docChanged && $selected_file) {
+				if (transaction.docChanged && s.selected_file) {
 					skip_reset = true;
 
 					// TODO do we even need to update `$files`? maintaining separate editor states is probably sufficient
 					update_file({
-						...$selected_file,
+						...s.selected_file,
 						contents: editor_view.state.doc.toString()
 					});
 
 					// keep `editor_states` updated so that undo/redo history is preserved for files independently
-					editor_states.set($selected_file.name, editor_view.state);
+					editor_states.set(s.selected_file.name, editor_view.state);
 
 					await tick();
 					skip_reset = false;
@@ -190,15 +190,15 @@
 		skip_reset = false;
 
 		editor_states.clear();
-		await reset($files);
+		await reset(s.files);
 
 		if (editor_view) {
 			// could be false if onMount returned early
-			select_state($selected_name);
+			select_state(s.selected_name);
 		}
 
 		// clear warnings
-		warnings.set({});
+		a.warnings = {};
 	});
 </script>
 
@@ -231,15 +231,15 @@
 		}, 200);
 	}}
 >
-	{#if !browser && $selected_file}
+	{#if !browser && s.selected_file}
 		<div class="fake">
 			<div class="fake-gutter">
-				{#each $selected_file.contents.split('\n') as _, i}
+				{#each s.selected_file.contents.split('\n') as _, i}
 					<div class="fake-line">{i + 1}</div>
 				{/each}
 			</div>
 			<div class="fake-content">
-				{#each $selected_file.contents.split('\n') as line}
+				{#each s.selected_file.contents.split('\n') as line}
 					<pre>{line || ' '}</pre>
 				{/each}
 			</div>

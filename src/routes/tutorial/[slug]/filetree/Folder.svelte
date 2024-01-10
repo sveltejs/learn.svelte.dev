@@ -5,7 +5,7 @@
 	import Item from './Item.svelte';
 	import folder_closed from '$lib/icons/folder.svg';
 	import folder_open from '$lib/icons/folder-open.svg';
-	import { files, solution, creating } from '../state.js';
+	import { s } from '../state.svelte.js';
 
 	/** @type {{ directory: import('$lib/types').DirectoryStub; prefix: string; depth: number; contents: Array<import('$lib/types').Stub>; }} */
 	let { directory, prefix, depth, contents } = $props();
@@ -37,7 +37,7 @@
 			const can_create = { file: false, directory: false };
 			const child_prefixes = [];
 
-			for (const file of $files) {
+			for (const file of s.files) {
 				if (
 					file.type === 'directory' &&
 					file.name.startsWith(prefix) &&
@@ -47,11 +47,11 @@
 				}
 			}
 
-			for (const file of Object.values($solution)) {
+			for (const file of Object.values(s.solution)) {
 				if (!file.name.startsWith(prefix)) continue;
 
-				// if already exists in $files, bail
-				if ($files.find((f) => f.name === file.name)) continue;
+				// if already exists in files, bail
+				if (s.files.find((f) => f.name === file.name)) continue;
 
 				// if intermediate directory exists, bail
 				if (child_prefixes.some((prefix) => file.name.startsWith(prefix))) continue;
@@ -64,7 +64,7 @@
 	);
 
 	// fake root directory has no name
-	const can_remove = $derived(directory.name ? !$solution[directory.name] : false);
+	const can_remove = $derived(directory.name ? !s.solution[directory.name] : false);
 
 	const actions = $derived(
 		/** @type {import('./ContextMenu.svelte').MenuItem[]} */ (
@@ -73,20 +73,20 @@
 					icon: 'file-new',
 					label: 'New file',
 					fn: () => {
-						creating.set({
+						s.creating = {
 							parent: directory.name,
 							type: 'file'
-						});
+						};
 					}
 				},
 				can_create.directory && {
 					icon: 'folder-new',
 					label: 'New folder',
 					fn: () => {
-						creating.set({
+						s.creating = {
 							parent: directory.name,
 							type: 'directory'
-						});
+						};
 					}
 				},
 				can_remove && {
@@ -111,12 +111,12 @@
 <Item
 	{depth}
 	basename={directory.basename}
-	icon={$collapsed[directory.name] ? folder_closed : folder_open}
+	icon={collapsed[directory.name] ? folder_closed : folder_open}
 	can_rename={can_remove}
 	{renaming}
 	{actions}
 	on:click={() => {
-		$collapsed[directory.name] = !$collapsed[directory.name];
+		collapsed[directory.name] = !collapsed[directory.name];
 	}}
 	on:edit={() => {
 		renaming = true;
@@ -129,13 +129,13 @@
 	}}
 	on:keydown={(e) => {
 		if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-			$collapsed[directory.name] = e.key === 'ArrowLeft';
+			collapsed[directory.name] = e.key === 'ArrowLeft';
 		}
 	}}
 />
 
-{#if !$collapsed[directory.name]}
-	{#if $creating?.parent === directory.name && $creating.type === 'directory'}
+{#if !collapsed[directory.name]}
+	{#if s.creating?.parent === directory.name && s.creating.type === 'directory'}
 		<Item
 			depth={depth + 1}
 			renaming
@@ -143,7 +143,7 @@
 				add(prefix + e.detail.basename, 'directory');
 			}}
 			on:cancel={() => {
-				creating.set(null);
+				s.creating = null;
 			}}
 		/>
 	{/if}
@@ -152,7 +152,7 @@
 		<svelte:self {directory} prefix={directory.name + '/'} depth={depth + 1} contents={children} />
 	{/each}
 
-	{#if $creating?.parent === directory.name && $creating.type === 'file'}
+	{#if s.creating?.parent === directory.name && s.creating.type === 'file'}
 		<Item
 			depth={depth + 1}
 			renaming
@@ -160,7 +160,7 @@
 				add(prefix + e.detail.basename, 'file');
 			}}
 			on:cancel={() => {
-				creating.set(null);
+				s.creating = null;
 			}}
 		/>
 	{/if}

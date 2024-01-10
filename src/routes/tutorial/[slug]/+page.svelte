@@ -2,7 +2,7 @@
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { SplitPane } from '@rich_harris/svelte-split-pane';
 	import { Icon } from '@sveltejs/site-kit/components';
-	import { reset } from './adapter.js';
+	import { reset } from './adapter.svelte.js';
 	import Editor from './Editor.svelte';
 	import ContextMenu from './filetree/ContextMenu.svelte';
 	import Filetree from './filetree/Filetree.svelte';
@@ -10,15 +10,7 @@
 	import Output from './Output.svelte';
 	import ScreenToggle from './ScreenToggle.svelte';
 	import Sidebar from './Sidebar.svelte';
-	import {
-		create_directories,
-		creating,
-		files,
-		reset_files,
-		selected_file,
-		selected_name,
-		solution
-	} from './state.js';
+	import { create_directories, reset_files, s } from './state.svelte.js';
 
 	let { data } = $props();
 
@@ -32,20 +24,20 @@
 	let previous_files = [];
 
 	let mobile = $derived(w < 800); // for the things we can't do with media queries
-	let completed = $derived(is_completed($files, data.exercise.b));
+	let completed = $derived(is_completed(s.files, data.exercise.b));
 
 	// meh: I have to duplicate this because $effect.pre doesn't run on the server
-	files.set(Object.values(data.exercise.a));
-	solution.set(data.exercise.b);
-	selected_name.set(data.exercise.focus);
+	s.files = Object.values(data.exercise.a);
+	s.solution = data.exercise.b;
+	s.selected_name = data.exercise.focus;
 	$effect.pre(() => {
-		files.set(Object.values(data.exercise.a));
-		solution.set(data.exercise.b);
-		selected_name.set(data.exercise.focus);
+		s.files = Object.values(data.exercise.a);
+		s.solution = data.exercise.b;
+		s.selected_name = data.exercise.focus;
 	});
 
 	beforeNavigate(() => {
-		previous_files = $files;
+		previous_files = s.files;
 	});
 
 	afterNavigate(async () => {
@@ -54,7 +46,7 @@
 		const will_delete = previous_files.some((file) => !(file.name in data.exercise.a));
 
 		if (data.exercise.path !== path || will_delete) paused = true;
-		await reset($files);
+		await reset(s.files);
 
 		path = data.exercise.path;
 		paused = false;
@@ -92,28 +84,28 @@
 
 	/** @param {string | null} name */
 	function select_file(name) {
-		const file = name && $files.find((file) => file.name === name);
+		const file = name && s.files.find((file) => file.name === name);
 
 		if (!file && name) {
 			// trigger file creation input. first, create any intermediate directories
-			const new_directories = create_directories(name, $files);
+			const new_directories = create_directories(name, s.files);
 
 			if (new_directories.length > 0) {
-				reset_files([...$files, ...new_directories]);
+				reset_files([...s.files, ...new_directories]);
 			}
 
 			// find the parent directory
 			const parent = name.split('/').slice(0, -1).join('/');
 
-			creating.set({
+			s.creating = {
 				parent,
 				type: 'file'
-			});
+			};
 
 			show_filetree = true;
 		} else {
 			show_filetree = false;
-			selected_name.set(name);
+			s.selected_name = name;
 		}
 
 		show_editor = true;
@@ -121,12 +113,12 @@
 
 	/** @param {string} name */
 	function navigate_to_file(name) {
-		if (name === $selected_name) return;
+		if (name === s.selected_name) return;
 
 		select_file(name);
 
 		if (mobile) {
-			const q = new URLSearchParams({ file: $selected_name || '' });
+			const q = new URLSearchParams({ file: s.selected_name || '' });
 			history.pushState({}, '', `?${q}`);
 		}
 	}
@@ -208,7 +200,7 @@
 							<section class="navigator" slot="a">
 								{#if mobile}
 									<button class="file" on:click={() => (show_filetree = !show_filetree)}>
-										{$selected_file?.name.replace(
+										{s.selected_file?.name.replace(
 											data.exercise.scope.prefix,
 											data.exercise.scope.name + '/'
 										) ?? 'Files'}
@@ -240,7 +232,7 @@
 
 							<section class="editor-container" slot="b">
 								<Editor />
-								<ImageViewer selected={$selected_file} />
+								<ImageViewer selected={s.selected_file} />
 
 								{#if mobile && show_filetree}
 									<div class="mobile-filetree">
@@ -273,7 +265,7 @@
 				const url = new URL(location.origin + location.pathname);
 
 				if (show_editor) {
-					url.searchParams.set('file', $selected_name ?? '');
+					url.searchParams.set('file', s.selected_name ?? '');
 				}
 
 				history.pushState({}, '', url);

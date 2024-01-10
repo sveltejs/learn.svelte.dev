@@ -1,22 +1,15 @@
-import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
-export const progress = writable({
-	value: 0,
-	text: 'initialising'
+export const a = $state({
+	progress: {
+		value: 0,
+		text: 'initialising'
+	},
+	base: /** @type {string | null} */ (null),
+	error: /** @type {Error | null} */ (null),
+	logs: /** @type {string[]} */ ([]),
+	warnings: /** @type {Record<string, import('./state.svelte').CompilerWarning[]>} */ ({})
 });
-
-/** @type {import('svelte/store').Writable<string | null>} */
-export const base = writable(null);
-
-/** @type {import('svelte/store').Writable<Error | null>} */
-export const error = writable(null);
-
-/** @type {import('svelte/store').Writable<string[]>} */
-export const logs = writable([]);
-
-/** @type {import('svelte/store').Writable<Record<string, import('./state').CompilerWarning[]>>} */
-export const warnings = writable({});
 
 /** @type {Promise<import('$lib/types').Adapter>} */
 let ready = new Promise(() => {});
@@ -25,7 +18,7 @@ if (browser) {
 	ready = new Promise(async (fulfil, reject) => {
 		try {
 			const module = await import('$lib/client/adapters/webcontainer/index.js');
-			const adapter = await module.create(base, error, progress, logs, warnings);
+			const adapter = await module.create(a);
 
 			fulfil(adapter);
 		} catch (error) {
@@ -71,9 +64,9 @@ export async function reset(files) {
 			publish('reload');
 		}
 
-		error.set(null);
+		a.error = null;
 	} catch (e) {
-		error.set(/** @type {Error} */ (e));
+		a.error = /** @type {Error} */ (e);
 	}
 }
 

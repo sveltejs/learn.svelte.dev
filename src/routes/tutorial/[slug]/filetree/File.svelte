@@ -2,7 +2,7 @@
 	import * as context from './context.js';
 	import Item from './Item.svelte';
 	import file_icon from '$lib/icons/file.svg';
-	import { selected_name, solution } from '../state.js';
+	import { s } from '../state.svelte.js';
 
 	/** @type {{ file: import('$lib/types').FileStub; depth: number }} */
 	let { file, depth } = $props();
@@ -11,7 +11,7 @@
 
 	let renaming = $state(false);
 
-	const can_remove = $derived(!$solution[file.name]);
+	const can_remove = $derived(!s.solution[file.name]);
 
 	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
 	const actions = $derived(
@@ -42,7 +42,7 @@
 	{renaming}
 	basename={file.basename}
 	icon={file_icon}
-	selected={file.name === $selected_name}
+	selected={file.name === s.selected_name}
 	{actions}
 	on:click={() => select(file.name)}
 	on:edit={() => {

@@ -4,13 +4,13 @@
 
 	/**
 	 * @type {{
-	 * 	basename: string;
-	 * 	icon: string;
-	 * 	depth: number;
-	 * 	selected: boolean;
-	 * 	can_rename: boolean;
+	 * 	basename?: string;
+	 * 	icon?: string;
+	 * 	depth?: number;
+	 * 	selected?: boolean;
+	 * 	can_rename?: boolean;
 	 * 	renaming: boolean;
-	 * 	actions: import('./ContextMenu.svelte').MenuItem[]
+	 * 	actions?: import('./ContextMenu.svelte').MenuItem[]
 	 * }}
 	 */
 	let {
