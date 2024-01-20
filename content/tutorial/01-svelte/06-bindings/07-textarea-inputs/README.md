@@ -2,6 +2,8 @@
 title: Textarea inputs
 ---
 
+Important: If following this tutorial locally, you will need to install the `marked` dependency using your package manager (e.g. `npm install marked`)
+
 The `<textarea>` element behaves similarly to a text input in Svelte — use `bind:value`:
 
 ```svelte
