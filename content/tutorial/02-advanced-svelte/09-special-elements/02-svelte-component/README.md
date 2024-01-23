@@ -27,7 +27,7 @@ We _could_ do this with a sequence of `if` blocks...
 	{/each}
 </select>
 
-+++<svelte:component this={selected.component}/>+++
++++<svelte:component this={selected.component} />+++
 ```
 
 The `this` value can be any component constructor, or a falsy value — if it's falsy, no component is rendered.
