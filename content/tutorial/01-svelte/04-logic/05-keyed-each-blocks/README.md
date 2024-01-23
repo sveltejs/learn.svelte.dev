@@ -4,7 +4,7 @@ title: Keyed each blocks
 
 By default, when you modify the value of an `each` block, it will add and remove DOM nodes at the _end_ of the block, and update any values that have changed. That might not be what you want.
 
-It's easier to show why than to explain.  The `<Thing>` component sets the emoji as a constant on initialization, but the name is passed in via a prop.
+It's easier to show why than to explain. The `<Thing>` component sets the emoji as a constant on initialization, but the name is passed in via a prop.
 
 Click the 'Remove first thing' button a few times, and notice what happens:
 
@@ -13,7 +13,7 @@ Click the 'Remove first thing' button a few times, and notice what happens:
 
 Instead, we'd like to remove only the first `<Thing>` component and its DOM node, and leave the others unaffected.
 
-To do that, we specify a unique identifier (or "key") for iteration of the `each` block:
+To do that, we specify a unique identifier (or "key") for each iteration of the `each` block:
 
 ```svelte
 /// file: App.svelte
