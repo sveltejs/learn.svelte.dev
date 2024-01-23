@@ -13,10 +13,10 @@
 	import { svelteTheme } from '@sveltejs/repl/theme';
 	import { basicSetup } from 'codemirror';
 	import { onMount, tick } from 'svelte';
-	import { warnings } from './adapter.js';
+	import { a } from './adapter.svelte.js';
 	import { autocomplete_for_svelte } from './autocompletion.js';
 	import './codemirror.css';
-	import { files, selected_file, selected_name, update_file } from './state.js';
+	import { update_file, s } from './state.svelte.js';
 
 	/** @type {HTMLDivElement} */
 	let container;
@@ -30,8 +30,7 @@
 	/** @type {Map<string, import('@codemirror/state').EditorState>} */
 	let editor_states = new Map();
 
-	/** @type {import('@codemirror/view').EditorView} */
-	let editor_view;
+	let editor_view = /** @type {import('@codemirror/view').EditorView} */ ($state());
 
 	const extensions = [
 		basicSetup,
@@ -41,38 +40,44 @@
 		svelteTheme
 	];
 
-	$: reset($files);
+	$effect.pre(() => {
+		reset(s.files);
+	});
 
-	$: select_state($selected_name);
+	$effect.pre(() => {
+		select_state(s.selected_name);
+	});
 
-	$: if (editor_view) {
-		if ($selected_name) {
-			const current_warnings = $warnings[$selected_name];
+	$effect.pre(() => {
+		if (editor_view) {
+			if (s.selected_name) {
+				const current_warnings = a.warnings[s.selected_name];
 
-			if (current_warnings) {
-				const diagnostics = current_warnings.map((warning) => {
-					/** @type {import('@codemirror/lint').Diagnostic} */
-					const diagnostic = {
-						from: warning.start.character,
-						to: warning.end.character,
-						severity: 'warning',
-						message: warning.message
-					};
+				if (current_warnings) {
+					const diagnostics = current_warnings.map((warning) => {
+						/** @type {import('@codemirror/lint').Diagnostic} */
+						const diagnostic = {
+							from: warning.start.character,
+							to: warning.end.character,
+							severity: 'warning',
+							message: warning.message
+						};
 
-					return diagnostic;
-				});
+						return diagnostic;
+					});
 
-				const transaction = setDiagnostics(editor_view.state, diagnostics);
+					const transaction = setDiagnostics(editor_view.state, diagnostics);
 
-				editor_view.dispatch(transaction);
+					editor_view.dispatch(transaction);
+				}
 			}
 		}
-	}
+	});
 
 	let installed_vim = false;
 
-	/** @param {import('$lib/types').Stub[]} $files */
-	async function reset($files) {
+	/** @param {import('$lib/types').Stub[]} files */
+	async function reset(files) {
 		if (skip_reset) return;
 
 		let should_install_vim = localStorage.getItem('vim') === 'true';
@@ -89,7 +94,7 @@
 			extensions.push(vim());
 		}
 
-		for (const file of $files) {
+		for (const file of files) {
 			if (file.type !== 'file') continue;
 
 			let state = editor_states.get(file.name);
@@ -109,7 +114,7 @@
 					editor_states.set(file.name, transaction.state);
 					state = transaction.state;
 
-					if ($selected_name === file.name) {
+					if (s.selected_name === file.name) {
 						editor_view.setState(state);
 					}
 				}
@@ -134,12 +139,12 @@
 		}
 	}
 
-	/** @param {string | null} $selected_name */
-	function select_state($selected_name) {
+	/** @param {string | null} selected_name */
+	function select_state(selected_name) {
 		if (skip_reset) return;
 
 		const state =
-			($selected_name && editor_states.get($selected_name)) ||
+			(selected_name && editor_states.get(selected_name)) ||
 			EditorState.create({
 				doc: '',
 				extensions: [EditorState.readOnly.of(true)]
@@ -154,17 +159,17 @@
 			async dispatch(transaction) {
 				editor_view.update([transaction]);
 
-				if (transaction.docChanged && $selected_file) {
+				if (transaction.docChanged && s.selected_file) {
 					skip_reset = true;
 
 					// TODO do we even need to update `$files`? maintaining separate editor states is probably sufficient
 					update_file({
-						...$selected_file,
+						...s.selected_file,
 						contents: editor_view.state.doc.toString()
 					});
 
 					// keep `editor_states` updated so that undo/redo history is preserved for files independently
-					editor_states.set($selected_file.name, editor_view.state);
+					editor_states.set(s.selected_file.name, editor_view.state);
 
 					await tick();
 					skip_reset = false;
@@ -185,25 +190,25 @@
 		skip_reset = false;
 
 		editor_states.clear();
-		await reset($files);
+		await reset(s.files);
 
 		if (editor_view) {
 			// could be false if onMount returned early
-			select_state($selected_name);
+			select_state(s.selected_name);
 		}
 
 		// clear warnings
-		warnings.set({});
+		a.warnings = {};
 	});
 </script>
 
 <svelte:window
-	on:pointerdown={(e) => {
+	onpointerdown={(e) => {
 		if (!container.contains(/** @type {HTMLElement} */ (e.target))) {
 			preserve_editor_focus = false;
 		}
 	}}
-	on:message={(e) => {
+	onmessage={(e) => {
 		if (preserve_editor_focus && e.data.type === 'iframe_took_focus') {
 			editor_view.focus();
 		}
@@ -213,11 +218,11 @@
 <div
 	class="container"
 	bind:this={container}
-	on:focusin={() => {
+	onfocusin={() => {
 		clearTimeout(remove_focus_timeout);
 		preserve_editor_focus = true;
 	}}
-	on:focusout={() => {
+	onfocusout={() => {
 		// Heuristic: user did refocus themmselves if iframe_took_focus
 		// doesn't happen in the next few miliseconds. Needed
 		// because else navigations inside the iframe refocus the editor.
@@ -226,15 +231,15 @@
 		}, 200);
 	}}
 >
-	{#if !browser && $selected_file}
+	{#if !browser && s.selected_file}
 		<div class="fake">
 			<div class="fake-gutter">
-				{#each $selected_file.contents.split('\n') as _, i}
+				{#each s.selected_file.contents.split('\n') as _, i}
 					<div class="fake-line">{i + 1}</div>
 				{/each}
 			</div>
 			<div class="fake-content">
-				{#each $selected_file.contents.split('\n') as line}
+				{#each s.selected_file.contents.split('\n') as line}
 					<pre>{line || ' '}</pre>
 				{/each}
 			</div>

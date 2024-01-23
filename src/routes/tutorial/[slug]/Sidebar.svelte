@@ -1,23 +1,14 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import Menu from './Menu.svelte';
 
-	/** @type {import('$lib/types').PartStub[]} */
-	export let index;
-
-	/** @type {import('$lib/types').Exercise} */
-	export let exercise;
-
-	/** @type {HTMLElement} */
-	export let sidebar;
-
-	const dispatch = createEventDispatcher();
+	/** @type {{ index: import('$lib/types').PartStub[]; exercise: import('$lib/types').Exercise; sidebar: HTMLElement; on_select?: (file: string) => void }}*/
+	let { index, exercise, sidebar, on_select } = $props();
 
 	const namespace = 'learn.svelte.dev';
 	const copy_enabled = `${namespace}:copy_enabled`;
 
-	let show_modal = false;
+	let show_modal = $state(false);
 </script>
 
 <Menu {index} current={exercise} />
@@ -25,7 +16,7 @@
 <section bind:this={sidebar}>
 	<div
 		class="text"
-		on:copy={(e) => {
+		oncopy={(e) => {
 			if (sessionStorage[copy_enabled]) return;
 
 			/** @type {HTMLElement | null} */
@@ -46,19 +37,19 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
-			on:click={(e) => {
+			onclick={(e) => {
 				const node = /** @type {HTMLElement} */ (e.target);
 
 				if (node.nodeName === 'CODE') {
 					const { file } = node.dataset;
 					if (file) {
-						dispatch('select', { file });
+						on_select?.(file);
 					}
 				}
 
 				if (node.nodeName === 'SPAN' && node.classList.contains('filename')) {
 					const file = exercise.scope.prefix + node.textContent;
-					dispatch('select', { file });
+					on_select?.(file);
 				}
 			}}
 		>
@@ -83,7 +74,7 @@
 </section>
 
 {#if show_modal}
-	<Modal on:close={() => (show_modal = false)}>
+	<Modal onclose={() => (show_modal = false)}>
 		<div class="modal-contents">
 			<h2>Copy and paste is currently disabled!</h2>
 
@@ -94,14 +85,14 @@
 			<label>
 				<input
 					type="checkbox"
-					on:change={(e) => {
+					onchange={(e) => {
 						sessionStorage[copy_enabled] = e.currentTarget.checked ? 'true' : '';
 					}}
 				/>
 				enable copy-and-paste for the duration of this session
 			</label>
 
-			<button on:click={() => (show_modal = false)}>OK</button>
+			<button onclick={() => (show_modal = false)}>OK</button>
 		</div>
 	</Modal>
 {/if}

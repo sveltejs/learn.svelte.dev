@@ -1,20 +1,14 @@
 <!-- TODO this is copied from kit.svelte.dev — probably belongs in site-kit -->
 <script>
-	import { createEventDispatcher } from 'svelte';
-
-	/** @type {string} */
-	export let label;
-
-	export let pressed = false;
-
-	const dispatch = createEventDispatcher();
+	/** @type {{ label: string; pressed: boolean; on_change?: (pressed: boolean) => void; }} */
+	let { label, pressed = false, on_change } = $props();
 </script>
 
 <button
 	aria-pressed={pressed ? 'true' : 'false'}
-	on:click={() => {
+	onclick={() => {
 		pressed = !pressed;
-		dispatch('change', { pressed });
+		on_change?.(pressed);
 	}}
 >
 	<span class="visually-hidden">{label}</span>
@@ -72,8 +66,12 @@
 		left: 2px;
 		border-radius: 50%;
 		background: var(--fg);
-		box-shadow: 0 0px 1px rgba(0, 0, 0, 0.4), 0 4px 2px rgba(0, 0, 0, 0.1);
-		transition: background 0.2s ease-out, left 0.2s ease-out;
+		box-shadow:
+			0 0px 1px rgba(0, 0, 0, 0.4),
+			0 4px 2px rgba(0, 0, 0, 0.1);
+		transition:
+			background 0.2s ease-out,
+			left 0.2s ease-out;
 	}
 
 	button[aria-pressed='true']::after {

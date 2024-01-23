@@ -1,21 +1,11 @@
 <script>
-	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Icon } from '@sveltejs/site-kit/components';
 
-	/** @type {boolean} */
-	export let initial;
+	/** @type {{initial: boolean; error: Error | null; progress: number; status: string}}*/
+	let { initial, error, progress, status } = $props();
 
-	/** @type {Error | null} */
-	export let error;
-
-	/** @type {number} */
-	export let progress;
-
-	/** @type {string} */
-	export let status;
-
-	$: is_svelte = /Part (1|2)/.test($page.data.exercise.part.title);
+	const is_svelte = $derived(/Part (1|2)/.test($page.data.exercise.part.title));
 </script>
 
 <div class="loading">

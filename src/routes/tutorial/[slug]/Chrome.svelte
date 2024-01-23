@@ -1,42 +1,50 @@
 <script>
-	import { createEventDispatcher } from 'svelte';
-
-	/** @type {string} */
-	export let path;
-
-	/** @type {boolean} */
-	export let loading;
-
-	/** @type {string | null} */
-	export let href;
-
-	const dispatch = createEventDispatcher();
+	/** @type {{
+	 * 	path: string;
+	 * 	loading: boolean;
+	 * 	href: string | null;
+	 * 	on_refresh?: () => void;
+	 * 	on_change?: (value: string) => void;
+	 * 	on_toggle_terminal?: () => void;
+	 * }}*/
+	let { path, loading, href, on_refresh, on_change, on_toggle_terminal } = $props();
 </script>
 
 <div class="chrome" class:loading>
-	<button disabled={loading} class="reload icon" on:click={() => dispatch('refresh')} aria-label="reload" />
+	<button
+		disabled={loading}
+		class="reload icon"
+		onclick={() => on_refresh?.()}
+		aria-label="reload"
+	/>
 
 	<input
 		disabled={loading}
 		aria-label="URL"
 		value={path}
-		on:change={(e) => {
-			dispatch('change', { value: e.currentTarget.value });
+		onchange={(e) => {
+			on_change?.(e.currentTarget.value);
 		}}
-		on:keydown={(e) => {
+		onkeydown={(e) => {
 			if (e.key !== 'Enter') return;
 
-			dispatch('change', { value: e.currentTarget.value });
+			on_change?.(e.currentTarget.value);
 			e.currentTarget.blur();
 		}}
 	/>
 
-	<a {href} class="new-tab icon" target="_blank" aria-label={href ? 'open in new tab' : undefined} tabindex="0" />
+	<a
+		{href}
+		class="new-tab icon"
+		target="_blank"
+		aria-label={href ? 'open in new tab' : undefined}
+		tabindex="0"
+	/>
 
 	<button
 		disabled={loading}
 		class="terminal icon"
-		on:click={() => dispatch('toggle_terminal')}
+		onclick={() => on_toggle_terminal?.()}
 		aria-label="toggle terminal"
 	/>
 </div>
@@ -69,7 +77,8 @@
 		border: 2px solid var(--sk-theme-3);
 	}
 
-	.icon, .icon::after {
+	.icon,
+	.icon::after {
 		position: relative;
 		height: 100%;
 		aspect-ratio: 1;

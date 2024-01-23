@@ -7,20 +7,24 @@
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 
-	/** @type {import('$lib/types').PartStub[]}*/
-	export let index;
-
-	/** @type {import('$lib/types').Exercise} */
-	export let current;
+	/** @type {{index: import('$lib/types').PartStub[]; current: import('$lib/types').Exercise;}}*/
+	let { index, current } = $props();
 
 	const is_mobile = mql('(max-width: 800px)');
 
 	const duration = $reduced_motion ? 0 : 200;
 
-	let is_open = false;
+	let is_open = $state(false);
 
-	$: expanded_part = current.part.slug;
-	$: expanded_chapter = current.chapter.slug;
+	let expanded_part = $state(current.part.slug);
+	$effect.pre(() => {
+		expanded_part = current.part.slug;
+	});
+
+	let expanded_chapter = $state(current.chapter.slug);
+	$effect.pre(() => {
+		expanded_chapter = current.chapter.slug;
+	});
 </script>
 
 <div
@@ -40,7 +44,7 @@
 
 		<button
 			class="heading"
-			on:click={() => ($is_mobile ? open_nav() : (is_open = !is_open))}
+			onclick={() => ($is_mobile ? open_nav() : (is_open = !is_open))}
 			class:open={is_open}
 		>
 			<h1>
@@ -83,7 +87,8 @@
 									transition:slide={{ duration }}
 								>
 									<button
-										on:click|stopPropagation={() => {
+										onclick={(e) => {
+											e.stopPropagation();
 											if (expanded_part !== part.slug) {
 												expanded_part = part.slug;
 												expanded_chapter = part.chapters[0].slug;
@@ -102,7 +107,10 @@
 													aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
 												>
 													<button
-														on:click|stopPropagation={() => (expanded_chapter = chapter.slug)}
+														onclick={(e) => {
+															e.stopPropagation();
+															expanded_chapter = chapter.slug;
+														}}
 														style="width: 100%; text-align: start;"
 													>
 														<!-- <img src={arrow} alt="Arrow icon" /> -->
@@ -122,7 +130,7 @@
 																>
 																	<a
 																		href="/tutorial/{exercise.slug}"
-																		on:click={() => (is_open = false)}
+																		onclick={() => (is_open = false)}
 																	>
 																		{exercise.title}
 																	</a>

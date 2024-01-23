@@ -2,7 +2,7 @@ import { setContext, getContext } from 'svelte';
 
 /**
  * @typedef {{
- *   collapsed: import('svelte/store').Writable<Record<string, boolean>>;
+ *   collapsed: Record<string, boolean>;
  *   add: (name: string, type: 'file' | 'directory') => Promise<void>;
  *   rename: (stub: import('$lib/types').Stub, name: string) => Promise<void>;
  *   remove: (stub: import('$lib/types').Stub) => Promise<void>;

@@ -1,10 +1,4 @@
-import { derived, writable } from 'svelte/store';
-import * as adapter from './adapter.js';
-
-/**
- * @template T
- * @typedef {import('svelte/store').Writable<T>} Writable<T>
- */
+import * as adapter from './adapter.svelte.js';
 
 // TODO would be nice if svelte exported this type (maybe it does already?)
 /**
@@ -19,35 +13,38 @@ import * as adapter from './adapter.js';
  * }} CompilerWarning
  */
 
-/** @type {Writable<import('$lib/types').Stub[]>} */
-export const files = writable([]);
-
-/** @type {Writable<Record<string, import('$lib/types').Stub>>} */
-export const solution = writable({});
-
-/** @type {Writable<{ parent: string, type: 'file' | 'directory' } | null>} */
-export const creating = writable(null);
-
-/** @type {Writable<string | null>} */
-export const selected_name = writable(null);
-
-export const selected_file = derived([files, selected_name], ([$files, $selected_name]) => {
-	return (
-		/** @type{import('$lib/types').FileStub | undefined} */ (
-			$files.find((stub) => stub.name === $selected_name)
-		) ?? null
-	);
-});
+export const s = $state(
+	/**
+	 * @type {{
+	 * 	files: import('$lib/types').Stub[];
+	 * 	solution: Record<string, import('$lib/types').Stub>;
+	 * 	creating: { parent: string, type: 'file' | 'directory' } | null;
+	 * 	selected_name: string | null;
+	 * 	selected_file: import('$lib/types').FileStub;
+	 * }}
+	 */
+	({
+		files: [],
+		solution: {},
+		creating: null,
+		selected_name: null,
+		get selected_file() {
+			return (
+				/** @type {import('$lib/types').FileStub | undefined} */ (
+					this.files.find((stub) => stub.name === this.selected_name)
+				) ?? null
+			);
+		}
+	})
+);
 
 /** @param {import('$lib/types').FileStub} file */
 export function update_file(file) {
-	files.update(($files) => {
-		return $files.map((old) => {
-			if (old.name === file.name) {
-				return file;
-			}
-			return old;
-		});
+	s.files = s.files.map((old) => {
+		if (old.name === file.name) {
+			return file;
+		}
+		return old;
 	});
 
 	adapter.update(file);
@@ -56,12 +53,10 @@ export function update_file(file) {
 /** @param {import('$lib/types').Stub[]} new_files */
 export function reset_files(new_files) {
 	// if the selected file no longer exists, clear it
-	selected_name.update(($selected_name) => {
-		const file = new_files.find((file) => file.name === $selected_name);
-		return file?.name ?? null;
-	});
-
-	files.set(new_files);
+	const file = new_files.find((file) => file.name === s.selected_name);
+	s.selected_name = file?.name ?? null;
+	s.files = new_files;
+	console.log('lets reset');
 	adapter.reset(new_files);
 }
 
