@@ -65,7 +65,7 @@ When the track ends, be kind — rewind:
 
 The complete set of bindings for `<audio>` and `<video>` is as follows — seven _readonly_ bindings...
 
-- `duration` (readonly) — the total duration of the video, in seconds
+- `duration` (readonly) — the total duration, in seconds
 - `buffered` (readonly) — an array of `{start, end}` objects
 - `seekable` (readonly) — ditto
 - `played` (readonly) — ditto
@@ -75,8 +75,8 @@ The complete set of bindings for `<audio>` and `<video>` is as follows — seven
 
 ...and five _two-way_ bindings:
 
-- `currentTime` — the current point in the video, in seconds
-- `playbackRate` — how fast to play the video, where `1` is 'normal'
+- `currentTime` — the current position of the playhead, in seconds
+- `playbackRate` — speed up or slow down (`1` is 'normal')
 - `paused` — this one should be self-explanatory
 - `volume` — a value between 0 and 1
 - `muted` — a boolean value where true is muted
