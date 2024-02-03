@@ -10,6 +10,7 @@ Most commonly, you'd use it to customise caching behaviour with the [`Cache-Cont
 /// file: src/routes/+page.server.js
 export function load(+++{ setHeaders }+++) {
 +++	setHeaders({
+		'X-Content-Type-Options': 'nosniff',
 		'Content-Type': 'text/plain'
 	});+++
 }
