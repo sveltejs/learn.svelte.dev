@@ -8,8 +8,8 @@
 </script>
 
 <button on:click={increment}>
-	Clicked {count}
-	{count === 1 ? 'time' : 'times'}
+	Il y a eu {count}
+	{count === 1 ? 'clic' : 'clics'}
 </button>
 
-<p>{count} doubled is {doubled}</p>
+<p>{count} fois 2  vaut {doubled}</p>

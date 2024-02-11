@@ -1,32 +1,32 @@
 ---
-title: Statements
+title: Instructions
 ---
 
-We're not limited to declaring reactive _values_ — we can also run arbitrary _statements_ reactively. For example, we can log the value of `count` whenever it changes:
+Nous ne sommes pas limité•e•s à la déclaration de _valeurs_ réactives — nous pouvons aussi exécuter des _instructions_ de manière réactive. Par exemple, nous pouvons afficher la valeur de `count` à chaque fois qu'elle change :
 
 ```js
 /// file: App.svelte
 let count = 0;
 
-+++$: console.log(`the count is ${count}`);+++
++++$: console.log(`le compteur vaut ${count}`);+++
 ```
 
-You can easily group statements together with a block:
+Vous pouvez facilement grouper des instructions avec un bloc :
 
 ```js
 /// file: App.svelte
 $: +++{+++
-	console.log(`the count is ${count}`);
-	console.log(`this will also be logged whenever count changes`);
+	console.log('le compteur vaut ' + count);
+	console.log(`ceci sera aussi affiché à chaque fois que count change`);
 +++}+++
 ```
 
-You can even put the `$:` in front of things like `if` blocks:
+Vous pouvez même ajouter `$:` devant des blocs `if` par exemple :
 
 ```js
 /// file: App.svelte
 $: +++if (count >= 10)+++ {
-	alert('count is dangerously high!');
+	alert('le compteur est dangereusement élevé !');
 	count = 0;
 }
 ```

@@ -1,3 +1,3 @@
 export function load() {
-	throw new Error('this is the bad place!');
+	throw new Error("ici c'est nul !");
 }

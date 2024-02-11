@@ -1,10 +1,10 @@
 ---
-title: Declarations
+title: Déclarations
 ---
 
-Svelte automatically updates the DOM when your component's state changes. Often, some parts of a component's state need to be computed from _other_ parts (such as a `fullname` derived from a `firstname` and a `lastname`), and recomputed whenever they change.
+Svelte met automatiquement à jour le <span class="vo">[DOM](PUBLIC_SVELTE_SITE_URL/docs/web#dom)</span> lorsque l'état de votre composant change. Certaines parties de l'état d'un composant doivent être calculées à partir d'autres variables et doivent être recalculées à chaque fois que ces dernières changent (comme un `nomComplet` dérivé d'un `prenom` et d'un `nom`),
 
-For these, we have _reactive declarations_. They look like this:
+Pour ces cas, nous avons les _déclarations réactives_. Elles se présentent comme suit :
 
 ```js
 /// file: App.svelte
@@ -12,19 +12,19 @@ let count = 0;
 +++$: doubled = count * 2;+++
 ```
 
-If a reactive statement consists entirely of an assignment to an undeclared variable, Svelte will inject a `let` declaration on your behalf.
+Si une déclaration réactive consiste entièrement en une affectation à une variable non déclarée, Svelte injectera une déclaration `let` pour vous.
 
-> Don't worry if this looks a little alien. It's [valid](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/label) (if unconventional) JavaScript, which Svelte interprets to mean 're-run this code whenever any of the referenced values change'. Once you get used to it, there's no going back.
+> Ne vous inquiétez pas si cela semble un peu étrange. Cette syntaxe est du JavaScript [valide](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Statements/label), même si peu conventionnel, que Svelte interprète ainsi : "ré-exécute ce code dès qu'une des variables référencées change". Une fois l'habitude prise, vous ne pourrez plus vous en passer.
 
-Let's use `doubled` in our markup:
+Utilisons `doubled` dans notre <span class="vo">[markup](PUBLIC_SVELTE_SITE_URL/docs/web#markup)</span> :
 
 ```svelte
 /// file: App.svelte
 <button>...</button>
 
-+++<p>{count} doubled is {doubled}</p>+++
+<p>{count} fois 2 vaut {doubled}</p>
 ```
 
-Of course, you could just write `{count * 2}` in the markup instead — you don't have to use reactive values. Reactive values become particularly valuable (no pun intended) when you need to reference them multiple times, or you have values that depend on _other_ reactive values.
+Bien sûr, vous pourriez très bien vous contenter d'écrire `{count * 2}` dans le <span class="vo">[markup](PUBLIC_SVELTE_SITE_URL/docs/web#markup)</span> — vous n'êtes pas obligé•e•s d'utiliser des valeurs réactives. Les valeurs réactives deviennent particulièrement utiles lorsque vous avez besoin de les référencer plusieurs fois, ou lorsque vous avez des valeurs qui dépendent d'_autres_ valeurs réactives.
 
-> Note that reactive declarations and statements will run after other script code and before component markup is rendered.
+> Notez que les déclarations et les instructions réactives seront exécutées après les autres parties du script et avant que le <span class="vo">[markup](PUBLIC_SVELTE_SITE_URL/docs/web#markup)</span> du composant ne soit rendu.

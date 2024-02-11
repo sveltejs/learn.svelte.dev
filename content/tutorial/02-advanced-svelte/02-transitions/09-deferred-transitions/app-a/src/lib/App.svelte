@@ -3,18 +3,18 @@
 	import TodoList from './TodoList.svelte';
 
 	const todos = createTodoStore([
-		{ done: false, description: 'write some docs' },
-		{ done: false, description: 'start writing blog post' },
-		{ done: true, description: 'buy some milk' },
-		{ done: false, description: 'mow the lawn' },
-		{ done: false, description: 'feed the turtle' },
-		{ done: false, description: 'fix some bugs' }
+		{ done: false, description: 'écrire de la doc' },
+		{ done: false, description: 'commencer un article de blog' },
+		{ done: true,  description: 'acheter du lait' },
+		{ done: false, description: 'tondre la pelouse' },
+		{ done: false, description: 'nourrir la tortue' },
+		{ done: false, description: 'résoudre des bugs' },
 	]);
 </script>
 
 <div class="board">
 	<input
-		placeholder="what needs to be done?"
+		placeholder="Qu'est ce qui doit être fait ?"
 		on:keydown={(e) => {
 			if (e.key !== 'Enter') return;
 
@@ -24,12 +24,12 @@
 	/>
 
 	<div class="todo">
-		<h2>todo</h2>
+		<h2>A faire</h2>
 		<TodoList store={todos} done={false} />
 	</div>
 
 	<div class="done">
-		<h2>done</h2>
+		<h2>Fait</h2>
 		<TodoList store={todos} done={true} />
 	</div>
 </div>

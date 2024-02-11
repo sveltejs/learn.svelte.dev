@@ -1,10 +1,10 @@
 ---
-title: Spread props
+title: Décomposition des props
 ---
 
-In this exercise, we've forgotten to specify the `version` prop expected by `PackageInfo.svelte`, meaning it shows 'version undefined'.
+Dans cet exercice, nous avons oublié de spécifier la propriété `version` attendue par `PackageInfo.svelte`, ce qui signifie qu'il affiche 'version undefined'.
 
-We _could_ fix it by adding the `version` prop...
+Nous _pourrions_ corriger cela en ajoutant la propriété `version`...
 
 ```svelte
 /// file: App.svelte
@@ -16,11 +16,11 @@ We _could_ fix it by adding the `version` prop...
 />
 ```
 
-...but since the properties of `pkg` correspond to the component's expected props, we can 'spread' them onto the component instead:
+...mais comme les propriétés de `pkg` correspondent aux propriétés attendues du composant, nous pouvons les "répartir" sur le composant à la place :
 
 ```svelte
 /// file: App.svelte
 <PackageInfo +++{...pkg}+++ />
 ```
 
-> Conversely, if you need to reference all the props that were passed into a component, including ones that weren't declared with `export`, you can do so by accessing `$$props` directly. It's not generally recommended, as it's difficult for Svelte to optimise, but it's useful in rare cases.
+> Inversement, si vous avez besoin de référencer toutes les <span class="vo">[props](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#props)</span> qui ont été passées à un composant, y compris celles non spécifiées avec le mot clé `export`, vous pouvez le faire avec l'objet `$$props` directement. Ce n'est pas recommandé, car cela rend difficile l'optimisation pour Svelte, mais peut être très pratique dans de rares cas.

@@ -33,7 +33,7 @@
 		in:spin={{ duration: 8000 }}
 		out:fade
 	>
-		<span>transitions!</span>
+		<span>transitionne !</span>
 	</div>
 {/if}
 

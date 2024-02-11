@@ -1,7 +1,7 @@
 <nav>
-	<a href="/">home</a>
-	<a href="/expected">page with expected error</a>
-	<a href="/unexpected">page with unexpected error</a>
+	<a href="/">accueil</a>
+	<a href="/expected">page avec une erreur attendue</a>
+	<a href="/unexpected">page avec une erreur inattendue</a>
 </nav>
 
 <slot />

@@ -28,10 +28,10 @@
 			time = 0;
 		}}
 	/>
-	
+
 	<button
 		class="play"
-		aria-label={paused ? 'play' : 'pause'}
+		aria-label={paused ? 'lecture' : 'pause'}
 		on:click={() => paused = !paused}
 	/>
 
@@ -47,14 +47,14 @@
 				class="slider"
 				on:pointerdown={e => {
 					const div = e.currentTarget;
-					
+
 					function seek(e) {
 						const { left, width } = div.getBoundingClientRect();
 
 						let p = (e.clientX - left) / width;
 						if (p < 0) p = 0;
 						if (p > 1) p = 1;
-						
+
 						time = p * duration;
 					}
 
@@ -94,7 +94,7 @@
 		color: var(--fg-1);
 		filter: drop-shadow(0.5em 0.5em 1em rgba(0,0,0,0.1));
 	}
-	
+
 	button {
 		width: 100%;
 		aspect-ratio: 1;
@@ -102,7 +102,7 @@
 		background-position: 50% 50%;
 		border-radius: 50%;
 	}
-	
+
 	[aria-label="pause"] {
 		background-image: url(./pause.svg);
 	}

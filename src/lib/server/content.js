@@ -262,7 +262,7 @@ export async function get_exercise(slug) {
 			return {
 				part: {
 					slug: part_dir,
-					title: `Part ${part_dir.slice(1, 2)}`,
+					title: `Partie ${part_dir.slice(1, 2)}`,
 					label: part_meta.title
 				},
 				chapter: {

@@ -1,5 +1,5 @@
 export function load(event) {
 	return {
-		message: `the answer is ${event.locals.answer}`
+		message: `la réponse est ${event.locals.answer}`
 	};
 }

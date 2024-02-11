@@ -1,5 +1,5 @@
 export function load() {
 	return {
-		message: `the answer is ???`
+		message: `la réponse est ???`
 	};
 }

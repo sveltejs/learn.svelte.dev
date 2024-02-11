@@ -1,12 +1,12 @@
 ---
-title: Event forwarding
+title: Relais d'évènement
 ---
 
-Unlike DOM events, component events don't _bubble_. If you want to listen to an event on some deeply nested component, the intermediate components must _forward_ the event.
+À la différence des évènements du <span class="vo">[DOM](PUBLIC_SVELTE_SITE_URL/docs/web#dom)</span>, les évènements de composant ne <span class="vo">[bubblent](PUBLIC_SVELTE_SITE_URL/docs/javascript#bubble-capture)</span> pas. Si vous souhaitez écouter un évènement provenant d'un composant profondément imbriqué, les composants intermédiaires doivent _relayer_ l'évènement.
 
-In this case, we have the same `App.svelte` and `Inner.svelte` as in the [previous chapter](/tutorial/component-events), but there's now an `Outer.svelte` component that contains `<Inner/>`.
+Ici, nous avons les mêmes `App.svelte` et `Inner.svelte` que dans le [chapitre précédent](/tutorial/component-events), mais il y a également le composant `Outer.svelte` qui instancie `<Inner/>`.
 
-One way we _could_ solve the problem is adding `createEventDispatcher` to `Outer.svelte`, listening for the `message` event, and creating a handler for it:
+Une façon de résoudre le problème est d'ajouter `createEventDispatcher` à `Outer.svelte`, d'écouter l'évènement `message`, et de le gérer via un gestionnaire :
 
 ```svelte
 /// file: Outer.svelte
@@ -24,7 +24,7 @@ One way we _could_ solve the problem is adding `createEventDispatcher` to `Outer
 <Inner on:message={forward}/>
 ```
 
-But that's a lot of code to write, so Svelte gives us an equivalent shorthand — an `on:message` event directive without a value means 'forward all `message` events'.
+Mais cela fait beaucoup de code à écrire. Svelte nous fournit un raccourci équivalent — une directive d'évènement `on:message` sans valeur signifie "relaye tous les évènements `message`".
 
 ```svelte
 /// file: Outer.svelte

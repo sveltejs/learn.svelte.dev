@@ -1,10 +1,10 @@
 ---
-title: Error pages
+title: Pages d'erreur
 ---
 
-When something goes wrong inside a `load` function, SvelteKit renders an error page.
+Lorsque quelque chose se passe mal dans une fonction `load`, SvelteKit affiche une page d'erreur.
 
-The default error page is somewhat bland. We can customize it by creating a `src/routes/+error.svelte` component:
+La page d'erreur par défaut est quelque peu fade. Nous pouvons la personnaliser en créant un composant `src/routes/+error.svelte` :
 
 ```svelte
 /// file: src/routes/+error.svelte
@@ -19,11 +19,11 @@ The default error page is somewhat bland. We can customize it by creating a `src
 </span>
 ```
 
-Notice that the `+error.svelte` component is rendered inside the root `+layout.svelte`. We can create more granular `+error.svelte` boundaries:
+Remarquez que le composant `+error.svelte` est rendu à l'intérieur du `+layout.svelte` racine. Nous pouvons créer des frontières `+error.svelte` plus granulaires :
 
 ```svelte
 /// file: src/routes/expected/+error.svelte
-<h1>this error was expected</h1>
+<h1>cette erreur est attendue</h1>
 ```
 
-This component will be rendered for `/expected`, while the root `src/routes/+error.svelte` page will be rendered for any other errors that occur.
+Ce composant sera rendu pour la route `/expected`, tandis que la page `src/routes/+error.svelte` sera rendue pour toute autre erreur.

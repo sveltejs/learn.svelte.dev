@@ -2,9 +2,9 @@
 title: handleError
 ---
 
-The `handleError` hook lets you intercept unexpected errors and trigger some behaviour, like pinging a Slack channel or sending data to an error logging service.
+Le <span class="vo">[hook](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#hook)</span> `handleError` vous permet d'intercepter des erreurs inattendues et de déclencher des comportements, comme alerter un canal Slack ou envoyer de la donnée vers un service de gestion d'erreur.
 
-As you'll recall from an [earlier exercise](error-basics), an error is _unexpected_ if it wasn't created with the `error` helper from `@sveltejs/kit`. It generally means something in your app needs fixing. The default behaviour is to log the error:
+Comme nous l'avons vu dans un [exercice précédent](error-basics), une erreur est _inattendue_ si elle n'a pas été créée avec l'utilitaire `error` de `@sveltejs/kit`. Cela signifie généralement que votre application a besoin d'être réparée. Le comportement par défaut est d'afficher l'erreur :
 
 ```js
 /// file: src/hooks.server.js
@@ -13,18 +13,18 @@ export function handleError({ event, error }) {
 }
 ```
 
-If you navigate to `/the-bad-place`, you'll see this in action — the error page is shown, and if you open the terminal (using the button to the right of the URL bar), you'll see the message from `src/routes/the-bad-place/+page.server.js`.
+Si vous naviguez vers `/the-bad-place`, vous verrez ceci en action — la page d'erreur est affichée, et si vous ouvrez le terminal (à l'aide du bouton à droite de la barre d'URL), vous verrez le message provenant de `src/routes/the-bad-place/+page.server.js`.
 
-Notice that we're _not_ showing the error message to the user. That's because error messages can include sensitive information that at best will confuse your users, and at worst could benefit evildoers. Instead, the error object available to your application — represented as `$page.error` in your `+error.svelte` pages, or `%sveltekit.error%` in your `src/error.html` fallback — is just this:
+Notez que nous n'affichons _pas_ le message d'erreur aux utilisateurs et utilisatrices, car les messages d'erreur peuvent contenir des informations sensibles qui au mieux vont dérouter une personne lambda, au pire bénéficier à une personne mal intentionnée. À la place, l'objet d'erreur disponible dans votre application — représenté par `$page.error` dans `+error.svelte`, ou `%sveltekit.error%` dans le fichier de secours `src/error.html` — ne contient que ça :
 
 ```js
 /// no-file
 {
-	message: 'Internal Error' // or 'Not Found' for a 404
+	message: 'Internal Error' // ou 'Not Found' pour une 404
 }
 ```
 
-In some situations you may want to customise this object. To do so, you can return an object from `handleError`:
+Dans certaines situations, vous pourriez vouloir personnaliser cet objet. Pour faire cela, vous pouvez renvoyer un objet depuis `handleError` :
 
 ```js
 /// file: src/hooks.server.js
@@ -32,13 +32,13 @@ export function handleError({ event, error }) {
 	console.error(error.stack);
 
 	return {
-		message: 'everything is fine',
+		message: 'tout va bien',
 		code: 'JEREMYBEARIMY'
 	};
 }
 ```
 
-You can now reference properties other than `message` in a custom error page. Create `src/routes/+error.svelte`:
+Vous pouvez désormais référencer des propriétés autres que `message` depuis une page d'erreur personnalisée. Créez `src/routes/+errors.svelte` :
 
 ```svelte
 /// file: src/routes/+error.svelte
@@ -48,5 +48,5 @@ You can now reference properties other than `message` in a custom error page. Cr
 
 <h1>{$page.status}</h1>
 <p>{$page.error.message}</p>
-<p>error code: {$page.error.code}</p>
+<p>code d'erreur: {$page.error.code}</p>
 ```

@@ -1,1 +1,1 @@
-<h1>blog post</h1>
+<h1>Article de blog</h1>

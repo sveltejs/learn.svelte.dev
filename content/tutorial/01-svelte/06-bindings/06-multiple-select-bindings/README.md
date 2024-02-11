@@ -1,22 +1,22 @@
 ---
-title: Select multiple
+title: Select multiples
 ---
 
-A `<select>` element can have a `multiple` attribute, in which case it will populate an array rather than selecting a single value.
+Un élément `<select>` peut avoir un attribute `multiple`. Dans ce cas, la liaison va remplir un tableau plutôt que sélectionner une valeur unique.
 
-Replace the checkboxes with a `<select multiple>`:
+Remplace les <span class='vo'>[checkboxes](PUBLIC_SVELTE_SITE_URL/docs/web#checkbox)</span> par un `<select multiple>`:
 
 ```svelte
 /// file: App.svelte
-<h2>Flavours</h2>
+<h2>Parfums</h2>
 
 +++<select multiple bind:value={flavours}>+++
-	{#each ['cookies and cream', 'mint choc chip', 'raspberry ripple'] as flavour}
+	{#each ['Cookie crémeux', 'Éclats de menthe', 'Vague à la fraise'] as flavour}
 +++		<option>{flavour}</option>+++
 	{/each}
 +++</select>+++
 ```
 
-Note that we're able to omit the `value` attribute on the `<option>`, since the value is identical to the element's contents.
+Notez que nous pouvons omettre l'attribut `value` des `<option>`, puisque les valeurs sont identiques au contenu des éléments.
 
-> Press and hold the `control` key (or the `command` key on MacOS) to select multiple options.
+> Laissez enfoncée la touche `control` (ou la touche `command` sur MacOS) pour sélectionner plusieurs options.

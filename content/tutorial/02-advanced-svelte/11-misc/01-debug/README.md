@@ -1,16 +1,16 @@
 ---
-title: The @debug tag
+title: La balise @debug
 ---
 
-Occasionally, it's useful to inspect a piece of data as it flows through your app.
+Il est parfois utile d'inspecter votre donnée au fur et à mesure qu'elle traverse votre application.
 
-One approach is to use `console.log(...)` inside your markup. If you want to pause execution, though, you can use the `{@debug ...}` tag with a comma-separated list of values you want to inspect:
+Une approche est d'utiliser `console.log(...)` dans votre <span class="vo">[markup](PUBLIC_SVELTE_SITE_URL/docs/web#markup)</span>. Mais si vous voulez mettre votre exécution en pause, vous pouvez utiliser la balise `{@debug ...}` avec une liste de valeurs que vous souhaitez inspecter séparées par des virgules :
 
 ```svelte
 /// file: App.svelte
 {@debug user}
 
-<h1>Hello {user.firstname}!</h1>
+<h1>Bonjour {user.firstname}!</h1>
 ```
 
-If you now open your devtools and start interacting with the `<input>` elements, you'll trigger the debugger as the value of `user` changes. (Note that the call stack and local variables will be hidden in this tutorial, because of iframe security restrictions.)
+Maintenant, si vous ouvrez vous outils de développement et commencez à interagir avec les éléments `<input>`, vous déclencherez le <span class='vo'>[debugger](PUBLIC_SVELTE_SITE_URL/docs/development#debugger)</span> à chaque fois que la valeur de `user` change.

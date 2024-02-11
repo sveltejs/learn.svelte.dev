@@ -1,1 +1,1 @@
-<h1>Prerendering</h1>
+<h1>Pré-rendu</h1>

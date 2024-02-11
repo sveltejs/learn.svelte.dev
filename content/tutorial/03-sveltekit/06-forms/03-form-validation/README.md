@@ -2,15 +2,15 @@
 title: Validation
 ---
 
-Users are a mischievous bunch, who will submit all kinds of nonsensical data if given the chance. To prevent them from causing chaos, it's important to validate form data.
+Les utilisateurs et utilisatrices sont une espèce malicieuse, qui peut soumettre de la donnée absurde si on lui en laisse l'occasion. Pour les empêcher de répandre le chaos, il est important de valider la donnée.
 
-The first line of defense is the browser's [built-in form validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#using_built-in_form_validation), which makes it easy to, for example, mark an `<input>` as required:
+La première ligne de défense est la [validation de formulaire native du navigateur](https://developer.mozilla.org/fr/docs/Learn/Forms/Form_validation#using_built-in_form_validation), qui rend simple par exemple de rendre un `<input>` obligatoire :
 
 ```svelte
 /// file: src/routes/+page.svelte
 <form method="POST" action="?/create">
 	<label>
-		add a todo
+		ajouter une tâche
 		<input
 			name="description"
 			autocomplete="off"
@@ -20,23 +20,23 @@ The first line of defense is the browser's [built-in form validation](https://de
 </form>
 ```
 
-Try hitting Enter while the `<input>` is empty.
+Essayer d'appuyer sur Entrée lorsque l'`<input>` est vide.
 
-This kind of validation is helpful, but insufficient. Some validation rules (e.g. uniqueness) can't be expressed using `<input>` attributes, and in any case, if the user is an elite hacker they might simply delete the attributes using the browser's devtools. To guard against these sorts of shenanigans, you should always use server-side validation.
+Ce genre de validation est pratique, mais insuffisant. Certaines règles de validation (par ex. l'unicité) ne peuvent pas être exprimées en utilisant des attributs d'`<input>`, et dans tous les cas, si la personne est une hackeuse d'élite, elle pourrait très simplement ignorer les attributs en utilisant les outils de développement du navigateur. Pour se prévenir de telles manigances, vous devriez toujours valider vos formulaires côté serveur.
 
-In `src/lib/server/database.js`, validate that the description exists and is unique:
+Dans `src/lib/server/database.js`, valider que la description existe et qu'elle est unique :
 
 ```js
 /// file: src/lib/server/database.js
 export function createTodo(userid, description) {
 +++	if (description === '') {
-		throw new Error('todo must have a description');
+		throw new Error('une tâche doit avoir une description');
 	}+++
 
 	const todos = db.get(userid);
 
 +++	if (todos.find((todo) => todo.description === description)) {
-		throw new Error('todos must be unique');
+		throw new Error('les tâches doivent être uniques');
 	}+++
 
 	todos.push({
@@ -47,9 +47,9 @@ export function createTodo(userid, description) {
 }
 ```
 
-Try submitting a duplicate todo. Yikes! SvelteKit takes us to an unfriendly-looking error page. On the server, we see a 'todos must be unique' error, but SvelteKit hides unexpected error messages from users because they often contain sensitive data.
+Essayez de créer une tâche dupliquées. Beurk ! SvelteKit nous emmène vers une page d'erreur très inhospitalière. Sur le serveur, nous voyons une erreur "les tâches doivent être uniques", mais SvelteKit cache aux utilisateurs et utilisatrices les messages d'erreurs inattendus car ils contiennent souvent de la donnée sensible.
 
-It would be much better to stay on the same page and provide an indication of what went wrong so that the user can fix it. To do this, we can use the `fail` function to return data from the action along with an appropriate HTTP status code:
+Il serait plus approprié de rester sur la même page et de fournir une indication de ce qu'il s'est mal passé afin que la personne puisse corriger le problème. Pour faire cela, nous pouvons utiliser la fonction `fail` pour renvoyer de la donnée de l'action avec un code HTTP approprié :
 
 ```js
 /// file: src/routes/+page.server.js
@@ -73,7 +73,7 @@ export const actions = {
 	}
 ```
 
-In `src/routes/+page.svelte`, we can access the returned value via the `form` prop, which is only ever populated after a form submission:
+Dans `src/routes/+page.svelte`, nous pouvons accéder à la valeur renvoyée via la <span class="vo">[prop](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#props)</span> `form`, qui n'est remplie qu'après la soumission d'un formulaire :
 
 ```svelte
 /// file: src/routes/+page.svelte
@@ -91,7 +91,7 @@ In `src/routes/+page.svelte`, we can access the returned value via the `form` pr
 	
 	<form method="POST" action="?/create">
 		<label>
-			add a todo:
+			ajouter une tâche :
 			<input
 				name="description"
 				+++value={form?.description ?? ''}+++
@@ -102,4 +102,4 @@ In `src/routes/+page.svelte`, we can access the returned value via the `form` pr
 	</form>
 ```
 
-> You can also return data from an action _without_ wrapping it in `fail` — for example to show a 'success!' message when data was saved — and it will be available via the `form` prop.
+> Vous pouvez aussi renvoyer de la donnée depuis une action _sans_ utiliser `fail` — par exemple pour afficher un message "succès !" lorsque la donnée est enregistrée — elle sera également disponible dans la <span class="vo">[prop](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#props)</span> `form`.

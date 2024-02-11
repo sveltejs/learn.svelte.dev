@@ -1,10 +1,10 @@
 ---
-title: Preloading
+title: Chargement anticipé
 ---
 
-In this exercise, the `/slow-a` and `/slow-b` routes both have artificial delays in their `load` functions, meaning it takes a long time to navigate to them.
+Dans cet exercice, les routes `/slow-a` et `slow-b` ont toutes les deux des ralentissements artificiels dans leurs fonctions `load`, ce qui veut dire qu'y accéder prend un temps conséquent.
 
-You can't always make your data load more quickly — sometimes it's out of your control — but SvelteKit can speed up navigations by _anticipating_ them. When an `<a>` element has a `data-sveltekit-preload-data` attribute, SvelteKit will begin the navigation as soon as the user hovers over the link (on desktop) or taps it (on mobile). Try adding it to the first link:
+Vous ne pouvez pas toujours faire en sorte que votre donnée soit chargées rapidement — c'est parfois hors de votre contrôle — mais SvelteKit peut accélérer les navigations en les _anticipant_. Lorsqu'un élément `<a>` a l'attribut `data-sveltekit-preload-data`, SvelteKit va commencer la navigation aussitôt que le lien est survolé (sur <span class="vo">[desktop](PUBLIC_SVELTE_SITE_URL/docs/web#desktop)</span>) ou appuie dessus (sur mobile). Essayez d'ajouter cet attribut au premier lien :
 
 ```svelte
 /// file: src/routes/+layout.svelte
@@ -15,9 +15,9 @@ You can't always make your data load more quickly — sometimes it's out of your
 </nav>
 ```
 
-Navigating to `/slow-a` will now be noticeably faster. Starting navigation on hover or tap (rather than waiting for a `click` event to be registered) might not sound like it makes much difference, but in practice it typically saves 200ms or more. That's enough to be the difference between sluggish and snappy.
+Naviguer vers `/slow-a` sera désormais significativement plus rapide. Commencer la navigation au survol ou au toucher (plutôt qu'attendre que l'évènement `click` soit traité) peut ne pas paraître comme une différence notable, mais en pratique cela économise généralement 200 ms, voire plus. C'est suffisant pour faire la différence entre une navigation laborieuse et une navigation rapide.
 
-You can put the attribute on individual links, or on any element that _contains_ links. The default project template includes the attribute on the `<body>` element:
+Vous pouvez mettre l'attribut sur des liens individuels, ou sur tout élément qui _contient_ des liens. Le <span class="vo">[template](PUBLIC_SVELTE_SITE_URL/docs/development#template)</span> de projet par défaut fournit cet attribut à l'élément `<body>` :
 
 ```html
 /// no-file
@@ -26,29 +26,29 @@ You can put the attribute on individual links, or on any element that _contains_
 </body>
 ```
 
-You can customise the behaviour further by specifying one of the following values for the attribute:
+Vous pouvez aller plus dans la personnalisation de ce comportement en précisant l'une des valeurs suivantes pour l'attribut :
 
-- `"hover"` (default, falls back to `"tap"` on mobile)
-- `"tap"` — only begin preloading on tap
-- `"off"` — disable preloading
+- `"hover"` — au survol, valeur par défaut (correspond à `"tap"` sur mobile)
+- `"tap"` — commence le pré-chargement uniquement au `"tap"`
+- `"off"` — désactive le pré-chargement
 
-Using `data-sveltekit-preload-data` may sometimes result in false positives - i.e. loading data in anticipation of a navigation that doesn't then happen — which might be undesirable. As an alternative, `data-sveltekit-preload-code` allows you to preload the JavaScript needed by a given route without eagerly loading its data. This attribute can have the following values:
+Utiliser `data-sveltekit-preload-data` peut parfois résulter à des faux positifs — c'est-à-dire charger la donnée en anticipation d'une navigation qui finalement n'arrive jamais — ce qui peut être indésirable. L'alternative `data-sveltekit-preload-code` vous permet de pré-charger le JavaScript requis pour une route donnée sans en charger la donnée. Cet attribut peut avoir les valeurs suivantes :
 
-- `"eager"` — preload everything on the page following a navigation
-- `"viewport"` — preload everything as it appears in the viewport
-- `"hover"` (default) as above
-- `"tap"` — as above
-- `"off"` — as above
+- `"eager"` — pré-charge tout le contenu de la page à la navigation
+- `"viewport"` — pré-charge tout le contenu au fur-et-à-mesure qu'il apparaît dans le <span class="vo">[viewport](PUBLIC_SVELTE_SITE_URL/docs/development#viewport)</span>
+- `"hover"` (par défaut) comme précédemment
+- `"tap"` — comme précédemment
+- `"off"` — comme précédemment
 
-You can also initiate preloading programmatically with `preloadCode` and `preloadData` imported from `$app/navigation`:
+Vous pouvez également initier le pré-chargement programmatiquement avec `preloadCode` et `preloadData` importées depuis `$app/navigation` :
 
 ```js
 /// no-file
 import { preloadCode, preloadData } from '$app/navigation';
 
-// preload the code and data needed to navigate to /foo
+// pré-charge le code et la donnée nécessaires pour naviguer vers /foo
 preloadData('/foo');
 
-// preload the code needed to navigate to /bar, but not the data
+// pré-charge le code nécessaire pour naviguer vers /bar, mais pas la donnée
 preloadCode('/bar');
 ```

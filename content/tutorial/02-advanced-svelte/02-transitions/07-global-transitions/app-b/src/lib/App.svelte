@@ -3,12 +3,12 @@
 
 	let showItems = true;
 	let i = 5;
-	let items = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+	let items = ['un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix'];
 </script>
 
 <label>
 	<input type="checkbox" bind:checked={showItems} />
-	show list
+	afficher la liste
 </label>
 
 <label>

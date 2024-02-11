@@ -3,11 +3,11 @@
 </script>
 
 <div class="centered">
-	<h1>todos</h1>
+	<h1>à faire</h1>
 
 	<form method="POST" action="?/create">
 		<label>
-			add a todo:
+			ajouter une tâche :
 			<input
 				name="description"
 				autocomplete="off"
@@ -21,7 +21,7 @@
 				<form method="POST" action="?/delete">
 					<input type="hidden" name="id" value={todo.id} />
 					<span>{todo.description}</span>
-					<button aria-label="Mark as complete" />
+					<button aria-label="Marquer comme terminée" />
 				</form>
 			</li>
 		{/each}

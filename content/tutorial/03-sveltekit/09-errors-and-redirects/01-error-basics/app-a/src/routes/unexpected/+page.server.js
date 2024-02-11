@@ -1,3 +1,3 @@
 export function load() {
-	throw new Error('Kaboom!');
+	throw new Error('Boum !');
 }

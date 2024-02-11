@@ -2,13 +2,13 @@
 title: ssr
 ---
 
-Server-side rendering (SSR) is the process of generating HTML on the server, and is what SvelteKit does by default. It's important for performance and [resilience](https://kryogenix.org/code/browser/everyonehasjs.html), and is very beneficial for search engine optimization (SEO) — while some search engines can index content that is rendered in the browser with JavaScript, it happens less frequently and reliably.
+Le rendu côté serveur (<span class="vo">[SSR](PUBLIC_SVELTE_SITE_URL/docs/web#ssr)</span>) est le processus de génération de HTML sur le serveur, et est le comportement par défaut de SvelteKit. Il est important pour la performance et la [résilience](https://kryogenix.org/code/browser/everyonehasjs.html) (en anglais), et est très bénéfique pour votre référencement (SEO) — bien que certains moteurs de recherche soient capables d'indexer du contenu généré par le navigateur avec JavaScript, cela arrive rarement et de manière moins fiable.
 
-That said, some components _can't_ be rendered on the server, perhaps because they expect to be able to access browser globals like `window` immediately. If you can, you should change those components so that they _can_ render on the server, but if you can't then you can disable SSR:
+Cela étant dit, certains composants _ne peuvent pas_ être générés sur le serveur, peut-être parce qu'ils ont besoin d'accéder immédiatement à certaines variables globales du navigateur comme `window`. Si possible, vous devriez modifier ces composants afin qu'ils _puissent_ être générés sur le serveur, mais si c'est impossible, vous pouvez désactiver le <span class="vo">[SSR](PUBLIC_SVELTE_SITE_URL/docs/web#ssr)</span> :
 
 ```js
 /// file: src/routes/+page.server.js
 export const ssr = false;
 ```
 
-> Setting `ssr` to `false` inside your root `+layout.server.js` effectively turns your entire app into a single-page app (SPA).
+> Définir `ssr` à `false` dans votre fichier `+layout.server.js` racine transforme l'intégralité de votre application en une [Single-Page Application (SPA)](PUBLIC_SVELTE_SITE_URL/docs/web#spa).

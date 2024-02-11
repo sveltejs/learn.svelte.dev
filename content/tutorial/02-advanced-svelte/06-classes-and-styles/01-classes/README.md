@@ -1,8 +1,8 @@
 ---
-title: The class directive
+title: La directive de classe
 ---
 
-Like any other attribute, you can specify classes with a JavaScript attribute. Here, we could add a `flipped` class to the card:
+Comme pour tous les autres attributs, vous pouvez spécifier de classes avec un attribut JavaScript. Ici, nous pourrions ajouter une classe `flipped` à la carte :
 
 ```svelte
 /// file: App.svelte
@@ -12,9 +12,9 @@ Like any other attribute, you can specify classes with a JavaScript attribute. H
 >
 ```
 
-This works as expected — if you click on the card now, it'll flip.
+Cela fonctionne comme attendu — si maintenant vous cliquez sur la carte, elle va se retourner.
 
-We can make it nicer though. Adding or removing a class based on some condition is such a common pattern in UI development that Svelte includes a special directive to simplify it:
+Nous pouvons toutefois faire mieux. Ajouter ou enlever une classe en fonction d'une condition est tellement courant dans le développement d'interface que Svelte inclut une directive spéciale pour le simplifier :
 
 ```svelte
 /// file: App.svelte
@@ -25,4 +25,4 @@ We can make it nicer though. Adding or removing a class based on some condition 
 >
 ```
 
-This directive means 'add the `flipped` class whenever `flipped` is truthy'.
+La directive signifie "ajoute la classe `flipped` lorsque `flipped` est <span class="vo">[truthy](PUBLIC_SVELTE_SITE_URL/docs/javascript#falsy-truthy-truthy)</span>".

@@ -1,14 +1,15 @@
 ---
-title: Writable stores
+title: Stores d'écriture
 ---
 
-Not all application state belongs inside your application's component hierarchy. Sometimes, you'll have values that need to be accessed by multiple unrelated components, or by a regular JavaScript module.
+Dans une application, certains états ne devraient pas être liés à une hiérarchie de composants. Vous aurez parfois des valeurs qui ont besoin d'être accessibles depuis plusieurs composants très différents, ou par un module JavaScript normal.
 
-In Svelte, we do this with _stores_. A store is simply an object with a `subscribe` method that allows interested parties to be notified whenever the store value changes. In `App.svelte`, `count` is a store, and we're setting `count_value` in the `count.subscribe` callback.
+En Svelte, nous faisons cela avec des <span class="vo">[stores](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#store)</span>. Un store est juste un objet avec une méthode `subscribe` qui permet aux parties intéressées d'être notifiées lorsque la valeur du store change. Dans `App.svelte`, `count` est un store, et nous définissons la valeur de `count_value` dans le <span class="vo">[callback](PUBLIC_SVELTE_SITE_URL/docs/development#callback)</span> `count.subscribe`.
 
-Open `stores.js` to see the definition of `count`. It's a _writable_ store, which means it has `set` and `update` methods in addition to `subscribe`.
 
-Now, in `Incrementer.svelte`, wire up the `+` button:
+Cliquez sur l'onglet `stores.js` pour voir la définition de `count`. C'est un <span class="vo">[store](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#store)</span> d'_écriture_, ce qui veut dire qu'il possède les méthodes `set` et `update` en plus de `subscribe`.
+
+Allez maintenant dans l'onglet `Incrementer.svelte` afin de connecter le bouton `+` :
 
 ```js
 /// file: Incrementer.svelte
@@ -17,9 +18,9 @@ function increment() {
 }
 ```
 
-Clicking the `+` button should now update the count. Do the inverse for `Decrementer.svelte`.
+Un clic sur le bouton `+` devrait maintenant mettre à jour le compteur. Faites l'inverse pour `Decrementer.svelte`.
 
-Finally, in `Resetter.svelte`, implement `reset`:
+Enfin, dans `Resetter.svelte`, implémentez `reset` :
 
 ```js
 /// file: Resetter.svelte

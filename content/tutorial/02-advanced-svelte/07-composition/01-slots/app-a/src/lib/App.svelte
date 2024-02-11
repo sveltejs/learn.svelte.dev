@@ -4,7 +4,7 @@
 
 <main>
 	<Card>
-		<!-- content goes here -->
+		<!-- le contenu vient ici -->
 	</Card>
 </main>
 

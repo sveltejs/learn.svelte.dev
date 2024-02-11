@@ -1,6 +1,6 @@
 <nav>
-	<a href="/">home</a>
-	<a href="/a/deeply/nested/route">a deeply nested route</a>
+	<a href="/">accueil</a>
+	<a href="/a/deeply/nested/route">une route très profonde</a>
 </nav>
 
 <slot />

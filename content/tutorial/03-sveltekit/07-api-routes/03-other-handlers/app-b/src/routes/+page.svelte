@@ -3,10 +3,10 @@
 </script>
 
 <div class="centered">
-	<h1>todos</h1>
+	<h1>à faire</h1>
 
 	<label>
-		add a todo:
+		ajouter une tâche :
 		<input
 			type="text"
 			autocomplete="off"
@@ -57,7 +57,7 @@
 					/>
 					<span>{todo.description}</span>
 					<button
-						aria-label="Mark as complete"
+						aria-label="Marquer comme terminée"
 						on:click={async (e) => {
 							await fetch(`/todo/${todo.id}`, {
 								method: 'DELETE'
@@ -106,4 +106,3 @@
 		opacity: 1;
 	}
 </style>
-	

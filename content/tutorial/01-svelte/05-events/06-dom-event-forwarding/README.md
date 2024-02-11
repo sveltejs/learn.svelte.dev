@@ -1,14 +1,14 @@
 ---
-title: DOM event forwarding
+title: Relais d'évènement DOM
 ---
 
-Event forwarding works for DOM events too.
+Le relais d'évènement fonctionne également pour les évènements <span class="vo">[DOM](PUBLIC_SVELTE_SITE_URL/docs/web#dom)</span>.
 
-We want to get notified of clicks on our `<BigRedButton>` — to do that, we just need to forward `click` events on the `<button>` element in `BigRedButton.svelte`:
+Nous voulons être notifiés des clics sur notre `<CustomButton>` — pour cela, nous avons simplement besoin de relayer les évènements `click` sur l'élément `<button>` dans `CustomButton.svelte` :
 
 ```svelte
 /// file: BigRedButton.svelte
 <button +++on:click+++>
-	Push
+	Cliquez moi
 </button>
 ```

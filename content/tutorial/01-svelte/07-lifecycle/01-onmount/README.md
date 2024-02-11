@@ -2,9 +2,9 @@
 title: onMount
 ---
 
-Every component has a _lifecycle_ that starts when it is created, and ends when it is destroyed. There are a handful of functions that allow you to run code at key moments during that lifecycle. The one you'll use most frequently is `onMount`, which runs after the component is first rendered to the DOM.
+Chaque instance de composant possède un _cycle de vie_ qui débute lorsqu'elle est créée, et qui se termine lorsqu'elle est détruite. Il existe plusieurs fonctions qui vous permettent d'exécuter du code à des moments clés de ce cycle de vie. Celle que vous utiliserez le plus souvent est `onMount`, qui s'exécute après le tout premier rendu de l'instance dans le <span class="vo">[DOM](PUBLIC_SVELTE_SITE_URL/docs/web#dom)</span>.
 
-In this exercise, we have a `<canvas>` that we'd like to animate, using the `paint` function in `gradient.js`. Begin by importing the `onMount` function from `svelte`:
+Dans cet exercice, nous avons un `<canvas>` que nous aimerions animer, en utilisant la fonction `paint` dans `gradient.js`. Commencez par importer la fonction `onMount` depuis `svelte` :
 
 ```svelte
 /// file: App.svelte
@@ -14,7 +14,7 @@ In this exercise, we have a `<canvas>` that we'd like to animate, using the `pai
 </script>
 ```
 
-Then, add a callback that runs when the component mounts:
+Ajoutez ensuite un <span class="vo">[callback](PUBLIC_SVELTE_SITE_URL/docs/development#callback)</span> qui s'exécute lorsque le composant est monté :
 
 ```svelte
 /// file: App.svelte
@@ -34,9 +34,9 @@ Then, add a callback that runs when the component mounts:
 </script>
 ```
 
-> In a [later exercise](bind-this), we'll learn how to get an element reference without using `document.querySelector`.
+> Dans un [exercice ultérieur] (bind-this), nous apprendrons comment obtenir une référence à un élément sans utiliser `document.querySelector`.
 
-So far so good — you should see gently undulating colours in the shape of the Svelte logo. But there's one problem — the loop will continue even after the component has been destroyed. To fix that, we need to return a cleanup function from `onMount`:
+Jusque ici, tout va bien - vous devriez voir des couleurs légèrement ondulantes dans la forme du logo Svelte. Mais il y a un problème - la boucle continuera même après que le composant ait été détruit. Pour résoudre ce problème, nous devons renvoyer une fonction de nettoyage à partir de `onMount` :
 
 ```js
 /// file: App.svelte

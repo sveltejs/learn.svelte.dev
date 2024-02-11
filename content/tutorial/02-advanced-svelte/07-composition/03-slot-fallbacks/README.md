@@ -1,29 +1,29 @@
 ---
-title: Slot fallbacks
+title: Slots par défaut
 ---
 
-A component can specify _fallbacks_ for any slots that are left empty, by putting content inside the `<slot>` element:
+Un composant peut préciser un _contenu par défaut_ pour tout <span class="vo">[slot](PUBLIC_SVELTE_SITE_URL/docs/sveltejs#slot)</span> laissé vide, en ajoutant du contenu dans l'élément `<slot>` :
 
 ```svelte
 /// file: Card.svelte
 <div class="card">
 	<header>
 		<slot name="telephone">
-			+++<i>(telephone)</i>+++
+			+++<i>(téléphone)</i>+++
 		</slot>
-		
+
 		<slot name="company">
-			+++<i>(company name)</i>+++
+			+++<i>(nom de la société)</i>+++
 		</slot>
 	</header>
 
 	<slot>
-		+++<i>(name)</i>+++
+		+++<i>(nom)</i>+++
 	</slot>
-		
+
 	<footer>
 		<slot name="address">
-			+++<i>(address)</i>+++
+			+++<i>(adresse)</i>+++
 		</slot>
 	</footer>
 </div>

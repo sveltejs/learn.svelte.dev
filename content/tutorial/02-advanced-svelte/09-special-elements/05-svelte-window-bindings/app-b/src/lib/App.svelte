@@ -4,7 +4,7 @@
 
 <svelte:window bind:scrollY={y} />
 
-<span>depth: {y}px</span>
+<span>profondeur : {y}px</span>
 
 <style>
 	:global(body) {

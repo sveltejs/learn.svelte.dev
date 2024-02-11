@@ -2,24 +2,24 @@
 title: trailingSlash
 ---
 
-Two URLs like `/foo` and `/foo/` might look the same, but they're actually different. A relative URL like `./bar` will resolve to `/bar` in the first case and `/foo/bar` in the second, and search engines will treat them as separate entries, harming your SEO.
+Deux URLs comme `/foo` et `/foo/` peuvent se ressembler, mais sont en vérité différentes. Une URL relative comme `./bar` sera traitée pour pointer vers `/bar` dans le premier cas, et vers `/foo/bar` dans le deuxième, et les moteurs de recherches les traiteront comme des points d'entrée différents, dégradant votre référencement.
 
-In short, being loosey-goosey about trailing slashes is a bad idea. By default, SvelteKit strips trailing slashes, meaning that a request for `/foo/` will result in a redirect to `/foo`.
+Pour simplifier, être approximatif sur ces slashs de fin d'URL (ou <span class="vo">[trailing slashs](PUBLIC_SVELTE_SITE_URL/docs/web#trailing-slash)</span>) est une mauvaise pratique. Par défaut, SvelteKit supprime les trailing slashs, ce qui implique qu'une requête vers `/foo/` sera en réalité redirigée vers `/foo`.
 
-If you instead want to ensure that a trailing slash is always present, you can specify the `trailingSlash` option accordingly:
+Si à la place vous souhaitez vous assurer qu'un <span class="vo">[trailing slashs](PUBLIC_SVELTE_SITE_URL/docs/web#trailing-slash)</span> est toujours présent, vous pouvez préciser l'option `trailingSlash` en conséquence :
 
 ```js
 /// file: src/routes/always/+page.server.js
 export const trailingSlash = 'always';
 ```
 
-To accommodate both cases (this is not recommended!), use `'ignore'`:
+Pour permettre les deux options (ce n'est pas recommandé !), utilisez la valeur `'ignore'` :
 
 ```js
 /// file: src/routes/ignore/+page.server.js
 export const trailingSlash = 'ignore';
 ```
 
-The default value is `'never'`.
+La valeur par défaut est `'never'`.
 
-Whether or not trailing slashes are applied affects prerendering. A URL like `/always/` will be saved to disk as `always/index.html` whereas a URL like `/never` will be saved as `never.html`.
+La présence ou l'absence de <span class="vo">[trailing slashs](PUBLIC_SVELTE_SITE_URL/docs/web#trailing-slash)</span> affecte le pré-rendu. Une URL comme `/always/` sera enregistrée sur le disque en tant que `always/index.html` alors qu'une URL comme `/never` sera enregistrée en tant que `never.html`.

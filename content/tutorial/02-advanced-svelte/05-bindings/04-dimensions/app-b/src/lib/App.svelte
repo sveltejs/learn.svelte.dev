@@ -2,12 +2,12 @@
 	let w;
 	let h;
 	let size = 42;
-	let text = 'edit this text';
+	let text = 'modifiez ce texte';
 </script>
 
 <label>
 	<input type="range" bind:value={size} min="10" max="100" />
-	font size ({size}px)
+	taille de police ({size}px)
 </label>
 
 <div bind:clientWidth={w} bind:clientHeight={h}>

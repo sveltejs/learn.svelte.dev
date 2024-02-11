@@ -2,10 +2,10 @@
 	import { count } from './stores.js';
 
 	function reset() {
-		// TODO reset the count
+		// TODO : mettre zéro le compteur
 	}
 </script>
 
 <button on:click={reset}>
-	reset
+	remettre à zéro
 </button>

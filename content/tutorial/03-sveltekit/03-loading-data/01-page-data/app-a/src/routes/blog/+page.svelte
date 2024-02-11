@@ -1,7 +1,7 @@
 <h1>blog</h1>
 
 <ul>
-	<li><a href="/blog/one">one</a></li>
-	<li><a href="/blog/two">two</a></li>
-	<li><a href="/blog/three">three</a></li>
+	<li><a href="/blog/un">un</a></li>
+	<li><a href="/blog/deux">deux</a></li>
+	<li><a href="/blog/trois">trois</a></li>
 </ul>

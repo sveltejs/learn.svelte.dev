@@ -15,7 +15,7 @@
 </script>
 
 <nav>
-	<a href="/">home</a>
+	<a href="/">accueil</a>
 	<a href="/slow-a">slow-a</a>
 	<a href="/slow-b">slow-b</a>
 </nav>
@@ -23,5 +23,5 @@
 <slot />
 
 {#if previous && end}
-	<p>navigated from {previous.from.url.pathname} to {previous.to.url.pathname} in <strong>{end - start}ms</strong></p>
+	<p>a navigué depuis {previous.from.url.pathname} vers {previous.to.url.pathname} en <strong>{end - start} ms</strong></p>
 {/if}

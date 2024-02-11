@@ -1,1 +1,1 @@
-<h1>you are in the bad place</h1>
+<h1>vous êtes dans un endroit nul</h1>
