@@ -4,6 +4,7 @@
 	function handleMove(event) {
 		m.x = event.clientX;
 		m.y = event.clientY;
+		m = m;
 	}
 </script>
 
