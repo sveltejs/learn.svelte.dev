@@ -1,7 +1,8 @@
 <script>
-	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Icon } from '@sveltejs/site-kit/components';
+	import { load_webcontainer, reset } from './adapter';
+	import { files } from './state';
 
 	/** @type {boolean} */
 	export let initial;
@@ -62,6 +63,23 @@
 						<code>chrome://settings/cookies</code> and add <code>learn.svelte.dev</code> to 'Sites that
 						can always use cookies'.
 					</p>
+					<!-- TODO: remove this when webcontainers are properly supported on iOS
+				see https://github.com/stackblitz/webcontainer-core/issues/1120 -->
+				{:else if /iphone/i.test(navigator.userAgent)}
+					<p>
+						We couldn't start the app. It seems that you're using iOS, which does not support
+						WebContainers.
+					</p>
+					<p>
+						If this is not the case, you can try loading it by <button
+							type="button"
+							on:click={async () => {
+								error = null;
+								load_webcontainer();
+								await reset($files);
+							}}>clicking here</button
+						>.
+					</p>
 				{:else}
 					<p>
 						We couldn't start the app. Please ensure third party cookies are enabled for this site.
@@ -70,7 +88,7 @@
 
 				{#if is_svelte}
 					<a href="https://svelte.dev/tutorial/{$page.data.exercise.slug}">
-						Go to the legacy svelte tutorial instead <Icon name="arrow-right" />
+						Or go to the legacy svelte tutorial instead <Icon name="arrow-right" />
 					</a>
 				{/if}
 			</div>
@@ -146,6 +164,16 @@
 
 	p {
 		margin: 0 0 1em 0;
+	}
+
+	button {
+		color: var(--sk-theme-1);
+		padding: 0 0 1px;
+		position: relative;
+	}
+
+	button:hover {
+		text-decoration: underline;
 	}
 
 	small {
