@@ -36,7 +36,7 @@
 {#if flavours.length === 0}
 	<p>Please select at least one flavour</p>
 {:else if flavours.length > scoops}
-	<p>Can't order more flavours than scoops!</p>
+	<p>Can't order more flavours than {scoops} {scoops === 1 ? 'scoop' : 'scoops'}!</p>
 {:else}
 	<p>
 		You ordered {scoops} {scoops === 1 ? 'scoop' : 'scoops'}
