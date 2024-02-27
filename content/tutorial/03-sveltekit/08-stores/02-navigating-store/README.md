@@ -2,7 +2,7 @@
 title: navigating
 ---
 
-The `navigating` store represents the current navigation. When a navigation starts — because of a link click, or a back/forward navigation, or a programmatic `goto` — the value of `navigation` will become an object with the following properties:
+The `navigating` store represents the current navigation. When a navigation starts — because of a link click, or a back/forward navigation, or a programmatic `goto` — the value of `navigating` will become an object with the following properties:
 
 - `from` and `to` — objects with `params`, `route` and `url` properties
 - `type` — the type of navigation, e.g. `link`, `popstate` or `goto`
