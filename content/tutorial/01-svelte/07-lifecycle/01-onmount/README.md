@@ -41,7 +41,7 @@ So far so good — you should see gently undulating colours in the shape of the 
 ```js
 /// file: App.svelte
 onMount(() => {
-	const canvas = document.querySelector('canvas')
+	const canvas = document.querySelector('canvas');
 	const context = canvas.getContext('2d');
 
 	+++let frame =+++ requestAnimationFrame(function loop(t) {
