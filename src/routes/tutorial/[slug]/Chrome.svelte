@@ -96,6 +96,7 @@
 		top: 0;
 		background-image: url($lib/icons/refresh.svg);
 		transition: 0.2s ease-out;
+		background-color: transparent;
 	}
 
 	.reload:active::after {
