@@ -13,6 +13,7 @@
 
 	{#if showMenu}
 		<div
+			role="presentation"
 			class="modal-background"
 			on:click|self={() => showMenu = false}
 			on:keydown={(e) => {
