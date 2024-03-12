@@ -27,7 +27,7 @@ export function load({ cookies }) {
 	+++cookies.set('visited', 'true', { path: '/' });+++
 
 	return {
-		visited: visited === 'true'
+		visited---: visited === 'true'---
 	};
 }
 ```
