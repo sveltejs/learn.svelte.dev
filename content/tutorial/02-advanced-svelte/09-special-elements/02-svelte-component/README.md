@@ -27,6 +27,11 @@ We _could_ do this with a sequence of `if` blocks...
 	{/each}
 </select>
 
+---{#if selected.color === 'red'}
+	<RedThing />
+{:else}
+	<p>TODO others</p>
+{/if}---
 +++<svelte:component this={selected.component} />+++
 ```
 
