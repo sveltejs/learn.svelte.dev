@@ -15,7 +15,7 @@
 <h1>The time is {formatter.format($time)}</h1>
 
 <p>
-	This page has been open for
+	This page has been opened for
 	{$elapsed}
 	{$elapsed === 1 ? 'second' : 'seconds'}
 </p>
