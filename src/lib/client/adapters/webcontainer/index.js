@@ -131,7 +131,7 @@ export async function create(base, error, progress, logs, warnings) {
 			await run_dev();
 
 			async function run_dev() {
-				const process = await vm.spawn('turbo', ['run', 'dev']);
+				const process = await vm.spawn('npm', ['run', 'dev']);
 
 				// TODO differentiate between stdout and stderr (sets `vite_error` to `true`)
 				// https://github.com/stackblitz/webcontainer-core/issues/971
