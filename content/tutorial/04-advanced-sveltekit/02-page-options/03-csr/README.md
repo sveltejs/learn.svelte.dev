@@ -4,7 +4,7 @@ title: csr
 
 Client-side rendering is what makes the page interactive — such as incrementing the counter when you click the button in this app — and enables SvelteKit to update the page upon navigation without a full-page reload.
 
-As with `ssr`, you can disable client-side rendering altogether:
+As with `csr`, you can disable client-side rendering altogether:
 
 ```js
 /// file: src/routes/+page.server.js
