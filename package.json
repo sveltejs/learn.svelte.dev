@@ -14,9 +14,10 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.37.1",
-		"@sveltejs/adapter-vercel": "3.0.3",
-		"@sveltejs/kit": "^1.30.3",
+		"@sveltejs/adapter-vercel": "^4.0.0",
+		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/site-kit": "6.0.0-next.39",
+		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/diff": "^5.0.3",
 		"@types/prismjs": "^1.26.0",
 		"@types/ws": "^8.5.5",
@@ -31,7 +32,7 @@
 		"svelte-check": "^3.5.1",
 		"tiny-glob": "^0.2.9",
 		"typescript": "^5.3.3",
-		"vite": "^4.5.2"
+		"vite": "^5.0.0"
 	},
 	"type": "module",
 	"dependencies": {
