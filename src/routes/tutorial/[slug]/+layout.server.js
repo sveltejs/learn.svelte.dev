@@ -1,7 +1,7 @@
 import { get_index } from '$lib/server/content.js';
 
-export function load() {
+export async function load() {
 	return {
-		index: get_index()
+		index: await get_index()
 	};
 }

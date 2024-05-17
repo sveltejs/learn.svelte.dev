@@ -7,13 +7,13 @@ export function entries() {
 
 export async function load({ params }) {
 	if (params.slug === 'local-transitions') {
-		throw redirect(307, '/tutorial/global-transitions');
+		redirect(307, '/tutorial/global-transitions');
 	}
 
 	const exercise = await get_exercise(params.slug);
 
 	if (!exercise) {
-		throw error(404, 'No such tutorial found');
+		error(404, 'No such tutorial found');
 	}
 
 	return {
