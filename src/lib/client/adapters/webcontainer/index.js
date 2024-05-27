@@ -5,10 +5,6 @@ import * as yootils from 'yootils';
 import { escape_html, get_depth } from '../../../utils.js';
 import { ready } from '../common/index.js';
 
-/**
- * @typedef {import("../../../../routes/tutorial/[slug]/state.js").CompilerWarning} CompilerWarning
- */
-
 const converter = new AnsiToHtml({
 	fg: 'var(--sk-text-3)'
 });
@@ -21,7 +17,7 @@ let vm;
  * @param {import('svelte/store').Writable<Error | null>} error
  * @param {import('svelte/store').Writable<{ value: number, text: string }>} progress
  * @param {import('svelte/store').Writable<string[]>} logs
- * @param {import('svelte/store').Writable<Record<string, CompilerWarning[]>>} warnings
+ * @param {import('svelte/store').Writable<Record<string, import('$lib/types').Warning[]>>} warnings
  * @returns {Promise<import('$lib/types').Adapter>}
  */
 export async function create(base, error, progress, logs, warnings) {
@@ -48,9 +44,9 @@ export async function create(base, error, progress, logs, warnings) {
 		}
 	});
 
-	/** @type {Record<string, CompilerWarning[]>} */
+	/** @type {Record<string, import('$lib/types').Warning[]>} */
 	let $warnings;
-	warnings.subscribe((value) => $warnings = value);
+	warnings.subscribe((value) => ($warnings = value));
 
 	/** @type {any} */
 	let timeout;
@@ -67,21 +63,19 @@ export async function create(base, error, progress, logs, warnings) {
 				if (chunk === '\x1B[1;1H') {
 					// clear screen
 					logs.set([]);
-
 				} else if (chunk?.startsWith('svelte:warnings:')) {
-					/** @type {CompilerWarning} */
+					/** @type {import('$lib/types').Warning} */
 					const warn = JSON.parse(chunk.slice(16));
 					const current = $warnings[warn.filename];
 
 					if (!current) {
 						$warnings[warn.filename] = [warn];
-					// the exact same warning may be given multiple times in a row
-					} else if (!current.some((s) => (s.code === warn.code && s.pos === warn.pos))) {
+						// the exact same warning may be given multiple times in a row
+					} else if (!current.some((s) => s.code === warn.code && s.pos === warn.pos)) {
 						current.push(warn);
 					}
 
 					schedule_to_update_warning(100);
-
 				} else {
 					const log = converter.toHtml(escape_html(chunk)).replace(/\n/g, '<br>');
 					logs.update(($logs) => [...$logs, log]);
@@ -179,16 +173,14 @@ export async function create(base, error, progress, logs, warnings) {
 				// Don't delete the node_modules folder when switching from one exercise to another
 				// where, as this crashes the dev server.
 				const to_delete = [
-					...Array.from(current_stubs.keys()).filter(
-						(s) => !s.startsWith('/node_modules')
-					),
+					...Array.from(current_stubs.keys()).filter((s) => !s.startsWith('/node_modules')),
 					...force_delete
 				];
 
 				// initialize warnings of written files
 				to_write
 					.filter((stub) => stub.type === 'file' && $warnings[stub.name])
-					.forEach((stub) => $warnings[stub.name] = []);
+					.forEach((stub) => ($warnings[stub.name] = []));
 				// remove warnings of deleted files
 				to_delete
 					.filter((stubname) => $warnings[stubname])
@@ -201,8 +193,8 @@ export async function create(base, error, progress, logs, warnings) {
 				// For some reason, server-ready is fired again when the vite dev server is restarted.
 				// We need to wait for it to finish before we can continue, else we might
 				// request files from Vite before it's ready, leading to a timeout.
-				const will_restart = launched &&
-					(to_write.some(is_config) || to_delete.some(is_config_path));
+				const will_restart =
+					launched && (to_write.some(is_config) || to_delete.some(is_config_path));
 				const promise = will_restart ? wait_for_restart_vite() : Promise.resolve();
 
 				for (const file of to_delete) {
@@ -223,14 +215,13 @@ export async function create(base, error, progress, logs, warnings) {
 			});
 		},
 		update: (file) => {
-
 			let queue = q_per_file.get(file.name);
 			if (queue) {
 				queue.push(file);
 				return Promise.resolve(false);
 			}
 
-			q_per_file.set(file.name, queue = [file]);
+			q_per_file.set(file.name, (queue = [file]));
 
 			return q.add(async () => {
 				/** @type {import('@webcontainer/api').FileSystemTree} */
@@ -257,10 +248,9 @@ export async function create(base, error, progress, logs, warnings) {
 				const will_restart = is_config(file);
 
 				while (queue && queue.length > 0) {
-
 					// if the file is updated many times rapidly, get the most recently updated one
 					const file = /** @type {import('$lib/types').FileStub} */ (queue.pop());
-					queue.length = 0
+					queue.length = 0;
 
 					tree[basename] = to_file(file);
 
@@ -280,7 +270,7 @@ export async function create(base, error, progress, logs, warnings) {
 					await new Promise((f) => setTimeout(f, 50));
 				}
 
-				q_per_file.delete(file.name)
+				q_per_file.delete(file.name);
 
 				return will_restart;
 			});

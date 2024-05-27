@@ -6,19 +6,6 @@ import * as adapter from './adapter.js';
  * @typedef {import('svelte/store').Writable<T>} Writable<T>
  */
 
-// TODO would be nice if svelte exported this type (maybe it does already?)
-/**
- * @typedef {{
- *   code: string;
- *   start: { line: number, column: number, character: number };
- *   end: { line: number, column: number, character: number };
- *   pos: number;
- *   filename: string;
- *   frame: string;
- *   message: string;
- * }} CompilerWarning
- */
-
 /** @type {Writable<import('$lib/types').Stub[]>} */
 export const files = writable([]);
 
