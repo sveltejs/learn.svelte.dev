@@ -39,6 +39,7 @@
 	}
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <li
 	aria-current={selected ? 'true' : undefined}
 	style="--depth: {depth}; --icon: url('{icon}');"
