@@ -138,6 +138,7 @@
 	}
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <ul
 	class="filetree"
 	class:mobile
