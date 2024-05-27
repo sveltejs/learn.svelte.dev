@@ -15,7 +15,7 @@ export const error = writable(null);
 /** @type {import('svelte/store').Writable<string[]>} */
 export const logs = writable([]);
 
-/** @type {import('svelte/store').Writable<Record<string, import('./state').CompilerWarning[]>>} */
+/** @type {import('svelte/store').Writable<Record<string, import('$lib/types').Warning[]>>} */
 export const warnings = writable({});
 
 /** @type {Promise<import('$lib/types').Adapter>} */
