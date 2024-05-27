@@ -33,8 +33,11 @@
 		(child) => get_depth(child.name) === segments && child.type === 'directory'
 	);
 
-	$: child_files = /** @type {import('$lib/types').FileStub[]} */ (
-		children.filter((child) => get_depth(child.name) === segments && child.type === 'file')
+	// prettier-ignore
+	$: child_files = (
+		/** @type {import('$lib/types').FileStub[]} */ (
+			children.filter((child) => get_depth(child.name) === segments && child.type === 'file')
+		)
 	);
 
 	const can_create = { file: false, directory: false };
@@ -71,43 +74,45 @@
 	// fake root directory has no name
 	$: can_remove = directory.name ? !$solution[directory.name] : false;
 
-	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
-	$: actions = [
-		can_create.file && {
-			icon: 'file-new',
-			label: 'New file',
-			fn: () => {
-				creating.set({
-					parent: directory.name,
-					type: 'file'
-				});
+	// prettier-ignore
+	$: actions = (
+		/** @type {import('$lib/types').MenuItem[]} */ ([
+			can_create.file && {
+				icon: 'file-new',
+				label: 'New file',
+				fn: () => {
+					creating.set({
+						parent: directory.name,
+						type: 'file'
+					});
+				}
+			},
+			can_create.directory && {
+				icon: 'folder-new',
+				label: 'New folder',
+				fn: () => {
+					creating.set({
+						parent: directory.name,
+						type: 'directory'
+					});
+				}
+			},
+			can_remove && {
+				icon: 'rename',
+				label: 'Rename',
+				fn: () => {
+					renaming = true;
+				}
+			},
+			can_remove && {
+				icon: 'delete',
+				label: 'Delete',
+				fn: () => {
+					remove(directory);
+				}
 			}
-		},
-		can_create.directory && {
-			icon: 'folder-new',
-			label: 'New folder',
-			fn: () => {
-				creating.set({
-					parent: directory.name,
-					type: 'directory'
-				});
-			}
-		},
-		can_remove && {
-			icon: 'rename',
-			label: 'Rename',
-			fn: () => {
-				renaming = true;
-			}
-		},
-		can_remove && {
-			icon: 'delete',
-			label: 'Delete',
-			fn: () => {
-				remove(directory);
-			}
-		}
-	].filter(Boolean);
+		].filter(Boolean))
+	);
 </script>
 
 <Item

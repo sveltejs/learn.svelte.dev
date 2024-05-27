@@ -89,3 +89,9 @@ export interface Warning {
 	frame: string;
 	message: string;
 }
+
+export interface MenuItem {
+	icon: string;
+	label: string;
+	fn: () => void;
+}

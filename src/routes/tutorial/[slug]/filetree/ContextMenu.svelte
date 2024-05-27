@@ -5,18 +5,14 @@
 	import { writable } from 'svelte/store';
 
 	/**
-	 * @typedef {{ icon: string; label: string; fn: () => void }} MenuItem
-	 */
-
-	/**
-	 * @type {import("svelte/store").Writable<{x: number; y: number; items: MenuItem[]} | null>}
+	 * @type {import("svelte/store").Writable<{x: number; y: number; items: import('$lib/types').MenuItem[]} | null>}
 	 */
 	let menu_items = writable(null);
 
 	/**
 	 * @param {number} x
 	 * @param {number} y
-	 * @param {MenuItem[]} items
+	 * @param {import('$lib/types').MenuItem[]} items
 	 */
 	export function open(x, y, items) {
 		if (items.length > 0) {

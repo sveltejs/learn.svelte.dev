@@ -14,7 +14,7 @@
 	/** @type {boolean} */
 	export let renaming;
 
-	/** @type {import('./ContextMenu.svelte').MenuItem[]} */
+	/** @type {import('$lib/types').MenuItem[]} */
 	export let actions = [];
 
 	const dispatch = createEventDispatcher();

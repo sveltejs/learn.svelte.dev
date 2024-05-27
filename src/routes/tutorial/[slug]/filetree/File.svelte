@@ -16,7 +16,7 @@
 
 	$: can_remove = !$solution[file.name];
 
-	/** @type {import('./ContextMenu.svelte').MenuItems} */
+	/** @type {import('$lib/types').MenuItem[]} */
 	$: actions = can_remove
 		? [
 				{
