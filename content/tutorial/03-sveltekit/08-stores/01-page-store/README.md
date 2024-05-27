@@ -6,13 +6,13 @@ As we learned [earlier](writable-stores), Svelte stores are a place to put data 
 
 SvelteKit makes three readonly stores available via the `$app/stores` module — `page`, `navigating` and `updated`. The one you'll use most often is [`page`](https://kit.svelte.dev/docs/types#public-types-page), which provides information about the current page:
 
-* `url` — the [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) of the current page
-* `params` — the current page's [parameters](params)
-* `route` — an object with an `id` property representing the current route
-* `status` — the HTTP status code of the current page
-* `error` — the error object of the current page, if any (you'll learn more about error handling in [later](error-basics) [exercises](handleerror))
-* `data` — the data for the current page, combining the return values of all `load` functions
-* `form` — the data returned from a [form action](the-form-element)
+- `url` — the [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) of the current page
+- `params` — the current page's [parameters](params)
+- `route` — an object with an `id` property representing the current route
+- `status` — the HTTP status code of the current page
+- `error` — the error object of the current page, if any (you'll learn more about error handling in [later](error-basics) [exercises](handleerror))
+- `data` — the data for the current page, combining the return values of all `load` functions
+- `form` — the data returned from a [form action](the-form-element)
 
 As with any other store, you can reference its value in a component by prefixing its name with the `$` symbol. For example, we can access the current pathname as `$page.url.pathname`:
 
@@ -32,5 +32,5 @@ As with any other store, you can reference its value in a component by prefixing
 	</a>
 </nav>
 
-<slot />
+<slot></slot>
 ```

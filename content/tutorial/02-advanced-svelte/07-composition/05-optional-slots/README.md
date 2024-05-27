@@ -7,7 +7,7 @@ In some cases, you may want to control parts of your component based on whether 
 ```svelte
 /// file: App.svelte
 ---<header slot="header" class="row">
-	<span class="color" />
+	<span class="color"></span>
 	<span class="name">name</span>
 	<span class="hex">hex</span>
 	<span class="rgb">rgb</span>
@@ -31,7 +31,7 @@ We can fix that by using the special `$$slots` variable in `FilterableList.svelt
 /// file: FilterableList.svelte
 +++{#if $$slots.header}+++
 	<div class="header">
-		<slot name="header"/>
+		<slot name="header"></slot>
 	</div>
 +++{/if}+++
 ```

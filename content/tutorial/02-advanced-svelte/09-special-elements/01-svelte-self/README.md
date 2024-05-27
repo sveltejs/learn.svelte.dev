@@ -20,8 +20,8 @@ It's useful for things like this folder tree view, where folders can contain _ot
 ```svelte
 /// file: Folder.svelte
 {#if file.files}
-	+++<svelte:self {...file}/>+++
+	+++<svelte:self {...file} />+++
 {:else}
-	<File {...file}/>
+	<File {...file} />
 {/if}
 ```

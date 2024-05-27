@@ -12,7 +12,7 @@ Open `FilterableList.svelte`. The `<slot>` is being rendered for each filtered i
 /// file: FilterableList.svelte
 <div class="content">
 	{#each data.filter(matches) as item}
-		<slot +++{item}+++ />
+		<slot +++{item}+++></slot>
 	{/each}
 </div>
 ```

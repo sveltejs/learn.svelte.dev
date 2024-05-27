@@ -10,14 +10,14 @@ Inside `App.svelte`, we're rendering a `<Card>` component that contains `<span s
 /// file: Card.svelte
 <div class="card">
 +++	<header>
-		<slot name="telephone" />
-		<slot name="company" />
+		<slot name="telephone"></slot>
+		<slot name="company"></slot>
 	</header>+++
 
-	<slot />
-		
+	<slot></slot>
+
 +++	<footer>
-		<slot name="address" />
+		<slot name="address"></slot>
 	</footer>+++
 </div>
 ```
@@ -47,7 +47,7 @@ Alternatively, we could use the `:global` modifier inside `Card.svelte` to targe
 ```svelte
 /// file: Card.svelte
 <style>
-	/* ... */ 
+	/* ... */
 
 	+++.card :global(small) {
 		display: block;

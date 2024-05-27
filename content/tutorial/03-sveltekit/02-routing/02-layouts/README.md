@@ -14,7 +14,7 @@ src/routes/
 └ +page.svelte
 ```
 
-...and move the duplicated content from the `+page.svelte` files into the new `+layout.svelte` file. The `<slot />` element is where the page content will be rendered:
+...and move the duplicated content from the `+page.svelte` files into the new `+layout.svelte` file. The `<slot></slot>` element is where the page content will be rendered:
 
 ```svelte
 /// file: src/routes/+layout.svelte
@@ -23,7 +23,7 @@ src/routes/
 	<a href="/about">about</a>
 </nav>
 
-<slot />
+<slot></slot>
 ```
 
 A `+layout.svelte` file applies to every child route, including the sibling `+page.svelte` (if it exists). You can nest layouts to arbitrary depth.

@@ -19,7 +19,7 @@ Now, add a sidebar in the layout for the post page:
 
 <div class="layout">
 	<main>
-		<slot />
+		<slot></slot>
 	</main>
 
 +++	<aside>

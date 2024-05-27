@@ -21,7 +21,7 @@
 
 				<span>{todo.description}</span>
 
-				<button on:click={() => store.remove(todo)} aria-label="Remove" />
+				<button on:click={() => store.remove(todo)} aria-label="Remove"></button>
 			</label>
 		</li>
 	{/each}

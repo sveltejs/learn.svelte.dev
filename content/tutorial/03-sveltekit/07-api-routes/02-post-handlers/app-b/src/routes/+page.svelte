@@ -55,7 +55,7 @@
 						on:click={async (e) => {
 							// TODO handle delete
 						}}
-					/>
+					></button>
 				</label>
 			</li>
 		{/each}

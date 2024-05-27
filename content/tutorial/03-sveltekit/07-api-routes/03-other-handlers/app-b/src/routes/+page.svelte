@@ -65,7 +65,7 @@
 
 							data.todos = data.todos.filter((t) => t !== todo);
 						}}
-					/>
+					></button>
 				</label>
 			</li>
 		{/each}

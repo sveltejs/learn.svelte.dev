@@ -133,7 +133,7 @@
 
 <div class="content">
 	{#if browser}
-		<iframe bind:this={iframe} title="Output" on:load={set_iframe_visible} />
+		<iframe bind:this={iframe} title="Output" on:load={set_iframe_visible}></iframe>
 	{/if}
 
 	{#if paused || loading || $error}

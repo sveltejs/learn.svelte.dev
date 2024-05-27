@@ -66,13 +66,13 @@
 
 		previous = coords;
 	}}
-/>
+></canvas>
 
 {#if previous}
 	<div
 		class="preview"
 		style="--color: {color}; --size: {size}px; --x: {previous.x}px; --y: {previous.y}px" 
-	/>
+	></div>
 {/if}
 
 <style>

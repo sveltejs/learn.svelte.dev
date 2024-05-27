@@ -39,7 +39,7 @@
 	});
 </script>
 
-<div class="modal-background" />
+<div class="modal-background"></div>
 
 <dialog class="modal" tabindex="-1" bind:this={modal} on:close>
 	<slot />

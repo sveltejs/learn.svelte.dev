@@ -61,7 +61,7 @@
 					><strong>{current.title}</strong>
 				</div>
 
-				<span style="flex: 1 1 auto" />
+				<span style="flex: 1 1 auto"></span>
 			</h1>
 
 			<span class="expand-icon" class:inverted={is_open}>
