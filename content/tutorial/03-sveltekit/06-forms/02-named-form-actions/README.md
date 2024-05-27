@@ -50,7 +50,7 @@ Next, we want to create a form for each todo, complete with a hidden `<input>` t
 +++			<form method="POST" action="?/delete">
 				<input type="hidden" name="id" value={todo.id} />
 				<span>{todo.description}</span>
-				<button aria-label="Mark as complete" />
+				<button aria-label="Mark as complete"></button>
 			</form>+++
 		</li>
 	{/each}

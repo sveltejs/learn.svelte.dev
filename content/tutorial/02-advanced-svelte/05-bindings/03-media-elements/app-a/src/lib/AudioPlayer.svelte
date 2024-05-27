@@ -21,7 +21,7 @@
 	<button
 		class="play"
 		aria-label={paused ? 'play' : 'pause'}
-	/>
+	></button>
 
 	<div class="info">
 		<div class="description">
@@ -57,7 +57,7 @@
 					});
 				}}
 			>
-				<div class="progress" style="--progress: {time / duration}%" />
+				<div class="progress" style="--progress: {time / duration}%"></div>
 			</div>
 			<span>{duration ? format(duration) : '--:--'}</span>
 		</div>

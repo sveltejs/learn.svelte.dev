@@ -22,7 +22,7 @@
 	bind:this={canvas}
 	width={32}
 	height={32}
-/>
+></canvas>
 
 <style>
 	canvas {

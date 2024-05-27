@@ -27,7 +27,7 @@
 <textarea
 	value={text}
 	on:keydown={handleKeydown}
-/>
+></textarea>
 
 <style>
 	textarea {

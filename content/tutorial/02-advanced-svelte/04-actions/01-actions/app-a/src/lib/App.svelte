@@ -30,7 +30,7 @@
 							on:click={() => {
 								selected = color;
 							}}
-						/>
+						></button>
 					{/each}
 				</div>
 

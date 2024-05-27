@@ -14,12 +14,12 @@ First, add the `<audio>` element along with its bindings (we'll use the shorthan
 		bind:currentTime={time}
 		bind:duration
 		bind:paused
-	/>+++
+	></audio>+++
 
 	<button
 		class="play"
 		aria-label={paused ? 'play' : 'pause'}
-	/>
+	></button>
 ```
 
 Next, add an event handler to the `<button>` that toggles `paused`:
@@ -30,7 +30,7 @@ Next, add an event handler to the `<button>` that toggles `paused`:
 	class="play"
 	aria-label={paused ? 'play' : 'pause'}
 	+++on:click={() => paused = !paused}+++
-/>
+></button>
 ```
 
 Our audio player now has basic functionality. Let's add the ability to seek to a specific part of a track by dragging the slider. Inside the slider's `pointerdown` handler there's a `seek` function, where we can update `time`:
@@ -60,7 +60,7 @@ When the track ends, be kind — rewind:
 +++	on:ended={() => {
 		time = 0;
 	}}+++
-/>
+></audio>
 ```
 
 The complete set of bindings for `<audio>` and `<video>` is as follows — seven _readonly_ bindings...

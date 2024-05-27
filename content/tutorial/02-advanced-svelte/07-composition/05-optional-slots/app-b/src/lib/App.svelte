@@ -9,7 +9,7 @@
 	let:item={row}
 >
 	<div class="row">
-		<span class="color" style="background-color: {row.hex}" />
+		<span class="color" style="background-color: {row.hex}"></span>
 		<span class="name">{row.name}</span>
 		<span class="hex">{row.hex}</span>
 		<span class="rgb">{row.rgb}</span>

@@ -6,5 +6,5 @@ Elements with a `contenteditable` attribute support `textContent` and `innerHTML
 
 ```svelte
 /// file: App.svelte
-<div +++bind:innerHTML={html}+++ contenteditable />
+<div +++bind:innerHTML={html}+++ contenteditable></div>
 ```

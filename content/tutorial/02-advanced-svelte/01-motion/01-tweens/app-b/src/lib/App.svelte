@@ -8,7 +8,7 @@
 	});
 </script>
 
-<progress value={$progress} />
+<progress value={$progress}></progress>
 
 <button on:click={() => progress.set(0)}>
 	0%

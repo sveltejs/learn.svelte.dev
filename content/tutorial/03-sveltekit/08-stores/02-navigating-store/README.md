@@ -31,5 +31,5 @@ It can be used to show a loading indicator for long-running navigations. In this
 	{/if}+++
 </nav>
 
-<slot />
+<slot></slot>
 ```
