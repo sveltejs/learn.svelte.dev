@@ -83,7 +83,7 @@
 									transition:slide={{ duration }}
 								>
 									<button
-										on:click|stopPropagation={() => {
+										on:click={() => {
 											if (expanded_part !== part.slug) {
 												expanded_part = part.slug;
 												expanded_chapter = part.chapters[0].slug;
@@ -102,7 +102,7 @@
 													aria-current={chapter.slug === current.chapter.slug ? 'step' : undefined}
 												>
 													<button
-														on:click|stopPropagation={() => (expanded_chapter = chapter.slug)}
+														on:click={() => (expanded_chapter = chapter.slug)}
 														style="width: 100%; text-align: start;"
 													>
 														<!-- <img src={arrow} alt="Arrow icon" /> -->
