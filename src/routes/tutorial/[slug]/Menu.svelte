@@ -23,6 +23,8 @@
 	$: expanded_chapter = current.chapter.slug;
 </script>
 
+<svelte:window on:keydown={(e) => e.key === 'Escape' && (is_open = false)} />
+
 <div
 	class="container"
 	class:dark={$theme.current === 'dark'}
@@ -38,35 +40,33 @@
 			<Icon name="arrow-left" size={16} />
 		</a>
 
-		<button
-			class="heading"
-			on:click={() => ($is_mobile ? open_nav() : (is_open = !is_open))}
-			class:open={is_open}
-		>
-			<h1>
-				<div class="mobile">
-					<div class="heading-row">
-						<strong>{current.title}</strong>
+		<div class="menu" class:open={is_open}>
+			<button on:click={() => ($is_mobile ? open_nav() : (is_open = !is_open))}>
+				<h1>
+					<div class="mobile">
+						<div class="heading-row">
+							<strong>{current.title}</strong>
+						</div>
+						<div class="heading-row">
+							<span class="part-title">{current.part.label}</span>
+							<span class="separator">/</span>
+							<span class="chapter-title">{current.chapter.title}</span>
+						</div>
 					</div>
-					<div class="heading-row">
-						<span class="part-title">{current.part.label}</span>
-						<span class="separator">/</span>
-						<span class="chapter-title">{current.chapter.title}</span>
+
+					<div class="desktop">
+						<span class="part-title">{current.part.title}</span><span class="separator">/</span>
+						<span class="chapter-title">{current.chapter.title}</span><span class="separator">/</span
+						><strong>{current.title}</strong>
 					</div>
-				</div>
 
-				<div class="desktop">
-					<span class="part-title">{current.part.title}</span><span class="separator">/</span>
-					<span class="chapter-title">{current.chapter.title}</span><span class="separator">/</span
-					><strong>{current.title}</strong>
-				</div>
+					<span style="flex: 1 1 auto"></span>
+				</h1>
 
-				<span style="flex: 1 1 auto"></span>
-			</h1>
-
-			<span class="expand-icon" class:inverted={is_open}>
-				<Icon name="chevron-down" />
-			</span>
+				<span class="expand-icon" class:inverted={is_open}>
+					<Icon name="chevron-down" />
+				</span>
+			</button>
 
 			{#if is_open}
 				<nav
@@ -140,7 +140,7 @@
 					</div>
 				</nav>
 			{/if}
-		</button>
+		</div>
 
 		<a
 			class="next-button"
@@ -191,7 +191,7 @@
 		width: 100%;
 	}
 
-	.heading.open {
+	.menu.open {
 		border-radius: var(--sk-border-radius) var(--sk-border-radius) 0 0;
 	}
 
@@ -200,7 +200,7 @@
 		font-size: var(--sk-text-xs);
 	}
 
-	.heading {
+	.menu {
 		font-size: var(--sk-text-s);
 		border: none;
 	}
@@ -209,15 +209,10 @@
 		color: var(--sk-theme-1);
 	}
 
-	.heading {
+	.menu {
 		flex: 1;
 
 		position: relative;
-
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 0.4ch;
 
 		top: 0.15rem;
 		height: 100%;
@@ -236,6 +231,15 @@
 		box-shadow: var(--shadow);
 
 		cursor: pointer;
+	}
+
+	.menu > button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.4ch;
+		width: 100%;
+		height: 100%;
 	}
 
 	h1 {
@@ -414,7 +418,7 @@
 		}
 
 		/* Remove all styles */
-		.heading {
+		.menu {
 			box-shadow: none;
 			background-color: transparent;
 
