@@ -146,7 +146,7 @@
 		if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
 			e.preventDefault();
 			const lis = Array.from(e.currentTarget.querySelectorAll('li'));
-			const focused = lis.findIndex((li) => li.contains(e.target));
+			const focused = lis.findIndex((li) => li.contains(/** @type {HTMLElement} */ (e.target)));
 
 			const d = e.key === 'ArrowUp' ? -1 : +1;
 
