@@ -191,11 +191,9 @@
 		height: 10rem;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		.loading {
-			--faded: #444;
-			--progress: #555;
-			--cutout: var(--sk-back-2);
-		}
+	:global(.dark) .loading {
+		--faded: #444;
+		--progress: #555;
+		--cutout: var(--sk-back-2);
 	}
 </style>
