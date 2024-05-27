@@ -57,8 +57,8 @@ dependencies:
     specifier: ^6.0.14
     version: 6.1.0(@codemirror/commands@6.3.3)(@codemirror/language@6.10.1)(@codemirror/search@6.5.6)(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)
   '@rich_harris/svelte-split-pane':
-    specifier: ^1.1.1
-    version: 1.1.1(svelte@4.2.10)
+    specifier: ^1.1.3
+    version: 1.1.3(svelte@4.2.10)
   '@sveltejs/repl':
     specifier: ^0.6.0
     version: 0.6.0(@codemirror/lang-html@6.4.8)(@codemirror/search@6.5.6)(@lezer/common@1.2.1)(@lezer/javascript@1.4.13)(@lezer/lr@1.4.0)(@sveltejs/kit@2.5.9)(svelte@4.2.10)
@@ -110,8 +110,8 @@ devDependencies:
     specifier: ^2.0.0
     version: 2.5.9(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.10)(vite@5.2.11)
   '@sveltejs/site-kit':
-    specifier: 6.0.0-next.39
-    version: 6.0.0-next.39(@sveltejs/kit@2.5.9)(svelte@4.2.10)
+    specifier: 6.0.0-next.64
+    version: 6.0.0-next.64(@sveltejs/kit@2.5.9)(svelte@4.2.10)
   '@sveltejs/vite-plugin-svelte':
     specifier: ^3.0.0
     version: 3.1.0(svelte@4.2.10)(vite@5.2.11)
@@ -880,10 +880,10 @@ packages:
       '@codemirror/view': 6.24.0
     dev: false
 
-  /@rich_harris/svelte-split-pane@1.1.1(svelte@4.2.10):
-    resolution: {integrity: sha512-y2RRLyrN6DCeIgwA423aAIv/T5JqQeOl2XogBQ/21DvA2IF7oyrLUtXMxmQL2va2NFdeJO6MDx6nDX5X7kau7A==}
+  /@rich_harris/svelte-split-pane@1.1.3(svelte@4.2.10):
+    resolution: {integrity: sha512-eziKez1ncDfLqJQsViwLG2rYNfMEa3pYBKFUBfNTChgT5lUnofm5IDHxupAKklKvRpTXCVhQXb1MxLUfj5UgFQ==}
     peerDependencies:
-      svelte: ^3.54.0
+      svelte: ^3.54.0 || ^4.0.0 || ^5.0.0-next.0
     dependencies:
       svelte: 4.2.10
     dev: false
@@ -1071,7 +1071,7 @@ packages:
       '@neocodemirror/svelte': 0.0.15(@codemirror/autocomplete@6.12.0)(@codemirror/commands@6.3.3)(@codemirror/language@6.10.1)(@codemirror/lint@6.5.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)
       '@replit/codemirror-lang-svelte': 6.0.0(@codemirror/autocomplete@6.12.0)(@codemirror/lang-css@6.2.1)(@codemirror/lang-html@6.4.8)(@codemirror/lang-javascript@6.2.1)(@codemirror/language@6.10.1)(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)(@lezer/common@1.2.1)(@lezer/highlight@1.2.0)(@lezer/javascript@1.4.13)(@lezer/lr@1.4.0)
       '@replit/codemirror-vim': 6.1.0(@codemirror/commands@6.3.3)(@codemirror/language@6.10.1)(@codemirror/search@6.5.6)(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)
-      '@rich_harris/svelte-split-pane': 1.1.1(svelte@4.2.10)
+      '@rich_harris/svelte-split-pane': 1.1.3(svelte@4.2.10)
       '@rollup/browser': 3.29.4
       '@sveltejs/site-kit': 5.2.2(@sveltejs/kit@2.5.9)(svelte@4.2.10)
       acorn: 8.11.3
@@ -1103,8 +1103,8 @@ packages:
       svelte-local-storage-store: 0.4.0(svelte@4.2.10)
     dev: false
 
-  /@sveltejs/site-kit@6.0.0-next.39(@sveltejs/kit@2.5.9)(svelte@4.2.10):
-    resolution: {integrity: sha512-HARhb2WayjHL/3BFjffFO5cMJjbkPrN/01Tz8Oe3mZYmAUD4Cb3iUI34p415ASTIO6RAeDnClBZDwr2EsK6spg==}
+  /@sveltejs/site-kit@6.0.0-next.64(@sveltejs/kit@2.5.9)(svelte@4.2.10):
+    resolution: {integrity: sha512-SosLY07DBA79yJhRR9vQpk9eXlSc3VjzOlIJQFvPzgsbu727rq5u3dudFEsm0NeQFoAF+NNgDYi5D85v5Yc+vQ==}
     peerDependencies:
       '@sveltejs/kit': ^1.20.0
       svelte: ^4.0.0
@@ -1112,7 +1112,7 @@ packages:
       '@sveltejs/kit': 2.5.9(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.10)(vite@5.2.11)
       esm-env: 1.0.0
       svelte: 4.2.10
-      svelte-local-storage-store: 0.6.4(svelte@4.2.10)
+      svelte-persisted-store: 0.9.4(svelte@4.2.10)
     dev: true
 
   /@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.10)(vite@5.2.11):
@@ -2378,11 +2378,11 @@ packages:
       svelte: 4.2.10
     dev: false
 
-  /svelte-local-storage-store@0.6.4(svelte@4.2.10):
-    resolution: {integrity: sha512-45WoY2vSGPQM1sIQJ9jTkPPj20hYeqm+af6mUGRFSPP5WglZf36YYoZqwmZZ8Dt/2SU8lem+BTA8/Z/8TkqNLg==}
+  /svelte-persisted-store@0.9.4(svelte@4.2.10):
+    resolution: {integrity: sha512-Em3cDSsd3fAkQhvNc4+V7ZT86GnIkFrlcKK/oNSHFhF5fbNoavdxvtTZ0pCF2ueG/Oqg5kSbAFxn0rkeICpHUA==}
     engines: {node: '>=0.14'}
     peerDependencies:
-      svelte: ^3.48.0 || >4.0.0
+      svelte: ^3.48.0 || ^4.0.0 || ^5.0.0-next.0
     dependencies:
       svelte: 4.2.10
     dev: true
