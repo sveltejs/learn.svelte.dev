@@ -109,7 +109,7 @@
 
 		{#if initial}
 			<div class="progress-container">
-				<div class="progress" style="width: {progress * 100}%;" />
+				<div class="progress" style="width: {progress * 100}%;"></div>
 			</div>
 			<span>{status}</span>
 		{/if}

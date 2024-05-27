@@ -14,7 +14,7 @@
 </script>
 
 <div class="chrome" class:loading>
-	<button disabled={loading} class="reload icon" on:click={() => dispatch('refresh')} aria-label="reload" />
+	<button disabled={loading} class="reload icon" on:click={() => dispatch('refresh')} aria-label="reload"></button>
 
 	<input
 		disabled={loading}
@@ -31,14 +31,14 @@
 		}}
 	/>
 
-	<a {href} class="new-tab icon" target="_blank" aria-label={href ? 'open in new tab' : undefined} tabindex="0" />
+	<a {href} class="new-tab icon" target="_blank" aria-label={href ? 'open in new tab' : undefined} tabindex="0"></a>
 
 	<button
 		disabled={loading}
 		class="terminal icon"
 		on:click={() => dispatch('toggle_terminal')}
 		aria-label="toggle terminal"
-	/>
+	></button>
 </div>
 
 <style>

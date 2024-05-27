@@ -86,7 +86,7 @@
 		{#if actions.length > 0}
 			<div class="actions">
 				{#each actions as action}
-					<button aria-label={action.label} class="icon {action.icon}" on:click={action.fn} />
+					<button aria-label={action.label} class="icon {action.icon}" on:click={action.fn}></button>
 				{/each}
 			</div>
 		{/if}
