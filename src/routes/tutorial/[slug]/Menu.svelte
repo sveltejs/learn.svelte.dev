@@ -438,7 +438,7 @@
 			align-items: flex-start;
 			grid-template-rows: repeat(2, auto);
 
-			width: max-content;
+			width: 100%;
 			height: max-content;
 		}
 
