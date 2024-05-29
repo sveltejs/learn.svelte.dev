@@ -62,6 +62,9 @@ dependencies:
   '@sveltejs/repl':
     specifier: ^0.6.0
     version: 0.6.0(@codemirror/lang-html@6.4.8)(@codemirror/search@6.5.6)(@lezer/common@1.2.1)(@lezer/javascript@1.4.13)(@lezer/lr@1.4.0)(@sveltejs/kit@2.5.9)(svelte@4.2.10)
+  '@vercel/speed-insights':
+    specifier: ^1.0.0
+    version: 1.0.11(@sveltejs/kit@2.5.9)(svelte@4.2.10)
   '@webcontainer/api':
     specifier: ^1.1.5
     version: 1.1.9
@@ -1226,6 +1229,34 @@ packages:
       - encoding
       - supports-color
     dev: true
+
+  /@vercel/speed-insights@1.0.11(@sveltejs/kit@2.5.9)(svelte@4.2.10):
+    resolution: {integrity: sha512-l9hzSNmJvb2Yqpgd/BzpiT0J0aQDdtqxOf3Xm+iW4PICxVvhY1ef7Otdx4GXI+88dVkws57qMzXiShz19gXzSQ==}
+    requiresBuild: true
+    peerDependencies:
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19
+      svelte: ^4
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      '@sveltejs/kit': 2.5.9(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.10)(vite@5.2.11)
+      svelte: 4.2.10
+    dev: false
 
   /@webcontainer/api@1.1.9:
     resolution: {integrity: sha512-Sp6PV0K9D/3f8fSbCubqhfmBFH8XbngZCBOCF+aExyGqnz2etmw+KYvbQ/JxYvYX5KPaSxM+asFQwoP2RHl5cg==}
