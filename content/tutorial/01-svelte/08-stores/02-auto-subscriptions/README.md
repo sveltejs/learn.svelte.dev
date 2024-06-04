@@ -28,7 +28,7 @@ You now declared `unsubscribe`, but it still needs to be called, for example thr
 
 	let count_value;
 
-	const unsubscribe = count.subscribe(value => {
+	const unsubscribe = count.subscribe((value) => {
 		count_value = value;
 	});
 
@@ -51,7 +51,7 @@ It starts to get a bit boilerplatey though, especially if your component subscri
 
 	---let count_value;---
 
-	---const unsubscribe = count.subscribe(value => {
+	---const unsubscribe = count.subscribe((value) => {
 		count_value = value;
 	});---
 
