@@ -18,6 +18,8 @@
 			on:keydown={(e) => {
 				if (e.key === 'Escape') showMenu = false;
 			}}
+			role="presentation"
+			aria-label="Color picker and brush size  modal"
 		>
 			<div class="menu">
 				<div class="colors">
