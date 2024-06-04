@@ -1,5 +1,5 @@
 <script>
-	import { message } from '../../../../../../lib/message.js';
+	import { message } from '../../../../../lib/message.js';
 </script>
 
 <h1>a deeply nested route</h1>
