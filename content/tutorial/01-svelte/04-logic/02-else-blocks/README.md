@@ -9,7 +9,7 @@ Just like in JavaScript, an `if` block can have an `else` block:
 {#if count > 10}
 	<p>{count} is greater than 10</p>
 +++{:else}
-	<p>{count} is between 0 and 10</p>+++
+	<p>{count} is less than 11</p>+++
 {/if}
 ```
 
