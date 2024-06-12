@@ -34,13 +34,41 @@ function addNumber() {
 }
 ```
 
-A simple rule of thumb: the name of the updated variable must appear on the left hand side of the assignment. For example this...
+A simple rule of thumb: the name of the updated variable must appear on the left hand side of the assignment. For example: 
 
 ```js
 /// no-file
-const obj = { foo: { bar: 1 } };
-const foo = obj.foo;
-foo.bar = 2;
-```
+<script>
+	let obj = { key: { subKey: 1 } };
 
-...won't trigger reactivity on `obj.foo.bar`, unless you follow it up with `obj = obj`.
+	function updateSubKey() {
+		const foo = obj.key;
+		foo.subKey += 1; 
+	}
+</script>
+
+<button on:click={updateSubKey}>update subKey</button>
+
+<p>{obj.key.subKey}</p>
+```
+This code above won't trigger reactivity on `obj.key.subKey` ...
+
+
+...unless you follow it up with a redundant assignment like: `obj = obj`.
+
+```js
+/// no-file
+<script>
+	let obj = { key: { subKey: 1 } };
+
+	function updateSubKey() {
+		const foo = obj.key;
+		foo.subKey += 1; 
+		obj = obj // Now yes, is reactive!
+	}
+</script>
+
+<button on:click={updateSubKey}>update subKey</button>
+
+<p>{obj.key.subKey}</p>
+```
