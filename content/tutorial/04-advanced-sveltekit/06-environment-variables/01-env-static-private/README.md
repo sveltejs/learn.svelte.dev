@@ -85,8 +85,8 @@ import { FEATURE_FLAG_X } from '$env/static/private';
 
 if (FEATURE_FLAG_X === 'enabled') {
 	// code in here will be removed from the build output
-	// if FEATURE_FLAG_X is not enabled
 }
+// if FEATURE_FLAG_X is not enabled
 ```
 
 In some cases you might need to refer to environment variables that are _dynamic_ — in other words, not known until we run the app. We'll cover this case in the next exercise.
