@@ -9,7 +9,7 @@ As you'll recall from an [earlier exercise](error-basics), an error is _unexpect
 ```js
 /// file: src/hooks.server.js
 export function handleError({ event, error }) {
-	console.error(error.stack);
+	console.error(error);
 }
 ```
 
@@ -29,7 +29,7 @@ In some situations you may want to customise this object. To do so, you can retu
 ```js
 /// file: src/hooks.server.js
 export function handleError({ event, error }) {
-	console.error(error.stack);
+	console.error(error);
 
 	return {
 		message: 'everything is fine',
