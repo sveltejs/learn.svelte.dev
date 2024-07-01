@@ -9,9 +9,9 @@ It's useful for things like this folder tree view, where folders can contain _ot
 ```svelte
 /// file: Folder.svelte
 {#if file.files}
-	<Folder {...file}/>
+	<Folder {...file} />
 {:else}
-	<File {...file}/>
+	<File {...file} />
 {/if}
 ```
 
