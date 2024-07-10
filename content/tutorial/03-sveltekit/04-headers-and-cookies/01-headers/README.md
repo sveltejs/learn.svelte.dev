@@ -15,4 +15,4 @@ export function load(+++{ setHeaders }+++) {
 }
 ```
 
-(You may need to reload the iframe to see the effect.)
+> You may need to reload the iframe to see the effect.
