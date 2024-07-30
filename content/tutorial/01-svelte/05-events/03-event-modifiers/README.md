@@ -22,4 +22,4 @@ The full list of modifiers:
 - `self` — only trigger handler if event.target is the element itself
 - `trusted` — only trigger handler if `event.isTrusted` is `true`, meaning the event was triggered by a user action rather than because some JavaScript called `element.dispatchEvent(...)`
 
-You can chain modifiers together, e.g. `on:click|once|capture={...}`.
+You can use multiple modifiers together, e.g. `on:click|once|capture={...}`.
