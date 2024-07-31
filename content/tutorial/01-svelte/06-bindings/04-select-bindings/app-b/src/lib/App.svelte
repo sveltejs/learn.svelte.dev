@@ -1,5 +1,5 @@
 <script>
-	let questions = [
+	const questions = [
 		{
 			id: 1,
 			text: `Where did you go to school?`
