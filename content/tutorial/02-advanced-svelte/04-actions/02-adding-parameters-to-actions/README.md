@@ -30,7 +30,7 @@ Then, we need to pass some options into the action:
 </button>
 ```
 
-The tooltip now works — almost. If we change the text in the `<input>`, the tooltip will not reflect the new content. We can fix that by adding an `update` method to the returned object.
+The tooltip now works — almost. If we change the text in the `<input>`, the tooltip will not reflect the new content. We can fix that by adding an `update` method to the returned object. If the returned object has an update method, it will be called immediately after Svelte has applied updates to the markup whenever that parameter changes.
 
 ```js
 /// file: App.svelte
