@@ -38,8 +38,8 @@ A simple rule of thumb: the name of the updated variable must appear on the left
 
 ```js
 /// no-file
-const obj = { foo: { bar: 1 } };
-const foo = obj.foo;
+let obj = { foo: { bar: 1 } };
+let foo = obj.foo;
 foo.bar = 2;
 ```
 
