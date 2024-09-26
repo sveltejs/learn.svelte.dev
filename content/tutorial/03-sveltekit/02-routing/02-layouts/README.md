@@ -4,7 +4,11 @@ title: Layouts
 
 Different routes of your app will often share common UI. Instead of repeating it in each `+page.svelte` component, we can use a `+layout.svelte` component that applies to all routes in the same directory.
 
-In this app we have two routes, `src/routes/+page.svelte` and `src/routes/about/+page.svelte`, that contain the same navigation UI. Let's create a new file, `src/routes/+layout.svelte`...
+In this app we have two routes using a common navigation UI:
+1. `src/routes/+page.svelte`
+2. `src/routes/about/+page.svelte`
+
+Let's create a new file, `src/routes/+layout.svelte`...
 
 ```
 src/routes/
