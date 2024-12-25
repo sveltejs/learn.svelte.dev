@@ -1,0 +1,5 @@
+{
+  "video/audeo": "mcr.microsoft.com/devcontainers/universal:2",
+  "clone": {
+  }
+}
